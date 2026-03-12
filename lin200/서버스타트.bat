@@ -1,0 +1,1 @@
+java -Xms1g -Xmx16g -cp lib/HikariCP-2.6.2.jar;lib/json-simple-1.1.1.jar;lib/log4j-1.2.16.jar;lib/mchange-commons-java-0.2.3.jar;lib/mysql-connector-java-5.1.22-bin.jar;lib/netty-3.9.9.Final.jar;lib/org.eclipse.swt.win32.win32.x86_64_3.7.1.v3738a.jar;lib/slf4j-api-1.6.1.jar;lib/slf4j-log4j12-1.6.1.jar;lib/swt-3.5.1-win32-win32-x86.jar;server.jar lineage.Main
