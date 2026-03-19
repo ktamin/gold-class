@@ -1374,12 +1374,12 @@ public class Enchant extends ItemInstance {
 					item.setEquipped(false);
 					item.toOption(cha, false);
 					
-					item.setEnLevel(Lineage.item_enchant_armor_max);
+					item.setEnLevel(Lineage.item_enchant_accessory_max);
 					
 					item.setEquipped(true);
 					item.toOption(cha, true);
 				} else {
-					item.setEnLevel(Lineage.item_enchant_armor_max);
+					item.setEnLevel(Lineage.item_enchant_accessory_max);
 				}		
 			} else {
 				if (item.isEquipped()) {

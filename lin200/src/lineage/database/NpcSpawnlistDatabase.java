@@ -54,6 +54,7 @@ import lineage.world.object.npc.드래곤텔레포터;
 import lineage.world.object.npc.라바던전텔레포터;
 import lineage.world.object.npc.라바상시텔레포터;
 import lineage.world.object.npc.레어인형합성사;
+import lineage.world.object.npc.룸티스제작사;
 import lineage.world.object.npc.마물암석제작사;
 import lineage.world.object.npc.마법주문서제작사;
 import lineage.world.object.npc.마법주문서합성사;
@@ -1545,6 +1546,8 @@ public final class NpcSpawnlistDatabase {
 						return new 마족제작사();
 					} else if (n.getType().equalsIgnoreCase("귀걸이 제작사")) {
 						return new 귀걸이제작사();
+					} else if (n.getType().equalsIgnoreCase("룸티스 합성사")) {
+						return new 룸티스제작사();
 					} else if (n.getType().equalsIgnoreCase("희귀 제작사")) {
 						return new 희귀장비제작사();
 					} else if (n.getType().equalsIgnoreCase("영웅 제작사")) {

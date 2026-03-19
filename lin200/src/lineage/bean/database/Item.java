@@ -102,6 +102,7 @@ public class Item {
 	private int enchantPvpDamage;
 	private int pvpReduction;
 	private int enchantPvpReduction;
+	private int expire_time;
 	
 
 	private int Slot;							// 서버 메모리에 등록되는 슬롯 위치
@@ -716,6 +717,14 @@ public class Item {
 	}
 	public void setEnchantPvpReduction(int enchantPvpReduction) {
 		this.enchantPvpReduction = enchantPvpReduction;
+	}
+	
+	public void setExpireTime(int time) {
+		this.expire_time = time;
+	}
+
+	public int getExpireTime() {
+		return expire_time;
 	}
 	
 	/**

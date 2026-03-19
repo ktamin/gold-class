@@ -551,6 +551,18 @@ public final class Lineage_Balance {
 	static public double accessories_bless_8_probability;
 	// 장신구 축오림 주문서 9 이상 확률(%)
 	static public double accessories_bless_9_probability;
+	
+	// 룸티스 강화 주문서
+	static public double roomtis_enchant_prob0 = 0.50; // 0->1 확률 (50%)
+	static public double roomtis_enchant_prob1 = 0.40; // 1->2 확률
+	static public double roomtis_enchant_prob2 = 0.30; // 2->3 확률
+	static public double roomtis_enchant_prob3 = 0.20; // 3->4 확률
+	static public double roomtis_enchant_prob4 = 0.15; // 4->5 확률
+	static public double roomtis_enchant_prob5 = 0.10; // 5->6 확률
+	static public double roomtis_enchant_prob6 = 0.07; // 6->7 확률
+	static public double roomtis_enchant_prob7 = 0.05; // 7->8 확률
+	static public double roomtis_enchant_prob8 = 0.03; // 8->9 확률
+	static public double roomtis_enchant_prob9 = 0.01; // 9->10 확률
 
 	// 오림의 무기 마법 주문서 최소 인첸
 	static public int orim_weapon_min_en;
@@ -1550,6 +1562,28 @@ public final class Lineage_Balance {
 						accessories_bless_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_bless_9_probability"))
 						accessories_bless_9_probability = Double.valueOf(value) * 0.01;
+					
+					// 룸티스 강화 확률 로드 부분
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob0"))
+						Lineage_Balance.roomtis_enchant_prob0 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob1"))
+						Lineage_Balance.roomtis_enchant_prob1 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob2"))
+						Lineage_Balance.roomtis_enchant_prob2 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob3"))
+						Lineage_Balance.roomtis_enchant_prob3 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob4"))
+						Lineage_Balance.roomtis_enchant_prob4 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob5"))
+						Lineage_Balance.roomtis_enchant_prob5 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob6"))
+						Lineage_Balance.roomtis_enchant_prob6 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob7"))
+						Lineage_Balance.roomtis_enchant_prob7 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob8"))
+						Lineage_Balance.roomtis_enchant_prob8 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob9"))
+						Lineage_Balance.roomtis_enchant_prob9 = Double.parseDouble(value);
 					
 					else if (key.equalsIgnoreCase("weapon_enchant_9_use_count_1"))
 						weapon_enchant_9_use_count_1 = Integer.valueOf(value);

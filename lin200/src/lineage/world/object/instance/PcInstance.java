@@ -2920,216 +2920,68 @@ public class PcInstance extends Character {
 	@Override
 	public void toTimer(long time) {
 
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("자동 사냥30일경100%/드50%"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 자동 사냥30일경100%/드50% 아이템의 사용 기간이 만료되었습니다.", 20);
+		// ▼▼▼ [1단계] DB 연동형 기간제 자동화 (실시간 패킷 갱신 포함) ▼▼▼
+		if (this.getInventory() != null) {
+			long currentTime = time / 1000; // 현재 시간(초)
+			
+			for (lineage.world.object.instance.ItemInstance invenItem : this.getInventory().getList()) {
+				if (invenItem == null || invenItem.getItem() == null) continue;
+				
+				// 나비켓 '사용기간(초)' 값을 가져옵니다.
+				int duration = invenItem.getItem().getExpireTime();
+				
+				if (duration > 0) { 
+					// 1. 처음 획득 시: 도장이 안 찍혀 있다면 도장 쾅!
+					if (invenItem.getDeleteTime() == 0) {
+						invenItem.setDeleteTime(currentTime + duration);
+						// [리셋 방지] 메모리 상태 갱신 (에러 발생 시 이 줄만 삭제하세요)
+						// invenItem.toUpdate(); 
+					}
+					
+					// ★ [중요 수정] 패킷 전송을 조건문 밖으로 뺐습니다.
+					// 이렇게 해야 유저가 인벤토리를 열 때마다 서버가 깎인 시간을 새로 계산해서 보내줍니다.
+					this.toSender(lineage.network.packet.server.S_InventoryStatus.clone(lineage.network.packet.BasePacketPooling.getPool(lineage.network.packet.server.S_InventoryStatus.class), invenItem));
+					
+					// 2. 만료 처리: 도장 찍힌 시간이 현재 시간보다 과거라면 삭제
+					if (invenItem.getDeleteTime() < currentTime) {
+						String expiredName = invenItem.getItem().getName();
+						this.getInventory().count(invenItem, 0, true);
+						lineage.world.controller.ChattingController.toChatting(this, "[알림] " + expiredName + " 아이템의 사용기간이 만료되었습니다.", 20);
+					}
 				}
 			}
 		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("자동 사냥1일경100%/드50%"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 86400);
+		// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 자동 사냥1일경100%/드50% 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("자동 사냥7일경100%/드50%"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 604800);
 
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 자동 사냥7일경100%/드50% 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("랭킹 변신 카드"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 랭킹 변신 카드의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("자동 사냥30일경100%/드50%"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 자동 사냥30일경100%/드20% 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("순간이동 주문서30일"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 순간이동 주문서30일 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("경험치 2배 물약30일"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 경험치 2배 물약30일 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("버프 물약30일"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 버프 물약30일 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("전투가호"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 전투가호 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("대박의인장(50%)30일"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 대박의인장(50%)30일 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-		if (getInventory() != null) {
-			ItemInstance item = getInventory().find(ItemDatabase.find("버프 물약(군업)30일"));
-			if (item != null) {
-				// 초기 시간 설정
-				if (item.getDeleteTime() == 0)
-					item.setDeleteTime((time / 1000) + 2592000);
-
-				// 패킷 전송
-				if (item != null)
-					toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-				// 지정 시간 이후 아이템 삭제
-				if (item.getDeleteTime() < (time / 1000)) {
-					getInventory().count(item, 0, true);
-					ChattingController.toChatting(this, "[알림] 버프 물약(군업)30일 아이템의 사용 기간이 만료되었습니다.", 20);
-				}
-			}
-		}
-
+		// ▼▼▼ [2단계] 스킬 쿨타임(딜레이) 알림 시스템 (원본 유지) ▼▼▼
 		if (isViewDelay() && getViewDelaySkillName() != null && getViewDelaySkillName().length() > 0
 				&& this.magic_time < this.delay_magic && (this.delay_magic - time) / 1000 >= 0) {
-			if ((this.delay_magic - time) / 1000 > 0)
-				// ChattingController.toChatting(this, "\\fU[마법이름] " + getViewDelaySkillName()
-				// +" [남은 딜레이] " + (this.delay_magic - time) / 1000,
-				// Lineage.CHATTING_MODE_MESSAGE);
-				ChattingController.toChatting(this,
+			
+			if ((this.delay_magic - time) / 1000 > 0) {
+				lineage.world.controller.ChattingController.toChatting(this,
 						"\\fU" + getViewDelaySkillName() + " 남은시간(초) " + (this.delay_magic - time) / 1000,
-						Lineage.CHATTING_MODE_MESSAGE);
+						lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+			}
+			
 			if ((this.delay_magic - time) / 1000 == 0) {
 				this.magic_time = 0;
 				this.delay_magic = 0;
-				ChattingController.toChatting(this, "\\fY재사용가능", Lineage.CHATTING_MODE_MESSAGE);
+				lineage.world.controller.ChattingController.toChatting(this, "\\fY재사용가능", lineage.share.Lineage.CHATTING_MODE_MESSAGE);
 			}
 		}
+		// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-		if (getMap() != 63 && getInventory().find("메테오 스트라이크") != null) {
 
-			ItemInstance item = getInventory().find("메테오 스트라이크", 0, 1);
-			getInventory().count(item, 0, true);
-
+		// ▼▼▼ [3단계] 63번 맵 외 메테오 스트라이크 자동 압수 로직 (원본 유지) ▼▼▼
+		if (this.getMap() != 63 && this.getInventory() != null && this.getInventory().find("메테오 스트라이크") != null) {
+			lineage.world.object.instance.ItemInstance meteorItem = this.getInventory().find("메테오 스트라이크", 0, 1);
+			if (meteorItem != null) {
+				this.getInventory().count(meteorItem, 0, true);
+			}
 		}
+		// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+		
 
 		if (보물찾기컨트롤러.isOpen && getMap() == 807) {
 
@@ -4789,6 +4641,7 @@ public class PcInstance extends Character {
 		}
 	}
 
+
 	/**
 	 * 자동칼질 타겟 정보 초기화.
 	 * 2019-02-14
@@ -6045,6 +5898,13 @@ public class PcInstance extends Character {
 
 			// ▼▼▼ 자동 매입(판매) 버튼 액션 처리 ▼▼▼
 			if (action != null && action.startsWith("autosell-")) {
+				
+				// [운영자 전역 설정 체크]
+			    // Config 파일에서 false로 바꾸면 모든 유저가 이 아래 로직으로 못 들어옵니다.
+			    if (!lineage.share.Lineage.is_autosell_global) { // 변수 위치는 팩에 따라 다를 수 있음
+			        lineage.world.controller.ChattingController.toChatting(this, "\\f3[알림] 현재 운영자에 의해 자동매입 기능이 중지되었습니다.", lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+			        return;
+			    }
 
 				// 0. 처음에 자동판매 HTML 창을 열어주는 역할 (복구 완료!)
 				if (action.equals("autosell-")) {

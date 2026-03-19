@@ -827,6 +827,44 @@ public class S_Inventory extends ServerBasePacket {
 			 * + sec + "초] ");
 			 * }
 			 */
+			
+			if (item.getDeleteTime() > 0) {
+				long currentTime = System.currentTimeMillis() / 1000;
+				long 남은시간 = item.getDeleteTime() - currentTime;
+				
+				if (남은시간 <= 0) {
+					sb.append("남은시간[만료됨] ");
+				} else {
+					// 1. 일(Day) 계산
+					long day = 남은시간 / 86400;
+					남은시간 %= 86400;
+					
+					// 2. 시간 계산
+					long hour = 남은시간 / 3600;
+					남은시간 %= 3600;
+					
+					// 3. 분/초 계산
+					long min = 남은시간 / 60;
+					long sec = 남은시간 % 60;
+					
+					// 4. [사장님 오더 적용] 기간에 따른 스마트 출력
+					sb.append("남은시간[");
+					
+					if (day > 0) {
+						// 30일 등 하루 이상 남았을 때 ➔ 남은시간[30일]
+						sb.append(day + "일");
+					} else if (hour > 0) {
+						// 하루 미만일 때 ➔ 남은시간[23시간 50분] (또는 초까지)
+						sb.append(hour + "시간 " + (min > 0 ? min + "분" : ""));
+					} else {
+						// 1시간 미만일 때 ➔ 남은시간[59분 30초]
+						sb.append(min + "분 " + sec + "초");
+					}
+					
+					sb.append("] ");
+				}
+			}
+			
 			// 봉인 표현
 			if (item.isDefinite() && item.getBless() < 0) {
 				sb.append("[봉인]");

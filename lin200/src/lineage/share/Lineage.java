@@ -81,6 +81,9 @@ public final class Lineage {
     // 지배반지 제작 성공 확률 (기본값 10%)
     public static double domring_success_rate = 0.10; // 기본값 10%
     
+    //자동매입 스위치
+    public static boolean is_autosell_global = true;
+    
     static public boolean oman = false;
     static public boolean oman2 = false;
     static public boolean oman3 = false;
@@ -3387,6 +3390,10 @@ public final class Lineage {
 						is_10cmdwlqo = value.equalsIgnoreCase("true");
                     else if (key.equalsIgnoreCase("domring_success_rate"))
                         domring_success_rate = Double.parseDouble(value);
+					
+					// ▼ 새로 추가할 코드 (자동매입 전역 스위치)
+                    else if (key.equalsIgnoreCase("is_autosell_global"))
+                    is_autosell_global = value.equalsIgnoreCase("true");
 
 					
 					else if (key.equalsIgnoreCase("battle_zone_x1"))

@@ -77,6 +77,7 @@ import lineage.world.object.item.all_night.ScrollOfNewClanJoin;
 import lineage.world.object.item.all_night.ScrollOfOrimArmor;
 import lineage.world.object.item.all_night.ScrollOfOrimWeapon;
 import lineage.world.object.item.all_night.ScrollOfRankPoly;
+import lineage.world.object.item.all_night.ScrollOfRoomtisEnchant;
 import lineage.world.object.item.all_night.ScrollOfWeapon;
 import lineage.world.object.item.all_night.ScrollOfmythRankPoly;
 import lineage.world.object.item.all_night.ScrollTOITeleport;
@@ -418,6 +419,7 @@ public final class ItemDatabase {
 				i.setEnchantPvpDamage(rs.getInt("인챈당 PvP 데미지"));
 				i.setPvpReduction(rs.getInt("PvP 리덕션"));
 				i.setEnchantPvpReduction(rs.getInt("인챈당 PvP 리덕션"));
+				i.setExpireTime(rs.getInt("expire_time"));
 
 				try {
 					StringBuffer sb = new StringBuffer();
@@ -562,6 +564,7 @@ public final class ItemDatabase {
 					i.setEnchantPvpDamage(rs.getInt("인챈당 PvP 데미지"));
 					i.setPvpReduction(rs.getInt("PvP 리덕션"));
 					i.setEnchantPvpReduction(rs.getInt("인챈당 PvP 리덕션"));
+					i.setExpireTime(rs.getInt("expire_time"));
 
 					try {
 						StringBuffer sb = new StringBuffer();
@@ -1532,6 +1535,10 @@ public final class ItemDatabase {
 		} else if (item.getType2().equalsIgnoreCase("accessory_scroll")) {
 			// 장신구 주문서
 			return ScrollOfAccessory.clone(getPool(ScrollOfAccessory.class)).clone(item);
+			
+		} else if (item.getType2().equalsIgnoreCase("roomtis_scroll")) {
+			// 룸티스 강화 주문서
+			return ScrollOfRoomtisEnchant.clone(getPool(ScrollOfRoomtisEnchant.class)).clone(item);
 
 		} else if (item.getType2().equalsIgnoreCase("scroll_orim_armor")) {
 			// 오림의 갑옷 마법 주문서
