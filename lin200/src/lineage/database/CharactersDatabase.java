@@ -1147,74 +1147,7 @@ public final class CharactersDatabase {
 		Inventory inv = pc.getInventory();
 		if (inv == null)
 			return;
-/*
-		Connection con = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
-		try {
-			con = DatabaseConnection.getLineage();
-			st = con.prepareStatement("SELECT * FROM characters_inventory WHERE cha_objId=?");
-			st.setLong(1, pc.getObjectId());
-			rs = st.executeQuery();
-			while (rs.next()) {
-				try {					
-					ItemInstance item = ItemDatabase.newInstance(ItemDatabase.find(rs.getString("name")));
-					if (item != null) {
-						item.setObjectId(rs.getInt(1));
-						item.setCount(rs.getLong(5));
-						item.setQuantity(rs.getInt(6));
-						item.setEnLevel(rs.getInt(7));
-						item.setEquipped(rs.getInt(8) == 1);
-						item.setDefinite(rs.getInt(9) == 1);
-						item.setBless(rs.getInt(10));
-						item.setDurability(rs.getInt(11));
-						item.setNowTime(rs.getInt(12));
-						item.setPetObjectId(rs.getInt(13));
-						item.setInnRoomKey(rs.getInt(14));
-						item.setLetterUid(rs.getInt(15));
-						item.setRaceTicket(rs.getString(16));
-						item.setEnFire(rs.getInt(20));
-						item.setEnWater(rs.getInt(21));
-						item.setEnWind(rs.getInt(22));
-						item.setEnEarth(rs.getInt(23));
-                        item.setDeleteTime(rs.getInt(24));
 
-						if (item.isEquipped() && item.getItem().getType2().equalsIgnoreCase("fishing_rod")) {
-							item.setEquipped(false);
-							pc.setGfxMode(0);
-							pc.toSender(S_ObjectAction.clone(BasePacketPooling.getPool(S_ObjectAction.class), pc, pc.getGfxMode()), true);
-						}
-
-						// 편지지일경우 월드 업데이트를 우선함.
-						if (item instanceof Letter) {
-							// 착용중인 아이템 정보 갱신.
-							item.toWorldJoin(con, pc);
-							// 인벤에 등록하면서 패킷 전송.
-							inv.append(item, Lineage.server_version <= 200);
-						} else {
-							// 인벤에 등록하면서 패킷 전송.
-							inv.append(item, Lineage.server_version <= 200);
-							// 착용중인 아이템 정보 갱신.
-							item.toWorldJoin(con, pc);
-						}
-					}
-				} catch (Exception e) {
-					lineage.share.System.printf("%s : 인벤 로드 에러.\r\n", CharactersDatabase.class.toString());
-					lineage.share.System.println(e + "   캐릭터: " + pc.getName());
-				}
-			}
-			if (Lineage.server_version > 200)
-				pc.toSender(S_InventoryList.clone(BasePacketPooling.getPool(S_InventoryList.class), inv));
-			
-		} catch (Exception e) {
-			lineage.share.System.printf("%s : readInventory(PcInstance pc)\r\n", CharactersDatabase.class.toString());
-			lineage.share.System.println(e + "   캐릭터: " + pc.getName());
-		} finally {
-			DatabaseConnection.close(con, st, rs);
-		}
-	}
-*/
-		
 		try (Connection con = DatabaseConnection.getLineage();
 			     PreparedStatement st = con.prepareStatement("SELECT * FROM characters_inventory WHERE cha_objId=?")) {
 			    st.setLong(1, pc.getObjectId());
@@ -1223,29 +1156,31 @@ public final class CharactersDatabase {
 			            try {
 			                ItemInstance item = ItemDatabase.newInstance(ItemDatabase.find(rs.getString("name")));
 			                if (item != null) {
-								item.setObjectId(rs.getInt(1));
-								item.setCount(rs.getLong(5));
-								item.setQuantity(rs.getInt(6));
-								item.setEnLevel(rs.getInt(7));
-								item.setEquipped(rs.getInt(8) == 1);
-								item.setDefinite(rs.getInt(9) == 1);
-								item.setBless(rs.getInt(10));
-								item.setDurability(rs.getInt(11));
-								item.setNowTime(rs.getInt(12));
-								item.setPetObjectId(rs.getInt(13));
-								item.setInnRoomKey(rs.getInt(14));
-								item.setLetterUid(rs.getInt(15));
-								item.setRaceTicket(rs.getString(16));
-								item.setEnFire(rs.getInt(20));
-								item.setEnWater(rs.getInt(21));
-								item.setEnWind(rs.getInt(22));
-								item.setEnEarth(rs.getInt(23));
-								item.setInvDolloptionA(rs.getInt(24));
-								item.setInvDolloptionB(rs.getInt(25));
-								item.setInvDolloptionC(rs.getInt(26));
-								item.setInvDolloptionD(rs.getInt(27));
-								item.setInvDolloptionE(rs.getInt(28));
-								item.setItemNowTime(rs.getLong(29));
+			                    item.setObjectId(rs.getInt(1));    // objId
+			                    // 2, 3, 4번은 캐릭터ID, 캐릭터명, 아이템명이니 패스
+			                    item.setCount(rs.getLong(5));      // count
+			                    item.setQuantity(rs.getInt(6));    // quantity
+			                    item.setEnLevel(rs.getInt(7));     // en
+			                    item.setEquipped(rs.getInt(8) == 1); // equipped
+			                    item.setDefinite(rs.getInt(9) == 1); // definite
+			                    item.setBless(rs.getInt(10));      // bress
+			                    item.setDurability(rs.getInt(11));  // durability
+			                    item.setNowTime(rs.getInt(12));    // nowtime
+			                    item.setPetObjectId(rs.getInt(13)); // pet_objid
+			                    item.setInnRoomKey(rs.getInt(14));  // inn_key
+			                    item.setLetterUid(rs.getInt(15));   // letter_uid
+			                    item.setRaceTicket(rs.getString(16)); // slimerace
+			                    // 17(구분1), 18(구분2) 패스
+			                    item.setEnFire(rs.getInt(20));  // ★ 20번부터 읽어옴
+			                    item.setEnWater(rs.getInt(21));
+			                    item.setEnWind(rs.getInt(22));
+			                    item.setEnEarth(rs.getInt(23));
+			                    item.setInvDolloptionA(rs.getInt(24));
+			                    item.setInvDolloptionB(rs.getInt(25));
+			                    item.setInvDolloptionC(rs.getInt(26));
+			                    item.setInvDolloptionD(rs.getInt(27));
+			                    item.setInvDolloptionE(rs.getInt(28));
+			                    item.setExpireTime(rs.getLong(29)); // ★ 29번에서 만료시간 로드
 			                    if (item.isEquipped() && "fishing_rod".equalsIgnoreCase(item.getItem().getType2())) {
 			                        item.setEquipped(false);
 			                        pc.setGfxMode(0);
@@ -1279,7 +1214,6 @@ public final class CharactersDatabase {
 			    lineage.share.System.println(e + "   캐릭터: " + pc.getName());
 			}
 	}
-	
 	/**
 	 * 스킬 정보 추출.
 	 * 
@@ -1704,7 +1638,7 @@ public final class CharactersDatabase {
 							continue;
 						}
 						st = con.prepareStatement("INSERT INTO characters_inventory SET " + "objId=?, cha_objId=?, cha_name=?, name=?, count=?, quantity=?, en=?, equipped=?, definite=?, bress=?, "
-								+ "durability=?, nowtime=?, pet_objid=?, inn_key=?, letter_uid=?, slimerace=?, 구분1=?, 구분2=?, enfire=?, enwater=?, enwind=?, enearth=?, deletetime=?");
+								+ "durability=?, nowtime=?, pet_objid=?, inn_key=?, letter_uid=?, slimerace=?, 구분1=?, 구분2=?, deletetime=?");
 						st.setLong(1, item.getObjectId());
 						st.setLong(2, pc.getObjectId());
 						st.setString(3, pc.getName());
@@ -1723,7 +1657,7 @@ public final class CharactersDatabase {
 						st.setString(16, item.getRaceTicket());
 						st.setString(17, item.getItem().getType1());
 						st.setString(18, item.getItem().getType2());
-                        st.setLong(19, item.getDeleteTime());
+                                                st.setLong(19, item.getDeleteTime());
 						st.executeUpdate();
 					} catch (Exception e) {
 						lineage.share.System.printf("%s : 캐릭터 인벤 저장 에러. 캐릭명: %s  아이템: %s(%d)\r\n", CharactersDatabase.class.toString(), pc.getName(), item.getItem().getName(), item.getCount());
@@ -1732,7 +1666,7 @@ public final class CharactersDatabase {
 						DatabaseConnection.close(st);
 					}
 				}
-			}
+			}				
 		} catch (Exception e) {
 			lineage.share.System.printf("%s : saveInventory(Connection con, PcInstance pc)\r\n", CharactersDatabase.class.toString());
 			lineage.share.System.println(e);
@@ -1741,7 +1675,7 @@ public final class CharactersDatabase {
 		}
 	}
 */
-		
+
 		/**
 		 * 인벤토리 정보 저장 함수 개선 (죽림)
 		 * 2023-03-08
@@ -1749,8 +1683,8 @@ public final class CharactersDatabase {
 		 * @param con
 		 * @param pc
 		 */
-		String insertQuery = "INSERT INTO characters_inventory (objId, cha_objId, cha_name, name, count, quantity, en, equipped, definite, bress, durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, 구분1, 구분2, enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, dolloption_c, dolloption_d, dolloption_e, item_now_time) " +
-		        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // INSERT 문 변경
+		String insertQuery = "INSERT INTO characters_inventory (objId, cha_objId, cha_name, name, count, quantity, en, equipped, definite, bress, durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, 구분1, 구분2, options, enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, dolloption_c, dolloption_d, dolloption_e, expire_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement deleteStatement = null;
 		PreparedStatement insertStatement = null;
@@ -1795,16 +1729,20 @@ public final class CharactersDatabase {
 		            insertStatement.setString(16, item.getRaceTicket());
 		            insertStatement.setString(17, item.getItem().getType1());
 		            insertStatement.setString(18, item.getItem().getType2());
-		            insertStatement.setInt(19, item.getEnFire());
-		            insertStatement.setInt(20, item.getEnWater());
-		            insertStatement.setInt(21, item.getEnWind());
-		            insertStatement.setInt(22, item.getEnEarth());
-		            insertStatement.setInt(23, item.getInvDolloptionA());
-		            insertStatement.setInt(24, item.getInvDolloptionB());
-		            insertStatement.setInt(25, item.getInvDolloptionC());
-		            insertStatement.setInt(26, item.getInvDolloptionD());
-		            insertStatement.setInt(27, item.getInvDolloptionE()); // 수정된 인덱스
-		            insertStatement.setLong(28, item.getItemNowTime());
+
+		            insertStatement.setString(19, ""); // ★ 중요: DB의 options 컬럼 자리를 공백으로 채움 (19번)
+
+		            insertStatement.setInt(20, item.getEnFire());   // 20번부터 한 칸씩 밀림
+		            insertStatement.setInt(21, item.getEnWater());
+		            insertStatement.setInt(22, item.getEnWind());
+		            insertStatement.setInt(23, item.getEnEarth());
+		            insertStatement.setInt(24, item.getInvDolloptionA());
+		            insertStatement.setInt(25, item.getInvDolloptionB());
+		            insertStatement.setInt(26, item.getInvDolloptionC());
+		            insertStatement.setInt(27, item.getInvDolloptionD());
+		            insertStatement.setInt(28, item.getInvDolloptionE());
+		            insertStatement.setLong(29, item.getExpireTime()); // ★ 드디어 29번에 시간이 박힙니다!
+		     
 
 		            insertStatement.addBatch(); // 배치에 INSERT 문 추가
 		        }
@@ -1829,7 +1767,7 @@ public final class CharactersDatabase {
 		    DatabaseConnection.close(insertStatement);
 		}
 	}
-		
+	
 	/**
 	 * 스킬 정보 저장 함수.
 	 * 
@@ -2410,5 +2348,27 @@ public final class CharactersDatabase {
 		} finally {
 			DatabaseConnection.close(con, st);
 		}
+	}
+	
+	// CharactersDatabase.java 내에 추가
+	public static double findExpByName(String name) {
+	    double exp = 0;
+	    Connection con = null;
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+	    try {
+	        con = DatabaseConnection.getLineage();
+	        st = con.prepareStatement("SELECT exp FROM characters WHERE name=?");
+	        st.setString(1, name);
+	        rs = st.executeQuery();
+	        if (rs.next()) {
+	            exp = rs.getDouble(1);
+	        }
+	    } catch (Exception e) {
+	        // 예외 로그
+	    } finally {
+	        DatabaseConnection.close(con, st, rs);
+	    }
+	    return exp;
 	}
 }

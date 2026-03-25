@@ -2918,40 +2918,34 @@ public class PcInstance extends Character {
 	}
 
 	@Override
-	public void toTimer(long time) {
+    public void toTimer(long time) {
+        if (this.getInventory() != null) {
+            // 현재 시간을 '초' 단위로 가져옴
+            long currentTime = System.currentTimeMillis() / 1000; 
+            
+            for (lineage.world.object.instance.ItemInstance invenItem : this.getInventory().getList()) {
+                if (invenItem == null || invenItem.getItem() == null) continue;
+                
+                // 1. 나비켓 아이템 설정값 (예: 2592000초 = 30일)
+                long duration = invenItem.getItem().getExpireTime();
+                
+                if (duration > 0) {
+                    // 2. 만약 아이템에 저장된 시간이 없다면(최초 인식), 현재시간 + 기간으로 세팅
+                    if (invenItem.getDeleteTime() <= 0) {
+                        invenItem.setDeleteTime(currentTime + duration);
+                    }
 
-		// ▼▼▼ [1단계] DB 연동형 기간제 자동화 (실시간 패킷 갱신 포함) ▼▼▼
-		if (this.getInventory() != null) {
-			long currentTime = time / 1000; // 현재 시간(초)
-			
-			for (lineage.world.object.instance.ItemInstance invenItem : this.getInventory().getList()) {
-				if (invenItem == null || invenItem.getItem() == null) continue;
-				
-				// 나비켓 '사용기간(초)' 값을 가져옵니다.
-				int duration = invenItem.getItem().getExpireTime();
-				
-				if (duration > 0) { 
-					// 1. 처음 획득 시: 도장이 안 찍혀 있다면 도장 쾅!
-					if (invenItem.getDeleteTime() == 0) {
-						invenItem.setDeleteTime(currentTime + duration);
-						// [리셋 방지] 메모리 상태 갱신 (에러 발생 시 이 줄만 삭제하세요)
-						// invenItem.toUpdate(); 
-					}
-					
-					// ★ [중요 수정] 패킷 전송을 조건문 밖으로 뺐습니다.
-					// 이렇게 해야 유저가 인벤토리를 열 때마다 서버가 깎인 시간을 새로 계산해서 보내줍니다.
-					this.toSender(lineage.network.packet.server.S_InventoryStatus.clone(lineage.network.packet.BasePacketPooling.getPool(lineage.network.packet.server.S_InventoryStatus.class), invenItem));
-					
-					// 2. 만료 처리: 도장 찍힌 시간이 현재 시간보다 과거라면 삭제
-					if (invenItem.getDeleteTime() < currentTime) {
-						String expiredName = invenItem.getItem().getName();
-						this.getInventory().count(invenItem, 0, true);
-						lineage.world.controller.ChattingController.toChatting(this, "[알림] " + expiredName + " 아이템의 사용기간이 만료되었습니다.", 20);
-					}
-				}
-			}
-		}
-		// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+                    // 3. ★ 핵심: 패킷을 보내기 전에 시간을 다시 한번 확인 시켜줍니다.
+                    // 이 패킷(S_InventoryStatus)이 아이템의 '남은 시간'을 클라이언트로 보냅니다.
+                    this.toSender(lineage.network.packet.server.S_InventoryStatus.clone(lineage.network.packet.BasePacketPooling.getPool(lineage.network.packet.server.S_InventoryStatus.class), invenItem));                    
+                    // 4. 만료 처리 (현재 시간이 저장된 시간보다 크면 삭제)
+                    if (invenItem.getDeleteTime() < currentTime) {
+                        this.getInventory().count(invenItem, 0, true);
+                        lineage.world.controller.ChattingController.toChatting(this, "[알림] 기간 만료로 삭제되었습니다.", 20);
+                    }
+                }
+            }
+        }
 
 
 		// ▼▼▼ [2단계] 스킬 쿨타임(딜레이) 알림 시스템 (원본 유지) ▼▼▼

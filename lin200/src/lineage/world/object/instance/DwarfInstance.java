@@ -210,6 +210,7 @@ public class DwarfInstance extends object {
 						int DolloptionC = rs.getInt(22);
 						int DolloptionD = rs.getInt(23);
 						int DolloptionE = rs.getInt(24);
+						long db_expire_time = rs.getLong(25);
 						// log 용
 						String item_name = null;
 						long item_objid = db_inv_id;
@@ -245,6 +246,7 @@ public class DwarfInstance extends object {
 										temp.setInvDolloptionC(DolloptionC);
 										temp.setInvDolloptionD(DolloptionD);
 										temp.setInvDolloptionE(DolloptionE);
+										temp.setExpireTime(db_expire_time);
 										pc.getInventory().append(temp, true);
 										// 아이템 정보 갱신.
 										temp.toWorldJoin(con, pc);

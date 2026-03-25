@@ -28,7 +28,6 @@ public class WarehouseDatabase {
 		TimeLine.end();
 	}
 	
-
 	
 	static public Warehouse getPool(){
 		Warehouse wh = null;
@@ -196,7 +195,7 @@ public class WarehouseDatabase {
 		if(dwarf_type == Lineage.DWARF_TYPE_CLAN)
 			wh.setClanId( rs.getInt("clan_id") );
 		else
-			wh.setAccountUid( rs.getInt("account_uid") );
+		wh.setAccountUid( rs.getInt("account_uid") );
 		wh.setInvId( rs.getInt("inv_id") );
 		wh.setPetId( rs.getInt("pet_id") );
 		wh.setLetterId( rs.getInt("letter_id") );
@@ -214,6 +213,7 @@ public class WarehouseDatabase {
 		wh.setEnwater( rs.getInt("enwater") );  
 		wh.setEnwind( rs.getInt("enwind") );  
 		wh.setEnearth( rs.getInt("enearth") );  
+		wh.setExpireTime( rs.getLong("expire_time") );
 		//
 		Item item = ItemDatabase.find(wh.getName());
 		if(item != null) {
@@ -277,13 +277,13 @@ public class WarehouseDatabase {
 			con = DatabaseConnection.getLineage();
 			switch(dwarf_type){
 				case Lineage.DWARF_TYPE_CLAN:
-					st = con.prepareStatement("INSERT INTO warehouse_clan SET clan_id=?, inv_id=?, name=?, type=?, gfxid=?, count=?, quantity=?, en=?, definite=?, bress=?, durability=?, time=?, pet_id=?, letter_id=?,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=?");
+					st = con.prepareStatement("INSERT INTO warehouse_clan SET clan_id=?, inv_id=?, name=?, type=?, gfxid=?, count=?, quantity=?, en=?, definite=?, bress=?, durability=?, time=?, pet_id=?, letter_id=?,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=?, expire_time=?");
 					break;
 				case Lineage.DWARF_TYPE_ELF:
-					st = con.prepareStatement("INSERT INTO warehouse_elf SET account_uid=?, inv_id=?, name=?, type=?, gfxid=?, count=?, quantity=?, en=?, definite=?, bress=?, durability=?, time=?, pet_id=?, letter_id=?,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=?");
+					st = con.prepareStatement("INSERT INTO warehouse_elf SET account_uid=?, inv_id=?, name=?, type=?, gfxid=?, count=?, quantity=?, en=?, definite=?, bress=?, durability=?, time=?, pet_id=?, letter_id=?,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=?, expire_time=?");
 					break;
 				default:
-					st = con.prepareStatement("INSERT INTO warehouse SET account_uid=?, inv_id=?, name=?, type=?, gfxid=?, count=?, quantity=?, en=?, definite=?, bress=?, durability=?, time=?, pet_id=?, letter_id=?,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=?");
+					st = con.prepareStatement("INSERT INTO warehouse SET account_uid=?, inv_id=?, name=?, type=?, gfxid=?, count=?, quantity=?, en=?, definite=?, bress=?, durability=?, time=?, pet_id=?, letter_id=?,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=?, expire_time=?");
 					break;
 			}
 			st.setInt(1, uid);
@@ -309,6 +309,7 @@ public class WarehouseDatabase {
 			st.setInt(21, item.getInvDolloptionC());
 			st.setInt(22, item.getInvDolloptionD());
 			st.setInt(23, item.getInvDolloptionE());
+			st.setLong(24, item.getExpireTime());
 			st.executeUpdate();
 		} catch (Exception e) {
 			lineage.share.System.println(WarehouseDatabase.class.toString()+" : insert(ItemInstance item, int inv_id, int count, int uid, int dwarf_type)");

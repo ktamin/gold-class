@@ -122,8 +122,26 @@ public class ItemInstance extends object implements BuffInterface {
 		DolloptionA = DolloptionB = DolloptionC = DolloptionD = DolloptionE = 0;
 		dynamicSp = dynamicReduction = dynamicIgnoreReduction = dynamicSwordCritical = dynamicBowCritical = dynamicMagicCritical = 0;
 		tollTipMp = tollTipSp = tollTipHealingPotion = tollTipStunDefens = tollTipHp = tollTipReduction = tollTipHit = tollTipDmg = tollTipMr = tollTipPvPReduction = tollTipPvPDmg = 0;
-		itemnowTime = 0;
+		deleteTime = 0;
 
+	}
+	
+	public void updateExpireTime() {
+	    java.sql.Connection con = null;
+	    java.sql.PreparedStatement pstm = null;
+	    try {
+	        con = lineage.database.DatabaseConnection.getLineage(); 
+	        // ★ 나비켓 첫번째 컬럼이 objId라면 아래처럼 써야 에러가 안 납니다.
+	        pstm = con.prepareStatement("UPDATE characters_inventory SET expire_time=? WHERE objId=?");
+	        pstm.setLong(1, getDeleteTime()); 
+	        pstm.setLong(2, getObjectId()); 
+	        pstm.executeUpdate();
+	    } catch (Exception e) {
+	        // 에러 발생 시 로그 출력 (테스트용)
+	        // e.printStackTrace(); 
+	    } finally {
+	        lineage.database.DatabaseConnection.close(con, pstm);
+	    }
 	}
 
 	public long getDeleteTime() {
@@ -665,6 +683,14 @@ public class ItemInstance extends object implements BuffInterface {
 	public void setItemNowTime(long itemnowTime) {
 		if (nowTime >= 0)
 			this.itemnowTime = itemnowTime;
+	}
+	
+	public long getExpireTime() {
+	    return deleteTime; 
+	}
+
+	public void setExpireTime(long time) {
+	    this.deleteTime = time; 
 	}
 
 	/**
