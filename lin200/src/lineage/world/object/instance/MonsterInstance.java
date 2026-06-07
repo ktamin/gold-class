@@ -2296,6 +2296,11 @@ public class MonsterInstance extends Character {
 						String.format("%s 획득: %s", msg_db, getMonster().getName()),
 						Lineage.CHATTING_MODE_MESSAGE);
 			}
+			// ✅ [여기에 추가] 전 서버 드랍 공지 호출
+			// 설정에서 몬스터 드랍 메시지가 켜져 있을 때만 발송
+			if (Lineage.is_item_drop_msg_monster) {
+				ItemDropMessageDatabase.sendMessage(pc, ii.getItem().getName(), getMonster().getName());
+			}
 			return true;
 		}
 

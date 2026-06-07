@@ -1,7 +1,11 @@
 package lineage.network.packet.client;
 
+import java.util.List;
+
+import lineage.bean.database.TalkScroll;
 import lineage.database.BackgroundDatabase;
 import lineage.database.NpcSpawnlistDatabase;
+import lineage.database.TalkScrollDatabase;
 import lineage.network.packet.BasePacket;
 import lineage.network.packet.BasePacketPooling;
 import lineage.network.packet.ClientBasePacket;
@@ -42,6 +46,49 @@ public class C_ObjectTalkAction extends ClientBasePacket {
 		String action = readS();
 		String type = readS();
 		object o = pc.findInsideList(objId);
+
+		// 말하는 두루마리
+		if (action != null && action.startsWith("talkscroll")) {
+			try {
+				String[] temp = action.split(" ");
+				if (temp.length < 2)
+					return this;
+
+				int slot = Integer.parseInt(temp[1]) - 1;
+				List<TalkScroll> slotList = TalkScrollDatabase.getDisplaySlotList();
+
+				if (slot < 0 || slot >= slotList.size())
+					return this;
+				TalkScroll ts = slotList.get(slot);
+
+				if (ts == null || TalkScrollDatabase.isTitleSlot(ts))
+					return this;
+
+				// 1. 레벨 부족 체크
+				if (pc.getLevel() < ts.getMinLevel()) {
+					ChattingController.toChatting(pc, "사냥터 입장 레벨이 부족하여 이동할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+					return this;
+				}
+
+				// 2. 아데나 체크 및 차감 후 텔레포트
+				if (ts.getPrice() > 0) {
+					// 💡 운영자님 서버 팩의 아데나 검사/차감 메서드 사용
+					if (pc.getInventory().isAden("아데나", ts.getPrice(), true)) {
+						pc.toTeleport(ts.getX(), ts.getY(), ts.getMap(), true);
+					} else {
+						ChattingController.toChatting(pc, "이동에 필요한 아데나가 부족합니다.", Lineage.CHATTING_MODE_MESSAGE);
+					}
+				} else {
+					// 무료 사냥터는 바로 이동
+					pc.toTeleport(ts.getX(), ts.getY(), ts.getMap(), true);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return this;
+		}
+
 		// f1상점
 		pc.setTempShop(null);
 		// f1상점
@@ -66,7 +113,7 @@ public class C_ObjectTalkAction extends ClientBasePacket {
 			NpcSpawnlistDatabase.yadolantel3.toTalk(pc, action, type, this);
 			return this;
 		}
-		
+
 		if (action.contains("yadolantel1-")) {
 			NpcSpawnlistDatabase.yadolantel1.toTalk(pc, action, type, this);
 			return this;

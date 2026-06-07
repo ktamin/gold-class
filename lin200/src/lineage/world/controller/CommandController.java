@@ -59,6 +59,7 @@ import lineage.database.ServerNoticeDatabase;
 import lineage.database.ServerReloadDatabase;
 import lineage.database.SkillDatabase;
 import lineage.database.SummonListDatabase;
+import lineage.database.TalkScrollDatabase;
 import lineage.database.TeamBattleDatabase;
 import lineage.database.TimeDungeonDatabase;
 import lineage.gui.GuiMain;
@@ -3696,10 +3697,20 @@ public class CommandController {
 	 *         by all_night.
 	 */
 	static public void serverOpenWait() {
+		Lineage.isMonsterSpawn = false; // 1. 몬스터 스폰 차단 설정
 		Lineage.open_wait = true;
 		Lineage.level_max = 10;
 		Lineage.rate_drop = 0;
 		Lineage.rate_aden = 0;
+
+		// 2. 현재 필드에 떠 있는 몬스터 싹 지우기
+		for (MonsterInstance mon : World.getMonsterList()) {
+			if (!mon.isBoss()) {
+				World.removeMonster(mon);
+				mon.toAiThreadDelete();
+				mon.close();
+			}
+		}
 	}
 
 	/**
@@ -3712,11 +3723,14 @@ public class CommandController {
 	static public void serverOpen() {
 		if (Lineage.open_wait) {
 			Lineage.open_wait = false;
+			Lineage.isMonsterSpawn = true; // 1. 몬스터 스폰 차단 해제
+			// 2. 즉시 전 지역 몬스터 소환 실행
+			MonsterSpawnlistDatabase.reload();
 			Lineage.init(true);
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
 					Lineage.CHATTING_MODE_MESSAGE, "서버 오픈대기 종료. 지금부터 정상 배율이 적용됩니다."));
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
-					Lineage.CHATTING_MODE_MESSAGE, String.format("한양 서버에 오신것을 진심으로 환영합니다.")));
+					Lineage.CHATTING_MODE_MESSAGE, String.format("골드 서버에 오신것을 진심으로 환영합니다.")));
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
 					Lineage.CHATTING_MODE_MESSAGE, "F1 도움말과 인베토리에 서버가이드 서버공지는 꼭 한번씩 확인 부탁드립니다."));
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
@@ -4708,6 +4722,9 @@ public class CommandController {
 			case "스핵":
 				HackNoCheckDatabase.reload();
 				break;
+			case "두루마리":
+				TalkScrollDatabase.reload();
+				break;		
 
 			case "아이콘":
 				try {

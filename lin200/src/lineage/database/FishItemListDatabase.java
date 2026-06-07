@@ -30,6 +30,8 @@ public final class FishItemListDatabase {
 				fishList.setItemEnchant(rs.getInt("enchant"));
 				fishList.setItemCountMin(rs.getInt("min_count"));
 				fishList.setItemCountMax(rs.getInt("max_count"));
+				// [추가] DB에서 확률 값을 읽어와서 저장합니다!
+				fishList.setChance(rs.getInt("chance"));
 
 				list.add(fishList);
 			}
@@ -63,6 +65,8 @@ public final class FishItemListDatabase {
 				fishList.setItemEnchant(rs.getInt("enchant"));
 				fishList.setItemCountMin(rs.getInt("min_count"));
 				fishList.setItemCountMax(rs.getInt("max_count"));
+				// [추가] DB에서 확률 값을 읽어와서 저장합니다!
+				fishList.setChance(rs.getInt("chance"));
 
 				list.add(fishList);
 			}

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lineage.bean.database.FishList;
@@ -336,12 +337,32 @@ public final class FishingController {
 	 * }
 	 */
 	public static void startFishing(PcInstance pc) {
+		/*
+		 * // --- [고정 멤버 낚시 금지] ---
+		 * if (!pc.isMember()) {
+		 * // 1. 메시지 출력
+		 * ChattingController.toChatting(pc, "고정 멤버만 낚시 기능을 이용할 수 있습니다.",
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * 
+		 * // 2. ★ 핵심: 낚시 상태를 강제로 꺼버림
+		 * pc.setFishing(false);
+		 * 
+		 * // 3. 낚싯대 아이템을 찾아서 클릭 효과(해제)를 줌
+		 * ItemInstance fishing = pc.getInventory().getSlot(Lineage.SLOT_WEAPON);
+		 * if (fishing != null) {
+		 * fishing.toClick(pc, null); // 낚싯대 사용 취소
+		 * }
+		 * return;
+		 * }
+		 * // --- [고정 멤버 낚시 금지] ---
+		 */
 		ItemInstance fishing = pc.getInventory().getSlot(Lineage.SLOT_WEAPON);
 
-		if (Lineage.open_wait) {
-			ChattingController.toChatting(pc, "오픈대기 상태에서는 불가능합니다", Lineage.CHATTING_MODE_MESSAGE);
-			return;
-		}
+		// if (Lineage.open_wait) {
+		// ChattingController.toChatting(pc, "오픈대기 상태에서는 불가능합니다",
+		// Lineage.CHATTING_MODE_MESSAGE);
+		// return;
+		// }
 		if (fishing == null)
 			return;
 
@@ -388,30 +409,27 @@ public final class FishingController {
 
 	// 낚싯대 마다 시간체크하여 물고기 낚음
 	public static void fishing(PcInstance pc, ItemInstance fishRice, ItemInstance fishing) {
-		if (fishing != null) {
-			// if (pc.getFishingTime() + (1000 * Lineage.fish_delay) <
-			// System.currentTimeMillis()) {
-			// huntFish(pc);
-			// pc.setFishingTime(System.currentTimeMillis());
-			// pc.getInventory().count(fishRice, fishRice.getCount() - 1, true);
-			// }
-			// }
-			// }
-			if (pc.getInventory().getSlot(Lineage.SLOT_WEAPON).getName().contains("고급 성장의 낚싯대")
-					&& pc.getFishingTime() + (1000 * (Lineage.fish_delay / 2)) < System.currentTimeMillis()) {
+		// 1. 전달받은 낚싯대가 정상적으로 존재하는지 최우선으로 안전하게 검사
+		if (fishing != null && fishing.getItem() != null) {
+
+			// 2. 착용 중인 낚싯대의 원본 이름을 가져옵니다.
+			String weaponName = fishing.getItem().getName();
+
+			// 3. 2배속 여부 판단 (이름에 "고급 성장의 낚싯대" 포함 여부)
+			boolean isFast = false;
+			if (weaponName != null && weaponName.contains("고급 성장의 낚싯대")) {
+				isFast = true;
+			}
+
+			// 4. 딜레이 시간 계산 (2배속이면 delay를 반으로 쪼갭니다!)
+			long delayMs = isFast ? (1000 * (Lineage.fish_delay / 2)) : (1000 * Lineage.fish_delay);
+
+			// 5. 계산된 시간(delayMs)이 지났다면 물고기를 낚습니다.
+			if (pc.getFishingTime() + delayMs < System.currentTimeMillis()) {
 				huntFish(pc);
 				pc.setFishingTime(System.currentTimeMillis());
-				// pc.getInventory().count(fishRice, fishRice.getCount() - 1, true);
-				if (fishRice != null && fishRice.getItem() != null) {
-					String nm = fishRice.getItem().getName();
-					if (nm == null || !nm.contains("무한")) {
-						pc.getInventory().count(fishRice, fishRice.getCount() - 1, true);
-					}
-				}
-			} else if (pc.getFishingTime() + (1000 * Lineage.fish_delay) < System.currentTimeMillis()) {
-				huntFish(pc);
-				pc.setFishingTime(System.currentTimeMillis());
-				// pc.getInventory().count(fishRice, fishRice.getCount() - 1, true);
+
+				// 6. 미끼 소모 처리 (무한 미끼가 아닐 경우에만 1개씩 차감)
 				if (fishRice != null && fishRice.getItem() != null) {
 					String nm = fishRice.getItem().getName();
 					if (nm == null || !nm.contains("무한")) {
@@ -421,14 +439,87 @@ public final class FishingController {
 			}
 		}
 	}
+	/*
+	 * // 물고기 낚는 처리
+	 * public static void huntFish(PcInstance pc) {
+	 * Item i = ItemDatabase.find(Lineage.fish_exp);
+	 * // 경험치 지급단
+	 * if (i != null) {
+	 * ItemInstance temp = pc.getInventory().find(i.getName(), i.isPiles());
+	 * 
+	 * if (temp == null) {
+	 * temp = ItemDatabase.newInstance(i);
+	 * temp.setObjectId(ServerDatabase.nextItemObjId());
+	 * temp.setBless(1);
+	 * temp.setEnLevel(0);
+	 * temp.setCount(1);
+	 * temp.setDefinite(true);
+	 * pc.getInventory().append(temp, true);
+	 * } else {
+	 * // 겹치는 아이템이 존재할 경우.
+	 * pc.getInventory().count(temp, temp.getCount() + 1, true);
+	 * }
+	 * }
+	 * 
+	 * if (FishItemListDatabase.getFishList().size() > 0) {
+	 * // fishing_item_list 테이블의 목록중 랜덤으로 하나 추출
+	 * FishList fishList = FishItemListDatabase.getFishList()
+	 * .get(Util.random(0, FishItemListDatabase.getFishList().size() - 1));
+	 * 
+	 * if (fishList != null) {
+	 * Item ii = ItemDatabase.find(fishList.getItemName());
+	 * 
+	 * if (ii != null) {
+	 * ItemInstance temp = pc.getInventory().find(fishList.getItemName(),
+	 * fishList.getItemBless(),
+	 * ii.isPiles());
+	 * int count = Util.random(fishList.getItemCountMin(),
+	 * fishList.getItemCountMax());
+	 * 
+	 * if (temp != null && (temp.getBless() != fishList.getItemBless()
+	 * || temp.getEnLevel() != fishList.getItemEnchant()))
+	 * temp = null;
+	 * 
+	 * if (temp == null) {
+	 * // 겹칠수 있는 아이템이 존재하지 않을경우.
+	 * if (ii.isPiles()) {
+	 * temp = ItemDatabase.newInstance(ii);
+	 * temp.setObjectId(ServerDatabase.nextItemObjId());
+	 * temp.setBless(fishList.getItemBless());
+	 * temp.setEnLevel(fishList.getItemEnchant());
+	 * temp.setCount(count);
+	 * temp.setDefinite(true);
+	 * pc.getInventory().append(temp, true);
+	 * } else {
+	 * for (int idx = 0; idx < count; idx++) {
+	 * temp = ItemDatabase.newInstance(ii);
+	 * temp.setObjectId(ServerDatabase.nextItemObjId());
+	 * temp.setBless(fishList.getItemBless());
+	 * temp.setEnLevel(fishList.getItemEnchant());
+	 * temp.setDefinite(true);
+	 * pc.getInventory().append(temp, true);
+	 * }
+	 * }
+	 * } else {
+	 * // 겹치는 아이템이 존재할 경우.
+	 * pc.getInventory().count(temp, temp.getCount() + count, true);
+	 * }
+	 * 
+	 * ChattingController.toChatting(pc, String.format("%s(%d) 획득: 낚시",
+	 * fishList.getItemName(), count),
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * }
+	 * }
+	 * }
+	 * }
+	 */
 
-	// 물고기 낚는 처리
+	// 물고기 낚는 처리 (확률형으로 수정 완료)
 	public static void huntFish(PcInstance pc) {
+		// 1. 기본 경험치 아이템 지급 (기존 로직 유지)
 		Item i = ItemDatabase.find(Lineage.fish_exp);
-		// 경험치 지급단
 		if (i != null) {
 			ItemInstance temp = pc.getInventory().find(i.getName(), i.isPiles());
-
 			if (temp == null) {
 				temp = ItemDatabase.newInstance(i);
 				temp.setObjectId(ServerDatabase.nextItemObjId());
@@ -438,19 +529,36 @@ public final class FishingController {
 				temp.setDefinite(true);
 				pc.getInventory().append(temp, true);
 			} else {
-				// 겹치는 아이템이 존재할 경우.
 				pc.getInventory().count(temp, temp.getCount() + 1, true);
 			}
 		}
 
-		if (FishItemListDatabase.getFishList().size() > 0) {
-			// fishing_item_list 테이블의 목록중 랜덤으로 하나 추출
-			FishList fishList = FishItemListDatabase.getFishList()
-					.get(Util.random(0, FishItemListDatabase.getFishList().size() - 1));
+		// 2. 가중치 랜덤 아이템 지급 (수정 포인트!)
+		List<FishList> fishPool = FishItemListDatabase.getFishList();
+		if (fishPool.size() > 0) {
+			int totalChance = 0;
+			// 전체 확률 합계 구하기
+			for (FishList f : fishPool) {
+				totalChance += f.getChance();
+			}
 
+			// 0부터 totalChance 사이의 숫자 하나 뽑기
+			int rnd = Util.random(0, totalChance);
+			int currentSum = 0;
+			FishList fishList = null;
+
+			// 뽑힌 숫자가 어느 아이템 구간에 있는지 확인 (가중치 방식)
+			for (FishList f : fishPool) {
+				currentSum += f.getChance();
+				if (rnd <= currentSum) {
+					fishList = f;
+					break;
+				}
+			}
+
+			// 선택된 아이템 지급 처리
 			if (fishList != null) {
 				Item ii = ItemDatabase.find(fishList.getItemName());
-
 				if (ii != null) {
 					ItemInstance temp = pc.getInventory().find(fishList.getItemName(), fishList.getItemBless(),
 							ii.isPiles());
@@ -461,7 +569,6 @@ public final class FishingController {
 						temp = null;
 
 					if (temp == null) {
-						// 겹칠수 있는 아이템이 존재하지 않을경우.
 						if (ii.isPiles()) {
 							temp = ItemDatabase.newInstance(ii);
 							temp.setObjectId(ServerDatabase.nextItemObjId());
@@ -481,7 +588,6 @@ public final class FishingController {
 							}
 						}
 					} else {
-						// 겹치는 아이템이 존재할 경우.
 						pc.getInventory().count(temp, temp.getCount() + count, true);
 					}
 
@@ -501,6 +607,7 @@ public final class FishingController {
 	 *         by all_night.
 	 */
 	public static void isAutoFishing(PcInstance pc) {
+
 		if (getFishRobot(pc.getAccountUid()) != null) {
 			ChattingController.toChatting(pc, "계정에 자동낚시 중인 캐릭터가 존재합니다.", Lineage.CHATTING_MODE_MESSAGE);
 			return;
@@ -544,6 +651,30 @@ public final class FishingController {
 		pc.toSender(S_MessageYesNo.clone(BasePacketPooling.getPool(S_MessageYesNo.class), 778));
 	}
 
+	/*
+	 * public static void startAutoFishing(PcInstance pc, boolean yes) {
+	 * if (yes && pc.isFishing() && !pc.isLock() && !pc.isWorldDelete() &&
+	 * !pc.isDead()) {
+	 * ChattingController.toChatting(pc, "자동낚시 시작. 클라이언트가 종료됩니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * 
+	 * try {
+	 * FishermanInstance fi = new FishermanInstance(pc);
+	 * toSave(fi);
+	 * } catch (Exception e) {
+	 * lineage.share.System.
+	 * printf("%s : startAutoFishing(PcInstance pc, boolean yes)\r\n",
+	 * FishingController.class.toString());
+	 * lineage.share.System.println(e);
+	 * }
+	 * 
+	 * // 사용자 강제종료 시키기.
+	 * pc.toSender(S_Disconnect.clone(BasePacketPooling.getPool(S_Disconnect.class),
+	 * 0x0A));
+	 * LineageServer.close(pc.getClient());
+	 * }
+	 * }
+	 */
 	public static void startAutoFishing(PcInstance pc, boolean yes) {
 		if (yes && pc.isFishing() && !pc.isLock() && !pc.isWorldDelete() && !pc.isDead()) {
 			ChattingController.toChatting(pc, "자동낚시 시작. 클라이언트가 종료됩니다.", Lineage.CHATTING_MODE_MESSAGE);
@@ -551,13 +682,14 @@ public final class FishingController {
 			try {
 				FishermanInstance fi = new FishermanInstance(pc);
 				toSave(fi);
+
 			} catch (Exception e) {
 				lineage.share.System.printf("%s : startAutoFishing(PcInstance pc, boolean yes)\r\n",
 						FishingController.class.toString());
 				lineage.share.System.println(e);
 			}
 
-			// 사용자 강제종료 시키기.
+			// 사용자 강제종료 시키기. (이때 튕겨도 이미 DB 저장이 끝났으므로 안전함!)
 			pc.toSender(S_Disconnect.clone(BasePacketPooling.getPool(S_Disconnect.class), 0x0A));
 			LineageServer.close(pc.getClient());
 		}

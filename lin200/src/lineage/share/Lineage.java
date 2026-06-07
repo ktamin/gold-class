@@ -24,7 +24,6 @@ public final class Lineage {
 	static public int server_version;
 	// 시장 맵번호
 	static public int market_map = 800;
-	
 
 	// 서버 명령어 필터
 	static public String command;
@@ -46,7 +45,7 @@ public final class Lineage {
 	static public boolean is_pvp_auto_potion;
 	// 채금시 명령어 사용 여부
 	static public boolean is_chatting_close_command;
-	
+
 	// 기란 공성전 진행 시간
 	static public int giran_kingdom_war_hour;
 	// 기란 공성전 진행 분
@@ -55,7 +54,7 @@ public final class Lineage {
 	static public int giran_kingdom_crown_min;
 	// 면류관 주웠을 시 몇초마다 메세지 날릴지(초)
 	static public int giran_kingdom_crown_msg_count;
-	
+
 	// 결투장 사용 여부
 	static public boolean is_battle_zone;
 	// 결투장 좌표
@@ -64,36 +63,39 @@ public final class Lineage {
 	static public int battle_zone_x2;
 	static public int battle_zone_y2;
 	static public int battle_zone_map;
-	
+
 	static public boolean is_wjsxn;
-    static public boolean is_tnsrks;
-    static public boolean is_qustls;
-    static public boolean is_tlstjd;
-    static public boolean is_1cmdwlqo;
-    static public boolean is_5cmdwlqo;
-    static public boolean is_10cmdwlqo;
-    
-    static public boolean is_gmlrnl; // 희귀 제작 비법서
+	static public boolean is_tnsrks;
+	static public boolean is_qustls;
+	static public boolean is_tlstjd;
+	static public boolean is_1cmdwlqo;
+	static public boolean is_5cmdwlqo;
+	static public boolean is_10cmdwlqo;
+
+	static public boolean is_gmlrnl; // 희귀 제작 비법서
 	static public boolean is_duddnd; // 영웅 제작 비법서
 	static public boolean is_wjstjf; // 전설 제작 비법서
 	static public boolean is_tlsghk; // 신화 제작 비법서
-	
-    // 지배반지 제작 성공 확률 (기본값 10%)
-    public static double domring_success_rate = 0.10; // 기본값 10%
-    
-    //자동매입 스위치
-    public static boolean is_autosell_global = true;
-    
-    static public boolean oman = false;
-    static public boolean oman2 = false;
-    static public boolean oman3 = false;
-    static public boolean oman4 = false;
-    
-    static public volatile double doll_aden_bonus_knight = 0.0;
-    static public volatile double doll_aden_bonus_elf    = 0.0;
-    static public volatile double doll_aden_bonus_wizard = 0.0;
-    static public volatile double doll_aden_bonus_lord   = 0.0;
-        
+
+	// 서버 켜질 때 기본값은 OFF (오픈 대기용)
+	static public boolean isMonsterSpawn = false;
+
+	// 지배반지 제작 성공 확률 (기본값 10%)
+	public static double domring_success_rate = 0.10; // 기본값 10%
+
+	// 자동매입 스위치
+	public static boolean is_autosell_global = true;
+
+	static public boolean oman = false;
+	static public boolean oman2 = false;
+	static public boolean oman3 = false;
+	static public boolean oman4 = false;
+
+	static public volatile double doll_aden_bonus_knight = 0.0;
+	static public volatile double doll_aden_bonus_elf = 0.0;
+	static public volatile double doll_aden_bonus_wizard = 0.0;
+	static public volatile double doll_aden_bonus_lord = 0.0;
+
 	static public int world_result = 1;
 	static public int go_hell = 1;
 	static public int go_dragon = 1;
@@ -114,6 +116,33 @@ public final class Lineage {
 	static public int go_goras = 1;
 	static public int go_dwarf = 1;
 	static public int go_omman10 = 1;
+
+	// 오만 텔레포트 층별 ON/OFF 변수
+	public static boolean OMAN_1F_ENABLE;
+	public static boolean OMAN_2F_ENABLE;
+	public static boolean OMAN_3F_ENABLE;
+	public static boolean OMAN_4F_ENABLE;
+	public static boolean OMAN_5F_ENABLE;
+	public static boolean OMAN_6F_ENABLE;
+	public static boolean OMAN_7F_ENABLE;
+	public static boolean OMAN_8F_ENABLE;
+	public static boolean OMAN_9F_ENABLE;
+	public static boolean OMAN_10F_ENABLE;
+	public static boolean OMAN_11F_ENABLE; // 정상 등
+
+	// 오만 텔레포트 층별 ON/OFF 변수
+	public static int OMAN_1F_LEVEL;
+	public static int OMAN_2F_LEVEL;
+	public static int OMAN_3F_LEVEL;
+	public static int OMAN_4F_LEVEL;
+	public static int OMAN_5F_LEVEL;
+	public static int OMAN_6F_LEVEL;
+	public static int OMAN_7F_LEVEL;
+	public static int OMAN_8F_LEVEL;
+	public static int OMAN_9F_LEVEL;
+	public static int OMAN_10F_LEVEL;
+	public static int OMAN_11F_LEVEL; // 정상 등
+
 	// 결투장에서 상대방 피바 보일지 여부
 	static public boolean is_battle_zone_hp_bar;
 	// 매입상인에게 팔경우 아이템 가격의 몇%로 팔지 여부
@@ -158,33 +187,32 @@ public final class Lineage {
 	static public int teamBattleMap = 509;
 	// 팀대전 입장 인원
 	static public int teamBattle_max_pc;
-	
-	//보상코인 
+
+	// 보상코인
 	static public int reward_coin_password_min_len = 4;
 	static public int reward_coin_password_max_len = 32;
-	
+
 	// 보상코인
 	public static boolean reward_coin_save_cmd_on = true;
 	public static boolean reward_coin_redeem_cmd_on = true;
-	public static String  reward_coin_item_name = "보상 코인";
-	public static String  reward_coin_season_tag = null;
-	
-	public static int reward_coin_min_level_save   = 70;
+	public static String reward_coin_item_name = "보상 코인";
+	public static String reward_coin_season_tag = null;
+
+	public static int reward_coin_min_level_save = 70;
 	public static int reward_coin_min_level_redeem = 70;
-	
+
 	// 기본값(고정): 절대 변경 안 됨
 	public static final String REWARD_COIN_REQUIRED_ITEM_NAME_DEFAULT = "변신 지배 반지(각인)";
-	public static final int    REWARD_COIN_MAX_SAVES_PER_SEASON_DEFAULT = 1;
-	public static final long   REWARD_COIN_MIN_SAVE_DEFAULT = 1L;
-	public static final long   REWARD_COIN_MAX_SAVE_DEFAULT = 1_000_000_000L;
+	public static final int REWARD_COIN_MAX_SAVES_PER_SEASON_DEFAULT = 1;
+	public static final long REWARD_COIN_MIN_SAVE_DEFAULT = 1L;
+	public static final long REWARD_COIN_MAX_SAVE_DEFAULT = 1_000_000_000L;
 
 	// 가변값(설정 로더가 바꾸는 대상): 초기값은 기본값으로 세팅
 	public static String reward_coin_required_item_name = REWARD_COIN_REQUIRED_ITEM_NAME_DEFAULT;
-	public static int    reward_coin_max_saves_per_season = REWARD_COIN_MAX_SAVES_PER_SEASON_DEFAULT;
-	public static long   reward_coin_min_save = REWARD_COIN_MIN_SAVE_DEFAULT;
-	public static long   reward_coin_max_save = REWARD_COIN_MAX_SAVE_DEFAULT;
+	public static int reward_coin_max_saves_per_season = REWARD_COIN_MAX_SAVES_PER_SEASON_DEFAULT;
+	public static long reward_coin_min_save = REWARD_COIN_MIN_SAVE_DEFAULT;
+	public static long reward_coin_max_save = REWARD_COIN_MAX_SAVE_DEFAULT;
 
-	
 	// 팀대전 입장 최소 레벨
 	static public int teamBattle_level;
 	// 팀대전 혈맹 이름
@@ -199,7 +227,7 @@ public final class Lineage {
 	public static String team_battle_open_days;
 	public static String world_boss_open_days;
 	public static String spot_battle_open_days;
-	
+
 	// 팀대전
 	public static List<Integer> team_battle_open_day_list = new ArrayList<>();
 	// 스팟전
@@ -207,8 +235,6 @@ public final class Lineage {
 	// (월드보스도 동일하게 이미 선언한 게 없다면)
 	public static List<Integer> world_boss_open_day_list = new ArrayList<>();
 
-	
-	
 	// 신규, 팀대전 혈맹 이외에 다른혈맹 가입시 2중(스파이) 혈맹을 가질수 있는지 여부
 	static public boolean is_two_clan_join = false;
 	// 난투전 맵
@@ -263,10 +289,9 @@ public final class Lineage {
 	static public int oman_join_item_count;
 	// 무혈 오만의 탑 정상 이용 가능 여부
 	static public boolean is_no_clan_oman_top;
-	// 오만의 탑 수배자 입장 가능 여부	
+	// 오만의 탑 수배자 입장 가능 여부
 	static public boolean is_wanted_oman_top;
-	
-	
+
 	// 잊혀진 섬 입장 가능 여부
 	static public boolean is_lost_island_join = true;
 	// 잊혀진 섬 입장 레벨
@@ -275,7 +300,7 @@ public final class Lineage {
 	static public String lost_island_join_item;
 	// 잊혀진 섬 입장시 필요 아이템 갯수
 	static public int lost_island_join_item_count;
-	
+
 	// 기르타스 성지 입장 가능 여부
 	static public boolean is_girtas_join = true;
 	// 기르타스 성지 입장 레벨
@@ -284,7 +309,7 @@ public final class Lineage {
 	static public String girtas_join_item;
 	// 기르타스 성지 입장시 필요 아이템 갯수
 	static public int girtas_join_item_count;
-	
+
 	// 정령의 무덤 입장 가능 여부
 	static public boolean is_jungmu_join = true;
 	// 정령의 무덤 입장 레벨
@@ -293,7 +318,7 @@ public final class Lineage {
 	static public String jungmu_join_item;
 	// 정령의 무덤 입장시 필요 아이템 갯수
 	static public int jungmu_join_item_count;
-	
+
 	// 테베 사막 입장 가능 여부
 	static public boolean is_tebe1_join = true;
 	// 테베 사막 입장 레벨
@@ -302,31 +327,31 @@ public final class Lineage {
 	static public String tebe1_join_item;
 	// 테베 사막 입장시 필요 아이템 갯수
 	static public int tebe1_join_item_count;
-	
+
 	// 용의 안식처 입장 가능 여부
 	static public boolean is_dragon_heaven_join = true;
-	// 용의 안식처  입장 레벨
+	// 용의 안식처 입장 레벨
 	static public int dragon_heaven_min_level;
-	// 용의 안식처  입장시 필요 아이템
+	// 용의 안식처 입장시 필요 아이템
 	static public String dragon_heaven_join_item;
-	// 용의 안식처  입장시 필요 아이템 갯수
-	static public int dragon_heaven_join_item_count;	
-	
+	// 용의 안식처 입장시 필요 아이템 갯수
+	static public int dragon_heaven_join_item_count;
+
 	// 얼던 입장시 필요 아이템
 	static public String ice_join_item;
 	// 얼던 입장시 필요 아이템 갯수
 	static public int ice_join_item_count;
-	
+
 	// 고라스 입장시 필요 아이템
 	static public String goras_join_item;
 	// 고라스 입장시 필요 아이템 갯수
 	static public int goras_join_item_count;
-	
+
 	// 드워프 광산 입장시 필요 아이템
 	static public String dwarf_join_item;
 	// 드워프 광산 입장시 필요 아이템 갯수
 	static public int dwarf_join_item_count;
-	
+
 	static public int tr_gift = 1;
 	// 성혈맹 가입 여부
 	static public boolean kingdom_clan_join = false;
@@ -337,12 +362,11 @@ public final class Lineage {
 	static public final int ATTACK_TYPE_BOW = 1;
 	static public final int ATTACK_TYPE_MAGIC = 2;
 	static public final int ATTACK_TYPE_DIRECT = 3; // 경비에게 데미지 당햇다고 요청하는구간에 필요해서 만듬.
-	
+
 	// 베릴소모갯수
 	static public int doll_drogon = 1;
 	static public int doll_drogon2 = 1;
 
-	
 	// 마법인형 소환가능한 최대갯수 설정.
 	static public int item_magicdoll_max = 1;
 	// 마법인형이 소환자와 유지할 거리.
@@ -367,7 +391,7 @@ public final class Lineage {
 	// 마을일 경우 틱 +@
 	static public int home_hp_tic;
 	static public int home_mp_tic;
-	
+
 	// 기란감옥 시간제한 사용여부.
 	static public boolean is_giran_dungeon_time;
 	// 기란감옥 이용시간(분)
@@ -376,7 +400,7 @@ public final class Lineage {
 	static public int giran_dungeon_inti_time;
 	// 던전 이용 시간 초기화 알림 여부
 	static public boolean dungeon_inti_time_message;
-	
+
 	// 사망시 이팩트
 	static public int pc_dead_effect = 12111;
 	static public int boss_monster_dead_effect = 384;
@@ -442,7 +466,7 @@ public final class Lineage {
 	static public boolean monster_boss_dead_message;
 	// 보스가 스폰된 후 정해진 시간이내에 못잡을 경우 소멸.
 	static public int boss_live_time;
-	
+
 	// 치명타 이팩트 여부
 	static public boolean is_critical_effect;
 	// 마법 치명타 이팩트 여부
@@ -462,7 +486,7 @@ public final class Lineage {
 	static public int giran_dungeon_level2;
 	static public int giran_dungeon_level3;
 	static public int giran_dungeon_level4;
-		
+
 	// 펫 최대 렙업값.
 	static public int pet_level_max;
 
@@ -611,10 +635,10 @@ public final class Lineage {
 	static public final int TREEY2 = 32341;
 
 	// 낚시터
-	static public final int FISHZONEX1 = 33409; //중앙 아래
-	static public final int FISHZONEX2 = 33420; //중앙 위
-	static public final int FISHZONEY1 = 32804; //왼쪽 위
-	static public final int FISHZONEY2 = 32824; //오른쪽 아래
+	static public final int FISHZONEX1 = 33409; // 중앙 아래
+	static public final int FISHZONEX2 = 33420; // 중앙 위
+	static public final int FISHZONEY1 = 32804; // 왼쪽 위
+	static public final int FISHZONEY2 = 32824; // 오른쪽 아래
 
 	// 기란마을 중앙
 	static public final int HOMEX1 = 33423;
@@ -674,7 +698,7 @@ public final class Lineage {
 	static public boolean kingdom_crown;
 	// 면류관 지급시 축여부
 	static public int kingdom_crown_bless;
-	// 면류관 지급시 인챈트 
+	// 면류관 지급시 인챈트
 	static public int kingdom_crown_enchant;
 	// 공성전 중 전쟁선포된 혈맹원들끼리 pvp 시 카오처리를 할지 여부.
 	static public boolean kingdom_pvp_pk;
@@ -809,7 +833,7 @@ public final class Lineage {
 	static public int blackwizard_max_mp;
 	static public List<FirstSpell> blackwizard_first_spell = new ArrayList<FirstSpell>();
 	static public List<FirstInventory> blackwizard_first_inventory = new ArrayList<FirstInventory>();
-	
+
 	// 아이템 제거 막대로 제거 불가능한 아이템
 	static public List<String> no_remove_item = new ArrayList<String>();
 
@@ -882,7 +906,7 @@ public final class Lineage {
 	// 랭커 변신을 할수있는 순위
 	static public int rank_poly_all;
 	static public int rank_poly_class;
-	
+
 	// 슬라임 레이스표 가격 설정
 	static public int slime_race_price;
 	// 마법인형 레이스 사용 여부
@@ -901,17 +925,17 @@ public final class Lineage {
 	static public double rate_party = 1;
 	static public double rate_exp_pet = 1;
 	// 혈맹 추가 배율
-	static public double clan_rate_drop = 1;	
-	static public double clan_rate_exp = 1;	
+	static public double clan_rate_drop = 1;
+	static public double clan_rate_exp = 1;
 	static public double clan_rate_aden = 1;
 	// 성혈맹 추가 배율
 	static public double kingdom_clan_rate_drop = 1;
-	static public double kingdom_clan_rate_exp = 1;	
+	static public double kingdom_clan_rate_exp = 1;
 	static public double kingdom_clan_rate_aden = 1;
-	
+
 	// 같은화면 안에 존재하는 파티원과 아덴 분배 여부
 	static public boolean is_party_aden_share;
-	
+
 	// 레벨에 따른 경험치 감소
 	static public double lv_50_exp_rate;
 	static public double lv_51_exp_rate;
@@ -954,7 +978,7 @@ public final class Lineage {
 	static public double lv_88_exp_rate;
 	static public double lv_89_exp_rate;
 	static public double lv_90_exp_rate;
-	
+
 	// 보스 추가 아데나
 	static public int class_1_boss_aden_min;
 	static public int class_1_boss_aden_max;
@@ -964,11 +988,11 @@ public final class Lineage {
 	static public int class_3_boss_aden_max;
 	static public int class_4_boss_aden_min;
 	static public int class_4_boss_aden_max;
-	
+
 	public static String boss_reward_box_name = "보스한입상자";
 	public static int boss_reward_box_count = 1;
 	public static int boss_reward_range = 10;
-	
+
 	// 패널티 줄 레벨
 	static public int penalty_level;
 	// 패널티 경험치 배율
@@ -976,9 +1000,9 @@ public final class Lineage {
 	// 경험치 지급단 경험치
 	static public int exp_marble_min;
 	static public int exp_marble_max;
-        static public int exp_marble_min2;
+	static public int exp_marble_min2;
 	static public int exp_marble_max2;
-        static public int exp_marble_min3;
+	static public int exp_marble_min3;
 	static public int exp_marble_max3;
 	// 버프 명령어 공짜 사용 레벨
 	static public int buff_max_level;
@@ -991,10 +1015,10 @@ public final class Lineage {
 	static public int chatting_level_global;
 	static public int chatting_level_normal;
 	static public int chatting_level_whisper;
-	
+
 	// 전체 채팅 매크로 딜레이(초)
 	static public int chatting_global_macro_delay;
-	
+
 	// 무혈, 신규 혈맹을 제외하고 같은 혈맹이 아닐경우 채팅 보일지 여부
 	static public boolean is_chatting_clan;
 
@@ -1008,7 +1032,7 @@ public final class Lineage {
 	// 아이피당 케릭터를 몇개까지 허용할지 여부.
 	static public int ip_character_count;
 	// 아이피당 동시에 몇캐릭까지 접속 허용할지 여부.
-	static public int ip_in_game_count;		
+	static public int ip_in_game_count;
 	// 정액제 활성화 여부.
 	static public boolean flat_rate;
 	// 신규생성 계정에 대한 정액시간값. 분단위
@@ -1022,7 +1046,7 @@ public final class Lineage {
 	static public List<String> kingdom_war_win_item_list = new ArrayList<String>();
 	// 최소 몇인 이상 접속중인 혈맹원이 있을경우 면류관 먹을수 있는지 여부
 	static public int crown_clan_min_people;
-	
+
 	// 기본 세율 값
 	static public int min_tax;
 	static public int max_tax;
@@ -1039,7 +1063,7 @@ public final class Lineage {
 	static public boolean auto_pickup_aden;
 	// 오토루팅 퍼센트 범위.
 	static public int auto_pickup_percent;
-	// 자동저장 시간. 분단위 
+	// 자동저장 시간. 분단위
 	static public int auto_save_time;
 
 	// 덱방 활성화 여부
@@ -1076,7 +1100,7 @@ public final class Lineage {
 	static public final int CLAN_NAME_MAX_SIZE = 9;
 
 	// 최대 ac
-	//static public final int MAX_AC = 190; // -150
+	// static public final int MAX_AC = 190; // -150
 	static public final int MAX_AC = 999; // -265
 
 	// door 오픈 유지값.
@@ -1104,7 +1128,6 @@ public final class Lineage {
 	static public int item_enchant_armor_max = 0;
 	static public int item_enchant_weapon_max = 0;
 	static public int item_enchant_accessory_max = 0;
-
 
 	// 쓰레드 설정
 	// 이벤트 쓰레드 갯수.
@@ -1175,12 +1198,11 @@ public final class Lineage {
 	static public boolean party_pickup_item_print = false;
 	static public int party_exp_level_range = 0;
 	static public boolean party_autopickup_item_print_on_screen = false;
-	
-	//전투멘트
+
+	// 전투멘트
 	static public String war_ment = null;
-	
-	
-	//전투멘트
+
+	// 전투멘트
 	static public String done_ment1 = null;
 	static public String done_ment2 = null;
 	static public String done_ment3 = null;
@@ -1188,7 +1210,7 @@ public final class Lineage {
 	static public String done_ment5 = null;
 	static public String done_ment6 = null;
 	static public String done_ment7 = null;
-	
+
 	// 현상수배 변수.
 	static public boolean wanted_clan = false;
 	static public String wanted_name = "[수배자]";
@@ -1196,7 +1218,7 @@ public final class Lineage {
 	static public int wanted_level_max = 0;
 	static public int wanted_price_min = 0;
 	static public int wanted_price_max = 0;
-	
+
 	static public int f1_tel1 = 0;
 	static public int f1_tel2 = 0;
 	static public int f1_tel3 = 0;
@@ -1211,7 +1233,7 @@ public final class Lineage {
 	static public int f1_tel12 = 0;
 	static public int f1_tel13 = 0;
 	static public int f1_tel14 = 0;
-	
+
 	static public int f2_tel1 = 0;
 	static public int f2_tel2 = 0;
 	static public int f2_tel3 = 0;
@@ -1226,21 +1248,21 @@ public final class Lineage {
 	static public int f2_tel12 = 0;
 	static public int f2_tel13 = 0;
 	static public int f2_tel14 = 0;
-	
+
 	static public boolean user_command = true;
 
-	//보물찾기 상자 재생성 시간
+	// 보물찾기 상자 재생성 시간
 	static public int boxspawn = 1;
-	
+
 	// 경매 남은시간 값. 3일로 설정됨.
 	static public long auction_delay = 259200 * 1000;
 
 	// pvp 변수.
 	static public boolean pvp_print_message = false;
-	
-	//속성강화제한
+
+	// 속성강화제한
 	static public int danlevel;
-	//속성 확률
+	// 속성 확률
 	static public int dan1;
 	static public int dan2;
 	static public int dan3;
@@ -1281,29 +1303,31 @@ public final class Lineage {
 
 	//
 	static public String rank_filter_names_query = null;
-	
-	static public final java.util.Map<Integer, Double> ADENA_MAP_RATES = new java.util.HashMap<Integer, Double>() {{
-	    put(2004, 1.0); 
-	    put(452, 1.0);
-	    put(811, 1.0);
-	    put(56, 1.0);
-	    put(410, 1.0);
-	    put(400, 1.0);
-	    put(666, 1.0);
-	    put(85, 1.0);
-	    put(430, 1.0);
-	    put(5167, 1.0);
-	    put(74, 1.0);
-	    put(781, 1.0);
-	}};
-	
+
+	static public final java.util.Map<Integer, Double> ADENA_MAP_RATES = new java.util.HashMap<Integer, Double>() {
+		{
+			put(2004, 1.0);
+			put(452, 1.0);
+			put(811, 1.0);
+			put(56, 1.0);
+			put(410, 1.0);
+			put(400, 1.0);
+			put(666, 1.0);
+			put(85, 1.0);
+			put(430, 1.0);
+			put(5167, 1.0);
+			put(74, 1.0);
+			put(781, 1.0);
+		}
+	};
+
 	// 보스에게도 맵 배율을 적용할지 여부
 	public static final boolean ADENA_MAP_RATE_APPLY_TO_BOSS = false;
 
 	// 헬퍼(선택)
 	public static double getAdenaMapRate(int mapId) {
-	    Double r = ADENA_MAP_RATES.get(mapId);
-	    return (r == null) ? 1.0 : r;
+		Double r = ADENA_MAP_RATES.get(mapId);
+		return (r == null) ? 1.0 : r;
 	}
 
 	// 죽어도 경험치를 잃어버리지 않는 맵
@@ -1313,26 +1337,28 @@ public final class Lineage {
 	static public int MAP_ITEM_NOT_DROP[] = { 89, 303, 509, 1400 };
 
 	// 수중 맵 목록
-	static public int MAP_AQUA[] = { };
+	static public int MAP_AQUA[] = {};
 
 	// 서먼객체가 이동 불가능한 맵. 또는 소환 불가능한 맵
-	static public int SummonTeleportImpossibleMap[] = { 63, 65, 509 ,807 };
+	static public int SummonTeleportImpossibleMap[] = { 63, 65, 509, 807 };
 
 	// 펫이 이동 불가능한 맵. (사용자가 텔레포트할때 해당 값을 확인해서 처리할지 여부 구분함.)
-	static public int PetTeleportImpossibleMap[] = { 5, 6, 22, 63, 65, 70, 83, 84, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 201, 202, 203, 204, 209, 210, 211, 212, 213, 214,
+	static public int PetTeleportImpossibleMap[] = { 5, 6, 22, 63, 65, 70, 83, 84, 88, 89, 90, 91, 92, 93, 94, 95, 96,
+			97, 98, 201, 202, 203, 204, 209, 210, 211, 212, 213, 214,
 			215, 216, 221, 222, 223, 224, 225, 226, 227, 228, 509 };
-	
+
 	// 마법인형 이동 또는 소환 불가능한 맵
 	static public int MagicDollTeleportImpossibleMap[] = { 509, 807 };
 
 	// 랜덤 텔레포트 가능한 맵
 	// 야도란 정무 추가
-	static public int TeleportPossibleMap[] = { 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 24, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38,
-			39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 68, 69, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 85, 86, 209,
-			210, 211, 212, 213, 214, 215, 216, 300, 301, 304, 400, 401, 410, 420, 430, 440, 441, 445, 452, 480, 522, 523, 524, 604, 605, 666, 777, 781, 811, 780, 783, 809, 810, 811, 812, 73,75,167, 2004, 5167, 15450};
-	
-	
-	
+	static public int TeleportPossibleMap[] = { 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21,
+			24, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38,
+			39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 68,
+			69, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 85, 86, 209,
+			210, 211, 212, 213, 214, 215, 216, 300, 301, 304, 400, 401, 410, 420, 430, 440, 441, 445, 452, 480, 522,
+			523, 524, 604, 605, 666, 777, 781, 811, 780, 783, 809, 810, 811, 812, 73, 75, 167, 2004, 5167, 15450 };
+
 	static public int TeleportPossibleMapLength = TeleportPossibleMap.length;
 
 	// 귀환 및 축순, 이반 불가능한 맵
@@ -1340,9 +1366,12 @@ public final class Lineage {
 	static public final int TeleportHomeImpossibilityMapLength = TeleportHomeImpossibilityMap.length;
 
 	// 각 성별 외성 내부 좌표값
-	static public final int KINGDOMLOCATION[][] = { { 0, 0, 0, 0, 0, 0 }, { 33089, 33219, 32717, 32827, 4, KINGDOM_KENT }, { 32750, 32850, 32250, 32350, 4, KINGDOM_ORCISH },
-			{ 32571, 32721, 33350, 33460, 4, KINGDOM_WINDAWOOD }, { 33559, 33686, 32615, 32755, 4, KINGDOM_GIRAN }, { 33458, 33583, 33315, 33490, 4, KINGDOM_HEINE },
-			{ 32755, 32870, 32790, 32920, 66, KINGDOM_ABYSS }, { 34007, 34162, 33172, 33332, 4, KINGDOM_ADEN }, { 32888, 33070, 32839, 32953, 320, 0 }, };
+	static public final int KINGDOMLOCATION[][] = { { 0, 0, 0, 0, 0, 0 },
+			{ 33089, 33219, 32717, 32827, 4, KINGDOM_KENT }, { 32750, 32850, 32250, 32350, 4, KINGDOM_ORCISH },
+			{ 32571, 32721, 33350, 33460, 4, KINGDOM_WINDAWOOD }, { 33559, 33686, 32615, 32755, 4, KINGDOM_GIRAN },
+			{ 33458, 33583, 33315, 33490, 4, KINGDOM_HEINE },
+			{ 32755, 32870, 32790, 32920, 66, KINGDOM_ABYSS }, { 34007, 34162, 33172, 33332, 4, KINGDOM_ADEN },
+			{ 32888, 33070, 32839, 32953, 320, 0 }, };
 
 	// 아지트 좌표값
 	static public final int AGITLOCATION[][] = { { 33368, 33375, 32651, 32654 }, // 기란,
@@ -1446,16 +1475,16 @@ public final class Lineage {
 			{ "마법인형: 데몬", "마법인형: 데스나이트", "마법인형: 바란카", "마법인형: 타락", "마법인형: 바포메트", "마법인형: 얼음여왕", "마법인형: 커츠" },
 			// 5단계 특수 마법인형
 			{ "마법인형: 안타라스", "마법인형: 파푸리온", "마법인형: 린드비오르", "마법인형: 발라카스" },
-        // 5단계 특수 마법인형
+			// 5단계 특수 마법인형
 			{ "풍룡의 마안", "수룡의 마안", "지룡의 마안", "화룡의 마안" },
-// 5단계 특수 마법인형
+			// 5단계 특수 마법인형
 			{ "생명의 마안", "탄생의 마안", "형상의 마안" } };
-	
+
 	// 개인상점 군터의 인장 사용 여부
 	static public boolean is_market_only_aden;
 	// 개인상점 최대 등록 갯수
 	static public int market_max_count;
-	
+
 	// 자동사냥 방지 사용 여부
 	static public boolean is_auto_hunt_check;
 	// 자동사냥 체크를 위한 몬스터 킬 수
@@ -1464,7 +1493,7 @@ public final class Lineage {
 	static public boolean is_auto_hunt_check_skill;
 	// 인증번호 받을 시 몇초 이내에 답변을 해야 공격가능
 	static public int auto_hunt_answer_time;
-	
+
 	// 현금거래 게시판 등록시 판매자 캐릭터명 노출 여부
 	static public boolean is_pc_trade_sell_name;
 	// 판매 등록 최소 레벨
@@ -1487,10 +1516,10 @@ public final class Lineage {
 	static public int pc_trade_buy_max_count;
 	// 구매신청 후 입금완료까지 대기시간
 	static public int pc_trade_buy_deposit_delay;
-	
+
 	// 버프 관리사 리스트
 	static public List<BuffNpc> buffNpcList = new ArrayList<BuffNpc>();
-	
+
 	// 켄트성 소모되지 않는 아이템 적용 여부
 	static public boolean is_kent_kingdom_war_no_remove;
 	// 켄트성 소모되지 않는 아이템 리스트
@@ -1525,13 +1554,12 @@ public final class Lineage {
 	static public int giran_dungeon_scroll_count;
 	// 기란감옥 초기화 주문서 초기화 시간
 	static public int giran_dungeon_reset_hour;
-	
+
 	// 기란감옥 초기화 주문서 사용 횟수
 	static public int auto_scroll_count;
 	// 기란감옥 초기화 주문서 초기화 시간
 	static public int auto_dungeon_reset_hour;
-	
-	
+
 	// 기란감옥 초기화 주문서 사용횟수 초기화 알림 메시지 알림여부
 	static public boolean is_giran_dungeon_scroll_message;
 	// 바포메트 시스템 적용 여부.
@@ -1544,7 +1572,7 @@ public final class Lineage {
 	static public boolean is_heine_teleport;
 	// 아덴 랜덤텔레포트 여부.
 	static public boolean is_aden_teleport;
-	
+
 	// 잠수용 허수아비 사용여부
 	static public boolean is_rest_cracker;
 	// 잠수용 허수아비 사용 레벨
@@ -1578,7 +1606,7 @@ public final class Lineage {
 	static public int rest_cracker_y2 = 0;
 	// 잠수용 허수아비 맵번호
 	static public int rest_cracker_map = 0;
-	
+
 	// 스팟 사용 여부
 	static public boolean is_spot;
 	// 스팟 타워 체력
@@ -1597,14 +1625,14 @@ public final class Lineage {
 	static public int spot_tower_time;
 	// 스팟 승리 보상
 	static public List<FirstInventory> spot_item = new ArrayList<FirstInventory>();
-	
+
 	// 투견
 	static public boolean is_fight;
 	static public String fight_aden = "아데나";
 	static public int fight_ticket_price = 500;
 	static public double fight_rate = 1.95;
 	static public long fight_max_ticket = 1000;
-	
+
 	// 마안 이팩트
 	static public boolean 마안이팩트여부;
 	static public final int 수룡의마안_이팩트 = 7672;
@@ -1614,19 +1642,19 @@ public final class Lineage {
 	static public final int 탄생의마안_이팩트 = 7675;
 	static public final int 형상의마안_이팩트 = 7676;
 	static public final int 생명의마안_이팩트 = 7678;
-	
+
 	static public double 탄생의마안_확률;
 	static public String 탄생의마안_제작_아덴;
 	static public long 탄생의마안_제작_아덴_수량;
-	
+
 	static public double 형상의마안_확률;
 	static public String 형상의마안_제작_아덴;
 	static public long 형상의마안_제작_아덴_수량;
-	
+
 	static public double 생명의마안_확률;
 	static public String 생명의마안_제작_아덴;
 	static public long 생명의마안_제작_아덴_수량;
-	
+
 	// 불멸의 가호 시스템 사용 여부
 	static public boolean is_immortality = false;
 	// 불멸의 가호 시스템 PvP시에만 적용 여부
@@ -1646,17 +1674,17 @@ public final class Lineage {
 	// 몬스터에게 사망시 타버린 불멸의 가호 드랍 여부
 	static public boolean is_immortality_kill_item_drop_monster;
 	// “고급 불멸의 가호” 우선 소모용 아이템 이름
-	static public String  immortality_premium_item_name       = "";
+	static public String immortality_premium_item_name = "";
 	// “타버린 고급 불멸의 가호” 보상용 아이템 이름
-	static public String  immortality_premium_burn_item_name  = "";
+	static public String immortality_premium_burn_item_name = "";
 	// 고급 불멸의 가호 보유 시 추가 아데나 드랍률 보너스 (예: 0.2 = 20%)
 	static public double immortality_premium_aden_percent = 0;
 	// 고급 불멸의 가호 보유 시 추가 경험치 획득률 보너스 (예: 0.3 = 30%)
-	static public double immortality_premium_exp_percent  = 0;
-	
+	static public double immortality_premium_exp_percent = 0;
+
 	// 펫 배고픔 사용 여부(true: 사용 / false: 사용안함)
 	static public boolean is_pet_hungry = true;
-	
+
 	// 나비켓에 skill테이블의 복수 쿨타임 마법아이디(uid)번호
 	static public int revenge_uid;
 	// 복수 시스템 사용 여부
@@ -1682,28 +1710,28 @@ public final class Lineage {
 	// 테베라스 입장 시간
 	static public List<TeamBattleTime> tebe_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String tebe_dungeon_time = "";
-	
+
 	static public List<TeamBattleTime> tebe_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
 	static public String tebe_dungeon_time2 = "";
 	// 테베라스 진행 시간(초)
 	static public int tebe_play_time = 600;
 	// 테베 입장 필요 아이템
-	public static String tebe_join_item = "";    // 예시: "40308" 또는 "아데나"
+	public static String tebe_join_item = ""; // 예시: "40308" 또는 "아데나"
 	// 테베 입장 필요 아이템 갯수
-	public static int tebe_join_item_count = 0;  // 예시: 10000
-	
+	public static int tebe_join_item_count = 0; // 예시: 10000
+
 	// 캐쉬사냥터 입장 레벨
-		static public int cash_level = 1;
-		// 캐쉬사냥터 수배자만 입장가능 여부
-		static public boolean cash_wanted1 = false;
-		// 캐쉬사냥터 혈맹가입자만 입장가능 여부
-		static public boolean cash_clan = false;
-		// 캐쉬사냥터 입장 시간
-		static public List<TeamBattleTime> cash_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String cash_dungeon_time = "";
-		// 캐쉬사냥터 진행 시간(초)
-		static public int cash_play_time = 600;
-	
+	static public int cash_level = 1;
+	// 캐쉬사냥터 수배자만 입장가능 여부
+	static public boolean cash_wanted1 = false;
+	// 캐쉬사냥터 혈맹가입자만 입장가능 여부
+	static public boolean cash_clan = false;
+	// 캐쉬사냥터 입장 시간
+	static public List<TeamBattleTime> cash_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String cash_dungeon_time = "";
+	// 캐쉬사냥터 진행 시간(초)
+	static public int cash_play_time = 600;
+
 	// 마족신전 입장 레벨
 	static public int dete_level = 1;
 	// 마족신전 수배자만 입장가능 여부
@@ -1718,7 +1746,7 @@ public final class Lineage {
 	static public String dete_dungeon_time2 = "";
 	// 마족신전 진행 시간(초)
 	static public int dete_play_time = 600;
-	
+
 	// 고무 입장 레벨
 	static public int gomu_level = 1;
 	// 고무 수배자만 입장가능 여부
@@ -1733,7 +1761,7 @@ public final class Lineage {
 	static public String gomu_dungeon_time2 = "";
 	// 고무 진행 시간(초)
 	static public int gomu_play_time = 600;
-	
+
 	// 정령의무덤 입장 레벨
 	static public int jungmu_level = 1;
 	// 정령의무덤 수배자만 입장가능 여부
@@ -1748,7 +1776,7 @@ public final class Lineage {
 	static public String jungmu_dungeon_time2 = "";
 	// 정령의무덤 진행 시간(초)
 	static public int jungmu_play_time = 600;
-	
+
 	// 그림자신전 입장 레벨
 	static public int shadow_level = 1;
 	// 그림자신전 수배자만 입장가능 여부
@@ -1762,23 +1790,23 @@ public final class Lineage {
 	static public List<TeamBattleTime> shadow_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
 	static public String shadow_dungeon_time2 = "";
 	// 그림자신전 진행 시간(초)
-		static public int shadow_play_time = 600;
-		
-		// 기란감옥 입장 레벨
-		static public int prison_level = 1;
-		// 기란감옥 수배자만 입장가능 여부
-		static public boolean prison_wanted = false;
-		// 기란감옥 혈맹가입자만 입장가능 여부
-		static public boolean prison_clan = false;
-		// 기란감옥 입장 평일시간
-		static public List<TeamBattleTime> prison_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String prison_dungeon_time = "";
-		// 기란감옥 입장 주말시간
-		static public List<TeamBattleTime> prison_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String prison_dungeon_time2 = "";
-		// 기란감옥 진행 시간(초)
-			static public int prison_play_time = 600;	
-	
+	static public int shadow_play_time = 600;
+
+	// 기란감옥 입장 레벨
+	static public int prison_level = 1;
+	// 기란감옥 수배자만 입장가능 여부
+	static public boolean prison_wanted = false;
+	// 기란감옥 혈맹가입자만 입장가능 여부
+	static public boolean prison_clan = false;
+	// 기란감옥 입장 평일시간
+	static public List<TeamBattleTime> prison_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String prison_dungeon_time = "";
+	// 기란감옥 입장 주말시간
+	static public List<TeamBattleTime> prison_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String prison_dungeon_time2 = "";
+	// 기란감옥 진행 시간(초)
+	static public int prison_play_time = 600;
+
 	// 라스타바드 입장 레벨
 	static public int lasta_level = 1;
 	// 라스타바드 수배자만 입장가능 여부
@@ -1793,8 +1821,7 @@ public final class Lineage {
 	static public String lasta_dungeon_time2 = "";
 	// 라스타바드 진행 시간(초)
 	static public int lasta_play_time = 600;
-	
-	
+
 	// 칠흑던전 입장 레벨
 	static public int dark_level = 1;
 	// 칠흑던전 수배자만 입장가능 여부
@@ -1809,7 +1836,7 @@ public final class Lineage {
 	static public String dark_dungeon_time2 = "";
 	// 칠흑던전 진행 시간(초)
 	static public int dark_play_time = 600;
-	
+
 	// 칠흑던전3 입장 레벨
 	static public int dark3_level = 1;
 	// 칠흑던전3 수배자만 입장가능 여부
@@ -1839,172 +1866,171 @@ public final class Lineage {
 	static public String dark4_dungeon_time2 = "";
 	// 칠흑던전4 진행 시간(초)
 	static public int dark4_play_time = 600;
-	
+
 	// 오만1층 입장 레벨
-		static public int oman1_level = 1;
-		// 오만1층 수배자만 입장가능 여부
-		static public boolean oman1_wanted = false;
-		// 오만1층 혈맹가입자만 입장가능 여부
-		static public boolean oman1_clan = false;
-		// 오만1층 입장 평일시간
-		static public List<TeamBattleTime> oman1_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman1_dungeon_time = "";
-		// 오만1층 입장 주말시간
-		static public List<TeamBattleTime> oman1_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman1_dungeon_time2 = "";
-		// 오만1층 진행 시간(초)
-		static public int oman1_play_time = 600;
-		
-		// 오만2층 입장 레벨
-		static public int oman2_level = 1;
-		// 오만2층 수배자만 입장가능 여부
-		static public boolean oman2_wanted = false;
-		// 오만2층 혈맹가입자만 입장가능 여부
-		static public boolean oman2_clan = false;
-		// 오만2층 입장 평일시간
-		static public List<TeamBattleTime> oman2_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman2_dungeon_time = "";
-		// 오만2층 입장 주말시간
-		static public List<TeamBattleTime> oman2_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman2_dungeon_time2 = "";
-		// 오만2층 진행 시간(초)
-		static public int oman2_play_time = 600;
-		
-		// 오만3층 입장 레벨
-		static public int oman3_level = 1;
-		// 오만3층 수배자만 입장가능 여부
-		static public boolean oman3_wanted = false;
-		// 오만3층 혈맹가입자만 입장가능 여부
-		static public boolean oman3_clan = false;
-		// 오만3층 입장 평일시간
-		static public List<TeamBattleTime> oman3_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman3_dungeon_time = "";
-		// 오만3층 입장 주말시간
-		static public List<TeamBattleTime> oman3_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman3_dungeon_time2 = "";
-		// 오만3층 진행 시간(초)
-		static public int oman3_play_time = 600;
-		
-		// 오만4층 입장 레벨
-		static public int oman4_level = 1;
-		// 오만4층 수배자만 입장가능 여부
-		static public boolean oman4_wanted = false;
-		// 오만4층 혈맹가입자만 입장가능 여부
-		static public boolean oman4_clan = false;
-		// 오만3층 입장 평일시간
-		static public List<TeamBattleTime> oman4_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman4_dungeon_time = "";
-		// 오만3층 입장 주말시간
-		static public List<TeamBattleTime> oman4_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman4_dungeon_time2 = "";
-		// 오만3층 진행 시간(초)
-		static public int oman4_play_time = 600;
-		
-		// 오만5층 입장 레벨
-		static public int oman5_level = 1;
-		// 오만5층 수배자만 입장가능 여부
-		static public boolean oman5_wanted = false;
-		// 오만5층 혈맹가입자만 입장가능 여부
-		static public boolean oman5_clan = false;
-		// 오만5층 입장 평일시간
-		static public List<TeamBattleTime> oman5_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman5_dungeon_time = "";
-		// 오만5층 입장 주말시간
-		static public List<TeamBattleTime> oman5_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman5_dungeon_time2 = "";
-		// 오만3층 진행 시간(초)
-		static public int oman5_play_time = 600;
-		
-		// 오만6층 입장 레벨
-		static public int oman6_level = 1;
-		// 오만6층 수배자만 입장가능 여부
-		static public boolean oman6_wanted = false;
-		// 오만6층 혈맹가입자만 입장가능 여부
-		static public boolean oman6_clan = false;
-		// 오만6층 입장 평일시간
-		static public List<TeamBattleTime> oman6_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman6_dungeon_time = "";
-		// 오만6층 입장 주말시간
-		static public List<TeamBattleTime> oman6_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman6_dungeon_time2 = "";
-		// 오만6층 진행 시간(초)
-		static public int oman6_play_time = 600;
-		
-		// 오만7층 입장 레벨
-		static public int oman7_level = 1;
-		// 오만7층 수배자만 입장가능 여부
-		static public boolean oman7_wanted = false;
-		// 오만7층 혈맹가입자만 입장가능 여부
-		static public boolean oman7_clan = false;
-		// 오만7층 입장 평일시간
-		static public List<TeamBattleTime> oman7_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman7_dungeon_time = "";
-		// 오만3층 입장 주말시간
-		static public List<TeamBattleTime> oman7_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman7_dungeon_time2 = "";
-		// 오만3층 진행 시간(초)
-		static public int oman7_play_time = 600;
-		
-		// 오만8층 입장 레벨
-		static public int oman8_level = 1;
-		// 오만8층 수배자만 입장가능 여부
-		static public boolean oman8_wanted = false;
-		// 오만8층 혈맹가입자만 입장가능 여부
-		static public boolean oman8_clan = false;
-		// 오만8층 입장 평일시간
-		static public List<TeamBattleTime> oman8_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman8_dungeon_time = "";
-		// 오만8층 입장 주말시간
-		static public List<TeamBattleTime> oman8_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman8_dungeon_time2 = "";
-		// 오만8층 진행 시간(초)
-		static public int oman8_play_time = 600;
-		
-		// 오만9층 입장 레벨
-		static public int oman9_level = 1;
-		// 오만9층 수배자만 입장가능 여부
-		static public boolean oman9_wanted = false;
-		// 오만9층 혈맹가입자만 입장가능 여부
-		static public boolean oman9_clan = false;
-		// 오만9층 입장 평일시간
-		static public List<TeamBattleTime> oman9_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman9_dungeon_time = "";
-		// 오만9층 입장 주말시간
-		static public List<TeamBattleTime> oman9_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman9_dungeon_time2 = "";
-		// 오만3층 진행 시간(초)
-		static public int oman9_play_time = 600;
-		
-		// 오만정상층 입장 레벨
-		static public int oman0_level = 1;
-		// 오만정상층 수배자만 입장가능 여부
-		static public boolean oman0_wanted = false;
-		// 오만정상층 혈맹가입자만 입장가능 여부
-		static public boolean oman0_clan = false;
-		// 오만정상층 입장 평일시간
-		static public List<TeamBattleTime> oman0_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman0_dungeon_time = "";
-		// 오만정상층 입장 주말시간
-		static public List<TeamBattleTime> oman0_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman0_dungeon_time2 = "";
-		// 오만정상층 진행 시간(초)
-		static public int oman0_play_time = 600;
-		
-		// 오만10층 입장 레벨
-		static public int oman10_level = 1;
-		// 오만10층 수배자만 입장가능 여부
-		static public boolean oman10_wanted = false;
-		// 오만10층 혈맹가입자만 입장가능 여부
-		static public boolean oman10_clan = false;
-		// 오만10층 입장 평일시간
-		static public List<TeamBattleTime> oman10_dungeon_time_list = new ArrayList<TeamBattleTime>();
-		static public String oman10_dungeon_time = "";
-		// 오만10층 입장 주말시간
-		static public List<TeamBattleTime> oman10_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-		static public String oman10_dungeon_time2 = "";
-		// 오만10층 진행 시간(초)
-		static public int oman10_play_time = 600;
-	
+	static public int oman1_level = 1;
+	// 오만1층 수배자만 입장가능 여부
+	static public boolean oman1_wanted = false;
+	// 오만1층 혈맹가입자만 입장가능 여부
+	static public boolean oman1_clan = false;
+	// 오만1층 입장 평일시간
+	static public List<TeamBattleTime> oman1_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman1_dungeon_time = "";
+	// 오만1층 입장 주말시간
+	static public List<TeamBattleTime> oman1_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman1_dungeon_time2 = "";
+	// 오만1층 진행 시간(초)
+	static public int oman1_play_time = 600;
+
+	// 오만2층 입장 레벨
+	static public int oman2_level = 1;
+	// 오만2층 수배자만 입장가능 여부
+	static public boolean oman2_wanted = false;
+	// 오만2층 혈맹가입자만 입장가능 여부
+	static public boolean oman2_clan = false;
+	// 오만2층 입장 평일시간
+	static public List<TeamBattleTime> oman2_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman2_dungeon_time = "";
+	// 오만2층 입장 주말시간
+	static public List<TeamBattleTime> oman2_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman2_dungeon_time2 = "";
+	// 오만2층 진행 시간(초)
+	static public int oman2_play_time = 600;
+
+	// 오만3층 입장 레벨
+	static public int oman3_level = 1;
+	// 오만3층 수배자만 입장가능 여부
+	static public boolean oman3_wanted = false;
+	// 오만3층 혈맹가입자만 입장가능 여부
+	static public boolean oman3_clan = false;
+	// 오만3층 입장 평일시간
+	static public List<TeamBattleTime> oman3_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman3_dungeon_time = "";
+	// 오만3층 입장 주말시간
+	static public List<TeamBattleTime> oman3_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman3_dungeon_time2 = "";
+	// 오만3층 진행 시간(초)
+	static public int oman3_play_time = 600;
+
+	// 오만4층 입장 레벨
+	static public int oman4_level = 1;
+	// 오만4층 수배자만 입장가능 여부
+	static public boolean oman4_wanted = false;
+	// 오만4층 혈맹가입자만 입장가능 여부
+	static public boolean oman4_clan = false;
+	// 오만3층 입장 평일시간
+	static public List<TeamBattleTime> oman4_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman4_dungeon_time = "";
+	// 오만3층 입장 주말시간
+	static public List<TeamBattleTime> oman4_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman4_dungeon_time2 = "";
+	// 오만3층 진행 시간(초)
+	static public int oman4_play_time = 600;
+
+	// 오만5층 입장 레벨
+	static public int oman5_level = 1;
+	// 오만5층 수배자만 입장가능 여부
+	static public boolean oman5_wanted = false;
+	// 오만5층 혈맹가입자만 입장가능 여부
+	static public boolean oman5_clan = false;
+	// 오만5층 입장 평일시간
+	static public List<TeamBattleTime> oman5_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman5_dungeon_time = "";
+	// 오만5층 입장 주말시간
+	static public List<TeamBattleTime> oman5_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman5_dungeon_time2 = "";
+	// 오만3층 진행 시간(초)
+	static public int oman5_play_time = 600;
+
+	// 오만6층 입장 레벨
+	static public int oman6_level = 1;
+	// 오만6층 수배자만 입장가능 여부
+	static public boolean oman6_wanted = false;
+	// 오만6층 혈맹가입자만 입장가능 여부
+	static public boolean oman6_clan = false;
+	// 오만6층 입장 평일시간
+	static public List<TeamBattleTime> oman6_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman6_dungeon_time = "";
+	// 오만6층 입장 주말시간
+	static public List<TeamBattleTime> oman6_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman6_dungeon_time2 = "";
+	// 오만6층 진행 시간(초)
+	static public int oman6_play_time = 600;
+
+	// 오만7층 입장 레벨
+	static public int oman7_level = 1;
+	// 오만7층 수배자만 입장가능 여부
+	static public boolean oman7_wanted = false;
+	// 오만7층 혈맹가입자만 입장가능 여부
+	static public boolean oman7_clan = false;
+	// 오만7층 입장 평일시간
+	static public List<TeamBattleTime> oman7_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman7_dungeon_time = "";
+	// 오만3층 입장 주말시간
+	static public List<TeamBattleTime> oman7_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman7_dungeon_time2 = "";
+	// 오만3층 진행 시간(초)
+	static public int oman7_play_time = 600;
+
+	// 오만8층 입장 레벨
+	static public int oman8_level = 1;
+	// 오만8층 수배자만 입장가능 여부
+	static public boolean oman8_wanted = false;
+	// 오만8층 혈맹가입자만 입장가능 여부
+	static public boolean oman8_clan = false;
+	// 오만8층 입장 평일시간
+	static public List<TeamBattleTime> oman8_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman8_dungeon_time = "";
+	// 오만8층 입장 주말시간
+	static public List<TeamBattleTime> oman8_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman8_dungeon_time2 = "";
+	// 오만8층 진행 시간(초)
+	static public int oman8_play_time = 600;
+
+	// 오만9층 입장 레벨
+	static public int oman9_level = 1;
+	// 오만9층 수배자만 입장가능 여부
+	static public boolean oman9_wanted = false;
+	// 오만9층 혈맹가입자만 입장가능 여부
+	static public boolean oman9_clan = false;
+	// 오만9층 입장 평일시간
+	static public List<TeamBattleTime> oman9_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman9_dungeon_time = "";
+	// 오만9층 입장 주말시간
+	static public List<TeamBattleTime> oman9_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman9_dungeon_time2 = "";
+	// 오만3층 진행 시간(초)
+	static public int oman9_play_time = 600;
+
+	// 오만정상층 입장 레벨
+	static public int oman0_level = 1;
+	// 오만정상층 수배자만 입장가능 여부
+	static public boolean oman0_wanted = false;
+	// 오만정상층 혈맹가입자만 입장가능 여부
+	static public boolean oman0_clan = false;
+	// 오만정상층 입장 평일시간
+	static public List<TeamBattleTime> oman0_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman0_dungeon_time = "";
+	// 오만정상층 입장 주말시간
+	static public List<TeamBattleTime> oman0_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman0_dungeon_time2 = "";
+	// 오만정상층 진행 시간(초)
+	static public int oman0_play_time = 600;
+
+	// 오만10층 입장 레벨
+	static public int oman10_level = 1;
+	// 오만10층 수배자만 입장가능 여부
+	static public boolean oman10_wanted = false;
+	// 오만10층 혈맹가입자만 입장가능 여부
+	static public boolean oman10_clan = false;
+	// 오만10층 입장 평일시간
+	static public List<TeamBattleTime> oman10_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String oman10_dungeon_time = "";
+	// 오만10층 입장 주말시간
+	static public List<TeamBattleTime> oman10_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String oman10_dungeon_time2 = "";
+	// 오만10층 진행 시간(초)
+	static public int oman10_play_time = 600;
 
 	static public int hell_level = 1;
 	// 지옥 수배자만 입장가능 여부
@@ -2014,19 +2040,19 @@ public final class Lineage {
 	// 지옥 입장 시간
 	static public List<TeamBattleTime> hell_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String hell_dungeon_time = "";
-	
+
 	// 지옥 입장 시간
 	static public List<TeamBattleTime> hell_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
 	static public String hell_dungeon_time2 = "";
 	// 지옥 진행 시간(초)
 	static public int hell_play_time = 600;
-	
-	//보물찾기
+
+	// 보물찾기
 	static public int Treasuress_level = 1;
 	static public List<TeamBattleTime> Treasuress_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String Treasuress_dungeon_time = "";
 	static public int Treasuress_play_time = 600;
-	
+
 	// 펭귄사냥터
 	static public int phunt_level = 1;
 	// 지옥 수배자만 입장가능 여부
@@ -2038,8 +2064,7 @@ public final class Lineage {
 	static public String phunt_dungeon_time = "";
 	// 지옥 진행 시간(초)
 	static public int phunt_play_time = 600;
-	
-	
+
 	// 월드보스 입장 레벨
 	static public int world_level = 1;
 	// 월드보스 수배자만 입장가능 여부
@@ -2051,7 +2076,7 @@ public final class Lineage {
 	static public String world_dungeon_time = "";
 	// 월드보스 진행 시간(초)
 	static public int world_play_time = 600;
-	
+
 	// 얼던 입장 레벨
 	static public int ice_level = 1;
 	// 얼던 수배자만 입장가능 여부
@@ -2061,12 +2086,12 @@ public final class Lineage {
 	// 얼던 입장 시간
 	static public List<TeamBattleTime> ice_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String ice_dungeon_time = "";
-	
+
 	static public List<TeamBattleTime> ice_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
 	static public String ice_dungeon_time2 = "";
 	// 얼던 진행 시간(초)
 	static public int ice_play_time = 600;
-	
+
 	// 고라스 입장 레벨
 	static public int goras_level = 1;
 	// 고라스 수배자만 입장가능 여부
@@ -2076,12 +2101,12 @@ public final class Lineage {
 	// 고라스 입장 시간
 	static public List<TeamBattleTime> goras_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String goras_dungeon_time = "";
-	
+
 	static public List<TeamBattleTime> goras_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
 	static public String goras_dungeon_time2 = "";
 	// 얼던 진행 시간(초)
 	static public int goras_play_time = 600;
-	
+
 	// 드워프 광산 입장 레벨
 	static public int dwarf_level = 1;
 	// 드워프 광산 수배자만 입장가능 여부
@@ -2091,19 +2116,16 @@ public final class Lineage {
 	// 드워프 광산 입장 시간
 	static public List<TeamBattleTime> dwarf_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String dwarf_dungeon_time = "";
-	
+
 	static public List<TeamBattleTime> dwarf_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
 	static public String dwarf_dungeon_time2 = "";
 	// 얼던 진행 시간(초)
 	static public int dwarf_play_time = 600;
-	
 
- //방랑상인
+	// 방랑상인
 	static public List<TeamBattleTime> wdr_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String wdr_dungeon_time = "";
 	static public int wdr_play_time = 600;
-	
-	
 
 	// 지하수로 입장 레벨
 	static public int wg_level = 1;
@@ -2114,12 +2136,12 @@ public final class Lineage {
 	// 지하수로 입장 시간
 	static public List<TeamBattleTime> wg_dungeon_time_list = new ArrayList<TeamBattleTime>();
 	static public String wg_dungeon_time = "";
-	
+
 	static public List<TeamBattleTime> wg_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
 	static public String wg_dungeon_time2 = "";
 	// 지하수로 진행 시간(초)
 	static public int wg_play_time = 600;
-	
+
 	// 악마왕의 영토 입장 레벨
 	static public int devil_level = 1;
 	// 악마왕의 영토 수배자만 입장가능 여부
@@ -2134,14 +2156,14 @@ public final class Lineage {
 	static public String devil_dungeon_time2 = "";
 	// 악마왕의 영토 진행 시간(초)
 	static public int devil_play_time = 600;
-	
+
 	// 오만의 탑 10층 입장 레벨
 	static public int omman10_level = 1;
 	// 오만의 탑 10층 수배자만 입장가능 여부
 	static public boolean omman10_wanted = false;
 	// 오만의 탑 10층 혈맹가입자만 입장가능 여부
 	static public boolean omman10_clan = false;
-	
+
 	// 수룡의둥지 입장 레벨
 	static public int wh_level = 1;
 	// 수룡의둥지 수배자만 입장가능 여부
@@ -2155,20 +2177,19 @@ public final class Lineage {
 	static public boolean gr_wanted = false;
 	// 망자의무덤 혈맹가입자만 입장가능 여부
 	static public boolean gr_clan = false;
-	
-	// 타임이벤트  시간
+
+	// 타임이벤트 시간
 	static public List<TeamBattleTime> time_event_time_list = new ArrayList<TeamBattleTime>();
 	static public String time_event_time = "";
-	
-	static public int time_ment ;
-	
+
+	static public int time_ment;
 
 	// 타임이벤트 시간(초)
 	static public int time_event_play_time = 600;
-	
+
 	static public String item_check_name;
 	static public int item_check_count;
-	
+
 	static public boolean is_item_drop_msg_name;
 	static public boolean is_item_drop_msg_en;
 	static public boolean is_item_drop_msg_monster;
@@ -2176,14 +2197,14 @@ public final class Lineage {
 	static public boolean is_item_drop_msg_doll;
 	static public boolean is_item_drop_msg_life;
 	static public boolean is_item_drop_msg_create;
-	
+
 	// 캐릭터 저장 구슬 인벤 확인 여부
 	static public boolean is_character_marble_inventory;
 	// 캐릭터 저장 구슬 무인 상점 확인 여부
 	static public boolean is_character_marble_pc_shop;
 	// 캐릭터 저장 구슬에 캐릭터 이름 표시 여부
 	static public boolean is_character_marble_name;
-	
+
 	// 경험치 저장 구슬 저장 경험치(%)
 	static public double exp_marble_percent;
 	// 경험치 저장 구슬 하루 사용 횟수
@@ -2193,9 +2214,9 @@ public final class Lineage {
 	// 경험치 저장 구슬 / 경험치 구슬 횟수 초기화 시간
 	static public List<TeamBattleTime> exp_marble_time_list = new ArrayList<TeamBattleTime>();
 	static public String exp_marble_time = "";
-	
+
 	static public boolean only_clan_boss_class_royal;
-	
+
 	static public int recovery_weapon_safe_0_en_min;
 	static public int recovery_weapon_safe_6_en_min;
 	static public int recovery_armor_safe_0_en_min;
@@ -2204,7 +2225,7 @@ public final class Lineage {
 	static public int recovery_acc_en_min;
 	static public int recovery_time;
 	static public boolean is_recovery_scroll;
-	
+
 	static public String weapon_safe_0_0_recovery_item;
 	static public int weapon_safe_0_0_recovery_item_count;
 	static public String weapon_safe_0_1_recovery_item;
@@ -2227,7 +2248,7 @@ public final class Lineage {
 	static public int weapon_safe_0_9_recovery_item_count;
 	static public String weapon_safe_0_10_recovery_item;
 	static public int weapon_safe_0_10_recovery_item_count;
-	
+
 	static public String weapon_safe_6_6_recovery_item;
 	static public int weapon_safe_6_6_recovery_item_count;
 	static public String weapon_safe_6_7_recovery_item;
@@ -2248,7 +2269,7 @@ public final class Lineage {
 	static public int weapon_safe_6_14_recovery_item_count;
 	static public String weapon_safe_6_15_recovery_item;
 	static public int weapon_safe_6_15_recovery_item_count;
-	
+
 	static public String armor_safe_0_0_recovery_item;
 	static public int armor_safe_0_0_recovery_item_count;
 	static public String armor_safe_0_1_recovery_item;
@@ -2271,7 +2292,7 @@ public final class Lineage {
 	static public int armor_safe_0_9_recovery_item_count;
 	static public String armor_safe_0_10_recovery_item;
 	static public int armor_safe_0_10_recovery_item_count;
-	
+
 	static public String armor_safe_4_4_recovery_item;
 	static public int armor_safe_4_4_recovery_item_count;
 	static public String armor_safe_4_5_recovery_item;
@@ -2290,7 +2311,7 @@ public final class Lineage {
 	static public int armor_safe_4_11_recovery_item_count;
 	static public String armor_safe_4_12_recovery_item;
 	static public int armor_safe_4_12_recovery_item_count;
-	
+
 	static public String armor_safe_6_6_recovery_item;
 	static public int armor_safe_6_6_recovery_item_count;
 	static public String armor_safe_6_7_recovery_item;
@@ -2305,7 +2326,7 @@ public final class Lineage {
 	static public int armor_safe_6_11_recovery_item_count;
 	static public String armor_safe_6_12_recovery_item;
 	static public int armor_safe_6_12_recovery_item_count;
-	
+
 	static public String acc_0_recovery_item;
 	static public int acc_0_recovery_item_count;
 	static public String acc_1_recovery_item;
@@ -2328,22 +2349,22 @@ public final class Lineage {
 	static public int acc_9_recovery_item_count;
 	static public String acc_10_recovery_item;
 	static public int acc_10_recovery_item_count;
-	
+
 	static public String shop_no_tax_npc;
-	
+
 	// 오픈대기 아이템 자동지급
 	static public boolean is_world_open_wait_item;
 	static public String world_open_wait_item;
 	static public int world_open_wait_item_min;
 	static public int world_open_wait_item_max;
 	static public int world_open_wait_item_delay;
-	
+
 	static public boolean is_clan_point;
 	static public int clan_point_monster;
 	static public int clan_point_boss_monster;
 	static public List<Integer> clan_point_map_list = new ArrayList<Integer>();
 	public static boolean cash_wanted;
-	
+
 	static public boolean is_auto_hunt;
 	static public boolean is_auto_hunt_pvp;
 	static public boolean is_auto_hunt_member;
@@ -2364,19 +2385,19 @@ public final class Lineage {
 	static public boolean is_auto_potion_buy;
 	static public String auto_potion_buy_npc;
 	static public long auto_potion_buy_min_count;
-	static public long auto_potion_buy_count;	
+	static public long auto_potion_buy_count;
 	static public boolean is_auto_poly_rank;
 	static public boolean is_auto_poly_rank_buy;
 	static public String auto_poly_rank_buy_npc;
 	static public String auto_poly_rank_item_name;
 	static public long auto_poly_rank_buy_min_count;
-	static public long auto_poly_rank_buy_count;	
+	static public long auto_poly_rank_buy_count;
 	static public boolean is_auto_poly;
-	static public boolean is_auto_poly_buy;	
+	static public boolean is_auto_poly_buy;
 	static public String auto_poly_buy_npc;
 	static public String auto_poly_item_name;
 	static public long auto_poly_buy_min_count;
-	static public long auto_poly_buy_count;	
+	static public long auto_poly_buy_count;
 	static public boolean is_auto_teleport;
 	static public boolean is_auto_teleport_buy;
 	static public String auto_teleport_buy_npc;
@@ -2416,43 +2437,43 @@ public final class Lineage {
 	static public void init(boolean reload) {
 		TimeLine.start("lineage.conf file loading...");
 		String line = null;
-		
+
 		try {
 			royal_spawn.clear();
 			royal_first_spell.clear();
 			royal_first_inventory.clear();
-			
+
 			knight_spawn.clear();
 			knight_first_spell.clear();
 			knight_first_inventory.clear();
-			
+
 			elf_spawn.clear();
 			elf_first_spell.clear();
 			elf_first_inventory.clear();
-			
+
 			wizard_spawn.clear();
 			wizard_first_spell.clear();
 			wizard_first_inventory.clear();
-			
+
 			darkelf_spawn.clear();
 			darkelf_first_spell.clear();
 			darkelf_first_inventory.clear();
-			
+
 			dragonknight_spawn.clear();
 			dragonknight_first_spell.clear();
 			dragonknight_first_inventory.clear();
-			
+
 			blackwizard_spawn.clear();
 			blackwizard_first_spell.clear();
 			blackwizard_first_inventory.clear();
-			
+
 			kingdom_war_win_item_list.clear();
-			
+
 			no_remove_item.clear();
-			
+
 			team_battle_time.clear();
 			giran_kingdom_war_day_list.clear();
-			
+
 			kingdom_war_no_remove_item_kent.clear();
 			kingdom_war_no_remove_item_orcish.clear();
 			kingdom_war_no_remove_item_windawood.clear();
@@ -2460,12 +2481,12 @@ public final class Lineage {
 			kingdom_war_no_remove_item_heine.clear();
 			kingdom_war_no_remove_item_abyss.clear();
 			kingdom_war_no_remove_item_aden.clear();
-			
+
 			spot_item.clear();
-			
+
 			revenge_not_map_list.clear();
 			revenge_need_item_list.clear();
-			
+
 			tebe_dungeon_time_list.clear();
 			tebe_dungeon_time_list2.clear();
 			hell_dungeon_time_list.clear();
@@ -2523,18 +2544,17 @@ public final class Lineage {
 			oman10_dungeon_time_list2.clear();
 			oman0_dungeon_time_list.clear();
 			oman0_dungeon_time_list2.clear();
-			
-			
+
 			exp_marble_time_list.clear();
 
 			clan_point_map_list.clear();
-			
+
 			auto_hunt_reset_time.clear();
 			auto_hunt_map_list.clear();
 			auto_hunt_home_hp_list.clear();
 			auto_hunt_potion_hp_list.clear();
 			auto_hunt_teleport_map_list.clear();
-					
+
 			BufferedReader lnrr = new BufferedReader(new FileReader("lineage.conf"));
 			while ((line = lnrr.readLine()) != null) {
 				if (line.startsWith("#"))
@@ -2544,8 +2564,6 @@ public final class Lineage {
 				if (pos > 0) {
 					String key = line.substring(0, pos).trim();
 					String value = line.substring(pos + 1, line.length()).trim();
-
-
 
 					if (key.equalsIgnoreCase("royal_spawn"))
 						toFirstSpawn(royal_spawn, value);
@@ -2765,7 +2783,7 @@ public final class Lineage {
 						warehouse_price_elf = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("warehouse_max"))
 						warehouse_max = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("stat_str"))
 						stat_str = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("stat_dex"))
@@ -2778,7 +2796,7 @@ public final class Lineage {
 						stat_wis = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("stat_cha"))
 						stat_cha = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("rate_enchant"))
 						rate_enchant = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("penalty_level"))
@@ -2789,11 +2807,11 @@ public final class Lineage {
 						exp_marble_min = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("exp_marble_max"))
 						exp_marble_max = Integer.valueOf(value);
-                                        else if (key.equalsIgnoreCase("exp_marble_min2"))
+					else if (key.equalsIgnoreCase("exp_marble_min2"))
 						exp_marble_min2 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("exp_marble_max2"))
 						exp_marble_max2 = Integer.valueOf(value);
-                                        else if (key.equalsIgnoreCase("exp_marble_min3"))
+					else if (key.equalsIgnoreCase("exp_marble_min3"))
 						exp_marble_min3 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("exp_marble_max3"))
 						exp_marble_max3 = Integer.valueOf(value);
@@ -2804,7 +2822,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("rate_lawful"))
 						rate_lawful = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("rate_aden"))
-						rate_aden = Double.valueOf(value);	
+						rate_aden = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("rate_party"))
 						rate_party = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("rate_exp_pet"))
@@ -2818,7 +2836,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("chatting_global_macro_delay"))
 						chatting_global_macro_delay = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_chatting_clan"))
-						is_chatting_clan = value.equalsIgnoreCase("true");		
+						is_chatting_clan = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("nonpvp"))
 						nonpvp = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("server_version"))
@@ -2850,7 +2868,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("board_write_price"))
 						board_write_price = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("board_write_min_level"))
-						board_write_min_level = Integer.valueOf(value);				
+						board_write_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("rank_update_delay"))
 						rank_update_delay = Integer.valueOf(value) * 1000;
 					else if (key.equalsIgnoreCase("rank_min_level"))
@@ -2864,11 +2882,11 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("rank_class_4"))
 						rank_class_4 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_rank_poly"))
-						is_rank_poly = value.equalsIgnoreCase("true");			
+						is_rank_poly = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("rank_poly_all"))
 						rank_poly_all = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("rank_poly_class"))
-						rank_poly_class = Integer.valueOf(value);				
+						rank_poly_class = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("inn_hall_max"))
 						inn_hall_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("inn_hall_in_max"))
@@ -2878,13 +2896,13 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("add_tax"))
 						add_tax = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_kingdom_war"))
-						is_kingdom_war = value.equalsIgnoreCase("true");				
+						is_kingdom_war = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("kingdom_war_win_gift"))
 						kingdom_war_win_gift = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("crown_clan_min_people"))
-						crown_clan_min_people = Integer.valueOf(value);			
+						crown_clan_min_people = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("kingdom_war_win_item_list"))
-						kingdomWarWinItemList(kingdom_war_win_item_list, value);		
+						kingdomWarWinItemList(kingdom_war_win_item_list, value);
 					else if (key.equalsIgnoreCase("min_tax"))
 						min_tax = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("max_tax"))
@@ -2898,11 +2916,11 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("kingdom_player_dead_itemdrop"))
 						kingdom_player_dead_itemdrop = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("kingdom_crown"))
-						kingdom_crown = value.equalsIgnoreCase("true");				
+						kingdom_crown = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("kingdom_crown_bless"))
-						kingdom_crown_bless = Integer.valueOf(value);	
+						kingdom_crown_bless = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("kingdom_crown_enchant"))
-						kingdom_crown_enchant = Integer.valueOf(value);					
+						kingdom_crown_enchant = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("kingdom_pvp_pk"))
 						kingdom_pvp_pk = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("kingdom_war_revival"))
@@ -2954,7 +2972,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("player_dead_expdown_rate"))
 						player_dead_expdown_rate = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("player_lost_exp_rate"))
-						player_lost_exp_rate = Double.valueOf(value) * 0.01;				
+						player_lost_exp_rate = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("player_lost_exp_aden_rate"))
 						player_lost_exp_aden_rate = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("player_dead_itemdrop_level"))
@@ -2972,9 +2990,9 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("notice_delay"))
 						notice_delay = Integer.valueOf(value) * 1000 * 60;
 					else if (key.equalsIgnoreCase("is_kingdom_war_notice"))
-						is_kingdom_war_notice = value.equalsIgnoreCase("true");				
+						is_kingdom_war_notice = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("kingdom_war_notice_delay"))
-						kingdom_war_notice_delay = Integer.valueOf(value) * 1000 * 60;		
+						kingdom_war_notice_delay = Integer.valueOf(value) * 1000 * 60;
 					else if (key.equalsIgnoreCase("event_poly"))
 						event_poly = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("account_ip_count"))
@@ -2982,7 +3000,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("ip_character_count"))
 						ip_character_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("ip_in_game_count"))
-						ip_in_game_count = Integer.valueOf(value);			
+						ip_in_game_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("event_buff"))
 						event_buff = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("event_illusion"))
@@ -3000,7 +3018,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_magic_doll_race"))
 						is_magic_doll_race = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("magic_doll_race_delay"))
-						magic_doll_race_delay = Integer.valueOf(value);				
+						magic_doll_race_delay = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("magic_doll_race_price"))
 						magic_doll_race_price = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("bravery_potion_frame"))
@@ -3030,13 +3048,13 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("monster_summon_item_drop"))
 						monster_summon_item_drop = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_damage_item_drop"))
-						is_damage_item_drop = value.equalsIgnoreCase("true");				
+						is_damage_item_drop = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("monster_item_drop"))
 						monster_item_drop = value.equalsIgnoreCase("new");
 					else if (key.equalsIgnoreCase("monster_boss_spawn_message"))
 						monster_boss_spawn_message = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("monster_boss_spawn_blue_message"))
-						monster_boss_spawn_blue_message = value.equalsIgnoreCase("true");		
+						monster_boss_spawn_blue_message = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("monster_boss_dead_message"))
 						monster_boss_dead_message = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("colosseum_talkingisland"))
@@ -3054,7 +3072,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("item_accessory_bless_enchant"))
 						item_accessory_bless_enchant = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("item_polymorph_bless"))
-						item_polymorph_bless = value.equalsIgnoreCase("true");				
+						item_polymorph_bless = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("item_enchant_armor_max"))
 						item_enchant_armor_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("item_enchant_weapon_max"))
@@ -3074,7 +3092,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("item_elixir_max"))
 						item_elixir_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("elixir_min_level"))
-						elixir_min_level = Integer.valueOf(value);				
+						elixir_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("thread_event"))
 						thread_event = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("thread_ai"))
@@ -3090,13 +3108,13 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("party_pickup_item_print"))
 						party_pickup_item_print = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("party_autopickup_item_print_on_screen"))
-						party_autopickup_item_print_on_screen = value.equalsIgnoreCase("true");				
+						party_autopickup_item_print_on_screen = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("party_exp_level_range"))
 						party_exp_level_range = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("wanted_clan"))
 						wanted_clan = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("wanted_name"))
-						wanted_name = value;	
+						wanted_name = value;
 					else if (key.equalsIgnoreCase("wanted_level")) {
 						if (value.startsWith("~")) {
 							// max
@@ -3120,14 +3138,14 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("view_cracker_damage"))
 						view_cracker_damage = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("view_cracker_dps"))
-						view_cracker_dps = value.equalsIgnoreCase("true");			
+						view_cracker_dps = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("cracker_exp_max_level"))
 						cracker_exp_max_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("user_command"))
 						user_command = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("auction_delay"))
 						auction_delay = Long.valueOf(value) * 1000;
-					
+
 					else if (key.equalsIgnoreCase("f1_tel1"))
 						f1_tel1 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("f1_tel2"))
@@ -3156,7 +3174,7 @@ public final class Lineage {
 						f1_tel13 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("f1_tel14"))
 						f1_tel14 = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("f2_tel1"))
 						f2_tel1 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("f2_tel2"))
@@ -3185,10 +3203,10 @@ public final class Lineage {
 						f2_tel13 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("f2_tel14"))
 						f2_tel14 = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("boxspawn"))
 						boxspawn = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("speedhack"))
 						speedhack = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("speedhack_warning_count"))
@@ -3204,7 +3222,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("speed_hack_block_time"))
 						speed_hack_block_time = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("speed_hack_message_count"))
-						speed_hack_message_count = Integer.valueOf(value);				
+						speed_hack_message_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("speed_check_walk_frame_rate"))
 						speed_check_walk_frame_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("speed_check_attack_frame_rate"))
@@ -3214,8 +3232,8 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("delay_hack_frame_rate"))
 						delay_hack_frame_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("gost_hack_block_time"))
-						gost_hack_block_time = Integer.valueOf(value);				
-	
+						gost_hack_block_time = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("clan_warehouse_message"))
 						clan_warehouse_message = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("clan_max"))
@@ -3234,7 +3252,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("fish_exp"))
 						fish_exp = value;
 					else if (key.equalsIgnoreCase("auto_fish_level"))
-						auto_fish_level = Integer.valueOf(value);			
+						auto_fish_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("auto_fish_coin"))
 						auto_fish_coin = value;
 					else if (key.equalsIgnoreCase("auto_fish_expense"))
@@ -3252,10 +3270,10 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("giran_dungeon_inti_time"))
 						giran_dungeon_inti_time = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dungeon_inti_time_message"))
-						dungeon_inti_time_message = value.equalsIgnoreCase("true");	
+						dungeon_inti_time_message = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("new_clan_name")) {
 						new_clan_name = value == null || value.length() < 2 ? "신규혈맹없습니다." : value;
-						
+
 						if (!reload) {
 							new_clan_name_temp = new_clan_name;
 						} else {
@@ -3278,7 +3296,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_no_clan_oman_top"))
 						is_no_clan_oman_top = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_wanted_oman_top"))
-						is_wanted_oman_top = value.equalsIgnoreCase("true");				
+						is_wanted_oman_top = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_heal_target"))
 						is_heal_target = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_greater_heal_target"))
@@ -3306,22 +3324,22 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("scroll_zel_go_mer"))
 						scroll_zel_go_mer = value;
 					else if (key.equalsIgnoreCase("scroll_orim"))
-						scroll_orim = value;				
+						scroll_orim = value;
 					else if (key.equalsIgnoreCase("teamBattle_max_pc"))
 						teamBattle_max_pc = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("teamBattle_level"))
-						teamBattle_level = Integer.valueOf(value);				
+						teamBattle_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("teamBattle_A_team"))
 						teamBattle_A_team = value;
 					else if (key.equalsIgnoreCase("teamBattle_B_team"))
 						teamBattle_B_team = value;
 					else if (key.equalsIgnoreCase("team_battle_world_message"))
-						team_battle_world_message = Integer.valueOf(value);		
+						team_battle_world_message = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("team_battle_time"))
-						teamBattleTime(team_battle_time, value);				
+						teamBattleTime(team_battle_time, value);
 					else if (key.equalsIgnoreCase("is_teamBattle_chatting"))
 						is_teamBattle_chatting = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("is_two_clan_join"))
 						is_two_clan_join = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_world_clean"))
@@ -3333,15 +3351,15 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("world_clean_message_time"))
 						world_clean_message_time = (Integer.valueOf(value) * 1000) + 1000;
 					else if (key.equalsIgnoreCase("is_exp_support"))
-						is_exp_support = value.equalsIgnoreCase("true");		
+						is_exp_support = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("exp_support_level_gap"))
 						exp_support_level_gap = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("exp_support_max_level"))
 						exp_support_max_level = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("levelup_support2"))
-					    levelup_support2_target = Integer.valueOf(value); // conf값이 없으면 95
-				
+						levelup_support2_target = Integer.valueOf(value); // conf값이 없으면 95
+
 					else if (key.equalsIgnoreCase("buff_max_level"))
 						buff_max_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("buff_aden"))
@@ -3357,23 +3375,23 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_weapon_speed"))
 						is_weapon_speed = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("sword_rack_delay"))
-						sword_rack_delay = Integer.valueOf(value);			
+						sword_rack_delay = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_pvp_auto_potion"))
 						is_pvp_auto_potion = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_chatting_close_command"))
 						is_chatting_close_command = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_battle_zone"))
 						is_battle_zone = value.equalsIgnoreCase("true");
-                    else if (key.equalsIgnoreCase("is_wjsxn"))
+					else if (key.equalsIgnoreCase("is_wjsxn"))
 						is_wjsxn = value.equalsIgnoreCase("true");
-                    else if (key.equalsIgnoreCase("is_tnsrks"))
+					else if (key.equalsIgnoreCase("is_tnsrks"))
 						is_tnsrks = value.equalsIgnoreCase("true");
-                    else if (key.equalsIgnoreCase("is_qustls"))
+					else if (key.equalsIgnoreCase("is_qustls"))
 						is_qustls = value.equalsIgnoreCase("true");
-                    else if (key.equalsIgnoreCase("is_tlstjd"))
+					else if (key.equalsIgnoreCase("is_tlstjd"))
 						is_tlstjd = value.equalsIgnoreCase("true");
-					
-                	else if (key.equalsIgnoreCase("is_gmlrnl"))
+
+					else if (key.equalsIgnoreCase("is_gmlrnl"))
 						is_gmlrnl = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_duddnd"))
 						is_duddnd = value.equalsIgnoreCase("true");
@@ -3381,21 +3399,20 @@ public final class Lineage {
 						is_wjstjf = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_tlsghk"))
 						is_tlsghk = value.equalsIgnoreCase("true");
-					
-                    else if (key.equalsIgnoreCase("is_1cmdwlqo"))
-						is_1cmdwlqo = value.equalsIgnoreCase("true");
-                    else if (key.equalsIgnoreCase("is_5cmdwlqo"))
-						is_5cmdwlqo = value.equalsIgnoreCase("true");
-                    else if (key.equalsIgnoreCase("is_10cmdwlqo"))
-						is_10cmdwlqo = value.equalsIgnoreCase("true");
-                    else if (key.equalsIgnoreCase("domring_success_rate"))
-                        domring_success_rate = Double.parseDouble(value);
-					
-					// ▼ 새로 추가할 코드 (자동매입 전역 스위치)
-                    else if (key.equalsIgnoreCase("is_autosell_global"))
-                    is_autosell_global = value.equalsIgnoreCase("true");
 
-					
+					else if (key.equalsIgnoreCase("is_1cmdwlqo"))
+						is_1cmdwlqo = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("is_5cmdwlqo"))
+						is_5cmdwlqo = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("is_10cmdwlqo"))
+						is_10cmdwlqo = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("domring_success_rate"))
+						domring_success_rate = Double.parseDouble(value);
+
+					// ▼ 새로 추가할 코드 (자동매입 전역 스위치)
+					else if (key.equalsIgnoreCase("is_autosell_global"))
+						is_autosell_global = value.equalsIgnoreCase("true");
+
 					else if (key.equalsIgnoreCase("battle_zone_x1"))
 						battle_zone_x1 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("battle_zone_y1"))
@@ -3407,31 +3424,31 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("battle_zone_map"))
 						battle_zone_map = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_battle_zone_hp_bar"))
-						is_battle_zone_hp_bar = value.equalsIgnoreCase("true");				
+						is_battle_zone_hp_bar = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("class_1_boss_aden_min"))
-						class_1_boss_aden_min = Integer.valueOf(value);	
+						class_1_boss_aden_min = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("class_1_boss_aden_max"))
-						class_1_boss_aden_max = Integer.valueOf(value);	
+						class_1_boss_aden_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("class_2_boss_aden_min"))
-						class_2_boss_aden_min = Integer.valueOf(value);	
+						class_2_boss_aden_min = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("class_2_boss_aden_max"))
 						class_2_boss_aden_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("class_3_boss_aden_min"))
-						class_3_boss_aden_min = Integer.valueOf(value);	
+						class_3_boss_aden_min = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("class_3_boss_aden_max"))
 						class_3_boss_aden_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("class_4_boss_aden_min"))
-						class_4_boss_aden_min = Integer.valueOf(value);	
+						class_4_boss_aden_min = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("class_4_boss_aden_max"))
-						class_4_boss_aden_max = Integer.valueOf(value);	
-					
+						class_4_boss_aden_max = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("boss_reward_box_name"))
-					    boss_reward_box_name = value;
+						boss_reward_box_name = value;
 					else if (key.equalsIgnoreCase("boss_reward_box_count"))
-					    boss_reward_box_count = Integer.valueOf(value);
+						boss_reward_box_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("boss_reward_range"))
-					    boss_reward_range = Integer.valueOf(value);
-									
+						boss_reward_range = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("giran_kingdom_war_hour"))
 						giran_kingdom_war_hour = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("giran_kingdom_war_min"))
@@ -3439,9 +3456,8 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("giran_kingdom_crown_min"))
 						giran_kingdom_crown_min = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("giran_kingdom_crown_msg_count"))
-						giran_kingdom_crown_msg_count = Integer.valueOf(value);	
-					
-					
+						giran_kingdom_crown_msg_count = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("world_result"))
 						world_result = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("go_hell"))
@@ -3450,35 +3466,33 @@ public final class Lineage {
 						go_dragon = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("go_wh"))
 						go_wh = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_gr"))
+					else if (key.equalsIgnoreCase("go_gr"))
 						go_gr = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_wg"))
+					else if (key.equalsIgnoreCase("go_wg"))
 						go_wg = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_dark"))
+					else if (key.equalsIgnoreCase("go_dark"))
 						go_dark = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_ice"))
+					else if (key.equalsIgnoreCase("go_ice"))
 						go_ice = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_dete"))
+					else if (key.equalsIgnoreCase("go_dete"))
 						go_dete = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_devil"))
+					else if (key.equalsIgnoreCase("go_devil"))
 						go_devil = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_lasta"))
+					else if (key.equalsIgnoreCase("go_lasta"))
 						go_lasta = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_tebe"))
+					else if (key.equalsIgnoreCase("go_tebe"))
 						go_tebe = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_tebe1"))
- 						go_tebe1 = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_gomu"))
+					else if (key.equalsIgnoreCase("go_tebe1"))
+						go_tebe1 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("go_gomu"))
 						go_gomu = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_jungmu"))
+					else if (key.equalsIgnoreCase("go_jungmu"))
 						go_jungmu = Integer.valueOf(value);
-                    else if (key.equalsIgnoreCase("go_omman10"))
+					else if (key.equalsIgnoreCase("go_omman10"))
 						go_omman10 = Integer.valueOf(value);
 
-					
-					
 					else if (key.equalsIgnoreCase("is_oman_join"))
-						is_oman_join = value.equalsIgnoreCase("true");	
+						is_oman_join = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("oman_min_level"))
 						oman_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman_join_item"))
@@ -3491,64 +3505,64 @@ public final class Lineage {
 						ice_join_item_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("tr_gift"))
 						tr_gift = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("goras_join_item"))
 						goras_join_item = value;
 					else if (key.equalsIgnoreCase("goras_join_item_count"))
 						goras_join_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("dwarf_join_item"))
 						dwarf_join_item = value;
 					else if (key.equalsIgnoreCase("dwarf_join_item_count"))
 						dwarf_join_item_count = Integer.valueOf(value);
 
 					else if (key.equalsIgnoreCase("is_lost_island_join"))
-						is_lost_island_join = value.equalsIgnoreCase("true");	
+						is_lost_island_join = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("lost_island_min_level"))
 						lost_island_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("lost_island_join_item"))
 						lost_island_join_item = value;
 					else if (key.equalsIgnoreCase("lost_island_join_item_count"))
 						lost_island_join_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("is_dragon_heaven_join"))
-						is_dragon_heaven_join = value.equalsIgnoreCase("true");	
+						is_dragon_heaven_join = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("dragon_heaven_min_level"))
 						dragon_heaven_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dragon_heaven_join_item"))
 						dragon_heaven_join_item = value;
 					else if (key.equalsIgnoreCase("dragon_heaven_join_item_count"))
 						dragon_heaven_join_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("is_girtas_join"))
-						is_girtas_join = value.equalsIgnoreCase("true");	
+						is_girtas_join = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("girtas_min_level"))
 						girtas_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("girtas_join_item"))
 						girtas_join_item = value;
 					else if (key.equalsIgnoreCase("girtas_join_item_count"))
 						girtas_join_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("is_jungmu_join"))
-						is_jungmu_join = value.equalsIgnoreCase("true");	
+						is_jungmu_join = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("jungmu_min_level"))
 						jungmu_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("jungmu_join_item"))
 						jungmu_join_item = value;
 					else if (key.equalsIgnoreCase("jungmu_join_item_count"))
 						jungmu_join_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("is_tebe1_join"))
-						is_tebe1_join = value.equalsIgnoreCase("true");	
+						is_tebe1_join = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("tebe1_min_level"))
 						tebe1_min_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("tebe1_join_item"))
 						tebe1_join_item = value;
 					else if (key.equalsIgnoreCase("tebe1_join_item_count"))
 						tebe1_join_item_count = Integer.valueOf(value);
-														
+
 					else if (key.equalsIgnoreCase("is_critical_effect"))
-						is_critical_effect = value.equalsIgnoreCase("true");			
+						is_critical_effect = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_skill_critical_effect"))
 						is_skill_critical_effect = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_character_dead_effect"))
@@ -3558,20 +3572,20 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_miss_effect"))
 						is_miss_effect = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("giran_dungeon_level"))
-						giran_dungeon_level = Integer.valueOf(value);	
+						giran_dungeon_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("giran_dungeon_level2"))
 						giran_dungeon_level2 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("giran_dungeon_level3"))
-						giran_dungeon_level3 = Integer.valueOf(value);	
+						giran_dungeon_level3 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("giran_dungeon_level4"))
 						giran_dungeon_level4 = Integer.valueOf(value);
 
-                    else if (key.equalsIgnoreCase("rmflawk_dungeon_level"))
-						rmflawk_dungeon_level = Integer.valueOf(value);	
+					else if (key.equalsIgnoreCase("rmflawk_dungeon_level"))
+						rmflawk_dungeon_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("rmflawk_dungeon_level2"))
-						rmflawk_dungeon_level2 = Integer.valueOf(value);		
+						rmflawk_dungeon_level2 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("rmflawk_dungeon_level3"))
-						rmflawk_dungeon_level3 = Integer.valueOf(value);		
+						rmflawk_dungeon_level3 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_50_exp_rate"))
 						lv_50_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_51_exp_rate"))
@@ -3591,7 +3605,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("lv_58_exp_rate"))
 						lv_58_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_59_exp_rate"))
-						lv_59_exp_rate = Double.valueOf(value);			
+						lv_59_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_60_exp_rate"))
 						lv_60_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_61_exp_rate"))
@@ -3611,7 +3625,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("lv_68_exp_rate"))
 						lv_68_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_69_exp_rate"))
-						lv_69_exp_rate = Double.valueOf(value);				
+						lv_69_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_60_exp_rate"))
 						lv_60_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_61_exp_rate"))
@@ -3631,7 +3645,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("lv_68_exp_rate"))
 						lv_68_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_69_exp_rate"))
-						lv_69_exp_rate = Double.valueOf(value);				
+						lv_69_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_70_exp_rate"))
 						lv_70_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_71_exp_rate"))
@@ -3651,7 +3665,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("lv_78_exp_rate"))
 						lv_78_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_79_exp_rate"))
-						lv_79_exp_rate = Double.valueOf(value);				
+						lv_79_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_80_exp_rate"))
 						lv_80_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("lv_81_exp_rate"))
@@ -3676,18 +3690,18 @@ public final class Lineage {
 						lv_90_exp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("kingdom_war_day"))
 						kingdom_war_day = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("is_auto_hunt_check"))
-						is_auto_hunt_check = value.equalsIgnoreCase("true");					
+						is_auto_hunt_check = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("auto_hunt_monster_kill_count"))
 						auto_hunt_monster_kill_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_auto_hunt_check_skill"))
 						is_auto_hunt_check_skill = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("auto_hunt_answer_time"))
-						auto_hunt_answer_time = Integer.valueOf(value) * 1000;	
-			
+						auto_hunt_answer_time = Integer.valueOf(value) * 1000;
+
 					else if (key.equalsIgnoreCase("is_pc_trade_sell_name"))
-						is_pc_trade_sell_name = value.equalsIgnoreCase("true");			
+						is_pc_trade_sell_name = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("pc_trade_sell_level"))
 						pc_trade_sell_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("pc_trade_buy_level"))
@@ -3701,7 +3715,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("aden_static_price"))
 						aden_static_price = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_pc_trade_success_delete"))
-						is_pc_trade_success_delete = value.equalsIgnoreCase("true");			
+						is_pc_trade_success_delete = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("pc_trade_sale_max_count"))
 						pc_trade_sale_max_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("pc_trade_buy_max_count"))
@@ -3735,7 +3749,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("kingdom_war_no_remove_item_abyss"))
 						isKingdomWarNoRemoveItem(kingdom_war_no_remove_item_abyss, value);
 					else if (key.equalsIgnoreCase("kingdom_war_no_remove_item_aden"))
-						isKingdomWarNoRemoveItem(kingdom_war_no_remove_item_aden, value);					
+						isKingdomWarNoRemoveItem(kingdom_war_no_remove_item_aden, value);
 					else if (key.equalsIgnoreCase("clan_rate_drop"))
 						clan_rate_drop = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("kingdom_clan_rate_drop"))
@@ -3748,46 +3762,46 @@ public final class Lineage {
 						clan_rate_aden = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("kingdom_clan_rate_aden"))
 						kingdom_clan_rate_aden = Double.valueOf(value);
-					else if(key.equalsIgnoreCase("robot_auto_pc"))
+					else if (key.equalsIgnoreCase("robot_auto_pc"))
 						robot_auto_pc = value.equalsIgnoreCase("true");
-					else if(key.equalsIgnoreCase("is_party_aden_share"))
+					else if (key.equalsIgnoreCase("is_party_aden_share"))
 						is_party_aden_share = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("giran_dungeon_scroll_count"))
 						giran_dungeon_scroll_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("giran_dungeon_reset_hour"))
 						giran_dungeon_reset_hour = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("auto_scroll_count"))
 						auto_scroll_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("auto_dungeon_reset_hour"))
 						auto_dungeon_reset_hour = Integer.valueOf(value);
-					
-					else if(key.equalsIgnoreCase("is_giran_dungeon_scroll_message"))
+
+					else if (key.equalsIgnoreCase("is_giran_dungeon_scroll_message"))
 						is_giran_dungeon_scroll_message = value.equalsIgnoreCase("true");
-					else if(key.equalsIgnoreCase("attackAndMagic_delay"))
+					else if (key.equalsIgnoreCase("attackAndMagic_delay"))
 						attackAndMagic_delay = Integer.valueOf(value);
-					else if(key.equalsIgnoreCase("is_batpomet_system"))
-						is_batpomet_system = value.equalsIgnoreCase("true");					
-					else if(key.equalsIgnoreCase("is_fire_nest_teleport"))
+					else if (key.equalsIgnoreCase("is_batpomet_system"))
+						is_batpomet_system = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("is_fire_nest_teleport"))
 						is_fire_nest_teleport = value.equalsIgnoreCase("true");
-					else if(key.equalsIgnoreCase("is_oren_teleport"))
+					else if (key.equalsIgnoreCase("is_oren_teleport"))
 						is_oren_teleport = value.equalsIgnoreCase("true");
-					else if(key.equalsIgnoreCase("is_heine_teleport"))
+					else if (key.equalsIgnoreCase("is_heine_teleport"))
 						is_heine_teleport = value.equalsIgnoreCase("true");
-					else if(key.equalsIgnoreCase("is_aden_teleport"))
+					else if (key.equalsIgnoreCase("is_aden_teleport"))
 						is_aden_teleport = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("boss_live_time"))
 						boss_live_time = Integer.valueOf(value);
-					
-					else if(key.equalsIgnoreCase("is_rest_cracker"))
+
+					else if (key.equalsIgnoreCase("is_rest_cracker"))
 						is_rest_cracker = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("rest_cracker_level"))
 						rest_cracker_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("rest_cracker_delay"))
-						rest_cracker_delay = Integer.valueOf(value);			
+						rest_cracker_delay = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("rest_cracker_name"))
-						rest_cracker_name = value;			
+						rest_cracker_name = value;
 					else if (key.equalsIgnoreCase("rest_cracker_weapon"))
 						rest_cracker_weapon = value;
 					else if (key.equalsIgnoreCase("rest_cracker_arrow"))
@@ -3816,33 +3830,33 @@ public final class Lineage {
 						rest_cracker_y2 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("rest_cracker_map"))
 						rest_cracker_map = Integer.valueOf(value);
-					
-					else if(key.equalsIgnoreCase("is_drop_item"))
+
+					else if (key.equalsIgnoreCase("is_drop_item"))
 						is_drop_item = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("is_blue_message"))
 						is_blue_message = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("done_ment1"))
-						done_ment1 = value;	
+						done_ment1 = value;
 					else if (key.equalsIgnoreCase("done_ment2"))
-						done_ment2 = value;	
+						done_ment2 = value;
 					else if (key.equalsIgnoreCase("done_ment3"))
-						done_ment3 = value;	
+						done_ment3 = value;
 					else if (key.equalsIgnoreCase("done_ment4"))
-						done_ment4 = value;	
+						done_ment4 = value;
 					else if (key.equalsIgnoreCase("done_ment5"))
-						done_ment5 = value;	
+						done_ment5 = value;
 					else if (key.equalsIgnoreCase("done_ment6"))
-						done_ment6 = value;	
+						done_ment6 = value;
 					else if (key.equalsIgnoreCase("done_ment7"))
-						done_ment7 = value;	
-					
+						done_ment7 = value;
+
 					else if (key.equalsIgnoreCase("war_ment"))
-						war_ment = value;	
-					
+						war_ment = value;
+
 					else if (key.equalsIgnoreCase("is_spot"))
-						is_spot = value.equalsIgnoreCase("true");			
+						is_spot = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("spot_tower_hp"))
 						spot_tower_hp = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("spot_tower_x"))
@@ -3859,7 +3873,7 @@ public final class Lineage {
 						spot_tower_time = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("spot_item"))
 						toFirstInventory(spot_item, value);
-					
+
 					else if (key.equalsIgnoreCase("is_fight"))
 						is_fight = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("fight_aden"))
@@ -3869,39 +3883,39 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("fight_rate"))
 						fight_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("fight_max_ticket"))
-						fight_max_ticket = Long.valueOf(value);				
-					
+						fight_max_ticket = Long.valueOf(value);
+
 					else if (key.equalsIgnoreCase("is_sword_lack_check"))
-						is_sword_lack_check = value.equalsIgnoreCase("true");	
-					
+						is_sword_lack_check = value.equalsIgnoreCase("true");
+
 					else if (key.equalsIgnoreCase("is_maan_effect"))
 						마안이팩트여부 = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("maan_birth_percent"))
 						탄생의마안_확률 = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("maan_birth_aden_name"))
 						탄생의마안_제작_아덴 = value;
 					else if (key.equalsIgnoreCase("maan_birth_aden_count"))
 						탄생의마안_제작_아덴_수량 = Long.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("maan_shape_percent"))
 						형상의마안_확률 = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("maan_shape_aden_name"))
 						형상의마안_제작_아덴 = value;
 					else if (key.equalsIgnoreCase("maan_shape_aden_count"))
 						형상의마안_제작_아덴_수량 = Long.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("maan_life_percent"))
 						생명의마안_확률 = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("maan_life_aden_name"))
 						생명의마안_제작_아덴 = value;
 					else if (key.equalsIgnoreCase("maan_life_aden_count"))
 						생명의마안_제작_아덴_수량 = Long.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("is_immortality"))
 						is_immortality = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_immortality_pvp"))
-						is_immortality_pvp = value.equalsIgnoreCase("true");	
+						is_immortality_pvp = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("immortality_item_name"))
 						immortality_item_name = value;
 					else if (key.equalsIgnoreCase("immortality_aden_percent"))
@@ -3909,7 +3923,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("immortality_item_percent"))
 						immortality_item_percent = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("is_immortality_kill_item"))
-						is_immortality_kill_item = value.equalsIgnoreCase("true");				
+						is_immortality_kill_item = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("immortality_kill_item_name"))
 						immortality_kill_item_name = value;
 					else if (key.equalsIgnoreCase("is_immortality_kill_item_drop"))
@@ -3917,20 +3931,20 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_immortality_kill_item_drop_monster"))
 						is_immortality_kill_item_drop_monster = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("immortality_premium_item_name"))
-					    immortality_premium_item_name = value.trim();
+						immortality_premium_item_name = value.trim();
 					else if (key.equalsIgnoreCase("immortality_premium_burn_item_name"))
-					    immortality_premium_burn_item_name = value.trim();
+						immortality_premium_burn_item_name = value.trim();
 					else if (key.equalsIgnoreCase("immortality_premium_aden_percent"))
-					    immortality_premium_aden_percent = Double.parseDouble(value.trim());
+						immortality_premium_aden_percent = Double.parseDouble(value.trim());
 					else if (key.equalsIgnoreCase("immortality_premium_exp_percent"))
-					    immortality_premium_exp_percent  = Double.parseDouble(value.trim());
-					
+						immortality_premium_exp_percent = Double.parseDouble(value.trim());
+
 					else if (key.equalsIgnoreCase("is_pet_hungry"))
 						is_pet_hungry = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("is_sync"))
 						is_sync = value.equalsIgnoreCase("true");
-								
+
 					else if (key.equalsIgnoreCase("revenge_uid"))
 						revenge_uid = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_revenge"))
@@ -3946,13 +3960,13 @@ public final class Lineage {
 						toFirstInventory(revenge_need_item_list, value);
 					} else if (key.equalsIgnoreCase("revenge_delay"))
 						revenge_delay = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("tebe_level"))
 						tebe_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("tebe_wanted"))
 						tebe_wanted = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("tebe_clan"))
-						tebe_clan = value.equalsIgnoreCase("true");					
+						tebe_clan = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("tebe_dungeon_time")) {
 						tebe_dungeon_time = value;
 						teamBattleTime(tebe_dungeon_time_list, value);
@@ -3962,21 +3976,21 @@ public final class Lineage {
 						tebe_join_item = value;
 					else if (key.equalsIgnoreCase("tebe_join_item_count"))
 						tebe_join_item_count = Integer.valueOf(value);
-		
+
 					else if (key.equalsIgnoreCase("hell_level"))
 						hell_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("hell_wanted"))
 						hell_wanted = value.equalsIgnoreCase("true");
-					
-                         else if (key.equalsIgnoreCase("oman"))
+
+					else if (key.equalsIgnoreCase("oman"))
 						oman = value.equalsIgnoreCase("true");
-                         else if (key.equalsIgnoreCase("oman2"))
+					else if (key.equalsIgnoreCase("oman2"))
 						oman2 = value.equalsIgnoreCase("true");
-                         else if (key.equalsIgnoreCase("oman3"))
+					else if (key.equalsIgnoreCase("oman3"))
 						oman3 = value.equalsIgnoreCase("true");
-                         else if (key.equalsIgnoreCase("oman4"))
+					else if (key.equalsIgnoreCase("oman4"))
 						oman4 = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("hell_clan"))
 						hell_clan = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("hell_dungeon_time")) {
@@ -3984,54 +3998,52 @@ public final class Lineage {
 						teamBattleTime(hell_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("hell_play_time"))
 						hell_play_time = Integer.valueOf(value);
-					
-					
-					
+
 					else if (key.equalsIgnoreCase("tebe_dungeon_time2")) {
 						tebe_dungeon_time2 = value;
 						teamBattleTime(tebe_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("hell_dungeon_time2")) {
 						hell_dungeon_time2 = value;
-						teamBattleTime(hell_dungeon_time_list2, value);					
+						teamBattleTime(hell_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("dete_dungeon_time2")) {
 						dete_dungeon_time2 = value;
 						teamBattleTime(dete_dungeon_time_list2, value);
-					}	
-					
+					}
+
 					else if (key.equalsIgnoreCase("gomu_dungeon_time2")) {
 						gomu_dungeon_time2 = value;
 						teamBattleTime(gomu_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("jungmu_dungeon_time2")) {
 						jungmu_dungeon_time2 = value;
 						teamBattleTime(jungmu_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("shadow_dungeon_time2")) {
 						shadow_dungeon_time2 = value;
 						teamBattleTime(shadow_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("prison_dungeon_time2")) {
 						prison_dungeon_time2 = value;
 						teamBattleTime(prison_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("lasta_dungeon_time2")) {
 						lasta_dungeon_time2 = value;
 						teamBattleTime(lasta_dungeon_time_list2, value);
-					}	
-					
+					}
+
 					else if (key.equalsIgnoreCase("dark_dungeon_time2")) {
 						dark_dungeon_time2 = value;
 						teamBattleTime(dark_dungeon_time_list2, value);
-					}	
-					
+					}
+
 					else if (key.equalsIgnoreCase("dark3_dungeon_time2")) {
 						dark3_dungeon_time2 = value;
 						teamBattleTime(dark3_dungeon_time_list2, value);
@@ -4041,95 +4053,95 @@ public final class Lineage {
 						dark4_dungeon_time2 = value;
 						teamBattleTime(dark4_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("ice_dungeon_time2")) {
 						ice_dungeon_time2 = value;
 						teamBattleTime(ice_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("goras_dungeon_time2")) {
 						goras_dungeon_time2 = value;
 						teamBattleTime(goras_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("dwarf_dungeon_time2")) {
 						dwarf_dungeon_time2 = value;
 						teamBattleTime(dwarf_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("wg_dungeon_time2")) {
 						wg_dungeon_time2 = value;
 						teamBattleTime(wg_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("devil_dungeon_time2")) {
 						devil_dungeon_time2 = value;
 						teamBattleTime(devil_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman1_dungeon_time2")) {
 						oman1_dungeon_time2 = value;
 						teamBattleTime(oman1_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman2_dungeon_time2")) {
 						oman2_dungeon_time2 = value;
 						teamBattleTime(oman2_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman3_dungeon_time2")) {
 						oman3_dungeon_time2 = value;
 						teamBattleTime(oman3_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman4_dungeon_time2")) {
 						oman4_dungeon_time2 = value;
 						teamBattleTime(oman4_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman5_dungeon_time2")) {
 						oman5_dungeon_time2 = value;
 						teamBattleTime(oman5_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman6_dungeon_time2")) {
 						oman6_dungeon_time2 = value;
 						teamBattleTime(oman6_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman7_dungeon_time2")) {
 						oman7_dungeon_time2 = value;
 						teamBattleTime(oman7_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman8_dungeon_time2")) {
 						oman8_dungeon_time2 = value;
 						teamBattleTime(oman8_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman9_dungeon_time2")) {
 						oman9_dungeon_time2 = value;
 						teamBattleTime(oman9_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman10_dungeon_time2")) {
 						oman10_dungeon_time2 = value;
 						teamBattleTime(oman10_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("oman0_dungeon_time2")) {
 						oman0_dungeon_time2 = value;
 						teamBattleTime(oman0_dungeon_time_list2, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("Treasuress_level"))
-						Treasuress_level = Integer.valueOf(value);				
+						Treasuress_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("Treasuress_dungeon_time")) {
 						Treasuress_dungeon_time = value;
 						teamBattleTime(Treasuress_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("Treasuress_play_time"))
 						Treasuress_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("phunt_level"))
 						phunt_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("phunt_wanted"))
@@ -4141,7 +4153,7 @@ public final class Lineage {
 						teamBattleTime(phunt_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("phunt_play_time"))
 						phunt_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("dete_level"))
 						dete_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dete_wanted"))
@@ -4153,7 +4165,7 @@ public final class Lineage {
 						teamBattleTime(dete_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("dete_play_time"))
 						dete_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("gomu_level"))
 						gomu_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("gomu_wanted"))
@@ -4165,7 +4177,7 @@ public final class Lineage {
 						teamBattleTime(gomu_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("gomu_play_time"))
 						gomu_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("jungmu_level"))
 						jungmu_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("jungmu_wanted"))
@@ -4177,7 +4189,7 @@ public final class Lineage {
 						teamBattleTime(jungmu_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("jungmu_play_time"))
 						jungmu_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("shadow_level"))
 						shadow_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("shadow_wanted"))
@@ -4189,7 +4201,7 @@ public final class Lineage {
 						teamBattleTime(shadow_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("shadow_play_time"))
 						shadow_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("prison_level"))
 						prison_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("prison_wanted"))
@@ -4201,7 +4213,7 @@ public final class Lineage {
 						teamBattleTime(prison_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("prison_play_time"))
 						prison_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("lasta_level"))
 						lasta_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("lasta_wanted"))
@@ -4213,7 +4225,7 @@ public final class Lineage {
 						teamBattleTime(lasta_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("lasta_play_time"))
 						lasta_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("world_level"))
 						world_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("world_wanted"))
@@ -4226,7 +4238,6 @@ public final class Lineage {
 					} else if (key.equalsIgnoreCase("world_play_time"))
 						world_play_time = Integer.valueOf(value);
 
-					
 					else if (key.equalsIgnoreCase("ice_level"))
 						ice_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("ice_wanted"))
@@ -4238,7 +4249,7 @@ public final class Lineage {
 						teamBattleTime(ice_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("ice_play_time"))
 						ice_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("goras_level"))
 						goras_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("goras_wanted"))
@@ -4250,7 +4261,7 @@ public final class Lineage {
 						teamBattleTime(goras_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("goras_play_time"))
 						goras_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("dwarf_level"))
 						dwarf_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dwarf_wanted"))
@@ -4262,7 +4273,7 @@ public final class Lineage {
 						teamBattleTime(dwarf_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("dwarf_play_time"))
 						dwarf_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("dark_level"))
 						dark_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dark_wanted"))
@@ -4274,7 +4285,7 @@ public final class Lineage {
 						teamBattleTime(dark_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("dark_play_time"))
 						dark_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("dark3_level"))
 						dark3_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dark3_wanted"))
@@ -4298,14 +4309,13 @@ public final class Lineage {
 						teamBattleTime(dark4_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("dark4_play_time"))
 						dark4_play_time = Integer.valueOf(value);
-			
+
 					else if (key.equalsIgnoreCase("wdr_dungeon_time")) {
 						wdr_dungeon_time = value;
 						teamBattleTime(wdr_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("wdr_play_time"))
 						wdr_play_time = Integer.valueOf(value);
-					
-					
+
 					else if (key.equalsIgnoreCase("wg_level"))
 						wg_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("wg_wanted"))
@@ -4317,7 +4327,7 @@ public final class Lineage {
 						teamBattleTime(wg_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("wg_play_time"))
 						wg_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("devil_level"))
 						devil_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("devil_wanted"))
@@ -4329,16 +4339,14 @@ public final class Lineage {
 						teamBattleTime(devil_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("devil_play_time"))
 						devil_play_time = Integer.valueOf(value);
-					
-					
-					
+
 					else if (key.equalsIgnoreCase("wh_level"))
 						wh_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("wh_wanted"))
 						wh_wanted = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("wh_clan"))
 						wh_clan = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("oman1_level"))
 						oman1_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("devil_wanted"))
@@ -4350,7 +4358,7 @@ public final class Lineage {
 						teamBattleTime(oman1_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman1_play_time"))
 						oman1_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman2_level"))
 						oman2_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman2_wanted"))
@@ -4362,7 +4370,7 @@ public final class Lineage {
 						teamBattleTime(oman2_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman2_play_time"))
 						oman2_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman3_level"))
 						oman3_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman3_wanted"))
@@ -4374,7 +4382,7 @@ public final class Lineage {
 						teamBattleTime(oman3_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman3_play_time"))
 						oman3_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman4_level"))
 						oman4_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman4_wanted"))
@@ -4386,7 +4394,7 @@ public final class Lineage {
 						teamBattleTime(oman4_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman4_play_time"))
 						oman4_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman5_level"))
 						oman5_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman5_wanted"))
@@ -4398,7 +4406,7 @@ public final class Lineage {
 						teamBattleTime(oman5_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman5_play_time"))
 						oman5_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman6_level"))
 						oman6_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman6_wanted"))
@@ -4410,7 +4418,7 @@ public final class Lineage {
 						teamBattleTime(oman6_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman6_play_time"))
 						oman6_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman7_level"))
 						oman7_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman7_wanted"))
@@ -4422,7 +4430,7 @@ public final class Lineage {
 						teamBattleTime(oman7_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman7_play_time"))
 						oman7_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman8_level"))
 						oman8_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman8_wanted"))
@@ -4434,7 +4442,7 @@ public final class Lineage {
 						teamBattleTime(oman8_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman8_play_time"))
 						oman8_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman9_level"))
 						oman9_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman9_wanted"))
@@ -4446,7 +4454,7 @@ public final class Lineage {
 						teamBattleTime(oman9_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman9_play_time"))
 						oman9_play_time = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("oman10_level"))
 						oman10_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman10_wanted"))
@@ -4457,8 +4465,8 @@ public final class Lineage {
 						oman10_dungeon_time = value;
 						teamBattleTime(oman10_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman10_play_time"))
-						oman10_play_time = Integer.valueOf(value);	
-					
+						oman10_play_time = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("oman0_level"))
 						oman0_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("oman0_wanted"))
@@ -4469,37 +4477,82 @@ public final class Lineage {
 						oman0_dungeon_time = value;
 						teamBattleTime(oman0_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("oman0_play_time"))
-						oman0_play_time = Integer.valueOf(value);	
-					
+						oman0_play_time = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("omman10_level"))
 						omman10_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("omman10_wanted"))
 						omman10_wanted = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("omman10_clan"))
 						omman10_clan = value.equalsIgnoreCase("true");
-					
+
+					else if (key.equalsIgnoreCase("Oman1FEnable"))
+						OMAN_1F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman2FEnable"))
+						OMAN_2F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman3FEnable"))
+						OMAN_3F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman4FEnable"))
+						OMAN_4F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman5FEnable"))
+						OMAN_5F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman6FEnable"))
+						OMAN_6F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman7FEnable"))
+						OMAN_7F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman8FEnable"))
+						OMAN_8F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman9FEnable"))
+						OMAN_9F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman10FEnable"))
+						OMAN_10F_ENABLE = value.equalsIgnoreCase("true");
+					else if (key.equalsIgnoreCase("Oman11FEnable"))
+						OMAN_11F_ENABLE = value.equalsIgnoreCase("true");
+
+					else if (key.equalsIgnoreCase("Oman1FLevel"))
+						OMAN_1F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman2FLevel"))
+						OMAN_2F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman3FLevel"))
+						OMAN_3F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman4FLevel"))
+						OMAN_4F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman5FLevel"))
+						OMAN_5F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman6FLevel"))
+						OMAN_6F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman7FLevel"))
+						OMAN_7F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman8FLevel"))
+						OMAN_8F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman9FLevel"))
+						OMAN_9F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman10FLevel"))
+						OMAN_10F_LEVEL = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("Oman11FLevel"))
+						OMAN_11F_LEVEL = Integer.parseInt(value);
+
 					else if (key.equalsIgnoreCase("gr_level"))
 						gr_level = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("gr_wanted"))
 						gr_wanted = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("gr_clan"))
 						gr_clan = value.equalsIgnoreCase("true");
-					
-					
+
 					else if (key.equalsIgnoreCase("time_event_time")) {
 						time_event_time = value;
 						teamBattleTime(time_event_time_list, value);
 					} else if (key.equalsIgnoreCase("time_event_play_time"))
 						time_event_play_time = Integer.valueOf(value);
 
-					else if (key.equalsIgnoreCase("time_ment")) 
+					else if (key.equalsIgnoreCase("time_ment"))
 						time_ment = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("item_check_name"))
 						item_check_name = value;
 					else if (key.equalsIgnoreCase("item_check_count"))
 						item_check_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("is_item_drop_msg_name"))
 						is_item_drop_msg_name = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_item_drop_msg_en"))
@@ -4514,14 +4567,14 @@ public final class Lineage {
 						is_item_drop_msg_life = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_item_drop_msg_create"))
 						is_item_drop_msg_create = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("is_character_marble_inventory"))
 						is_character_marble_inventory = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_character_marble_pc_shop"))
 						is_character_marble_pc_shop = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_character_marble_name"))
 						is_character_marble_name = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("exp_marble_percent"))
 						exp_marble_percent = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("exp_marble_use_count"))
@@ -4532,10 +4585,10 @@ public final class Lineage {
 						exp_marble_time = value;
 						teamBattleTime(exp_marble_time_list, value);
 					}
-					
+
 					else if (key.equalsIgnoreCase("only_clan_boss_class_royal"))
 						only_clan_boss_class_royal = value.equalsIgnoreCase("true");
-					
+
 					else if (key.equalsIgnoreCase("recovery_weapon_safe_0_en_min"))
 						recovery_weapon_safe_0_en_min = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("recovery_weapon_safe_6_en_min"))
@@ -4551,8 +4604,8 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("recovery_time"))
 						recovery_time = Integer.valueOf(value) * 1000;
 					else if (key.equalsIgnoreCase("is_recovery_scroll"))
-						is_recovery_scroll = value.equalsIgnoreCase("true");				
-					
+						is_recovery_scroll = value.equalsIgnoreCase("true");
+
 					else if (key.equalsIgnoreCase("weapon_safe_0_0_recovery_item"))
 						weapon_safe_0_0_recovery_item = value;
 					else if (key.equalsIgnoreCase("weapon_safe_0_0_recovery_item_count"))
@@ -4597,7 +4650,7 @@ public final class Lineage {
 						weapon_safe_0_10_recovery_item = value;
 					else if (key.equalsIgnoreCase("weapon_safe_0_10_recovery_item_count"))
 						weapon_safe_0_10_recovery_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("weapon_safe_6_6_recovery_item"))
 						weapon_safe_6_6_recovery_item = value;
 					else if (key.equalsIgnoreCase("weapon_safe_6_6_recovery_item_count"))
@@ -4638,7 +4691,7 @@ public final class Lineage {
 						weapon_safe_6_15_recovery_item = value;
 					else if (key.equalsIgnoreCase("weapon_safe_6_15_recovery_item_count"))
 						weapon_safe_6_15_recovery_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("armor_safe_0_0_recovery_item"))
 						armor_safe_0_0_recovery_item = value;
 					else if (key.equalsIgnoreCase("armor_safe_0_0_recovery_item_count"))
@@ -4683,7 +4736,7 @@ public final class Lineage {
 						armor_safe_0_10_recovery_item = value;
 					else if (key.equalsIgnoreCase("armor_safe_0_10_recovery_item_count"))
 						armor_safe_0_10_recovery_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("armor_safe_4_4_recovery_item"))
 						armor_safe_4_4_recovery_item = value;
 					else if (key.equalsIgnoreCase("armor_safe_4_4_recovery_item_count"))
@@ -4720,7 +4773,7 @@ public final class Lineage {
 						armor_safe_4_12_recovery_item = value;
 					else if (key.equalsIgnoreCase("armor_safe_4_12_recovery_item_count"))
 						armor_safe_4_12_recovery_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("armor_safe_6_6_recovery_item"))
 						armor_safe_6_6_recovery_item = value;
 					else if (key.equalsIgnoreCase("armor_safe_6_6_recovery_item_count"))
@@ -4749,7 +4802,7 @@ public final class Lineage {
 						armor_safe_6_12_recovery_item = value;
 					else if (key.equalsIgnoreCase("armor_safe_6_12_recovery_item_count"))
 						armor_safe_6_12_recovery_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("acc_0_recovery_item"))
 						acc_0_recovery_item = value;
 					else if (key.equalsIgnoreCase("acc_0_recovery_item_count"))
@@ -4794,10 +4847,10 @@ public final class Lineage {
 						acc_10_recovery_item = value;
 					else if (key.equalsIgnoreCase("acc_10_recovery_item_count"))
 						acc_10_recovery_item_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("shop_no_tax_npc"))
 						shop_no_tax_npc = value;
-					
+
 					else if (key.equalsIgnoreCase("is_world_open_wait_item"))
 						is_world_open_wait_item = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("world_open_wait_item"))
@@ -4808,7 +4861,7 @@ public final class Lineage {
 						world_open_wait_item_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("world_open_wait_item_delay"))
 						world_open_wait_item_delay = Integer.valueOf(value) * 1000;
-					
+
 					else if (key.equalsIgnoreCase("is_clan_point"))
 						is_clan_point = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("clan_point_monster"))
@@ -4817,11 +4870,11 @@ public final class Lineage {
 						clan_point_boss_monster = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("clan_point_map_list"))
 						kingdomDay(clan_point_map_list, value);
-					
+
 					else if (key.equalsIgnoreCase("is_auto_hunt"))
 						is_auto_hunt = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_hunt_pvp"))
-						is_auto_hunt_pvp = value.equalsIgnoreCase("true");			
+						is_auto_hunt_pvp = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_hunt_member"))
 						is_auto_hunt_member = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_hunt_exp_percent"))
@@ -4829,7 +4882,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_auto_hunt_item_drop_percent"))
 						is_auto_hunt_item_drop_percent = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("is_auto_hunt_aden_drop_percent"))
-						is_auto_hunt_aden_drop_percent = Double.valueOf(value) * 0.01;				
+						is_auto_hunt_aden_drop_percent = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("is_auto_hunt_time"))
 						is_auto_hunt_time = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_hunt_time_account"))
@@ -4855,11 +4908,11 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_auto_potion_buy"))
 						is_auto_potion_buy = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("auto_potion_buy_npc"))
-						auto_potion_buy_npc = value;	
+						auto_potion_buy_npc = value;
 					else if (key.equalsIgnoreCase("auto_potion_buy_min_count"))
 						auto_potion_buy_min_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("auto_potion_buy_count"))
-						auto_potion_buy_count = Integer.valueOf(value);				
+						auto_potion_buy_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_auto_poly_rank"))
 						is_auto_poly_rank = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_poly_rank_buy"))
@@ -4871,7 +4924,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("auto_poly_rank_buy_min_count"))
 						auto_poly_rank_buy_min_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("auto_poly_rank_buy_count"))
-						auto_poly_rank_buy_count = Integer.valueOf(value);									
+						auto_poly_rank_buy_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_auto_poly"))
 						is_auto_poly = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_poly_buy"))
@@ -4907,7 +4960,7 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("auto_haste_buy_min_count"))
 						auto_haste_buy_min_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("auto_haste_buy_count"))
-						auto_haste_buy_count = Integer.valueOf(value);			
+						auto_haste_buy_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("is_auto_bravery"))
 						is_auto_bravery = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_bravery_buy"))
@@ -4941,67 +4994,67 @@ public final class Lineage {
 					else if (key.equalsIgnoreCase("is_auto_hunt_skill"))
 						is_auto_hunt_skill = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_auto_hunt_skill_percent"))
-						is_auto_hunt_skill_percent = Double.valueOf(value) ;
+						is_auto_hunt_skill_percent = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("auto_hunt_telpeport_delay"))
-						auto_hunt_telpeport_delay = Integer.valueOf(value);	
-					
+						auto_hunt_telpeport_delay = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("doll_aden_bonus_knight"))
-					    doll_aden_bonus_knight = Double.parseDouble(value);
+						doll_aden_bonus_knight = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("doll_aden_bonus_elf"))
-					    doll_aden_bonus_elf = Double.parseDouble(value);
+						doll_aden_bonus_elf = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("doll_aden_bonus_wizard"))
-					    doll_aden_bonus_wizard = Double.parseDouble(value);
+						doll_aden_bonus_wizard = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("doll_aden_bonus_lord"))
-					    doll_aden_bonus_lord = Double.parseDouble(value);
-					
-					// 보상코인 
+						doll_aden_bonus_lord = Double.parseDouble(value);
+
+					// 보상코인
 					else if (key.equalsIgnoreCase("reward_coin_password_min_len"))
-					    Lineage.reward_coin_password_min_len = Integer.parseInt(value);
+						Lineage.reward_coin_password_min_len = Integer.parseInt(value);
 					else if (key.equalsIgnoreCase("reward_coin_password_max_len"))
-					    Lineage.reward_coin_password_max_len = Integer.parseInt(value);
-										
+						Lineage.reward_coin_password_max_len = Integer.parseInt(value);
+
 					else if (key.equalsIgnoreCase("reward_coin_save_cmd_on"))
-					    Lineage.reward_coin_save_cmd_on = value.equalsIgnoreCase("true");
+						Lineage.reward_coin_save_cmd_on = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("reward_coin_redeem_cmd_on"))
-					    Lineage.reward_coin_redeem_cmd_on = value.equalsIgnoreCase("true");
+						Lineage.reward_coin_redeem_cmd_on = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("reward_coin_item_name"))
-					    Lineage.reward_coin_item_name = value;
+						Lineage.reward_coin_item_name = value;
 					else if (key.equalsIgnoreCase("reward_coin_season_tag"))
-					    Lineage.reward_coin_season_tag = (value.length() == 0 ? null : value);
-					
+						Lineage.reward_coin_season_tag = (value.length() == 0 ? null : value);
+
 					else if (key.equalsIgnoreCase("reward_coin_min_level_save"))
-					    Lineage.reward_coin_min_level_save = Integer.parseInt(value.trim());
+						Lineage.reward_coin_min_level_save = Integer.parseInt(value.trim());
 					else if (key.equalsIgnoreCase("reward_coin_min_level_redeem"))
-					    Lineage.reward_coin_min_level_redeem = Integer.parseInt(value.trim());
-					
+						Lineage.reward_coin_min_level_redeem = Integer.parseInt(value.trim());
+
 					else if (key.equalsIgnoreCase("reward_coin_required_item_name"))
-					    Lineage.reward_coin_required_item_name = value;
+						Lineage.reward_coin_required_item_name = value;
 					else if (key.equalsIgnoreCase("reward_coin_max_saves_per_season"))
-					    Lineage.reward_coin_max_saves_per_season = Integer.parseInt(value);
+						Lineage.reward_coin_max_saves_per_season = Integer.parseInt(value);
 					else if (key.equalsIgnoreCase("reward_coin_min_save"))
-					    Lineage.reward_coin_min_save = Long.parseLong(value);
+						Lineage.reward_coin_min_save = Long.parseLong(value);
 					else if (key.equalsIgnoreCase("reward_coin_max_save"))
-					    Lineage.reward_coin_max_save = Long.parseLong(value);
-					
+						Lineage.reward_coin_max_save = Long.parseLong(value);
+
 					else if (key.equalsIgnoreCase("danlevel"))
-						danlevel = Integer.valueOf(value);			
+						danlevel = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dan1"))
-						dan1 = Integer.valueOf(value);			
+						dan1 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dan2"))
-						dan2 = Integer.valueOf(value);			
+						dan2 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dan3"))
-						dan3 = Integer.valueOf(value);		
+						dan3 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dan4"))
-						dan4 = Integer.valueOf(value);	
+						dan4 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("dan5"))
-						dan5 = Integer.valueOf(value);				
+						dan5 = Integer.valueOf(value);
 				}
 			}
 			lnrr.close();
-			
+
 			for (BuffNpc npc : buffNpcList)
 				npc.reloadTitle(false);
-			
+
 			BackgroundDatabase.reloadSpawnBattleZone();
 		} catch (Exception e) {
 			lineage.share.System.printf("%s : init()\r\n", Lineage.class.toString());
@@ -5026,20 +5079,20 @@ public final class Lineage {
 	 */
 	static public int getClassType(int class_type) {
 		switch (class_type) {
-		case LINEAGE_CLASS_ROYAL:
-			return LINEAGE_ROYAL;
-		case LINEAGE_CLASS_KNIGHT:
-			return LINEAGE_KNIGHT;
-		case LINEAGE_CLASS_ELF:
-			return LINEAGE_ELF;
-		case LINEAGE_CLASS_WIZARD:
-			return LINEAGE_WIZARD;
-		case LINEAGE_CLASS_DARKELF:
-			return LINEAGE_DARKELF;
-		case LINEAGE_CLASS_DRAGONKNIGHT:
-			return 0;
-		case LINEAGE_CLASS_BLACKWIZARD:
-			return 0;
+			case LINEAGE_CLASS_ROYAL:
+				return LINEAGE_ROYAL;
+			case LINEAGE_CLASS_KNIGHT:
+				return LINEAGE_KNIGHT;
+			case LINEAGE_CLASS_ELF:
+				return LINEAGE_ELF;
+			case LINEAGE_CLASS_WIZARD:
+				return LINEAGE_WIZARD;
+			case LINEAGE_CLASS_DARKELF:
+				return LINEAGE_DARKELF;
+			case LINEAGE_CLASS_DRAGONKNIGHT:
+				return 0;
+			case LINEAGE_CLASS_BLACKWIZARD:
+				return 0;
 		}
 		return 0;
 	}
@@ -5053,7 +5106,8 @@ public final class Lineage {
 					if (uid > 0)
 						list.add(new FirstSpell(uid));
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : toFirstSpell(List<FirstSpell> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : toFirstSpell(List<FirstSpell> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
@@ -5072,7 +5126,8 @@ public final class Lineage {
 					int count = Integer.valueOf(db.substring(f_pos + 1, e_pos).trim());
 					list.add(new FirstInventory(name, count));
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : toFirstInventory(List<FirstInventory> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : toFirstInventory(List<FirstInventory> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
@@ -5090,13 +5145,14 @@ public final class Lineage {
 					String map = db.substring(x.length() + y.length() + 2).trim();
 					list.add(new FirstSpawn(Integer.valueOf(x), Integer.valueOf(y), Integer.valueOf(map)));
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : toFirstSpawn(List<FirstSpawn> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : toFirstSpawn(List<FirstSpawn> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 아이템 제거 막대로 삭제 불가능한 아이템 목록
 	 * 2017-10-24
@@ -5110,13 +5166,14 @@ public final class Lineage {
 					String item = st.nextToken().trim();
 					list.add(item);
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : isRemoveItem(List<String> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : isRemoveItem(List<String> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 공성전 보상 아이템 이름 리스트
 	 * 2017-10-24
@@ -5130,13 +5187,14 @@ public final class Lineage {
 					String item = st.nextToken().trim();
 					list.add(item);
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : kingdomWarWinItemList(List<String> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : kingdomWarWinItemList(List<String> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 팀대전 시간
 	 * 2017-10-24
@@ -5152,13 +5210,14 @@ public final class Lineage {
 					String min = time.substring(hour.length() + 1).trim();
 					list.add(new TeamBattleTime(Integer.valueOf(hour), Integer.valueOf(min)));
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : teamBattleTime(List<TeamBattleTime> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : teamBattleTime(List<TeamBattleTime> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
 		}
 	}
-	
+
 	static private void kingdomDay(List<Integer> list, String value) {
 		if (value.length() > 0) {
 			StringTokenizer st = new StringTokenizer(value, ",");
@@ -5167,19 +5226,20 @@ public final class Lineage {
 					String day = st.nextToken().trim();
 					list.add(Integer.valueOf(day));
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : kingdomDay(List<Integer> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : kingdomDay(List<Integer> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
 		}
 	}
-	
+
 	static public List<Integer> getGiranKingdomWarDayList() {
 		synchronized (giran_kingdom_war_day_list) {
 			return new ArrayList<Integer>(giran_kingdom_war_day_list);
-		}	
+		}
 	}
-	
+
 	/**
 	 * 공성중 소모되지 않는 아이템 리스트
 	 * 2018-08-04
@@ -5193,13 +5253,14 @@ public final class Lineage {
 					String item = st.nextToken().trim();
 					list.add(item);
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : isKingdomWarNoRemoveItem(List<String> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : isKingdomWarNoRemoveItem(List<String> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 복수 시스템 맵리스트
 	 * 2020-08-03
@@ -5213,13 +5274,14 @@ public final class Lineage {
 					String number = st.nextToken().trim();
 					list.add(Integer.valueOf(number));
 				} catch (Exception e) {
-					lineage.share.System.printf("%s : stringToInt(List<Integer> list, String value)\r\n", Lineage.class.toString());
+					lineage.share.System.printf("%s : stringToInt(List<Integer> list, String value)\r\n",
+							Lineage.class.toString());
 					lineage.share.System.println(e);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 귀환 마을 좌표
 	 * 2018-08-11
@@ -5231,7 +5293,7 @@ public final class Lineage {
 		int y = Util.random(32801, 32824);
 		// 맵번호
 		int map = 4;
-		int[] loc = {x, y, map};
+		int[] loc = { x, y, map };
 		int count = 0;
 
 		for (;;) {
@@ -5240,12 +5302,13 @@ public final class Lineage {
 				loc[1] = 32817;
 				break;
 			}
-			
+
 			if ((x >= 33423 && x <= 33425 && y >= 32807 && y <= 32809) ||
-				(x >= 33434 && x <= 33436 && y >= 32807 && y <= 32809) ||
-				(x >= 33423 && x <= 33425 && y >= 32818 && y <= 32820) ||
-				(x >= 33433 && x <= 33435 && y >= 32818 && y <= 32820) ||
-				(x == 33430 && y == 32805) || (x == 33429 && y == 32822) || (x == 33430 && y == 32813) || (x == 33424 && y == 32822)) {
+					(x >= 33434 && x <= 33436 && y >= 32807 && y <= 32809) ||
+					(x >= 33423 && x <= 33425 && y >= 32818 && y <= 32820) ||
+					(x >= 33433 && x <= 33435 && y >= 32818 && y <= 32820) ||
+					(x == 33430 && y == 32805) || (x == 33429 && y == 32822) || (x == 33430 && y == 32813)
+					|| (x == 33424 && y == 32822)) {
 				// x, y좌표
 				x = Util.random(33424, 33437);
 				y = Util.random(32801, 32824);
@@ -5255,6 +5318,6 @@ public final class Lineage {
 				break;
 			}
 		}
-		return loc;	
+		return loc;
 	}
 }

@@ -2269,6 +2269,17 @@ public class PcInstance extends Character {
 						}
 						// 데미지 처리하는 구간
 
+						// ==================================2026.06.07
+						// 🚨 [수정됨] 외부 콘프(Lineage_Balance) 값을 가져와서 대미지 증폭
+						// =========================================================
+						if (getClassType() == Lineage.LINEAGE_CLASS_DARKELF) {
+							if (o != null && o instanceof PcInstance) {
+								// 텍스트 파일에 적힌 배율(예: 1.2)을 그대로 곱해줍니다.
+								dmg = dmg * Lineage_Balance.darkelf_pvp_damage_bonus; 
+							}
+						}
+						// =========================================================
+
 						ItemInstance item = getInventory().find("트리플 애로우(부스트)", 0, 1);
 						if (item != null) {
 							dmg += 20;

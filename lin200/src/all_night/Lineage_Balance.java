@@ -48,7 +48,9 @@ public final class Lineage_Balance {
 	static public double ELF_dmg ;
 	static public double WIZARD_dmg ;
 	static public double DARKELF_dmg ;
-
+	
+	//다크엘프 pvp 데미지
+	static public double darkelf_pvp_damage_bonus = 1.0;
 	
 	// 트리플 애로우 최종 대미지의 몇% 적용 여부
 	static public double triple_arrow_damage;
@@ -1539,6 +1541,9 @@ public final class Lineage_Balance {
 						DARKELF_dmg = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("WIZARD_dmg"))
 						WIZARD_dmg = Double.valueOf(value) * 0.01;
+					
+					else if (key.equalsIgnoreCase("darkelf_pvp_damage_bonus"))
+					    darkelf_pvp_damage_bonus = Double.valueOf(value);
 					
 					else if (key.equalsIgnoreCase("bless_orim_acc_min_en"))
 						bless_orim_acc_min_en = Integer.valueOf(value);
