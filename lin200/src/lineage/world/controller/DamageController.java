@@ -106,6 +106,34 @@ public final class DamageController {
         if (o.isBuffArmorBreak() == true) {
 	     dmg *= 2;
          }
+        
+     // =========================================================
+     		// 🚨 [추가] 외부 콘프 연동: 클래스별 대미지 감소(맷집) 로직
+     		// =========================================================
+     		// 맞는 대상(o)이 몬스터가 아닌 유저(PcInstance)일 경우에만 적용
+     		if (o instanceof lineage.world.object.instance.PcInstance) {
+     			lineage.world.object.instance.PcInstance defender = (lineage.world.object.instance.PcInstance) o;
+     			
+     			switch (defender.getClassType()) {
+     				case Lineage.LINEAGE_CLASS_ROYAL:
+     					dmg = (int) Math.round(dmg * Lineage_Balance.ROYAL_dmg);
+     					break;
+     				case Lineage.LINEAGE_CLASS_KNIGHT:
+     					dmg = (int) Math.round(dmg * Lineage_Balance.KNIGHT_dmg);
+     					break;
+     				case Lineage.LINEAGE_CLASS_ELF:
+     					dmg = (int) Math.round(dmg * Lineage_Balance.ELF_dmg);
+     					break;
+     				case Lineage.LINEAGE_CLASS_DARKELF:
+     					dmg = (int) Math.round(dmg * Lineage_Balance.DARKELF_dmg);
+     					break;
+     				case Lineage.LINEAGE_CLASS_WIZARD:
+     					dmg = (int) Math.round(dmg * Lineage_Balance.WIZARD_dmg);
+     					break;
+     			}
+     		}
+     		// =========================================================
+     		
 		// hp 처리
 		o.setNowHp(o.getNowHp() - dmg);
 		// 투망상태 해제
