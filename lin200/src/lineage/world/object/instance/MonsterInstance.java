@@ -989,9 +989,22 @@ public class MonsterInstance extends Character {
 						&& !Util.isDistance(x, y, map, homeX, homeY, homeMap, Lineage.SEARCH_MONSTER_TARGET_LOCATION)) {
 					// setNowHp(getTotalHp());
 					// setNowMp(getTotalMp());
+					
+					// ==============2026.06.08 보스 스폰 자리 리젠시 데미지 및 경험치 초기화
+					// 🚨 [추가] 보스 어그로 및 타겟 초기화
+					// =========================================================
+					clearAttackList(); // 나를 때린 유저 목록(원한 관계)을 싹 비웁니다.
+					clearExpList();    // 누적 대미지(경험치) 목록도 함께 초기화합니다.
+					// =========================================================
 					toTeleport(homeX, homeY, homeMap, true);
 				}
 				if (map == 807 && !Util.isDistance(x, y, map, homeX, homeY, homeMap, 10)) {
+					// ===============2026.06.08 보스 스폰 자리 리젠시 데미지 및 경험치 초기화
+					// 🚨 [추가] 807 맵 보스 어그로 및 타겟 초기화
+					// =========================================================
+					clearAttackList();
+					clearExpList();
+					// =========================================================
 					toTeleport(homeX, homeY, homeMap, true);
 				}
 				//
