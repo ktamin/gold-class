@@ -104,35 +104,8 @@ public final class DamageController {
 
 		// 아머브레이크 들어가는 데미지에 2배
         if (o.isBuffArmorBreak() == true) {
-	     dmg *= 2;
+	     dmg *= 1.25;
          }
-        
-     // =========================================================
-     		// 🚨 [추가] 외부 콘프 연동: 클래스별 대미지 감소(맷집) 로직
-     		// =========================================================
-     		// 맞는 대상(o)이 몬스터가 아닌 유저(PcInstance)일 경우에만 적용
-     		if (o instanceof lineage.world.object.instance.PcInstance) {
-     			lineage.world.object.instance.PcInstance defender = (lineage.world.object.instance.PcInstance) o;
-     			
-     			switch (defender.getClassType()) {
-     				case Lineage.LINEAGE_CLASS_ROYAL:
-     					dmg = (int) Math.round(dmg * Lineage_Balance.ROYAL_dmg);
-     					break;
-     				case Lineage.LINEAGE_CLASS_KNIGHT:
-     					dmg = (int) Math.round(dmg * Lineage_Balance.KNIGHT_dmg);
-     					break;
-     				case Lineage.LINEAGE_CLASS_ELF:
-     					dmg = (int) Math.round(dmg * Lineage_Balance.ELF_dmg);
-     					break;
-     				case Lineage.LINEAGE_CLASS_DARKELF:
-     					dmg = (int) Math.round(dmg * Lineage_Balance.DARKELF_dmg);
-     					break;
-     				case Lineage.LINEAGE_CLASS_WIZARD:
-     					dmg = (int) Math.round(dmg * Lineage_Balance.WIZARD_dmg);
-     					break;
-     			}
-     		}
-     		// =========================================================
      		
 		// hp 처리
 		o.setNowHp(o.getNowHp() - dmg);
@@ -349,9 +322,33 @@ public final class DamageController {
 			if (!bow && cha.isBuffBurningSpirit() && Util.random(1, 100) <= 20)
 				dmg *= 1.5;
 
+			// 더블 브레이크 2배--------------2026.06.09 주석처리
+//			if (!bow && cha.isBuffDoubleBreak() && Util.random(1, 100) <= 10)
+//				dmg *= 2.0;
+			
 			// 더블 브레이크 2배
-			if (!bow && cha.isBuffDoubleBreak() && Util.random(1, 100) <= 10)
-				dmg *= 2.0;
+						if (!bow && cha.isBuffDoubleBreak()) {
+							if (weapon != null) {
+								String wType = weapon.getItem().getType2();
+								
+								// 1. 무기 제한: 이도류(edoryu 또는 dualblade) 또는 크로우(claw)일 경우에만 발동
+								// (주의: 서버 DB의 weapon 테이블 type2 컬럼에 적힌 영문명과 일치해야 합니다)
+								if (wType.equalsIgnoreCase("claw") || wType.equalsIgnoreCase("edoryu") || wType.equalsIgnoreCase("dualblade")) {
+									
+									// 2. 확률 계산: 기본 10% + (45레벨부터 5레벨당 1%씩 상승)
+									int doubleChance = 10; // 기본 확률 (본섭은 보통 30% 내외이지만, 기존 코드를 존중하여 10으로 시작)
+									if (cha.getLevel() >= 45) {
+										doubleChance += (cha.getLevel() - 40) / 5; // 예: 45렙=+1%, 50렙=+2%
+									}
+
+									// 3. 발동 검사 및 데미지 적용
+									if (Util.random(1, 100) <= doubleChance) {
+										// (팁: 원래 무기 데미지만 2배를 해야 완벽하지만, 자바 구조상 최종 데미지를 뻥튀기하는 방식을 유지하되 배율을 살짝 깎아 타협하는 것을 추천합니다.)
+										dmg *= 1.8; // 2.0배는 스탯까지 2배가 되어 너무 아프니 1.8배 정도로 하향을 추천합니다.
+									}
+								}
+							}
+						}
 
 			// 엘리멘탈 파이어 1.5배
 			if (!bow && cha.isBuffElementalFire() && Util.random(1, 100) <= 40)
@@ -1334,6 +1331,12 @@ public final class DamageController {
 				Character c = (Character) target;
 				tempProbability = acProbability(c, bow);
 				
+				// ======================2026.06.09 근거리 회피 추가
+				// 💡 [핵심 추가] 근거리 회피율(DG)을 합산해 줍니다!
+				// =========================================================
+				tempProbability += c.getDynamicDg(); // 또는 서버에 따라 c.getTotalDg() 일 수 있습니다.
+				// =========================================================
+				
 				// 보스는 유저 공격시 좀더 잘박히게 설정.
 				if (cha instanceof MonsterInstance && target instanceof PcInstance) {
 					MonsterInstance boss = (MonsterInstance) cha;
@@ -1453,9 +1456,10 @@ public final class DamageController {
 		}
 		
 		probability -= tempProbability;
-                if (cha instanceof MonsterInstance){
-                    probability = 100;
-                }
+		//-------------2026.06.09 몬스터 명중 100% 주석처리
+//                if (cha instanceof MonsterInstance){
+//                   probability = 100;
+//                }
 
 
 		if (probability < 1)
