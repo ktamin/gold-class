@@ -125,23 +125,23 @@ public class ItemInstance extends object implements BuffInterface {
 		deleteTime = 0;
 
 	}
-	
+
 	public void updateExpireTime() {
-	    java.sql.Connection con = null;
-	    java.sql.PreparedStatement pstm = null;
-	    try {
-	        con = lineage.database.DatabaseConnection.getLineage(); 
-	        // ★ 나비켓 첫번째 컬럼이 objId라면 아래처럼 써야 에러가 안 납니다.
-	        pstm = con.prepareStatement("UPDATE characters_inventory SET expire_time=? WHERE objId=?");
-	        pstm.setLong(1, getDeleteTime()); 
-	        pstm.setLong(2, getObjectId()); 
-	        pstm.executeUpdate();
-	    } catch (Exception e) {
-	        // 에러 발생 시 로그 출력 (테스트용)
-	        // e.printStackTrace(); 
-	    } finally {
-	        lineage.database.DatabaseConnection.close(con, pstm);
-	    }
+		java.sql.Connection con = null;
+		java.sql.PreparedStatement pstm = null;
+		try {
+			con = lineage.database.DatabaseConnection.getLineage();
+			// ★ 나비켓 첫번째 컬럼이 objId라면 아래처럼 써야 에러가 안 납니다.
+			pstm = con.prepareStatement("UPDATE characters_inventory SET expire_time=? WHERE objId=?");
+			pstm.setLong(1, getDeleteTime());
+			pstm.setLong(2, getObjectId());
+			pstm.executeUpdate();
+		} catch (Exception e) {
+			// 에러 발생 시 로그 출력 (테스트용)
+			// e.printStackTrace();
+		} finally {
+			lineage.database.DatabaseConnection.close(con, pstm);
+		}
 	}
 
 	public long getDeleteTime() {
@@ -161,6 +161,50 @@ public class ItemInstance extends object implements BuffInterface {
 	 */
 	public boolean isClick(PcInstance pc) {
 		if (pc != null) {
+
+			// ====================2026.06.10 아이템:맵 사용금지 추가
+			String itemName = item.getName();
+			int currentMap = pc.getMap();
+
+			// 💡 이제 Lineage.RESTRICTED_MAP_ITEMS는 텍스트 파일에 적은 만큼 자동으로 늘어납니다.
+			for (String[] rule : lineage.share.Lineage.RESTRICTED_MAP_ITEMS) {
+				String restrictItemKeyword = rule[0];
+				String restrictMapSetting = rule[1];
+
+				if (itemName.contains(restrictItemKeyword)) {
+					boolean isForbidden = false;
+
+					if (restrictMapSetting.startsWith("all,!")) {
+						int allowedMap = Integer.parseInt(restrictMapSetting.replace("all,!", "").trim());
+						if (currentMap != allowedMap) {
+							isForbidden = true;
+						}
+					} else {
+						String[] mapIds = restrictMapSetting.split(",");
+						for (String mapIdStr : mapIds) {
+							if (Integer.parseInt(mapIdStr.trim()) == currentMap) {
+								isForbidden = true;
+								break;
+							}
+						}
+					}
+
+					if (isForbidden) {
+						String msg = restrictMapSetting.startsWith("all,!")
+								? "이 아이템은 기란 마을에서만 사용이 가능합니다."
+								: "현재 맵에서는 이 아이템을 사용할 수 없습니다.";
+
+						lineage.world.controller.ChattingController.toChatting(pc, msg,
+								lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+						pc.toSender(lineage.network.packet.server.S_ObjectLock
+								.clone(lineage.network.packet.BasePacketPooling
+										.getPool(lineage.network.packet.server.S_ObjectLock.class), 0x09));
+						return false;
+					}
+				}
+			}
+			// ===================================추가완료
+
 			// 맵에따른 아이템 제한 확인.
 			switch (pc.getMap()) {
 				case 22:
@@ -684,13 +728,13 @@ public class ItemInstance extends object implements BuffInterface {
 		if (nowTime >= 0)
 			this.itemnowTime = itemnowTime;
 	}
-	
+
 	public long getExpireTime() {
-	    return deleteTime; 
+		return deleteTime;
 	}
 
 	public void setExpireTime(long time) {
-	    this.deleteTime = time; 
+		this.deleteTime = time;
 	}
 
 	/**

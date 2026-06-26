@@ -514,6 +514,7 @@ public final class GuiMain {
 		reload_menu_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				lineage.share.Lineage.loadRestrictionConfig();
 				Lineage.init(true);
 			}
 		});

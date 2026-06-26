@@ -1040,6 +1040,18 @@ public final class CharactersDatabase {
 				pc.setTempTitle(rs.getString("temp_title"));
 				pc.setBattleTeam(rs.getInt("battle_team"));
 				pc.scrollWeaponCount = rs.getInt("장인주문서_사용횟수");
+				// ✅ [추가] 장신구 천장 시스템 카운트 불러오기
+				// ==========================================
+				pc.accCount5 = rs.getInt("장신구천장_5");
+				pc.accCount6 = rs.getInt("장신구천장_6");
+				pc.accCount7 = rs.getInt("장신구천장_7");
+				// 👇 [추가] 룸티스 천장 시스템 카운트 불러오기
+				pc.roomtisCount5 = rs.getInt("룸티스천장_5");
+				pc.roomtisCount6 = rs.getInt("룸티스천장_6");
+				pc.roomtisCount7 = rs.getInt("룸티스천장_7");
+				
+				pc.dollEvoCount = rs.getInt("인형진화_사용횟수");
+				//==============================================
 				pc.setExp_marble_save_count(rs.getInt("경험치저장구슬_사용횟수"));
 				pc.setExp_marble_use_count(rs.getInt("경험치구슬_사용횟수"));
 				pc.auto_hunt_time = rs.getInt("자동사냥_남은시간");
@@ -1482,7 +1494,10 @@ public final class CharactersDatabase {
 					+ "is_auto_potion=?, auto_potion_percent=?, auto_potion=?, auto_hunt_monster_count=?, evolution_count=?, temp_name=?, temp_clan_name=?, temp_clan_id=?, temp_clan_grade=?, temp_title=?, battle_team=?, last_ip=?, "
 					+ "장인주문서_사용횟수=?, 경험치저장구슬_사용횟수=?, 경험치구슬_사용횟수=?, "
 					+ "자동사냥_남은시간=?, 자동사냥_귀환체력=?, 자동사냥_자동버프=?, 자동사냥_물약구매=?, 자동사냥_우선변줌사용=?, 자동사냥_자동랭변=?, 자동사냥_랭변구매=?, 자동사냥_자동변신=?, 자동사냥_변줌구매=?, "
-					+ "자동사냥_자동텔포=?, 자동사냥_자동용기=?, 자동사냥_용기구매=?, 자동사냥_자동촐기=?, 자동사냥_촐기구매=?, 자동사냥_화살구매=? WHERE objID=?");
+					+ "자동사냥_자동텔포=?, 자동사냥_자동용기=?, 자동사냥_용기구매=?, 자동사냥_자동촐기=?, 자동사냥_촐기구매=?, 자동사냥_화살구매=?, "
+					+ "장신구천장_5=?, 장신구천장_6=?, 장신구천장_7=?, "
+					+ "룸티스천장_5=?, 룸티스천장_6=?, 룸티스천장_7=?, " // 👈 룸티스 3개 추가!
+					+ "인형진화_사용횟수=? WHERE objID=?"); // WHERE 조건이 마지막
 			st.setInt(1, pc.getLevel());
 			st.setInt(2, pc.getNowHp());
 			st.setInt(3, pc.getMaxHp());
@@ -1563,6 +1578,16 @@ public final class CharactersDatabase {
 			st.setInt(75, pc.is_auto_haste ? 1 : 0);
 			st.setInt(76, pc.is_auto_haste_buy ? 1 : 0);
 			st.setInt(77, pc.is_auto_arrow_buy ? 1 : 0);
+			st.setInt(78, pc.accCount5);
+			st.setInt(79, pc.accCount6);
+			st.setInt(80, pc.accCount7);
+			st.setInt(81, pc.roomtisCount5);
+			st.setInt(82, pc.roomtisCount6);
+			st.setInt(83, pc.roomtisCount7);
+			st.setInt(84, pc.dollEvoCount);
+			st.setLong(85, pc.getObjectId());
+			st.executeUpdate();
+			st.close();
 			st.setLong(78, pc.getObjectId());
 			st.executeUpdate();
 			st.close();

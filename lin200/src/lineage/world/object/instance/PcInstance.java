@@ -314,6 +314,10 @@ public class PcInstance extends Character {
 	// 마법인형을 위한 변수
 	private MagicDoll magicDoll;
 	private MagicDollInstance magicDollinstance;
+	
+	// 인형 진화 천장
+	public int dollEvoCount = 0;
+		
 	// exp 버프 아이콘을 위한 변수
 	private boolean icon;
 	// 팀대전 & 난투전 위한 변수
@@ -399,6 +403,16 @@ public class PcInstance extends Character {
 	public long now_Time;
 	public long frame_Time;
 	public long ai_Time;
+	
+	//악세사리 천장
+	public int accCount5 = 0; // +5 -> +6 도전 실패 횟수 (30장 천장용)
+    public int accCount6 = 0; // +6 -> +7 도전 실패 횟수 (50장 천장용)
+    public int accCount7 = 0; // +7 -> +8 도전 실패 횟수 (100장 천장용)
+    
+    //룸티스 귀걸이 천장
+    public int roomtisCount5 = 0;
+    public int roomtisCount6 = 0;
+    public int roomtisCount7 = 0;
 
 	public PcInstance(LineageClient client) {
 		this.client = client;

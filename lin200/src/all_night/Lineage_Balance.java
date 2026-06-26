@@ -554,6 +554,16 @@ public final class Lineage_Balance {
 	// 장신구 축오림 주문서 9 이상 확률(%)
 	static public double accessories_bless_9_probability;
 	
+	//축오림 천장 시스템
+	public static int accessories_pity_count_5 = 30; // 기본값
+	public static int accessories_pity_count_6 = 50;
+	public static int accessories_pity_count_7 = 100;
+	
+	// 룸티스 천장 시스템
+	public static int roomtis_pity_count_5 = 5; 
+	public static int roomtis_pity_count_6 = 10;
+	public static int roomtis_pity_count_7 = 15;
+	
 	// 룸티스 강화 주문서
 	static public double roomtis_enchant_prob0 = 0.50; // 0->1 확률 (50%)
 	static public double roomtis_enchant_prob1 = 0.40; // 1->2 확률
@@ -982,6 +992,8 @@ public final class Lineage_Balance {
 	
 	// 인형 진화 주문서 확률
 	static public double doll_upgrade_percent;
+	// 인형 진화 천장
+	static public int doll_pity_count = 20;
 	
 	/**
 	 * 리니지 밸런스에 사용되는 변수 초기화.
@@ -1568,6 +1580,22 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("accessories_bless_9_probability"))
 						accessories_bless_9_probability = Double.valueOf(value) * 0.01;
 					
+					// 장신구 천장 시스템
+					else if (key.equalsIgnoreCase("accessories_pity_count_5"))
+						accessories_pity_count_5 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("accessories_pity_count_6"))
+						accessories_pity_count_6 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("accessories_pity_count_7"))
+						accessories_pity_count_7 = Integer.valueOf(value);
+					
+					// 룸티스 천장 시스템
+					else if (key.equalsIgnoreCase("roomtis_pity_count_5"))
+						roomtis_pity_count_5 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("roomtis_pity_count_6"))
+						roomtis_pity_count_6 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("roomtis_pity_count_7"))
+						roomtis_pity_count_7 = Integer.valueOf(value);
+					
 					// 룸티스 강화 확률 로드 부분
 					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob0"))
 						Lineage_Balance.roomtis_enchant_prob0 = Double.parseDouble(value);
@@ -1966,7 +1994,10 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("orim_bless_armor_15_probability"))
 						orim_bless_armor_15_probability = Double.valueOf(value) * 0.01;				
 					else if (key.equalsIgnoreCase("doll_upgrade_percent"))
-						doll_upgrade_percent = Double.valueOf(value) * 0.01;				
+						doll_upgrade_percent = Double.valueOf(value) * 0.01;	
+					// ✅ [추가] 인형 진화 천장 횟수 읽어오기
+					else if (key.equalsIgnoreCase("doll_pity_count"))
+						doll_pity_count = Integer.valueOf(value);
 					
 					// ... (기존 else-if 들 사이 아무 데나) ...
 					else if (key.equalsIgnoreCase("valakas_min_en")) {

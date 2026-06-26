@@ -19,6 +19,7 @@ import lineage.world.object.Character;
 import lineage.world.object.instance.ItemArmorInstance;
 import lineage.world.object.instance.ItemInstance;
 import lineage.world.object.instance.ItemWeaponInstance;
+import lineage.world.object.instance.PcInstance;
 import lineage.world.object.item.all_night.ScrollOfMetis;
 import lineage.world.object.item.all_night.ScrollOfOrimArmor;
 import lineage.world.object.item.all_night.ScrollOfOrimWeapon;
@@ -937,7 +938,7 @@ public class Enchant extends ItemInstance {
 										rnd = 0;
 									}
 								}
-
+/*
 								// 장인의 무기 마법 주문서
 								if (this instanceof ScrollOfWeapon) {
 									double orimChance = 0;
@@ -1026,8 +1027,99 @@ public class Enchant extends ItemInstance {
 
 											if (rnd == -1)
 												EnMsg[1] = "$246";
+										}																				
+			
+									
+			
+									} else if (bless == 0 || bless == -128) {
+*/									
+								// 장인의 무기 마법 주문서
+								if (this instanceof ScrollOfWeapon) {
+									double orimChance = 0;
+
+									if (bless == 1) {
+										
+										// ==========================================
+										// ✅ [천장 시스템] +9 이상 무기 전용 처리
+										// ==========================================
+										if (item.getItem().getSafeEnchant() != 0 && item.getEnLevel() >= 9) {
+											PcInstance pc = (PcInstance) cha;
+											int currentCount = pc.scrollWeaponCount;
+
+											if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_3) { 
+												orimChance = Lineage_Balance.weapon_enchant_9_scroll_probability; 
+											} else if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_2) { 
+												orimChance = Lineage_Balance.weapon_enchant_9_use_count_3_probability;
+											} else if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_1) { 
+												orimChance = Lineage_Balance.weapon_enchant_9_use_count_2_probability;
+											} else { 
+												orimChance = Lineage_Balance.weapon_enchant_9_use_count_1_probability;
+											}
+
+											isEnchant = Math.random() < orimChance;
+
+											if (isEnchant) {
+												// [대성공] 무기 상승 & 횟수 리셋!
+												pc.scrollWeaponCount = 0; 
+												rnd = 1; 
+											} else {
+												// [실패] 횟수 누적!
+												pc.scrollWeaponCount += 1; 
+												isEnchant = true; // 무기 보호 기본
+												
+												if (Math.random() < Lineage_Balance.orim_scroll_weapon_nothing_probability) {
+													rnd = 0; // 아무 일 없음
+												} else {
+													isEnchant = false; // 증발
+													rnd = -1;
+												}
+											}
+										} 
+										// ==========================================
+										// ✅ [기존 로직] +8 이하 또는 뼈/블랙미스릴 무기
+										// ==========================================
+										else {
+											if (item.getItem().getSafeEnchant() == 0) {
+												switch (item.getEnLevel()) {
+													case 0: orimChance = Lineage_Balance.orim_weapon_0_0_probability; break;
+													case 1: orimChance = Lineage_Balance.orim_weapon_0_1_probability; break;
+													case 2: orimChance = Lineage_Balance.orim_weapon_0_2_probability; break;
+													case 3: orimChance = Lineage_Balance.orim_weapon_0_3_probability; break;
+													case 4: orimChance = Lineage_Balance.orim_weapon_0_4_probability; break;
+													case 5: orimChance = Lineage_Balance.orim_weapon_0_5_probability; break;
+													case 6: orimChance = Lineage_Balance.orim_weapon_0_6_probability; break;
+													case 7: orimChance = Lineage_Balance.orim_weapon_0_7_probability; break;
+													case 8: orimChance = Lineage_Balance.orim_weapon_0_8_probability; break;
+													default: orimChance = Lineage_Balance.orim_weapon_0_9_probability; break;
+												}
+											} else {
+												switch (item.getEnLevel()) {
+													case 6: orimChance = Lineage_Balance.orim_weapon_6_probability; break;
+													case 7: orimChance = Lineage_Balance.orim_weapon_7_probability; break;
+													case 8: orimChance = Lineage_Balance.orim_weapon_8_probability; break;
+													default: orimChance = Lineage_Balance.orim_weapon_15_probability; break;
+												}
+											}
+
+											isEnchant = Math.random() < orimChance;
+
+											if (!isEnchant) {
+												isEnchant = true;
+
+												if (Math.random() < Lineage_Balance.orim_scroll_weapon_nothing_probability)
+													rnd = 0;
+												else
+													rnd = -1;
+
+												if (item.getEnLevel() < 1 && rnd == -1)
+													rnd = 0;
+
+												if (rnd == -1)
+													EnMsg[1] = "$246";
+											}
 										}
 									} else if (bless == 0 || bless == -128) {
+										//----------------천장시스템 끝
 										if (item.getItem().getSafeEnchant() == 0) {
 											switch (item.getEnLevel()) {
 												case 0:
@@ -1218,188 +1310,166 @@ public class Enchant extends ItemInstance {
 				}
 			}
 		} else {
-			if (getItem().getName().contains("장신구 마법 주문서[") && getItem().getSmallDmg() > 1) {
+			// ==========================================
+						// 🟦 1. 일반 [장신구 마법 주문서] (기본)
+						// ==========================================
+						if (getItem().getName().equalsIgnoreCase("장신구 마법 주문서")) {
+							rnd = 1;
+							switch (safeEnLevel) {
+								case 0:
+									switch (item.getEnLevel()) {
+										case 0: isEnchant = Math.random() < Lineage_Balance.accessories_0_probability; break;
+										case 1: isEnchant = Math.random() < Lineage_Balance.accessories_1_probability; break;
+										case 2: isEnchant = Math.random() < Lineage_Balance.accessories_2_probability; break;
+										case 3: isEnchant = Math.random() < Lineage_Balance.accessories_3_probability; break;
+										case 4: isEnchant = Math.random() < Lineage_Balance.accessories_4_probability; break;
+										case 5: isEnchant = Math.random() < Lineage_Balance.accessories_5_probability; break;
+										case 6: isEnchant = Math.random() < Lineage_Balance.accessories_6_probability; break;
+										case 7: isEnchant = Math.random() < Lineage_Balance.accessories_7_probability; break;
+										case 8: isEnchant = Math.random() < Lineage_Balance.accessories_8_probability; break;
+										default: isEnchant = Math.random() < Lineage_Balance.accessories_9_probability; break;
+									}
+									break;
+								case 2:
+									switch (item.getEnLevel()) {
+										case 0:
+										case 1:
+											rnd = 1;
+											isEnchant = true;
+											break;
+										case 2: isEnchant = Math.random() < Lineage_Balance.accessories_2_probability; break;
+										case 3: isEnchant = Math.random() < Lineage_Balance.accessories_3_probability; break;
+										case 4: isEnchant = Math.random() < Lineage_Balance.accessories_4_probability; break;
+										case 5: isEnchant = Math.random() < Lineage_Balance.accessories_5_probability; break;
+										case 6: isEnchant = Math.random() < Lineage_Balance.accessories_6_probability; break;
+										case 7: isEnchant = Math.random() < Lineage_Balance.accessories_7_probability; break;
+										case 8: isEnchant = Math.random() < Lineage_Balance.accessories_8_probability; break;
+										default: isEnchant = Math.random() < Lineage_Balance.accessories_9_probability; break;
+									}
+									break;
+							}
+						} 
+						// ==========================================
+						// 🟩 2. 하얀색 [오림의 장신구 마법 주문서] (bless == 1, 천장 X, 실패시 증발/유지)
+						// ==========================================
+						else if (getItem().getName().equalsIgnoreCase("오림의 장신구 마법 주문서") && bless == 1) {
+							rnd = 1;
 
-				rnd = 1;
+							switch (item.getEnLevel()) {
+								case 0: isEnchant = Math.random() < Lineage_Balance.accessories_0_probability; break;
+								case 1: isEnchant = Math.random() < Lineage_Balance.accessories_1_probability; break;
+								case 2: isEnchant = Math.random() < Lineage_Balance.accessories_2_probability; break;
+								case 3: isEnchant = Math.random() < Lineage_Balance.accessories_3_probability; break;
+								case 4: isEnchant = Math.random() < Lineage_Balance.accessories_4_probability; break;
+								case 5: isEnchant = Math.random() < Lineage_Balance.accessories_5_probability; break;
+								case 6: isEnchant = Math.random() < Lineage_Balance.accessories_6_probability; break;
+								case 7: isEnchant = Math.random() < Lineage_Balance.accessories_7_probability; break;
+								case 8: isEnchant = Math.random() < Lineage_Balance.accessories_8_probability; break;
+								default: isEnchant = Math.random() < Lineage_Balance.accessories_9_probability; break;
+							}
 
-				double test = getItem().getSmallDmg() * 0.01;
-				isEnchant = Math.random() < test;
-
-				if (!isEnchant) {
-					isEnchant = true;
-					rnd = 0;
-				}
-
-			}
-			// 장신구 인첸트
-			if (getItem().getName().equalsIgnoreCase("장신구 마법 주문서")) {
-				rnd = 1;
-				switch (safeEnLevel) {
-					case 0:
-						switch (item.getEnLevel()) {
-							case 0:
-								isEnchant = Math.random() < Lineage_Balance.accessories_0_probability;
-								break;
-							case 1:
-								isEnchant = Math.random() < Lineage_Balance.accessories_1_probability;
-								break;
-							case 2:
-								isEnchant = Math.random() < Lineage_Balance.accessories_2_probability;
-								break;
-							case 3:
-								isEnchant = Math.random() < Lineage_Balance.accessories_3_probability;
-								break;
-							case 4:
-								isEnchant = Math.random() < Lineage_Balance.accessories_4_probability;
-								break;
-							case 5:
-								isEnchant = Math.random() < Lineage_Balance.accessories_5_probability;
-								break;
-							case 6:
-								isEnchant = Math.random() < Lineage_Balance.accessories_6_probability;
-								break;
-							case 7:
-								isEnchant = Math.random() < Lineage_Balance.accessories_7_probability;
-								break;
-							case 8:
-								isEnchant = Math.random() < Lineage_Balance.accessories_8_probability;
-								break;
-							default:
-								isEnchant = Math.random() < Lineage_Balance.accessories_9_probability;
-								break;
-						}
-						break;
-					case 2:
-						switch (item.getEnLevel()) {
-							case 0:
-							case 1:
-								rnd = 1;
+							if (!isEnchant) {
 								isEnchant = true;
-								break;
-							case 2:
-								isEnchant = Math.random() < Lineage_Balance.accessories_2_probability;
-							case 3:
-								isEnchant = Math.random() < Lineage_Balance.accessories_3_probability;
-								break;
-							case 4:
-								isEnchant = Math.random() < Lineage_Balance.accessories_4_probability;
-								break;
-							case 5:
-								isEnchant = Math.random() < Lineage_Balance.accessories_5_probability;
-								break;
-							case 6:
-								isEnchant = Math.random() < Lineage_Balance.accessories_6_probability;
-								break;
-							case 7:
-								isEnchant = Math.random() < Lineage_Balance.accessories_7_probability;
-								break;
-							case 8:
-								isEnchant = Math.random() < Lineage_Balance.accessories_8_probability;
-								break;
-							default:
-								isEnchant = Math.random() < Lineage_Balance.accessories_9_probability;
-								break;
+
+								if (Math.random() < Lineage_Balance.accessories_nothing_probability)
+									rnd = 0; // 운 좋게 증발 면함
+								else
+									rnd = -1; // 증발
+
+								if (item.getEnLevel() < 1 && rnd == -1)
+									rnd = 0;
+
+								if (rnd == -1)
+									EnMsg[1] = "$246";
+							}
 						}
-						break;
-				}
-			} else if (getItem().getName().equalsIgnoreCase("오림의 장신구 마법 주문서") && bless == 1) {
-				rnd = 1;
+						// ==========================================
+						// 🟨 3. 노란색(축복) [오림의 장신구 마법 주문서] (bless == 0, 천장 O, 실패해도 무조건 유지)
+						// ==========================================
+						else if (getItem().getName().equalsIgnoreCase("오림의 장신구 마법 주문서") && bless == 0) {
+							rnd = 1;
+							PcInstance pc = (PcInstance) cha;
 
-				switch (item.getEnLevel()) {
-					case 0:
-						isEnchant = Math.random() < Lineage_Balance.accessories_0_probability;
-						break;
-					case 1:
-						isEnchant = Math.random() < Lineage_Balance.accessories_1_probability;
-						break;
-					case 2:
-						isEnchant = Math.random() < Lineage_Balance.accessories_2_probability;
-						break;
-					case 3:
-						isEnchant = Math.random() < Lineage_Balance.accessories_3_probability;
-						break;
-					case 4:
-						isEnchant = Math.random() < Lineage_Balance.accessories_4_probability;
-						break;
-					case 5:
-						isEnchant = Math.random() < Lineage_Balance.accessories_5_probability;
-						break;
-					case 6:
-						isEnchant = Math.random() < Lineage_Balance.accessories_6_probability;
-						break;
-					case 7:
-						isEnchant = Math.random() < Lineage_Balance.accessories_7_probability;
-						break;
-					case 8:
-						isEnchant = Math.random() < Lineage_Balance.accessories_8_probability;
-						break;
-					default:
-						isEnchant = Math.random() < Lineage_Balance.accessories_9_probability;
-						break;
-				}
-				/*
-				 * if (!isEnchant) {
-				 * isEnchant = true;
-				 * rnd = 0;
-				 * }
-				 */
-				if (!isEnchant) {
-					isEnchant = true;
+							// 1. [+5 -> +6] 도전
+							if (item.getEnLevel() == 5) {
+								int maxPity5 = Lineage_Balance.accessories_pity_count_5; 
+								
+								if (pc.accCount5 >= (maxPity5 - 1)) { 
+									isEnchant = true;
+									pc.accCount5 = 0; 
+//									ChattingController.toChatting(pc, "\\fW[시스템] 축복의 기운이 모여 100% 강화에 성공했습니다!", 20);
+								} else {
+									isEnchant = Math.random() < Lineage_Balance.accessories_bless_5_probability;
+									if (isEnchant) {
+										pc.accCount5 = 0; 
+									} else {
+										isEnchant = true; 
+										rnd = 0;          
+										pc.accCount5 += 1;
+//									ChattingController.toChatting(pc, "\\fV[시스템] 장신구 강화 실패! (현재 누적: " + pc.accCount5 + "/" + maxPity5 + ")", 20);
+									}
+								}
+							}
+							// 2. [+6 -> +7] 도전
+							else if (item.getEnLevel() == 6) {
+								int maxPity6 = Lineage_Balance.accessories_pity_count_6;
+								
+								if (pc.accCount6 >= (maxPity6 - 1)) {
+									isEnchant = true;
+									pc.accCount6 = 0; 
+//									ChattingController.toChatting(pc, "\\fW[시스템] 축복의 기운이 모여 100% 강화에 성공했습니다!", 20);
+								} else {
+									isEnchant = Math.random() < Lineage_Balance.accessories_bless_6_probability;
+									if (isEnchant) {
+										pc.accCount6 = 0;
+									} else {
+										isEnchant = true;
+										rnd = 0;
+										pc.accCount6 += 1;
+//										ChattingController.toChatting(pc, "\\fV[시스템] 장신구 강화 실패! (현재 누적: " + pc.accCount6 + "/" + maxPity6 + ")", 20);
+									}
+								}
+							}
+							// 3. [+7 -> +8] 도전
+							else if (item.getEnLevel() == 7) {
+								int maxPity7 = Lineage_Balance.accessories_pity_count_7;
+								
+								if (pc.accCount7 >= (maxPity7 - 1)) {
+									isEnchant = true;
+									pc.accCount7 = 0;
+//									ChattingController.toChatting(pc, "\\fW[시스템] 축복의 기운이 모여 100% 강화에 성공했습니다!", 20);
+								} else {
+									isEnchant = Math.random() < Lineage_Balance.accessories_bless_7_probability;
+									if (isEnchant) {
+										pc.accCount7 = 0;
+									} else {
+										isEnchant = true;
+										rnd = 0;
+										pc.accCount7 += 1;
+//										ChattingController.toChatting(pc, "\\fV[시스템] 장신구 강화 실패! (현재 누적: " + pc.accCount7 + "/" + maxPity7 + ")", 20);
+									}
+								}
+							}
+							// 4. 천장이 없는 나머지 구간 (+0~+4, +8 이상)
+							else {
+								switch (item.getEnLevel()) {
+									case 0: isEnchant = Math.random() < Lineage_Balance.accessories_bless_0_probability; break;
+									case 1: isEnchant = Math.random() < Lineage_Balance.accessories_bless_1_probability; break;
+									case 2: isEnchant = Math.random() < Lineage_Balance.accessories_bless_2_probability; break;
+									case 3: isEnchant = Math.random() < Lineage_Balance.accessories_bless_3_probability; break;
+									case 4: isEnchant = Math.random() < Lineage_Balance.accessories_bless_4_probability; break;
+									case 8: isEnchant = Math.random() < Lineage_Balance.accessories_bless_8_probability; break;
+									default: isEnchant = Math.random() < Lineage_Balance.accessories_bless_9_probability; break;
+								}
 
-					if (Math.random() < Lineage_Balance.accessories_nothing_probability)
-						rnd = 0;
-					else
-						rnd = -1;
-
-					if (item.getEnLevel() < 1 && rnd == -1)
-						rnd = 0;
-
-					if (rnd == -1)
-						EnMsg[1] = "$246";
-				}
-			} else if (getItem().getName().equalsIgnoreCase("오림의 장신구 마법 주문서") && bless == 0) {
-				rnd = 1;
-
-				switch (item.getEnLevel()) {
-					case 0:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_0_probability;
-						break;
-					case 1:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_1_probability;
-						break;
-					case 2:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_2_probability;
-						break;
-					case 3:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_3_probability;
-						break;
-					case 4:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_4_probability;
-						break;
-					case 5:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_5_probability;
-						break;
-					case 6:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_6_probability;
-						break;
-					case 7:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_7_probability;
-						break;
-					case 8:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_8_probability;
-						break;
-					default:
-						isEnchant = Math.random() < Lineage_Balance.accessories_bless_9_probability;
-						break;
-				}
-
-				if (!isEnchant) {
-					isEnchant = true;
-					rnd = 0;
-				}
-			}
-		}
-
+								if (!isEnchant) {
+									isEnchant = true;
+									rnd = 0; // 축복이라 실패해도 템 유지
+								}
+							}
+						}
+					} // <-- 마지막 중괄호 닫기 주의!
+		
 		// 메티스의 축복
 		if (this instanceof ScrollOfMetis) {
 			rnd = 1;
@@ -1407,6 +1477,9 @@ public class Enchant extends ItemInstance {
 		}
 
 		StringBuffer itemName = new StringBuffer();
+		
+		long time = System.currentTimeMillis();
+		String timeString = Util.getLocaleString(time, true);
 		// 인첸 성공시 아이템에 실제 변수 설정하는 부분.
 		if (isEnchant || cha.getGm() > 0) {
 			if (cha.getGm() > 0)
@@ -1500,17 +1573,17 @@ public class Enchant extends ItemInstance {
 			if (rnd == 0) {
 				cha.toSender(
 						S_Message.clone(BasePacketPooling.getPool(S_Message.class), 160, EnMsg[0], EnMsg[1], EnMsg[2]));
-
-				// ✅ [핵심 패치] 여기서 바로 매니저 창으로 실패(유지) 로그를 쏴줍니다!
-				final String log = String.format("[%s] [인첸트 실패(유지)]\t [캐릭터: %s]\t [아이템: %s (+%d)]\t [주문서: %s]",
-						cha.getName(), item.getItem().getName(), item.getEnLevel(), this.getItem().getName());
-
+				
+				// ✅ [갯수 표시 통일 패치] Util.getItemNameToString 을 사용합니다.
+				final String log = String.format("[%s] [인첸트 실패(유지)]\t [캐릭터: %s]\t [아이템: %s]\t [주문서: %s]", 
+					  timeString, cha.getName(), Util.getItemNameToString(item, item.getCount()), Util.getItemNameToString(this, getCount()));
+				
 				lineage.gui.GuiMain.display.asyncExec(new Runnable() {
 					public void run() {
 						lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(log);
 					}
 				});
-
+				
 				return -125;
 			}
 
@@ -1536,12 +1609,10 @@ public class Enchant extends ItemInstance {
 			ItemDropMessageDatabase.sendMessageEn(cha, item, false);
 		}
 
-		long time = System.currentTimeMillis();
-		String timeString = Util.getLocaleString(time, true);
+		// (원래 여기 있던 time과 timeString 선언은 삭제 또는 유지하셔도 됩니다. 위에서 이미 선언했으므로 삭제하는 것이 깔끔합니다.)
 
 		// log
 		if (isEnchant) {
-
 			Log.appendItem(cha, "type|인첸트성공", String.format("item_name|%s", item_name),
 					String.format("item_objid|%d", item_objid), String.format("scroll_name|%s", toStringDB()),
 					String.format("scroll_objid|%d", getObjectId()), String.format("scroll_bress|%d", getBless()),
@@ -1579,8 +1650,6 @@ public class Enchant extends ItemInstance {
 				});
 			}
 		}
-
 		return rnd;
 	}
-
 }

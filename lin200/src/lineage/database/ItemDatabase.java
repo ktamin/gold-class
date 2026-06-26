@@ -83,6 +83,7 @@ import lineage.world.object.item.all_night.ScrollOfmythRankPoly;
 import lineage.world.object.item.all_night.ScrollTOITeleport;
 import lineage.world.object.item.all_night.StatClear;
 import lineage.world.object.item.all_night.Sword_lack;
+import lineage.world.object.item.all_night.TalkingScroll;
 import lineage.world.object.item.all_night.cpaty;
 import lineage.world.object.item.all_night.huntgo;
 import lineage.world.object.item.all_night.huntgo1;
@@ -241,7 +242,7 @@ import lineage.world.object.item.scroll.SpellScrollWeaponBreak;
 import lineage.world.object.item.scroll.SpellScrollWindShuriken;
 import lineage.world.object.item.scroll.TOITeleportCharm;
 import lineage.world.object.item.scroll.TOITeleportScroll;
-import lineage.world.object.item.scroll.TalkingScroll;
+
 import lineage.world.object.item.scroll.발라카스의숨결;
 import lineage.world.object.item.shield.ElvenShield;
 import lineage.world.object.item.wand.EbonyWand;

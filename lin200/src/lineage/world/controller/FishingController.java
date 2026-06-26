@@ -839,34 +839,43 @@ public final class FishingController {
 				st.setLong(1, fi.getPc_objectId());
 				rs = st.executeQuery();
 				while (rs.next()) {
-					// 중복 제거.
-					if (fi.getInventory().find(rs.getInt(1)) != null)
+					// 💡 안전하게 이름으로 호출 (objId)
+					if (fi.getInventory().find(rs.getInt("objId")) != null)
 						continue;
 
 					ItemInstance item = ItemDatabase.newInstance(ItemDatabase.find(rs.getString("name")));
 					if (item != null && item.getItem() != null) {
-						item.setObjectId(rs.getInt(1));
-						item.setCount(rs.getLong(5));
-						item.setQuantity(rs.getInt(6));
-						item.setEnLevel(rs.getInt(7));
-						item.setEquipped(rs.getInt(8) == 1);
-						item.setDefinite(rs.getInt(9) == 1);
-						item.setBless(rs.getInt(10));
-						item.setDurability(rs.getInt(11));
-						item.setNowTime(rs.getInt(12));
-						item.setPetObjectId(rs.getInt(13));
-						item.setInnRoomKey(rs.getInt(14));
-						item.setLetterUid(rs.getInt(15));
-						item.setRaceTicket(rs.getString(16));
-						item.setEnFire(rs.getInt(19));
-						item.setEnWater(rs.getInt(20));
-						item.setEnWind(rs.getInt(21));
-						item.setEnEarth(rs.getInt(22));
-						item.setInvDolloptionA(rs.getInt(23));
-						item.setInvDolloptionB(rs.getInt(24));
-						item.setInvDolloptionC(rs.getInt(25));
-						item.setInvDolloptionD(rs.getInt(26));
-						item.setInvDolloptionE(rs.getInt(27));
+						item.setObjectId(rs.getInt("objId"));
+						item.setCount(rs.getLong("count"));
+						item.setQuantity(rs.getInt("quantity"));
+						item.setEnLevel(rs.getInt("en"));
+						item.setEquipped(rs.getInt("equipped") == 1);
+						item.setDefinite(rs.getInt("definite") == 1);
+						item.setBless(rs.getInt("bress"));
+						item.setDurability(rs.getInt("durability"));
+						item.setNowTime(rs.getInt("nowtime"));
+						item.setPetObjectId(rs.getInt("pet_objid"));
+						item.setInnRoomKey(rs.getInt("inn_key"));
+						item.setLetterUid(rs.getInt("letter_uid"));
+						item.setRaceTicket(rs.getString("slimerace"));
+
+						// =========================================================
+						// ✨ [속성 밀림 버그 완벽 패치] 방 번호 대신 이름표를 보고 찾습니다!
+						// =========================================================
+						item.setEnFire(rs.getInt("enfire"));
+						item.setEnWater(rs.getInt("enwater"));
+						item.setEnWind(rs.getInt("enwind"));
+						item.setEnEarth(rs.getInt("enearth"));
+						item.setInvDolloptionA(rs.getInt("dolloption_a"));
+						item.setInvDolloptionB(rs.getInt("dolloption_b"));
+						item.setInvDolloptionC(rs.getInt("dolloption_c"));
+						item.setInvDolloptionD(rs.getInt("dolloption_d"));
+						item.setInvDolloptionE(rs.getInt("dolloption_e"));
+
+						// CharactersDatabase에 있던 만료시간(expire_time)도 낚시에 추가해줍니다.
+						item.setExpireTime(rs.getLong("expire_time"));
+						// =========================================================
+
 						inv.appendList(item);
 					}
 				}

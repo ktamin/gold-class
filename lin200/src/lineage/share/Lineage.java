@@ -1350,6 +1350,10 @@ public final class Lineage {
 	// 마법인형 이동 또는 소환 불가능한 맵
 	static public int MagicDollTeleportImpossibleMap[] = { 509, 807 };
 
+	// 💡 텍스트 파일에서 읽어온 규칙들을 무한대로 저장할 동적 리스트
+	// 2026.06.10 맵:아이템 사용금지 추가
+	static public java.util.List<String[]> RESTRICTED_MAP_ITEMS = new java.util.ArrayList<>();
+
 	// 랜덤 텔레포트 가능한 맵
 	// 야도란 정무 추가
 	static public int TeleportPossibleMap[] = { 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21,
@@ -5319,5 +5323,41 @@ public final class Lineage {
 			}
 		}
 		return loc;
+	}
+
+	static public void loadRestrictionConfig() {
+		RESTRICTED_MAP_ITEMS.clear(); // 기존 목록 싹 지우기 (리로드 대비)
+
+		try {
+			// 직접 설정 파일을 엽니다. (경로: 루트 폴더의 lineage.conf)
+			java.util.Properties config = new java.util.Properties();
+			java.io.FileInputStream fis = new java.io.FileInputStream("lineage.conf");
+			config.load(fis);
+			fis.close();
+
+			// MapItemRestriction_ 번호를 1부터 무한대로 순서대로 읽어옵니다.
+			int index = 1;
+			while (true) {
+				String value = config.getProperty("MapItemRestriction_" + index);
+
+				// 더 이상 등록된 번호가 없으면(비어있으면) 스톱!
+				if (value == null || value.trim().isEmpty()) {
+					break;
+				}
+
+				// "오만의 탑:all,!4" -> ":" 기준으로 쪼개서 리스트에 담기
+				String[] parts = value.split(":");
+				if (parts.length == 2) {
+					RESTRICTED_MAP_ITEMS.add(new String[] { parts[0].trim(), parts[1].trim() });
+				}
+				index++;
+			}
+			// System 충돌 방지를 위해 java.lang.System 풀 네임 사용
+			java.lang.System.out.println("====== [시스템] 맵별 아이템 제한 규칙 총 " + (index - 1) + "개 로드 완료 ======");
+
+		} catch (Exception e) {
+			java.lang.System.out.println("🚨 맵별 아이템 제한 설정(lineage.conf)을 읽는 중 에러가 발생했습니다.");
+			e.printStackTrace();
+		}
 	}
 }

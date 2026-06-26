@@ -263,6 +263,7 @@ public final class Main implements Runnable {
 			GuiThread.init();
 			Mysql.init();
 			Lineage.init(false);
+			lineage.share.Lineage.loadRestrictionConfig();
 			Lineage_Balance.init();
 			Npc_promotion.init();
 			Socket.init();
