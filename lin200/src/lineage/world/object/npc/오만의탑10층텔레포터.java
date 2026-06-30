@@ -19,10 +19,10 @@ public class 오만의탑10층텔레포터 extends object {
     public void toTalk(PcInstance pc, ClientBasePacket cbp) {
         List<String> list = new ArrayList<String>();
 
-        list.add(String.format("입장 레벨: %d이상 입장 가능", Lineage.omman10_level));
-        list.add(String.format("수배 조건: %s", Lineage.omman10_wanted ? "수배자만 입장 가능" : "수배 필요없음"));
-        list.add(String.format("혈맹 조건: %s", Lineage.omman10_clan ? "혈맹 필요" : "혈맹 필요없음"));
-        list.add(String.format("입장재료 : 아데나 %,d 개", Lineage.go_omman10));
+        list.add(String.format("입장 레벨: %d이상 입장 가능", Lineage.oman10_level));
+        list.add(String.format("수배 조건: %s", Lineage.oman10_wanted ? "수배자만 입장 가능" : "수배 필요없음"));
+        list.add(String.format("혈맹 조건: %s", Lineage.oman10_clan ? "혈맹 필요" : "혈맹 필요없음"));
+        list.add(String.format("입장재료 : 아데나 %,d 개", Lineage.go_oman10));
 
         pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "omman10tel", null, list));
     }
@@ -40,9 +40,9 @@ public class 오만의탑10층텔레포터 extends object {
         }
 
         // 1) 레벨 체크
-        if (pc.getLevel() < Lineage.omman10_level) {
+        if (pc.getLevel() < Lineage.oman10_level) {
             ChattingController.toChatting(pc,
-                String.format("오만의 탑 10층은 %d레벨 이상 입장 가능합니다.", Lineage.omman10_level),
+                String.format("오만의 탑 10층은 %d레벨 이상 입장 가능합니다.", Lineage.oman10_level),
                 Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
@@ -50,25 +50,25 @@ public class 오만의탑10층텔레포터 extends object {
         // 2) 수배 조건
         // wh_wanted = true  → 수배자만 입장
         // wh_wanted = false → 수배 필요 없음(= 수배자는 입장 가능/불가 정책이 없으니 통과)
-        if (Lineage.omman10_wanted && !WantedController.checkWantedPc(pc)) {
+        if (Lineage.oman10_wanted && !WantedController.checkWantedPc(pc)) {
             ChattingController.toChatting(pc, "오만의 탑 10층은 수배자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
 
         // 3) 혈맹 조건
-        if (Lineage.omman10_clan && pc.getClanId() <= 0) {
+        if (Lineage.oman10_clan && pc.getClanId() <= 0) {
             ChattingController.toChatting(pc, "오만의 탑 10층은 혈맹 가입자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
 
         // 4) 입장료(아데나) 체크 — 0이면 패스
-        if (Lineage.go_omman10 > 0) {
+        if (Lineage.go_oman10 > 0) {
             // 서버 공용: 인벤에 아데나 차감 API가 있으면 사용 (이름은 "아데나"로 고정)
             // true: 차감 성공 / false: 부족
             if (pc.getInventory() == null ||
-                !pc.getInventory().isAden("아데나", Lineage.go_omman10, true)) {
+                !pc.getInventory().isAden("아데나", Lineage.go_oman10, true)) {
                 ChattingController.toChatting(pc,
-                    String.format("입장재료가 부족합니다. 아데나 %,d만 필요합니다.", Lineage.go_omman10),
+                    String.format("입장재료가 부족합니다. 아데나 %,d만 필요합니다.", Lineage.go_oman10),
                     Lineage.CHATTING_MODE_MESSAGE);
                 return;
             }

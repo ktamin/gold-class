@@ -395,6 +395,47 @@ public final class Lineage_Balance {
 	static public double oman_spawn_hp_min;
 	static public double oman_spawn_hp_max;
 	
+	// 🛡️ 장인의 갑옷 마법 주문서 (단일 천장 시스템)
+	// [+7 -> +8 구간]
+	public static int armor_enchant_7_pity_count = 100;   
+	// [+8 -> +9 구간]
+	public static int armor_enchant_8_pity_count = 100;
+	// [+9 -> +10 구간]
+	public static int armor_enchant_9_pity_count = 100;
+
+	// 🔮 마안 합성 시스템 (확률, 재화 이름, 재화 수량)
+	static public double maan_birth_percent = 30.0;
+	static public String maan_birth_aden_name = "아데나";
+	static public int maan_birth_aden_count = 100000;
+
+	static public double maan_shape_percent = 10.0;
+	static public String maan_shape_aden_name = "아데나";
+	static public int maan_shape_aden_count = 500000;
+
+	static public double maan_life_percent = 5.0;
+	static public String maan_life_aden_name = "아데나";
+	static public int maan_life_aden_count = 1000000;
+
+	// 천장 시스템 (해당 횟수 도달 시 100% 성공)
+	static public int maan_pity_count_birth = 10;
+	static public int maan_pity_count_shape = 10;
+	static public int maan_pity_count_life = 10;
+	
+	// 🔮 마안 합성 실패 시 상승할 '확률 보너스' 고정값
+	public static double maan_birth_bonus_val = 5.0; // 탄생 실패 시 +5%
+	public static double maan_shape_bonus_val = 3.0; // 형상 실패 시 +3%
+	public static double maan_life_bonus_val  = 1.0; // 생명 실패 시 +1%
+	
+	// 🧸 마법인형 합성 천장 시스템 (목표 등급 기준)
+	static public int doll_pity_count_4 = 10;      // 4단계 인형 천장 횟수
+	static public int doll_pity_count_5 = 10;      // 5단계 인형 천장 횟수
+	static public int doll_pity_count_dragon = 10; // 용인형 천장 횟수
+	
+	// 🧸 인형 합성 실패 시 상승할 '확률 보너스' (1.0 = 1%)
+	public static double doll_bonus_val_4 = 1.0; 
+	public static double doll_bonus_val_5 = 1.0; 
+	public static double doll_bonus_val_dragon = 0.5;
+	
 	// 1단계 마법인형 합성 확률
 	static public double magicDoll_class_1_probability;
 	// 1단계 마법인형 합성 대성공 확률
@@ -812,6 +853,10 @@ public final class Lineage_Balance {
 	static public double weapon_enchant_9_use_count_3_probability;
 	// 장인의 무기 마법 주문서 누적 사용횟수가 설정값 이상일 경우 확률(%)
 	static public double weapon_enchant_9_scroll_probability;
+	
+	//장인의 무기 마법 주문서 천장 +10, +11
+	public static int weapon_enchant_10_pity_count = 100; // 예시 횟수
+	public static int weapon_enchant_11_pity_count = 100; // 예시 횟수
 
 	// 양손무기 추가 대미지
 	static public double two_handsword_damage;
@@ -844,6 +889,15 @@ public final class Lineage_Balance {
 	
 	// 스턴 확률 조절
 	static public double stun_percent_rate;
+	
+	// 포스 스턴 발동 확률
+	public static int force_stun_chance = 35; // 기본값 35%
+	
+	// ✅ 다크엘프 쉐도우 스턴 발동 확률
+	static public double shadow_stun_prob;
+	
+	// 네메시스 스턴 확률
+	public static int nemesis_stun_chance = 10; // 기본값 10%
 	
 	// 안전인챈트 0 무기 0 -> 2 확률(%)
 	static public double weapon_safe_enchant0_0_2_probability;
@@ -1083,6 +1137,67 @@ public final class Lineage_Balance {
 						oman_spawn_hp_min = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("oman_spawn_hp_max"))
 						oman_spawn_hp_max = Double.valueOf(value) * 0.01;
+					
+					// 장인의 갑옷 마법 주문서 천장
+					else if (key.equalsIgnoreCase("armor_enchant_7_pity_count"))
+					    armor_enchant_7_pity_count = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("armor_enchant_8_pity_count"))
+					    armor_enchant_8_pity_count = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("armor_enchant_9_pity_count"))
+					    armor_enchant_9_pity_count = Integer.valueOf(value);					
+					
+					// 1. 탄생의 마안
+					else if (key.equalsIgnoreCase("maan_birth_percent"))
+						maan_birth_percent = Double.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_birth_aden_name"))
+						maan_birth_aden_name = value; 
+					else if (key.equalsIgnoreCase("maan_birth_aden_count"))
+						maan_birth_aden_count = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_pity_count_birth"))
+						maan_pity_count_birth = Integer.valueOf(value);
+
+					// 2. 형상의 마안
+					else if (key.equalsIgnoreCase("maan_shape_percent"))
+						maan_shape_percent = Double.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_shape_aden_name"))
+						maan_shape_aden_name = value; 
+					else if (key.equalsIgnoreCase("maan_shape_aden_count"))
+						maan_shape_aden_count = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_pity_count_shape"))
+						maan_pity_count_shape = Integer.valueOf(value);
+
+					// 3. 생명의 마안
+					else if (key.equalsIgnoreCase("maan_life_percent"))
+						maan_life_percent = Double.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_life_aden_name"))
+						maan_life_aden_name = value; 
+					else if (key.equalsIgnoreCase("maan_life_aden_count"))
+						maan_life_aden_count = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_pity_count_life"))
+						maan_pity_count_life = Integer.valueOf(value);
+					
+					else if (key.equalsIgnoreCase("maan_birth_bonus_val"))
+						maan_birth_bonus_val = Double.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_shape_bonus_val"))
+						maan_shape_bonus_val = Double.valueOf(value);
+					else if (key.equalsIgnoreCase("maan_life_bonus_val"))
+						maan_life_bonus_val = Double.valueOf(value);
+					
+					// 🧸 인형 천장 시스템 로드
+					else if (key.equalsIgnoreCase("doll_pity_count_4"))
+						doll_pity_count_4 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("doll_pity_count_5"))
+						doll_pity_count_5 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("doll_pity_count_dragon"))
+						doll_pity_count_dragon = Integer.valueOf(value);
+					
+					// [인형 합성 실패시 보너스 확률]
+					else if (key.equalsIgnoreCase("doll_bonus_val_4"))
+						doll_bonus_val_4 = Double.valueOf(value);
+					else if (key.equalsIgnoreCase("doll_bonus_val_5")) 
+						doll_bonus_val_5 = Double.valueOf(value);
+					else if (key.equalsIgnoreCase("doll_bonus_val_dragon")) 
+						doll_bonus_val_dragon = Double.valueOf(value);
 					
 					else if (key.equalsIgnoreCase("magicDoll_class_1_probability"))
 						magicDoll_class_1_probability = Double.valueOf(value) * 0.01;
@@ -1344,6 +1459,13 @@ public final class Lineage_Balance {
 						weapon_enchant_9_nothing_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_enchant_9_scroll_probability"))
 						weapon_enchant_9_scroll_probability = Double.valueOf(value) * 0.01;
+					
+					// 무기 천장 (+10, +11 구간)
+					else if (key.equalsIgnoreCase("weapon_enchant_10_pity_count"))
+						weapon_enchant_10_pity_count = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("weapon_enchant_11_pity_count"))
+						weapon_enchant_11_pity_count = Integer.valueOf(value);
+					
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_0_probability"))
 						armor_safe_enchant0_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_1_probability"))
@@ -1542,6 +1664,13 @@ public final class Lineage_Balance {
 						pc_bow_hit_ac_wizard_percent = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("stun_percent_rate"))
 						stun_percent_rate = Double.valueOf(value) * 0.01;
+					// 포스스턴, 네메시스, 쉐도우 스턴
+					else if (key.equalsIgnoreCase("force_stun_chance"))
+						force_stun_chance = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("shadow_stun_prob"))
+						shadow_stun_prob = Double.valueOf(value) * 0.01;
+					else if (key.equalsIgnoreCase("nemesis_stun_chance"))
+						nemesis_stun_chance = Integer.parseInt(value);
 					
 					else if (key.equalsIgnoreCase("ROYAL_dmg"))
 						ROYAL_dmg = Double.valueOf(value) * 0.01;

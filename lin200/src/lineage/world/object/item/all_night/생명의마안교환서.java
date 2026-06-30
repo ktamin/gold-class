@@ -72,10 +72,10 @@ public class 생명의마안교환서 extends ItemInstance {
 							// 겹치는 아이템이 존재할 경우.
 							cha.getInventory().count(temp, temp.getCount() + 1, true);
 						}
-                                                if (!cha.getInventory().isAden(Lineage.생명의마안_제작_아덴_수량, true)) {
-                                                        ChattingController.toChatting(cha, "아데나가 부족합니다.", Lineage.CHATTING_MODE_MESSAGE);
-                                                        return;
-                                                }
+//                                                if (!cha.getInventory().isAden(Lineage.생명의마안_제작_아덴_수량, true)) {
+//                                                        ChattingController.toChatting(cha, "아데나가 부족합니다.", Lineage.CHATTING_MODE_MESSAGE);
+//                                                        return;
+//                                                }
 						cha.getInventory().count(수룡의마안, 수룡의마안.getCount() - 1, true);
 						cha.getInventory().count(풍룡의마안, 풍룡의마안.getCount() - 1, true);
 						cha.getInventory().count(지룡의마안, 지룡의마안.getCount() - 1, true);

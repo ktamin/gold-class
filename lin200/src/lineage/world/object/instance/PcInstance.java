@@ -317,6 +317,16 @@ public class PcInstance extends Character {
 	
 	// 인형 진화 천장
 	public int dollEvoCount = 0;
+	
+	// 인형 합성 실패 누적 횟수 (천장 카운트)
+	public int dollCount4 = 0;        // 4단계 인형 획득 실패 횟수
+	public int dollCount5 = 0;        // 5단계 인형 획득 실패 횟수
+	public int dollCountDragon = 0;   // 용인형 획득 실패 횟수
+	
+	// 인형 실패시 성공 확률 추가
+	public double dollBonus4 = 0.0; 
+	public double dollBonus5 = 0.0;
+	public double dollBonusDragon = 0.0;
 		
 	// exp 버프 아이콘을 위한 변수
 	private boolean icon;
@@ -404,10 +414,35 @@ public class PcInstance extends Character {
 	public long frame_Time;
 	public long ai_Time;
 	
+	// 장인의 무기 마법 주문서 천장
+	public int scrollWeaponCount = 0;
+	public int scrollWeaponCount10 = 0; 
+	public int scrollWeaponCount11 = 0; 
+	
+	// 🛡️ 장인의 갑옷 마법 주문서 천장 카운트
+	public int scrollArmorCount7 = 0; // +7 -> +8 도전 실패 횟수
+	public int scrollArmorCount8 = 0; // +8 -> +9 도전 실패 횟수
+	public int scrollArmorCount9 = 0; // +9 -> +10 도전 실패 횟수
+	
 	//악세사리 천장
 	public int accCount5 = 0; // +5 -> +6 도전 실패 횟수 (30장 천장용)
     public int accCount6 = 0; // +6 -> +7 도전 실패 횟수 (50장 천장용)
     public int accCount7 = 0; // +7 -> +8 도전 실패 횟수 (100장 천장용)
+    
+    // ----------------------------------------------------
+  	// 🔮 마안 합성 천장 시스템용 실패 누적 변수
+  	// ----------------------------------------------------
+  	public int maanCountBirth = 0; // 탄생의 마안 실패 횟수
+  	public int maanCountShape = 0; // 형상의 마안 실패 횟수
+  	public int maanCountLife = 0;  // 생명의 마안 실패 횟수
+  	
+ 	// 마안 실패 보너스
+  	public double maanBonusBirth = 0.0;
+  	public double maanBonusShape = 0.0;
+  	public double maanBonusLife = 0.0;
+
+ 	// 디스 단독 쿨타임 타이머
+ 	public long lastDisintegrateTime = 0;
     
     //룸티스 귀걸이 천장
     public int roomtisCount5 = 0;

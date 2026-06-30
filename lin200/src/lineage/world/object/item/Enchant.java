@@ -142,7 +142,124 @@ public class Enchant extends ItemInstance {
 		EnMsg[2] = "$247"; // 한 순간
 
 		if (!item.isAcc()) {
-			if (this instanceof ScrollOfOrimWeapon || this instanceof ScrollOfOrimArmor) {
+			// ✅ [천장 시스템] 장인의 갑옷 마법 주문서 (전통 확률 유지형 + 실시간 DB 저장)
+			
+			if (this.getItem().getName().contains("장인의 갑옷") || this.toString().contains("ScrollOfArmor")) {
+			    double orimChance = 0;
+
+			    if (bless == 1) { // bless가 1(축복/장인)인 경우에만 작동
+			        
+			    	// 1. 천장 적용 대상 구간 (+7, +8, +9 방어구 강화 시)
+			    	if (item.getEnLevel() >= 7 && item.getEnLevel() <= 9) {
+			    	    PcInstance pc = (PcInstance) cha;
+			    	    int currentLevel = item.getEnLevel();
+			    	    
+			    	    // 💡 [수정] 나중에 에러가 나지 않도록 여기서 미리 카운트와 천장 최대치를 다 구해둡니다!
+			    	    int currentCount = (currentLevel == 7) ? pc.scrollArmorCount7 : (currentLevel == 8) ? pc.scrollArmorCount8 : pc.scrollArmorCount9;
+			    	    int maxPity = (currentLevel == 7) ? Lineage_Balance.armor_enchant_7_pity_count : (currentLevel == 8) ? Lineage_Balance.armor_enchant_8_pity_count : Lineage_Balance.armor_enchant_9_pity_count;
+
+			    	    // [확률 계산] 천장 횟수 도달 시 100%(1.0) 성공, 미도달 시 안전인챈트별 기존 전통 확률 적용
+			    	    if (currentLevel == 7) {
+			    	        orimChance = (currentCount >= maxPity) ? 1.0 : 
+			    	                     (item.getItem().getSafeEnchant() == 0) ? Lineage_Balance.orim_armor_0_7_probability :
+			    	                     (item.getItem().getSafeEnchant() == 4) ? Lineage_Balance.orim_armor_4_7_probability : Lineage_Balance.orim_armor_7_probability;
+			    	    } else if (currentLevel == 8) {
+			    	        orimChance = (currentCount >= maxPity) ? 1.0 : 
+			    	                     (item.getItem().getSafeEnchant() == 0) ? Lineage_Balance.orim_armor_0_8_probability :
+			    	                     (item.getItem().getSafeEnchant() == 4) ? Lineage_Balance.orim_armor_4_8_probability : Lineage_Balance.orim_armor_8_probability;
+			    	    } else if (currentLevel == 9) {
+			    	        orimChance = (currentCount >= maxPity) ? 1.0 : 
+			    	                     (item.getItem().getSafeEnchant() == 0) ? Lineage_Balance.orim_armor_0_9_probability :
+			    	                     (item.getItem().getSafeEnchant() == 4) ? Lineage_Balance.orim_armor_4_9_probability : Lineage_Balance.orim_armor_9_probability;
+			    	    }
+
+			    	    // 확률 주사위 굴리기
+			    	    isEnchant = Math.random() < orimChance;
+			    	    
+			    	    // 💡 [추가] 인챈트 로그에 띄울 현재 시간 가져오기
+			            String timeString = Util.getLocaleString(System.currentTimeMillis(), true);
+
+			    	    if (isEnchant) {
+			    	        // [강화 성공] 해당 레벨의 천장 스택 초기화
+			    	        if (currentLevel == 7) pc.scrollArmorCount7 = 0;
+			    	        else if (currentLevel == 8) pc.scrollArmorCount8 = 0;
+			    	        else if (currentLevel == 9) pc.scrollArmorCount9 = 0;
+			    	        rnd = 1;
+			    	        
+			    	     // ✅ [수정] 성공 로그를 GUI 인챈트 창으로 출력
+			                final String successLog = String.format("[%s] [장인갑옷 성공]\t [캐릭터: %s]\t [+%d -> +%d] (스택 리셋)", timeString, cha.getName(), currentLevel, currentLevel + 1);
+			                GuiMain.display.asyncExec(new Runnable() {
+			                    public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(successLog); }
+			                });
+			    	    } else {
+			    	        // [강화 실패] 해당 레벨의 천장 스택 1 증가
+			    	        if (currentLevel == 7) pc.scrollArmorCount7 += 1;
+			    	        else if (currentLevel == 8) pc.scrollArmorCount8 += 1;
+			    	        else if (currentLevel == 9) pc.scrollArmorCount9 += 1;
+
+			    	        isEnchant = true; // 기본적으로 아이템 보호 처리
+			    	        if (Math.random() < Lineage_Balance.orim_scroll_armor_nothing_probability) {
+			    	            rnd = 0; // 아무 일도 일어나지 않음 (인챈트 수치 유지)
+			    	        } else { 
+			    	            isEnchant = false; 
+			    	            rnd = -1; // 증발 처리
+			    	        }
+			    	        
+			    	        // 방금 올린 스택을 다시 가져와서 출력
+			    	        int updatedCount = (currentLevel == 7) ? pc.scrollArmorCount7 : (currentLevel == 8) ? pc.scrollArmorCount8 : pc.scrollArmorCount9;
+			    	        
+			    	     // ✅ [수정] 실패 및 천장 누적 로그를 GUI 인챈트 창으로 출력
+			                final String failLog = String.format("[%s] [장인갑옷 실패]\t [캐릭터: %s]\t [+%d 구간]\t [스택: %d / %d]", timeString, cha.getName(), currentLevel, updatedCount, maxPity);
+			                GuiMain.display.asyncExec(new Runnable() {
+			                    public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(failLog); }
+			                });
+			    	    }
+			    	    
+			    	    // 💾 성공이든 실패든 변경된 스택 수치를 즉시 캐릭터 DB에 반영
+			    	    pc.toCharacterSave2();
+			    	}
+			        
+			        // 2. 천장 적용 대상이 아닌 일반 구간 (+6 이하 방어구 강화 시)
+			        else {
+			            if (item.getItem().getSafeEnchant() == 0) {
+			                switch (item.getEnLevel()) {
+			                    case 0: orimChance = Lineage_Balance.orim_armor_0_0_probability; break;
+			                    case 1: orimChance = Lineage_Balance.orim_armor_0_1_probability; break;
+			                    default: orimChance = Lineage_Balance.orim_armor_0_9_probability; break;
+			                }
+			            } else if (item.getItem().getSafeEnchant() == 4) {
+			                switch (item.getEnLevel()) {
+			                    case 4: orimChance = Lineage_Balance.orim_armor_4_4_probability; break;
+			                    case 5: orimChance = Lineage_Balance.orim_armor_4_5_probability; break;
+			                    case 6: orimChance = Lineage_Balance.orim_armor_4_6_probability; break;
+			                    default: orimChance = Lineage_Balance.orim_armor_4_13_probability; break;
+			                }
+			            } else {
+			                switch (item.getEnLevel()) {
+			                    case 6: orimChance = Lineage_Balance.orim_armor_6_probability; break;
+			                    default: orimChance = Lineage_Balance.orim_armor_15_probability; break;
+			                }
+			            }
+			            
+			            isEnchant = Math.random() < orimChance;
+			            
+			            if (!isEnchant) {
+			                isEnchant = true;
+			                if (Math.random() < Lineage_Balance.orim_scroll_armor_nothing_probability) {
+			                    rnd = 0;
+			                } else {
+			                    rnd = -1;
+			                }
+			                if (item.getEnLevel() < 1 && rnd == -1) rnd = 0;
+			                if (rnd == -1) EnMsg[1] = "$246";
+			            }
+			        }
+			    }
+			}
+			// ==========================================
+			// ✅ 장인의 갑옷 마법 주문서 단일 천장 끝
+			// ==========================================	
+			else if (this instanceof ScrollOfOrimWeapon || this instanceof ScrollOfOrimArmor) {
 				double orimChance = 0;
 				rnd = 1;
 				// 오림의 갑옷 마법 주문서
@@ -1035,46 +1152,125 @@ public class Enchant extends ItemInstance {
 */									
 								// 장인의 무기 마법 주문서
 								if (this instanceof ScrollOfWeapon) {
-									double orimChance = 0;
+								    double orimChance = 0;
 
-									if (bless == 1) {
-										
-										// ==========================================
-										// ✅ [천장 시스템] +9 이상 무기 전용 처리
-										// ==========================================
-										if (item.getItem().getSafeEnchant() != 0 && item.getEnLevel() >= 9) {
-											PcInstance pc = (PcInstance) cha;
-											int currentCount = pc.scrollWeaponCount;
+								    if (bless == 1) {
+								        
+								        // ==========================================
+								        // ✅ [천장 시스템] +9, +10, +11 무기 전용 처리
+								        // ==========================================
+								        if (item.getItem().getSafeEnchant() != 0 && item.getEnLevel() >= 9 && item.getEnLevel() <= 11) {
+								            PcInstance pc = (PcInstance) cha;
+								            int currentLevel = item.getEnLevel();
 
-											if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_3) { 
-												orimChance = Lineage_Balance.weapon_enchant_9_scroll_probability; 
-											} else if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_2) { 
-												orimChance = Lineage_Balance.weapon_enchant_9_use_count_3_probability;
-											} else if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_1) { 
-												orimChance = Lineage_Balance.weapon_enchant_9_use_count_2_probability;
-											} else { 
-												orimChance = Lineage_Balance.weapon_enchant_9_use_count_1_probability;
-											}
+								            // 🟦 [+9 -> +10 구간] : 기존의 다단계(계단식) 확률 유지
+								            if (currentLevel == 9) {
+								                int currentCount = pc.scrollWeaponCount;
 
-											isEnchant = Math.random() < orimChance;
+								                if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_3) { 
+								                    orimChance = Lineage_Balance.weapon_enchant_9_scroll_probability; 
+								                } else if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_2) { 
+								                    orimChance = Lineage_Balance.weapon_enchant_9_use_count_3_probability;
+								                } else if (currentCount >= Lineage_Balance.weapon_enchant_9_use_count_1) { 
+								                    orimChance = Lineage_Balance.weapon_enchant_9_use_count_2_probability;
+								                } else { 
+								                    orimChance = Lineage_Balance.weapon_enchant_9_use_count_1_probability;
+								                }
 
-											if (isEnchant) {
-												// [대성공] 무기 상승 & 횟수 리셋!
-												pc.scrollWeaponCount = 0; 
-												rnd = 1; 
-											} else {
-												// [실패] 횟수 누적!
-												pc.scrollWeaponCount += 1; 
-												isEnchant = true; // 무기 보호 기본
-												
-												if (Math.random() < Lineage_Balance.orim_scroll_weapon_nothing_probability) {
-													rnd = 0; // 아무 일 없음
-												} else {
-													isEnchant = false; // 증발
-													rnd = -1;
-												}
-											}
-										} 
+								                isEnchant = Math.random() < orimChance;
+
+								                if (isEnchant) {
+								                    pc.scrollWeaponCount = 0; 
+								                    rnd = 1; 
+								                    
+								                 // ✅ 성공 로그 전송
+								                 String timeString = Util.getLocaleString(System.currentTimeMillis(), true);
+								                 final String successLog = String.format("[%s] [장인무기 성공]\t [캐릭터: %s]\t [+9 -> +10] (스택 리셋)", timeString, cha.getName());
+								                 GuiMain.display.asyncExec(new Runnable() {
+								                     public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(successLog); }
+								                    });
+								                } else {
+								                    pc.scrollWeaponCount += 1; 
+								                    isEnchant = true; 
+								                    if (Math.random() < Lineage_Balance.orim_scroll_weapon_nothing_probability) {
+								                        rnd = 0; 
+								                    } else {
+								                        isEnchant = false; 
+								                        rnd = -1;
+								                    }
+								                 // ✅ 실패 누적 로그 전송
+								                    String timeString = Util.getLocaleString(System.currentTimeMillis(), true);
+								                    final String failLog = String.format("[%s] [장인무기 실패]\t [캐릭터: %s]\t [+9 구간]\t [스택: %d / %d]", timeString, cha.getName(), pc.scrollWeaponCount, Lineage_Balance.weapon_enchant_9_use_count_3);
+								                    GuiMain.display.asyncExec(new Runnable() {
+								                        public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(failLog); }
+								                    });
+								                }
+								            }
+								         // 🟩 [+10 -> +11 구간]
+								            else if (currentLevel == 10) {
+								                int currentCount = pc.scrollWeaponCount10; // 👈 +10 전용 스택 변수 확인
+
+								                // 천장 도달 시 100%, 아닐 시 기본 오림 무기 확률 적용
+								                orimChance = (currentCount >= Lineage_Balance.weapon_enchant_10_pity_count) ? 1.0 : Lineage_Balance.orim_weapon_10_probability;
+								                isEnchant = Math.random() < orimChance;
+								                
+								                String timeString = Util.getLocaleString(System.currentTimeMillis(), true);
+
+								                if (isEnchant) {
+								                    pc.scrollWeaponCount10 = 0; // 👈 +10 스택 초기화
+								                    rnd = 1; 
+								                    
+								                    final String successLog = String.format("[%s] [장인무기 성공]\t [캐릭터: %s]\t [+10 -> +11] (스택 리셋)", timeString, cha.getName());
+								                    GuiMain.display.asyncExec(new Runnable() {
+								                        public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(successLog); }
+								                    });
+								                } else {
+								                    pc.scrollWeaponCount10 += 1; // 👈 여기가 +9로 되어 있어서 안 올랐던 겁니다! (+10 스택 증가)
+								                    isEnchant = true; 
+								                    if (Math.random() < Lineage_Balance.orim_scroll_weapon_nothing_probability) rnd = 0; 
+								                    else { isEnchant = false; rnd = -1; }
+								                    
+								                    // 👈 로그 출력부에도 pc.scrollWeaponCount10 과 10구간 밸런스 설정값 삽입
+								                    final String failLog = String.format("[%s] [장인무기 실패]\t [캐릭터: %s]\t [+10 구간]\t [스택: %d / %d]", timeString, cha.getName(), pc.scrollWeaponCount10, Lineage_Balance.weapon_enchant_10_pity_count);
+								                    GuiMain.display.asyncExec(new Runnable() {
+								                        public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(failLog); }
+								                    });
+								                }
+								            }
+								         // 🟨 [+11 -> +12 구간]
+								            else if (currentLevel == 11) {
+								                int currentCount = pc.scrollWeaponCount11; // 👈 +11 전용 스택 변수
+
+								                orimChance = (currentCount >= Lineage_Balance.weapon_enchant_11_pity_count) ? 1.0 : Lineage_Balance.orim_weapon_11_probability;
+								                isEnchant = Math.random() < orimChance;
+								                
+								                String timeString = Util.getLocaleString(System.currentTimeMillis(), true);
+
+								                if (isEnchant) {
+								                    pc.scrollWeaponCount11 = 0; // 👈 +11 스택 초기화
+								                    rnd = 1; 
+								                    
+								                    final String successLog = String.format("[%s] [장인무기 성공]\t [캐릭터: %s]\t [+11 -> +12] (스택 리셋)", timeString, cha.getName());
+								                    GuiMain.display.asyncExec(new Runnable() {
+								                        public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(successLog); }
+								                    });
+								                } else {
+								                    pc.scrollWeaponCount11 += 1; // 👈 +11 스택 증가
+								                    isEnchant = true; 
+								                    if (Math.random() < Lineage_Balance.orim_scroll_weapon_nothing_probability) rnd = 0; 
+								                    else { isEnchant = false; rnd = -1; }
+								                    
+								                    // 👈 로그 출력부에도 pc.scrollWeaponCount11 과 11구간 밸런스 설정값 삽입
+								                    final String failLog = String.format("[%s] [장인무기 실패]\t [캐릭터: %s]\t [+11 구간]\t [스택: %d / %d]", timeString, cha.getName(), pc.scrollWeaponCount11, Lineage_Balance.weapon_enchant_11_pity_count);
+								                    GuiMain.display.asyncExec(new Runnable() {
+								                        public void run() { GuiMain.getViewComposite().getEnchantComposite().toLog(failLog); }
+								                    });
+								                }
+								            }
+								            
+								            // 💾 결과 저장 (모든 구간 공통)
+								            pc.toCharacterSave2();
+								        }
 										// ==========================================
 										// ✅ [기존 로직] +8 이하 또는 뼈/블랙미스릴 무기
 										// ==========================================
@@ -1195,7 +1391,6 @@ public class Enchant extends ItemInstance {
 											rnd = 0;
 										}
 									}
-
 								}
 							} else if (item instanceof ItemArmorInstance) {
 								switch (safeEnLevel) {
@@ -1294,7 +1489,7 @@ public class Enchant extends ItemInstance {
 												break;
 										}
 										break;
-								}
+								}													
 							}
 						}
 						break;

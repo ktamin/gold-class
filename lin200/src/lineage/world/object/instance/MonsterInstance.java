@@ -1481,7 +1481,7 @@ public class MonsterInstance extends Character {
 
 		inv.clearList();
 
-		// ---------------------------------------------------------
+/*
 		// [3] 경험치 지급 (펫 포함)
 		// ---------------------------------------------------------
 		double total_dmg = 0;
@@ -1520,7 +1520,101 @@ public class MonsterInstance extends Character {
 			}
 			ExpDatabase.setPool(e);
 		}
+*/
+		
+        // ---------------------------------------------------------
+		// [3] 경험치 지급 (펫 & 테이밍 밸런스 분리 적용)
+		// ---------------------------------------------------------
+		double total_dmg = 0;
+		for (Exp e : getExpList())
+			total_dmg += e.getDmg();
 
+		for (Exp e : getExpList()) {
+			if (e == null)
+				continue;
+			object oo = e.getObject();
+			if (oo == null)
+				continue;
+
+			// 각자 넣은 데미지 지분율만큼 파이를 나눔
+			double percent = e.getDmg() / total_dmg;
+			e.setExp(getMonster().getExp() * percent);
+
+			if (oo instanceof Character) {
+				Character cha = (Character) oo;
+
+				if (Util.isDistance(this, cha, Lineage.SEARCH_LOCATIONRANGE)) {
+					
+					// =========================================================
+					// 🟢 1. 주인이 직접 때린 경우 (정상 지급)
+					// =========================================================
+					if (cha instanceof PcInstance) {
+						if (!PartyController.toExp(cha, this, e.getExp()) && !cha.isDead()) {
+							cha.toExp(this, e.getExp());
+							
+							// 라우풀 처리
+							double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
+							if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
+								int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
+								lawful = Util.random(tempLawful * 0.8, tempLawful);
+							}
+							cha.setLawful(cha.getLawful() + (int) lawful);
+						}
+						if (Lineage.is_auto_hunt_check && oo.getGm() == 0)
+							AutoHuntCheckController.addCount((PcInstance) oo);
+					}
+					
+					// =========================================================
+					// 🔵 2. 펫(도베르만, 허스키 등)이 때린 경우
+					// =========================================================
+					else if (cha instanceof PetInstance) {
+						PetInstance pet = (PetInstance) cha;
+						if (!pet.isDead()) {
+							pet.toExp(this, e.getExp()); // 펫 자체 경험치 획득 (레벨업)
+							
+							// 라우풀 처리 (원래 코드 유지)
+							double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
+							if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
+								int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
+								lawful = Util.random(tempLawful * 0.8, tempLawful);
+							}
+							pet.setLawful(pet.getLawful() + (int) lawful);
+						}
+						
+						// 💡 [혜택] 펫이 뺏어간 경험치는 주인에게 그대로 복사해서 돌려줌!
+//						PcInstance master = (PcInstance) pet.getMaster();
+//						if (master != null && !master.isDead() && Util.isDistance(this, master, Lineage.SEARCH_LOCATIONRANGE)) {
+//							if (!PartyController.toExp(master, this, e.getExp())) {
+//								master.toExp(this, e.getExp());
+//							}
+//						}
+					}
+					
+					// =========================================================
+					// 🔴 3. 테이밍/서먼 몬스터가 때린 경우 (법사 소환수)
+					// =========================================================
+					else if (cha instanceof lineage.world.object.instance.SummonInstance) {
+						// 테이밍 몬스터는 원래 경험치를 먹지 않습니다.
+						// 🚨 [핵심] 얘네가 획득한 경험치는 주인에게 돌려주지 않고 증발시킵니다!
+						// 이렇게 해야 법사가 소환수 여러 마리를 끌고 다닐 때 경험치를 폭식하는 밸런스 붕괴를 막을 수 있습니다.
+						
+						// 단, 주인이 성향치(라우풀)는 획득할 수 있도록 처리
+						lineage.world.object.instance.SummonInstance summon = (lineage.world.object.instance.SummonInstance) cha;
+						PcInstance master = (PcInstance) summon.getMaster();
+						if (master != null && !master.isDead() && Util.isDistance(this, master, Lineage.SEARCH_LOCATIONRANGE)) {
+							double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
+							if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
+								int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
+								lawful = Util.random(tempLawful * 0.8, tempLawful);
+							}
+							master.setLawful(master.getLawful() + (int) lawful);
+						}
+					}
+				}
+			}
+			ExpDatabase.setPool(e);
+		}
+		
 		if (Lineage.event_christmas && Util.random(0, 100) < 10 && getAttackListSize() > 0) {
 			if (o != null && o instanceof PcInstance && !(o instanceof RobotInstance)) {
 				ItemInstance ii = ItemDatabase.newInstance(ItemDatabase.find("빨간 양말"));

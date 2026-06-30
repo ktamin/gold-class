@@ -31,8 +31,6 @@ public class 테베텔레포터 extends object {
 		}
 		list.add(String.format("진행 시간: %s", Lineage.tebe_play_time < 60 ? Lineage.tebe_play_time + "초" : (Lineage.tebe_play_time / 60) + "분"));
 		list.add(String.format("입장 가능 여부: %s", 테베라스컨트롤러.isOpen ? "현재 입장 가능" : "입장 불가"));
-		 if (Lineage.tebe_join_item_count > 0)
-		 list.add(String.format("입장료: %s(%d개)", Lineage.tebe_join_item, Lineage.tebe_join_item_count));
 		
 		pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "tebetel", null, list));
 	}
@@ -68,18 +66,12 @@ public class 테베텔레포터 extends object {
 	        ChattingController.toChatting(pc, "테베라스 사막은 혈맹 가입자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
 	        return;
 	    }
-	    // [입장료 체크 - 단일 아이템/수량]
-	    if (pc.getGm() == 0 && Lineage.tebe_join_item_count > 0) {
-	        if (!pc.getInventory().isAden(Lineage.tebe_join_item, Lineage.tebe_join_item_count, true)) {
-	            ChattingController.toChatting(pc,
-	                String.format("입장에는 %s %d개가 필요합니다.", Lineage.tebe_join_item, Lineage.tebe_join_item_count),
-	                Lineage.CHATTING_MODE_MESSAGE);
-	            return;
-	        }
+	    // 아데나 소모 및 텔레포트
+	    if (pc.getInventory().isAden("아데나", Lineage.go_tebe, true)) {
+	    	pc.toPotal(Util.random(32742, 32742), Util.random(32803, 32797), 781);
+	    } else {
+	        ChattingController.toChatting(pc, "입장에 필요한 아데나가 부족합니다.", Lineage.CHATTING_MODE_MESSAGE);
 	    }
-
-	    // 실제 이동
-	    pc.toPotal(Util.random(32742, 32742), Util.random(32803, 32797), 781);
 	}
 
 	public static int getDayOfWeek() {

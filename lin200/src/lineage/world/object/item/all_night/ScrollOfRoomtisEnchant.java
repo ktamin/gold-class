@@ -24,8 +24,6 @@ public class ScrollOfRoomtisEnchant extends ItemInstance {
 
 	@Override
 	public void toClick(Character cha, ClientBasePacket cbp) {
-		// 주문서를 클릭하자마자 콘솔창에 무조건 출력!
-		lineage.share.System.println("[디버그] 룸티스 주문서 클릭됨: " + cha.getName());
 		if (!(cha instanceof PcInstance) || cha.getInventory() == null) 
 			return;
 
@@ -87,45 +85,45 @@ public class ScrollOfRoomtisEnchant extends ItemInstance {
 		}
 
 		// ==========================================
-		// ✨ [보안 강화] 오직 "보호 주문서"만 천장 시스템 이용!
-		// ==========================================
-		boolean isProtectScroll = this.getItem().getName().contains("보호");
-		
-		int maxPityCount = 0; 
-		int currentPityCount = 0;
-		boolean isPityTriggered = false;
+				// ✨ [보안 강화] 오직 "보호 주문서"만 천장 시스템 이용!
+				// ==========================================
+				boolean isProtectScroll = this.getItem().getName().contains("보호");
+				
+				int maxPityCount = 0; 
+				int currentPityCount = 0;
+				boolean isPityTriggered = false;
 
-		if (currentEnLevel == 5) {
-			maxPityCount = Lineage_Balance.roomtis_pity_count_5;
-			currentPityCount = pc.roomtisCount5;
-		} else if (currentEnLevel == 6) {
-			maxPityCount = Lineage_Balance.roomtis_pity_count_6;
-			currentPityCount = pc.roomtisCount6;
-		} else if (currentEnLevel == 7) {
-			maxPityCount = Lineage_Balance.roomtis_pity_count_7;
-			currentPityCount = pc.roomtisCount7;
-		}
+				if (currentEnLevel == 5) {
+					maxPityCount = Lineage_Balance.roomtis_pity_count_5;
+					currentPityCount = pc.roomtisCount5;
+				} else if (currentEnLevel == 6) {
+					maxPityCount = Lineage_Balance.roomtis_pity_count_6;
+					currentPityCount = pc.roomtisCount6;
+				} else if (currentEnLevel == 7) {
+					maxPityCount = Lineage_Balance.roomtis_pity_count_7;
+					currentPityCount = pc.roomtisCount7;
+				}
 
-		// 💡 [핵심] 보호 주문서(isProtectScroll)를 사용했을 때만 100% 천장 혜택이 발동됩니다!
-		// 일반 주문서를 쓰면 스택이 다 찼더라도 본래 확률(chance)대로 굴러갑니다.
-		if (isProtectScroll && maxPityCount > 0 && currentPityCount >= (maxPityCount - 1)) {
-			chance = 1.1; 
-			isPityTriggered = true;
-		}
-		// ==========================================
+				if (isProtectScroll && maxPityCount > 0 && currentPityCount >= (maxPityCount - 1)) {
+					chance = 1.1; 
+					isPityTriggered = true;
+				}
+				// ==========================================
 
-		pc.getInventory().count(this, getCount() - 1, true);
+				// 💡 [수정됨] 주문서가 삭제되기 전에, 필요한 이름 정보들을 미리 확보합니다.
+				final String timeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+				final String charName = pc.getName();
+				final String scrollName = this.getItem().getName(); 
+				final String oldItemName = "+" + currentEnLevel + " " + name; 
 
-		final String timeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		final String charName = pc.getName();
-		final String scrollName = this.getItem().getName();
-		final String oldItemName = "+" + currentEnLevel + " " + name; 
+				// 💡 [수정됨] 정보를 모두 확보한 후, 마지막으로 주문서를 인벤토리에서 소모(삭제)합니다.
+				pc.getInventory().count(this, getCount() - 1, true);
 
-		// 4. 강화 연산 시작 
-		if (Math.random() < chance) {
-			// [강화 성공]
-			int newEnLevel = targetItem.getEnLevel() + 1;
-			targetItem.setEnLevel(newEnLevel);
+				// 4. 강화 연산 시작 
+				if (Math.random() < chance) {
+					// [강화 성공]
+					int newEnLevel = targetItem.getEnLevel() + 1;
+					targetItem.setEnLevel(newEnLevel);
 			
 			// ✨ 성공 시 해당 구간의 스택을 0으로 초기화
 			if (currentEnLevel == 5) pc.roomtisCount5 = 0;
@@ -178,7 +176,7 @@ public class ScrollOfRoomtisEnchant extends ItemInstance {
 				else if (currentEnLevel == 6) pc.roomtisCount6 = 0;
 				else if (currentEnLevel == 7) pc.roomtisCount7 = 0;
 
-				ChattingController.toChatting(pc, "\\fR" + name + " 강화 실패로 아이템이 증발되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(pc, "\\fR" + name + " 강화 실패로 증발되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
 				pc.getInventory().count(targetItem, 0, true); 
 
 				final String logMessage = String.format("[%s] [룸티스 증발]\t [캐릭터: %s]\t [소멸: %s]\t [주문서: %s]", 

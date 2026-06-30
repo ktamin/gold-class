@@ -1045,13 +1045,38 @@ public final class CharactersDatabase {
 				pc.accCount5 = rs.getInt("장신구천장_5");
 				pc.accCount6 = rs.getInt("장신구천장_6");
 				pc.accCount7 = rs.getInt("장신구천장_7");
+				pc.dollEvoCount = rs.getInt("인형진화_사용횟수");
 				// 👇 [추가] 룸티스 천장 시스템 카운트 불러오기
 				pc.roomtisCount5 = rs.getInt("룸티스천장_5");
 				pc.roomtisCount6 = rs.getInt("룸티스천장_6");
 				pc.roomtisCount7 = rs.getInt("룸티스천장_7");
 				
-				pc.dollEvoCount = rs.getInt("인형진화_사용횟수");
-				//==============================================
+				// 마안 천장 및 보너스 불러오기
+				pc.maanCountBirth = rs.getInt("마안천장_탄생");
+				pc.maanBonusBirth = rs.getDouble("마안보너스_탄생"); // 👈 DB값 불러오기
+				pc.maanCountShape = rs.getInt("마안천장_형상");
+				pc.maanBonusShape = rs.getDouble("마안보너스_형상");
+				pc.maanCountLife  = rs.getInt("마안천장_생명");
+				pc.maanBonusLife  = rs.getDouble("마안보너스_생명");
+				
+				// 인형 천장 및 보너스 불러오기
+				pc.dollCount4 = rs.getInt("인형천장_4단계");
+				pc.dollBonus4 = rs.getDouble("인형보너스_4단계"); // 👈 추가				
+				pc.dollCount5 = rs.getInt("인형천장_5단계");
+				pc.dollBonus5 = rs.getDouble("인형보너스_5단계"); // 👈 추가				
+				pc.dollCountDragon = rs.getInt("인형천장_용인형");
+				pc.dollBonusDragon = rs.getDouble("인형보너스_용인형"); // 👈 추가
+				
+				// 장인 갑옷 천장
+				pc.scrollArmorCount7 = rs.getInt("갑옷천장_7");
+				pc.scrollArmorCount8 = rs.getInt("갑옷천장_8");
+				pc.scrollArmorCount9 = rs.getInt("갑옷천장_9");
+				
+				// 장인 무기 +10, +11
+				pc.scrollWeaponCount10 = rs.getInt("무기천장_10");
+				pc.scrollWeaponCount11 = rs.getInt("무기천장_11");
+				//========================================================
+
 				pc.setExp_marble_save_count(rs.getInt("경험치저장구슬_사용횟수"));
 				pc.setExp_marble_use_count(rs.getInt("경험치구슬_사용횟수"));
 				pc.auto_hunt_time = rs.getInt("자동사냥_남은시간");
@@ -1496,8 +1521,16 @@ public final class CharactersDatabase {
 					+ "자동사냥_남은시간=?, 자동사냥_귀환체력=?, 자동사냥_자동버프=?, 자동사냥_물약구매=?, 자동사냥_우선변줌사용=?, 자동사냥_자동랭변=?, 자동사냥_랭변구매=?, 자동사냥_자동변신=?, 자동사냥_변줌구매=?, "
 					+ "자동사냥_자동텔포=?, 자동사냥_자동용기=?, 자동사냥_용기구매=?, 자동사냥_자동촐기=?, 자동사냥_촐기구매=?, 자동사냥_화살구매=?, "
 					+ "장신구천장_5=?, 장신구천장_6=?, 장신구천장_7=?, "
-					+ "룸티스천장_5=?, 룸티스천장_6=?, 룸티스천장_7=?, " // 👈 룸티스 3개 추가!
-					+ "인형진화_사용횟수=? WHERE objID=?"); // WHERE 조건이 마지막
+					+ "룸티스천장_5=?, 룸티스천장_6=?, 룸티스천장_7=?, " 
+					+ "마안천장_탄생=?, 마안보너스_탄생=?, " 
+					+ "마안천장_형상=?, 마안보너스_형상=?, "
+					+ "마안천장_생명=?, 마안보너스_생명=?, "
+					+ "인형천장_4단계=?, 인형보너스_4단계=?, "  // 👈 보너스 4단계 추가
+					+ "인형천장_5단계=?, 인형보너스_5단계=?, "  // 👈 보너스 5단계 추가
+					+ "인형천장_용인형=?, 인형보너스_용인형=?, " // 👈 보너스 용인형 추가
+					+ "갑옷천장_7=?, 갑옷천장_8=?, 갑옷천장_9=?, "
+					+ "무기천장_10=?, 무기천장_11=?, "
+					+ "인형진화_사용횟수=? WHERE objID=?");
 			st.setInt(1, pc.getLevel());
 			st.setInt(2, pc.getNowHp());
 			st.setInt(3, pc.getMaxHp());
@@ -1584,11 +1617,27 @@ public final class CharactersDatabase {
 			st.setInt(81, pc.roomtisCount5);
 			st.setInt(82, pc.roomtisCount6);
 			st.setInt(83, pc.roomtisCount7);
-			st.setInt(84, pc.dollEvoCount);
-			st.setLong(85, pc.getObjectId());
-			st.executeUpdate();
-			st.close();
-			st.setLong(78, pc.getObjectId());
+			st.setInt(84, pc.maanCountBirth);
+			st.setDouble(85, pc.maanBonusBirth); // 👈 DB값 저장
+			st.setInt(86, pc.maanCountShape);
+			st.setDouble(87, pc.maanBonusShape);
+			st.setInt(88, pc.maanCountLife);
+			st.setDouble(89, pc.maanBonusLife);
+			// 👇 인형 천장 및 보너스 세팅 (번호 밀림 주의)
+			st.setInt(90, pc.dollCount4);
+			st.setDouble(91, pc.dollBonus4);      // 👈 추가						
+			st.setInt(92, pc.dollCount5);
+			st.setDouble(93, pc.dollBonus5);      // 👈 추가						
+			st.setInt(94, pc.dollCountDragon);
+			st.setDouble(95, pc.dollBonusDragon); // 👈 추가	
+			st.setInt(96, pc.scrollArmorCount7);
+			st.setInt(97, pc.scrollArmorCount8);
+			st.setInt(98, pc.scrollArmorCount9);
+			st.setInt(99, pc.scrollWeaponCount10); 
+			st.setInt(100, pc.scrollWeaponCount11);					
+			st.setInt(101, pc.dollEvoCount);        
+			st.setLong(102, pc.getObjectId());      
+						
 			st.executeUpdate();
 			st.close();
 			

@@ -320,10 +320,7 @@ public class object {
 	// 추가 드랍률
 	private double addDropItemRate;
 	// 추가 아덴 획득률
-	private double addDropAdenRate;
-	
-	// 장인 주문서 사용 횟수.
-	public int scrollWeaponCount;
+	private double addDropAdenRate;	
 	
 	public boolean isAddHp;
 	public boolean isAddMp;
@@ -457,8 +454,6 @@ public class object {
 		BuffMaanFire = BuffMaanEarth = BuffMaanWatar = BuffMaanWind = BuffMaanLife = BuffMaanBirth = BuffMaanShape = false;
 		
 		addDropItemRate = addDropAdenRate = 0;
-		
-		scrollWeaponCount = 0;
 		
 		isAddHp = isAddMp = false;
 		

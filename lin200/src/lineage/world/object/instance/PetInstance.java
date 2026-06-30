@@ -80,6 +80,11 @@ public class PetInstance extends SummonInstance {
 
 	@Override
 	public void toExp(object o, double exp){
+		// 펫이 죽인 대상(o)이 '테이밍 몬스터(서먼)'이거나 '다른 펫'이라면 경험치를 0 처리합니다.
+		if (o instanceof SummonInstance || o instanceof PetInstance) {
+			return; 
+				}
+		// =========================================================
 		// 배율에따른 경험치 증가.
 		exp *= Lineage.rate_exp_pet;
 		// 레벨별 지급될 경험치 감소.

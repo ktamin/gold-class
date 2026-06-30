@@ -28,6 +28,23 @@ public class EnergyBolt {
 	 * @param object_id
 	 */
 	static public void init(Character cha, Skill skill, int object_id) {
+		
+		// ✅ [추가] 디스인티그레이트 단독 쿨타임(8초) 체크 로직
+				if (skill.getUid() == 77 && cha instanceof PcInstance) {
+					PcInstance pc = (PcInstance) cha;
+					long currentTime = System.currentTimeMillis();
+					
+					// 아직 8초가 지나지 않았다면?
+					if (pc.lastDisintegrateTime > currentTime) {
+						long remainTime = (pc.lastDisintegrateTime - currentTime) / 1000;
+						ChattingController.toChatting(cha, "\\fY디스인티그레이트 재사용 대기시간: " + remainTime + "초", Lineage.CHATTING_MODE_MESSAGE);
+						return; // 스킬 시전 자체를 취소!
+					}
+					
+					// 시전 성공! 쿨타임을 현재시간 + 8초(8000ms)로 리셋합니다.
+					pc.lastDisintegrateTime = currentTime + 9000;
+				}
+				
 		// 타겟 찾기
 		object o = cha.findInsideList(object_id);
 
@@ -123,14 +140,31 @@ public class EnergyBolt {
 			else if (skill.getUid() == 77)
 				effect = 11748;
 		}
-		ItemInstance item = cha.getInventory().find("디스(에이션트)", 0, 1);
+		ItemInstance item = cha.getInventory().find("네메시스", 0, 1);
 
+		// ==========================================
+		// ✅ 네메시스(디스) 전용 스턴 및 이펙트 로직
+		// ==========================================
 		if (item != null && skill.getUid() == 77) {
-			effect = 13546;
+			effect = 11748; // 화려한 이펙트로 강제 변경
+			
+			// 👇 [테스트용] 무조건 100% 발동하게 세팅! (테스트 후 25 등으로 내리세요)
+			// 👇 [수정됨] 고정 숫자 100 대신, Lineage_Balance 파일의 변수를 불러옵니다!
+		if (Util.random(1, 100) <= Lineage_Balance.nemesis_stun_chance) { 
+			int stunTime = Util.random(2, 4);
+				
+				// 타겟에게 기사 스턴 부여
+			//	BuffController.append(o, lineage.world.object.magic.ShockStun.clone(BuffController.getPool(lineage.world.object.magic.ShockStun.class), skill, stunTime, o, 16229));
+				lineage.world.object.magic.ShockStun.applyStun(o, skill, stunTime, 16229);
+				// 💡 확실한 확인을 위해 주석 해제! (디스 쏠 때마다 메시지가 뜨는지 확인하세요)
+//				ChattingController.toChatting(cha, "\\fV[시스템] 디스의 강력한 힘으로 적이 기절했습니다!", Lineage.CHATTING_MODE_MESSAGE);
+			}
 		}
+
 		if (alpha_dmg == 2357) {
 			dmg = 2;
 		}
+		
 		cha.toSender(S_ObjectAttack.clone(BasePacketPooling.getPool(S_ObjectAttack.class), cha, o, action,
 				(int) Math.round(dmg), effect, false, false, 0, 0), cha instanceof PcInstance);
 

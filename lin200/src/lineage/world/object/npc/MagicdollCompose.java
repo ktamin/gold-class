@@ -22,7 +22,6 @@ import lineage.world.object.item.MagicDoll;
 
 public class MagicdollCompose extends object {
 
-	// 아데나 소모량 (conf에서 설정)
 	public static int 인형_1단계_합성_아데나 = 0;
 	public static int 인형_2단계_합성_아데나 = 0;
 	public static int 인형_3단계_합성_아데나 = 0;
@@ -30,16 +29,11 @@ public class MagicdollCompose extends object {
 	public static int 인형_5단계_합성_아데나 = 0;
 
 	public static void loadConfig(String key, String value) {
-		if (key.equalsIgnoreCase("doll_aden_cost_1"))
-			인형_1단계_합성_아데나 = Integer.valueOf(value);
-		else if (key.equalsIgnoreCase("doll_aden_cost_2"))
-			인형_2단계_합성_아데나 = Integer.valueOf(value);
-		else if (key.equalsIgnoreCase("doll_aden_cost_3"))
-			인형_3단계_합성_아데나 = Integer.valueOf(value);
-		else if (key.equalsIgnoreCase("doll_aden_cost_4"))
-			인형_4단계_합성_아데나 = Integer.valueOf(value);
-		else if (key.equalsIgnoreCase("doll_aden_cost_5"))
-			인형_5단계_합성_아데나 = Integer.valueOf(value);
+		if (key.equalsIgnoreCase("doll_aden_cost_1")) 인형_1단계_합성_아데나 = Integer.valueOf(value);
+		else if (key.equalsIgnoreCase("doll_aden_cost_2")) 인형_2단계_합성_아데나 = Integer.valueOf(value);
+		else if (key.equalsIgnoreCase("doll_aden_cost_3")) 인형_3단계_합성_아데나 = Integer.valueOf(value);
+		else if (key.equalsIgnoreCase("doll_aden_cost_4")) 인형_4단계_합성_아데나 = Integer.valueOf(value);
+		else if (key.equalsIgnoreCase("doll_aden_cost_5")) 인형_5단계_합성_아데나 = Integer.valueOf(value);
 	}
 
 	@Override
@@ -66,29 +60,23 @@ public class MagicdollCompose extends object {
 		int level = -1;
 		int adenaCost = 0;
 		if (action.equalsIgnoreCase("1단계 합성")) {
-			level = 0;
-			adenaCost = 인형_1단계_합성_아데나;
+			level = 0; adenaCost = 인형_1단계_합성_아데나;
 		} else if (action.equalsIgnoreCase("2단계 합성")) {
-			level = 1;
-			adenaCost = 인형_2단계_합성_아데나;
+			level = 1; adenaCost = 인형_2단계_합성_아데나;
 		} else if (action.equalsIgnoreCase("3단계 합성")) {
-			level = 2;
-			adenaCost = 인형_3단계_합성_아데나;
+			level = 2; adenaCost = 인형_3단계_합성_아데나;
 		} else if (action.equalsIgnoreCase("4단계 합성")) {
 			if (!Lineage.oman2) {
 				ChattingController.toChatting(pc, "현재는 5단계인형을 제작 할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
 				return;
 			}
-			level = 3;
-			adenaCost = 인형_4단계_합성_아데나;
+			level = 3; adenaCost = 인형_4단계_합성_아데나;
 		} else if (action.equalsIgnoreCase("용 합성")) {
 			if (!Lineage.oman3) {
 				ChattingController.toChatting(pc, "현재는 용인형을 제작 할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
 				return;
 			}
-			level = 4;
-			count = 2;
-			adenaCost = 인형_5단계_합성_아데나;
+			level = 4; count = 2; adenaCost = 인형_5단계_합성_아데나;
 		} else {
 			return;
 		}
@@ -114,6 +102,7 @@ public class MagicdollCompose extends object {
 		double perfectChance = 0.0;
 		double normalChance = 0.0;
 
+		// 💡 DB에서 불러온 누적 보너스를 합산 (Math.random()이 0~1 기준이므로 /100.0 처리)
 		if (level == 0) {
 			perfectChance = Lineage_Balance.magicDoll_class_1_perfect_probability;
 			normalChance = Lineage_Balance.magicDoll_class_1_probability;
@@ -122,29 +111,97 @@ public class MagicdollCompose extends object {
 			normalChance = Lineage_Balance.magicDoll_class_2_probability;
 		} else if (level == 2) {
 			perfectChance = Lineage_Balance.magicDoll_class_3_perfect_probability;
-			normalChance = Lineage_Balance.magicDoll_class_3_probability;
+			normalChance = Lineage_Balance.magicDoll_class_3_probability + (pc.dollBonus4 / 100.0);
 		} else if (level == 3) {
-			normalChance = Lineage_Balance.magicDoll_class_4_probability;
+			normalChance = Lineage_Balance.magicDoll_class_4_probability + (pc.dollBonus5 / 100.0);
 		} else if (level == 4) {
-			normalChance = Lineage_Balance.magicDoll_class_5_probability;
+			normalChance = Lineage_Balance.magicDoll_class_5_probability + (pc.dollBonusDragon / 100.0);
 		}
 
+		int maxPity = 0;
+		boolean isPity = false;
+
+		if (level == 2) { 
+			maxPity = Lineage_Balance.doll_pity_count_4;
+			isPity = (maxPity > 0 && pc.dollCount4 >= maxPity);
+		} else if (level == 3) {
+			maxPity = Lineage_Balance.doll_pity_count_5;
+			isPity = (maxPity > 0 && pc.dollCount5 >= maxPity);
+		} else if (level == 4) {
+			maxPity = Lineage_Balance.doll_pity_count_dragon;
+			isPity = (maxPity > 0 && pc.dollCountDragon >= maxPity);
+		}
+
+		// 확률 안내 메시지 (천장 적용 대상인 4단계, 5단계, 용인형만 출력)
+		if (level >= 2) {
+			ChattingController.toChatting(pc, String.format("현재 성공 확률: %.1f%%", normalChance * 100.0), Lineage.CHATTING_MODE_MESSAGE);
+		}
+
+		boolean isSuccess = false;
+		boolean isPerfect = false;
+
 		if (level == 4) {
-			if (probability < normalChance) {
-				itemName = Lineage.magicDoll[level + 1][Util.random(0, Lineage.magicDoll[level + 1].length - 1)];
-				pc.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), pc, 2048), true);
-			} else {
-				itemName = Lineage.magicDoll[level][Util.random(0, Lineage.magicDoll[level].length - 1)];
-			}
+			if (isPity || probability < normalChance) isSuccess = true;
 		} else {
 			if (probability < perfectChance) {
-				itemName = Lineage.magicDoll[level + 2][Util.random(0, Lineage.magicDoll[level + 2].length - 1)];
-				ChattingController.toChatting(pc, String.format("%d단계 마법인형 합성 대성공!", level + 1), Lineage.CHATTING_MODE_MESSAGE);
-			} else if (probability < normalChance) {
-				itemName = Lineage.magicDoll[level + 1][Util.random(0, Lineage.magicDoll[level + 1].length - 1)];
-				ChattingController.toChatting(pc, String.format("%d단계 마법인형 합성 성공!", level + 1), Lineage.CHATTING_MODE_MESSAGE);
+				isPerfect = true; 
+				isSuccess = true;
+			} else if (isPity || probability < normalChance) {
+				isSuccess = true;
+			}
+		}
+
+		if (isPerfect) {
+			itemName = Lineage.magicDoll[level + 2][Util.random(0, Lineage.magicDoll[level + 2].length - 1)];
+			ChattingController.toChatting(pc, String.format("%d단계 마법인형 합성 대성공!", level + 1), Lineage.CHATTING_MODE_MESSAGE);
+		} else if (isSuccess) {
+			itemName = Lineage.magicDoll[level + 1][Util.random(0, Lineage.magicDoll[level + 1].length - 1)];
+			if (level == 4) {
+				pc.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), pc, 2048), true);
 			} else {
-				itemName = Lineage.magicDoll[level][Util.random(0, Lineage.magicDoll[level].length - 1)];
+				ChattingController.toChatting(pc, String.format("%d단계 마법인형 합성 성공!", level + 1), Lineage.CHATTING_MODE_MESSAGE);
+			}
+			if (isPity) {
+				ChattingController.toChatting(pc, "\\fV[시스템] 천장 달성! 100% 확률로 합성에 성공하였습니다!", Lineage.CHATTING_MODE_MESSAGE);
+			}
+		} else {
+			itemName = Lineage.magicDoll[level][Util.random(0, Lineage.magicDoll[level].length - 1)];
+		}
+
+		// 💡 성공 시 스택/보너스 초기화, 실패 시 카운트 증가 및 보너스 확률 추가
+		if (isSuccess) {
+			if (level == 2) { pc.dollCount4 = 0; pc.dollBonus4 = 0.0; }
+			else if (level == 3) { pc.dollCount5 = 0; pc.dollBonus5 = 0.0; }
+			else if (level == 4) { pc.dollCountDragon = 0; pc.dollBonusDragon = 0.0; }
+		} else {
+			String pityMsg = "";
+			if (level == 2) {
+				pc.dollCount4++;
+				if (Util.random(1, 100) <= 10) {
+					pc.dollBonus4 += Lineage_Balance.doll_bonus_val_4;
+					ChattingController.toChatting(pc, "운이 따르기 시작합니다! (4단계 인형 성공 확률 상승)", Lineage.CHATTING_MODE_MESSAGE);
+				}
+				if (maxPity > 0) pityMsg = " (누적: " + pc.dollCount4 + " / " + maxPity + ")";
+			} else if (level == 3) {
+				pc.dollCount5++;
+				if (Util.random(1, 100) <= 10) {
+					pc.dollBonus5 += Lineage_Balance.doll_bonus_val_5;
+					ChattingController.toChatting(pc, "운이 따르기 시작합니다! (5단계 인형 성공 확률 상승)", Lineage.CHATTING_MODE_MESSAGE);
+				}
+				if (maxPity > 0) pityMsg = " (누적: " + pc.dollCount5 + " / " + maxPity + ")";
+			} else if (level == 4) {
+				pc.dollCountDragon++;
+				if (Util.random(1, 100) <= 10) {
+					pc.dollBonusDragon += Lineage_Balance.doll_bonus_val_dragon;
+					ChattingController.toChatting(pc, "운이 따르기 시작합니다! (용인형 성공 확률 상승)", Lineage.CHATTING_MODE_MESSAGE);
+				}
+				if (maxPity > 0) pityMsg = " (누적: " + pc.dollCountDragon + " / " + maxPity + ")";
+			}
+			
+			if (level >= 2) {
+				ChattingController.toChatting(pc, "마법인형 합성에 실패하였습니다." + pityMsg, Lineage.CHATTING_MODE_MESSAGE);
+			} else {
+				ChattingController.toChatting(pc, "마법인형 합성에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 		}
 
@@ -165,5 +222,7 @@ public class MagicdollCompose extends object {
 				ChattingController.toChatting(pc, String.format("[마법인형 합성] %s 획득!", temp.toStringDB()), Lineage.CHATTING_MODE_MESSAGE);
 			}
 		}
+		
+		pc.toCharacterSave2();
 	}
 }
