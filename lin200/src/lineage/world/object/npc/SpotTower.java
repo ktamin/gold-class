@@ -3,6 +3,7 @@ package lineage.world.object.npc;
 import java.util.ArrayList;
 import java.util.List;
 
+import all_night.Lineage_Balance;
 import lineage.bean.database.Monster;
 import lineage.bean.lineage.Map;
 import lineage.database.MonsterDatabase;
@@ -50,14 +51,34 @@ public class SpotTower extends Character {
 		// 높은 값부터 차례대로 입력.
 		// 값이 4개일 경우 4단계로 스폰.
 		hpStep = new int[] {80, 60, 40, 20};
-		
-		// 스텝 별로 스폰될 몬스터
-		// 체력 값의 갯수만큼 몬스터 단계도 맞춰서 설정해줘야함.
-		monsterNameList = new String[][] {{"큰뼈 흑장로"},					// 1단계 스폰 몬스터
-										{"타워 바포메트"},														// 2단계 스폰 몬스터
-										{"타워 얼음 여왕"},														// 3단계 스폰 몬스터
-										{"타워 리치"}};															// 4단계 스폰 몬스터
-	}
+								
+				// 스텝 별로 스폰될 몬스터 (설정 파일의 티어 값에 따라 변경됨)
+				if (Lineage_Balance.spot_tower_monster_tier == 2) {
+					// 🟦 2군 몬스터 그룹 (서버 중반부용)
+					monsterNameList = new String[][] {
+						{"[2차타워]흑장로"},                          // 80% 스폰
+						{"[2차타워]드레이크 킹"},                       // 60% 스폰
+						{"[2차타워]얼음 여왕"},                         // 40% 스폰
+						{"[2차타워]타락"}                              // 20% 스폰
+					};
+				} else if (Lineage_Balance.spot_tower_monster_tier == 3) {
+					// 🟥 3군 몬스터 그룹 (서버 후반부용)
+					monsterNameList = new String[][] {
+						{"[3차타워]커츠"},                           // 80% 스폰
+						{"[3차타워]나이트발드"},                       // 60% 스폰
+						{"[3차타워]그림리퍼"},                         // 40% 스폰
+						{"[3차타워]데스나이트 킹"}                       // 20% 스폰
+					};
+				} else {
+					// 🟩 1군 몬스터 그룹 (서버 초반부용 - 기본값)
+					monsterNameList = new String[][] {
+						{"[1차타워]네크로맨서(2)"},                   // 80% 스폰
+						{"[1차타워]드레이크(2)"},                     // 60% 스폰
+						{"[1차타워]바포메트"},                        // 40% 스폰
+						{"[1차타워]정예 데스나이트"}                       // 20% 스폰
+					};
+				}
+	       }	
 	
 	public object getCrown() {
 		return crown;

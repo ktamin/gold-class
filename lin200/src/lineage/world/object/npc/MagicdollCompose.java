@@ -1,6 +1,8 @@
 package lineage.world.object.npc;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import all_night.Lineage_Balance;
@@ -59,24 +61,26 @@ public class MagicdollCompose extends object {
 
 		int level = -1;
 		int adenaCost = 0;
+		String composeLevelName = ""; // 로그 출력을 위한 합성 단계 이름
+
 		if (action.equalsIgnoreCase("1단계 합성")) {
-			level = 0; adenaCost = 인형_1단계_합성_아데나;
+			level = 0; adenaCost = 인형_1단계_합성_아데나; composeLevelName = "1단계 합성";
 		} else if (action.equalsIgnoreCase("2단계 합성")) {
-			level = 1; adenaCost = 인형_2단계_합성_아데나;
+			level = 1; adenaCost = 인형_2단계_합성_아데나; composeLevelName = "2단계 합성";
 		} else if (action.equalsIgnoreCase("3단계 합성")) {
-			level = 2; adenaCost = 인형_3단계_합성_아데나;
+			level = 2; adenaCost = 인형_3단계_합성_아데나; composeLevelName = "3단계 합성";
 		} else if (action.equalsIgnoreCase("4단계 합성")) {
 			if (!Lineage.oman2) {
 				ChattingController.toChatting(pc, "현재는 5단계인형을 제작 할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
 				return;
 			}
-			level = 3; adenaCost = 인형_4단계_합성_아데나;
+			level = 3; adenaCost = 인형_4단계_합성_아데나; composeLevelName = "4단계 합성";
 		} else if (action.equalsIgnoreCase("용 합성")) {
 			if (!Lineage.oman3) {
 				ChattingController.toChatting(pc, "현재는 용인형을 제작 할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
 				return;
 			}
-			level = 4; count = 2; adenaCost = 인형_5단계_합성_아데나;
+			level = 4; count = 2; adenaCost = 인형_5단계_합성_아데나; composeLevelName = "용인형 합성";
 		} else {
 			return;
 		}
@@ -102,7 +106,6 @@ public class MagicdollCompose extends object {
 		double perfectChance = 0.0;
 		double normalChance = 0.0;
 
-		// 💡 DB에서 불러온 누적 보너스를 합산 (Math.random()이 0~1 기준이므로 /100.0 처리)
 		if (level == 0) {
 			perfectChance = Lineage_Balance.magicDoll_class_1_perfect_probability;
 			normalChance = Lineage_Balance.magicDoll_class_1_probability;
@@ -132,7 +135,6 @@ public class MagicdollCompose extends object {
 			isPity = (maxPity > 0 && pc.dollCountDragon >= maxPity);
 		}
 
-		// 확률 안내 메시지 (천장 적용 대상인 4단계, 5단계, 용인형만 출력)
 		if (level >= 2) {
 			ChattingController.toChatting(pc, String.format("현재 성공 확률: %.1f%%", normalChance * 100.0), Lineage.CHATTING_MODE_MESSAGE);
 		}
@@ -168,12 +170,42 @@ public class MagicdollCompose extends object {
 			itemName = Lineage.magicDoll[level][Util.random(0, Lineage.magicDoll[level].length - 1)];
 		}
 
-		// 💡 성공 시 스택/보너스 초기화, 실패 시 카운트 증가 및 보너스 확률 추가
+		// =========================================================
+		// 💡 GUI 및 DB 로그 기록 로직 시작
+		// =========================================================
+		final String timeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		final String charName = pc.getName();
+		final String finalItemName = itemName;
+		final String finalLevelName = composeLevelName;
+		
+		int currentStackForLog = (level == 2) ? pc.dollCount4 : (level == 3) ? pc.dollCount5 : (level == 4) ? pc.dollCountDragon : 0;
+
 		if (isSuccess) {
+			// [성공 시 스택 초기화]
 			if (level == 2) { pc.dollCount4 = 0; pc.dollBonus4 = 0.0; }
 			else if (level == 3) { pc.dollCount5 = 0; pc.dollBonus5 = 0.0; }
 			else if (level == 4) { pc.dollCountDragon = 0; pc.dollBonusDragon = 0.0; }
+			
+			// 1. GUI 로그 출력 (대성공 / 천장 성공 / 일반 성공 분기)
+			final String guiLogMsg;
+			if (isPerfect) {
+				guiLogMsg = String.format("[%s] [인형 대성공]\t [캐릭터: %s]\t [%s] 획득: [%s] (스택 리셋)", timeString, charName, finalLevelName, finalItemName);
+			} else if (isPity) {
+				guiLogMsg = String.format("[%s] [인형 천장성공]\t [캐릭터: %s]\t [%s] 획득: [%s] (확정 천장: %d)", timeString, charName, finalLevelName, finalItemName, currentStackForLog);
+			} else {
+				guiLogMsg = String.format("[%s] [인형 성공]\t [캐릭터: %s]\t [%s] 획득: [%s] (스택 리셋)", timeString, charName, finalLevelName, finalItemName);
+			}
+			
+			lineage.gui.GuiMain.display.asyncExec(new Runnable() {
+				public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(guiLogMsg); }
+			});
+			
+			// 2. DB 로그 기록
+			String dbLogDetail = isPerfect ? "[대성공]" : isPity ? "[천장 성공]" : "[일반 성공]";
+//			lineage.database.EnchantLogDatabase.insert(charName, finalItemName, "성공", finalLevelName + " " + dbLogDetail);
+
 		} else {
+			// [실패 시 스택 증가 및 로직 처리]
 			String pityMsg = "";
 			if (level == 2) {
 				pc.dollCount4++;
@@ -203,8 +235,21 @@ public class MagicdollCompose extends object {
 			} else {
 				ChattingController.toChatting(pc, "마법인형 합성에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
+
+			// 방금 올라간 최신 스택을 가져옴
+			int updatedStack = (level == 2) ? pc.dollCount4 : (level == 3) ? pc.dollCount5 : (level == 4) ? pc.dollCountDragon : 0;
+			
+			// 1. GUI 로그 출력
+			final String guiLogMsg = String.format("[%s] [인형 실패]\t [캐릭터: %s]\t [%s] 획득: [%s] [스택: %d / %d]", timeString, charName, finalLevelName, finalItemName, updatedStack, maxPity);
+			lineage.gui.GuiMain.display.asyncExec(new Runnable() {
+				public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(guiLogMsg); }
+			});
+			
+			// 2. DB 로그 기록
+//			lineage.database.EnchantLogDatabase.insert(charName, finalItemName, "실패", finalLevelName + " 천장스택: " + updatedStack);
 		}
 
+		// 아이템 지급 및 DB 저장 처리
 		if (itemName != null) {
 			Item item = ItemDatabase.find(itemName);
 			if (item != null) {

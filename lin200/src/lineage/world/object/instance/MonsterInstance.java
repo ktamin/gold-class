@@ -1261,69 +1261,142 @@ public class MonsterInstance extends Character {
 			chance6 += 0.05;
 		}
 
-		if (!getMonster().getName().contains("파우스트") && !mon.isBoss() && summon == null && getMap() == 53) {
-			Monster monster = MonsterDatabase.find("파우스트의 악령(잔인)");
-			if (monster != null) {
-				MonsterSpawnlistDatabase.toSpawnMonster2(monster, x, y, map, heading, false, this);
-			}
-		}
+		//--------------------------54,55맵에 "파우스트의 악령(잔인)"을 출현하지 않고 54,55번 맵에 파우스트 출현 시키기 위해 주석처리 2026.06.14
+//		if (!getMonster().getName().contains("파우스트") && !mon.isBoss() && summon == null && (getMap() == 53 || getMap() == 54 || getMap() == 55)) {
+//			Monster monster = MonsterDatabase.find("파우스트의 악령(잔인)");
+//			if (monster != null) {
+//				MonsterSpawnlistDatabase.toSpawnMonster2(monster, x, y, map, heading, false, this);
+//			}
+//		}
+		
+		// 💡 [조건문] 파우스트 이름이 아니고, 보스도 아니고, 서몬/펫이 아닐 때 지정된 맵들(53, 54, 55)이라면!
+		//------54,55맵에 "파우스트의 악령(잔인)"을 출현하지 않고 파우스트 출현 시키기 위해 코드 추가 2026.06.14
+		// 💡 [조건문] 파우스트 이름이 아니고, 보스도 아니고, 서몬/펫이 아닐 때 지정된 맵들(53, 54, 55)이라면!
+				if (!getMonster().getName().contains("파우스트") && !mon.isBoss() && summon == null && (getMap() == 53 || getMap() == 54 || getMap() == 55)) {
+					
+					Monster monster = null;
+					
+					// =========================================================
+					// ✨ [확률 및 맵별 분기 처리 수정]
+					// =========================================================
+					if (getMap() == 54 || getMap() == 55) {
+						
+						// 🎲 54, 55번 맵은 악령 단계를 패스하는 대신, 여기서 0.1% 확률 검사를 직접 수행합니다!
+						if (Math.random() < all_night.Lineage_Balance.faust_spawn_probability && !lineage.world.controller.BossController.isSpawn("파우스트", getMap())) {
+							// 확률에 당첨되면 보스 "파우스트"를 준비합니다.
+							monster = MonsterDatabase.find("파우스트");
+						}
+						// 💡 만약 0.1% 확률에 실패하면 monster는 null 상태로 유지되어 아무것도 스폰되지 않고 일반 몹만 죽고 끝납니다.
+						
+					} else {
+						// 💀 기존 53번 맵은 기획대로 조무래기 "파우스트의 악령(잔인)"을 100% 확률로 부릅니다.
+						monster = MonsterDatabase.find("파우스트의 악령(잔인)");
+					}
+					// =========================================================
+					
+					// 결정된 몬스터(확률 뚫은 파우스트 혹은 53번의 악령)가 존재할 때만 맵에 스폰시킵니다.
+					if (monster != null) {
+						MonsterSpawnlistDatabase.toSpawnMonster2(monster, x, y, map, heading, false, this);
+					}
+				}
+				// ==================================코드 추가 완료
 
-		if (Math.random() < chance1 && !getMonster().getName().contains("드래곤") && !mon.isBoss() && summon == null
-				&& (getMap() == 430 || getMap() == 400)) {
-			if (Math.random() < chance2) {
-				Monster monster = MonsterDatabase.find("하급 드래곤");
-				this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 4784), true);
-				if (monster != null
-						&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
-					return;
+		// 💡 드래곤 이벤트 스위치가 켜진(true) 맵에서만 출현하도록 조건 수정
+				if (Math.random() < chance1 && !getMonster().getName().contains("드래곤") && !mon.isBoss() && summon == null
+						&& (   (getMap() == 781 && Lineage_Balance.event_map_781_active) 
+							|| (getMap() == 400 && Lineage_Balance.event_map_400_active) 
+							|| (getMap() == 452 && Lineage_Balance.event_map_452_active)  )) {
+					
+					if (Math.random() < chance2) {
+						Monster monster = MonsterDatabase.find("골드 드래곤");
+						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 6082), true);
+						if (monster != null
+								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
+							return;
+						}
+					} else {
+						Monster monster = MonsterDatabase.find("아이스 드래곤");
+						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 4784), true);
+						if (monster != null
+								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
+							
+							// [추가] 아이스 드래곤 출현 메시지
+//							for (PcInstance onlinePc : World.getPcList()) {
+//								SC_TOAST_NOTI.newInstance()
+//									.setMessage( String.format("\\g1* 이벤트 출현 [ %s ] *", monster.getName()) )
+//									.setMessage2(String.format("\\fH어딘가에서 [%s]이(가) 출현하였습니다.", monster.getName()))
+//									.setToastType(ToastType.HeavyText)
+//									.send(onlinePc);
+//							}
+							
+							return;
+						}
+					}
 				}
-			} else {
-				Monster monster = MonsterDatabase.find("그린 드래곤");
-				this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 6082), true);
-				if (monster != null
-						&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
-					return;
-				}
-			}
-		}
 
-		if (Math.random() < chance3 && !getMonster().getName().contains("드래곤") && !mon.isBoss() && summon == null
-				&& (getMap() == 110 || getMap() == 99)) {
-			if (Math.random() < chance4) {
-				Monster monster = MonsterDatabase.find("중급 드래곤");
-				this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 4784), true);
-				if (monster != null
-						&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
-					return;
+		// 💡 이벤트 스위치가 켜진(true) 맵에서만 출현하도록 조건 수정
+				if (Math.random() < chance3 && !getMonster().getName().contains("원숭이") && !mon.isBoss() && summon == null
+						&& (   (getMap() == 666 && Lineage_Balance.event_map_666_active) 
+							|| (getMap() == 5167 && Lineage_Balance.event_map_5167_active) 
+							|| (getMap() == 200 && Lineage_Balance.event_map_200_active)  )) {
+					
+					if (Math.random() < chance4) {
+						Monster monster = MonsterDatabase.find("원숭이");
+						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 6082), true);
+						if (monster != null
+								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
+							return;
+						}
+					} else {
+						Monster monster = MonsterDatabase.find("거대 원숭이");
+						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 4784), true);
+						if (monster != null
+								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
+							
+							// [추가] 자이언트 케이크 출현 메시지
+//							for (PcInstance onlinePc : World.getPcList()) {
+//								SC_TOAST_NOTI.newInstance()
+//									.setMessage( String.format("\\g1* 이벤트 출현 [ %s ] *", monster.getName()) )
+//									.setMessage2(String.format("\\fH어딘가에서 [%s]이(가) 출현하였습니다.", monster.getName()))
+//									.setToastType(ToastType.HeavyText)
+//									.send(onlinePc);
+//							}
+							return;
+						}
+					}
 				}
-			} else {
-				Monster monster = MonsterDatabase.find("블루 드래곤");
-				this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 6082), true);
-				if (monster != null
-						&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
-					return;
-				}
-			}
-		}
 
-		if (Math.random() < chance5 && !getMonster().getName().contains("드래곤") && !mon.isBoss() && summon == null
-				&& (getMap() == 811 || getMap() == 99)) {
-			if (Math.random() < chance6) {
-				Monster monster = MonsterDatabase.find("상급 드래곤");
-				this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 4784), true);
-				if (monster != null
-						&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
-					return;
+				// 💡 케이크 이벤트 스위치가 켜진(true) 맵에서만 출현하도록 조건 수정
+				if (Math.random() < chance5 && !getMonster().getName().contains("케이크") && !mon.isBoss() && summon == null
+						&& (   (getMap() == 809 && Lineage_Balance.event_map_809_active) 
+							|| (getMap() == 810 && Lineage_Balance.event_map_810_active) 
+							|| (getMap() == 811 && Lineage_Balance.event_map_811_active)  )) {
+					
+					if (Math.random() < chance6) {
+						Monster monster = MonsterDatabase.find("케이크");
+						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 6082), true);
+						if (monster != null
+								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
+							return;
+						}
+					} else {
+						Monster monster = MonsterDatabase.find("자이언트 케이크");
+						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 4784), true);
+						if (monster != null
+								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
+							
+							// [추가] 불타는 스톤 출현 메시지
+//							for (PcInstance onlinePc : World.getPcList()) {
+//								SC_TOAST_NOTI.newInstance()
+//									.setMessage( String.format("\\g1* 이벤트 출현 [ %s ] *", monster.getName()) )
+//									.setMessage2(String.format("\\fH[%s]이(가) 미지인 던전 어딘가에 출현하였습니다.", monster.getName()))
+//									.setToastType(ToastType.HeavyText)
+//									.send(onlinePc);
+//							}
+							return;
+						}
+					}
 				}
-			} else {
-				Monster monster = MonsterDatabase.find("레드 드래곤");
-				this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 6082), true);
-				if (monster != null
-						&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
-					return;
-				}
-			}
-		}
 
 		giveBossRewardToAttackers();
 		super.toAiDead(time);

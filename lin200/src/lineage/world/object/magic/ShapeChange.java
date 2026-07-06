@@ -123,8 +123,50 @@ public class ShapeChange extends Magic {
 	}
 
 	/**
-	 * 변신주문서 등에서 호출
+	 * 모든 변신 아이템의 최종 변신 승인 및 레벨/시간 검사
 	 */
+	static public boolean init(Character cha, Character target, Poly p, int time, int bress) {
+	    if (cha.getInventory() != null && p != null) {
+	        boolean isRing = false; // 반지 여부
+	        boolean isBlessed = (bress == 0); // 아이템 축복 상태
+	        
+	        if (cha instanceof PcInstance) {
+	            PcInstance pc = (PcInstance) cha;
+	            if (pc.getTempPolyScroll() != null) {
+	                // 1. 변신 조종 반지류 판별
+	                if (pc.getTempPolyScroll() instanceof lineage.world.object.item.scroll.ScrollPolymorph3) {
+	                    isRing = true;
+	                    time = 7200; // 반지는 2시간
+	                } 
+	                // 2. 변신 주문서류 판별
+	                else if (pc.getTempPolyScroll() instanceof lineage.world.object.item.scroll.ScrollPolymorph) {
+	                    time = 1800; // 주문서는 30분
+	                }
+	            }
+	        }
+
+	        int checkLevel = cha.getLevel();
+//	        if (isRing) {
+//	            checkLevel += 2; // 반지는 +2 보정
+//	        }
+
+	        // 💡 [핵심] 콘프 설정(item_polymorph_bless)이 켜져 있고 축복 아이템일 때만 레벨 제한 무시(프리패스)
+	        boolean isLevelBypass = (Lineage.item_polymorph_bless && isBlessed);
+
+	        if (isLevelBypass || p.getMinLevel() <= checkLevel || Lineage.event_poly || 
+	            cha.getGm() > 0 || cha.getMap() == Lineage.teamBattleMap) {
+	            
+	            onBuff(cha, target, p, time, false, true);
+	        } else {
+	            ChattingController.toChatting(cha, String.format("%s: %d레벨 이상 변신 가능", p.getPolyName(), p.getMinLevel()), Lineage.CHATTING_MODE_MESSAGE);
+	            return false;
+	        }
+	    } else {
+	        BuffController.remove(cha, ShapeChange.class);
+	    }
+	    return true;
+	}
+/*	
 	static public boolean init(Character cha, Character target, Poly p, int time, int bress) {
 		if (cha.getInventory() != null && p != null) {
 			boolean isRingPoly = false;
@@ -169,7 +211,7 @@ public class ShapeChange extends Magic {
 		}
 		return true;
 	}
-	
+*/	
 	/**
 	 * 변신 최종 뒷처리 구간
 	 */
@@ -213,6 +255,10 @@ public class ShapeChange extends Magic {
 			PcInstance pc = (PcInstance) o;
 			if (p == null)
 				p = ItemMaplewandDatabase.randomPoly();
+			
+			// 1️⃣ [순서 변경] 외형을 바꾸기 전에 기존 버프부터 삭제!
+		    BuffController.remove(o, ShapeChange.class);
+		    
 			if (p != null && !o.isDead()) {
 				if (o instanceof Character)
 					// 장비 해제.
@@ -254,9 +300,13 @@ public class ShapeChange extends Magic {
 				if (!p.getName().contains("세트") && !p.getName().contains("운영자") && !p.getName().contains("좀비 변신")) {
 					o.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), o, 6082), true);
 				
-					// 아이템 수량 갱신 (주문서 사용 시)
-					if (pc.getTempPolyScroll() != null)
-						pc.getInventory().count(pc.getTempPolyScroll(), pc.getTempPolyScroll().getCount() - 1, true);
+					// 💡 [수정] 아이템 수량 갱신 (반지(ScrollPolymorph3)가 아닐 때만 차감)
+					if (pc.getTempPolyScroll() != null) {
+						if (!(pc.getTempPolyScroll() instanceof lineage.world.object.item.scroll.ScrollPolymorph3)) {
+							pc.getInventory().count(pc.getTempPolyScroll(), pc.getTempPolyScroll().getCount() - 1, true);
+						}
+					}
+					
 					pc.setTempPoly(false);
 					pc.setTempPolyScroll(null);
 					if (!p.getName().contains("랭커") && !p.getName().contains("질리언(80)") && !p.getName().contains("헬바인(80)") && !p.getName().contains("군터(80)") && !p.getName().contains("켄라우헬(80)"))

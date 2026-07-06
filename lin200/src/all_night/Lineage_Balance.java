@@ -49,6 +49,9 @@ public final class Lineage_Balance {
 	static public double WIZARD_dmg ;
 	static public double DARKELF_dmg ;
 	
+	// [스팟 타워 출현 몬스터 그룹 티어 (1=1군, 2=2군, 3=3군)]
+		static public int spot_tower_monster_tier = 1;
+	
 	//다크엘프 pvp 데미지
 	static public double darkelf_pvp_damage_bonus = 1.0;
 	
@@ -351,35 +354,32 @@ public final class Lineage_Balance {
 	// 파우스트 등장시 스폰 알림 여부
 	static public boolean faust_spawn_msg;
 	
-	// 깜짝 상자 스폰 확률
+	// 드래곤 스폰 확률
 	static public double event_b_spawn_probability;
-	
-	// 깜짝 대박상자 스폰 확률
+	// 드래곤 스폰 확률
 	static public double event_b2_spawn_probability;
-	
-	// 깜짝 상자 스폰 확률
+	// [드래곤 출현 이벤트 맵 활성화 스위치]
+	public static boolean event_map_781_active = true;
+	public static boolean event_map_400_active = false;
+	public static boolean event_map_452_active = false;
+
+	// 원숭이 스폰 확률
 	static public double event_a_spawn_probability;
-	
-	// 깜짝 대박상자 스폰 확률
+	// 원숭이 스폰 확률
 	static public double event_a2_spawn_probability;
-	
+	// [원숭이 이벤트 맵 활성화 스위치]
+	public static boolean event_map_666_active = true;
+	public static boolean event_map_5167_active = false;
+	public static boolean event_map_200_active = false;
+
 	// 깜짝 상자 스폰 확률
 	static public double event_s_spawn_probability;
-	
 	// 깜짝 대박상자 스폰 확률
 	static public double event_s2_spawn_probability;
-	
-	// 깜짝 상자 스폰 확률
-	static public double event_k_spawn_probability;
-	
-	// 깜짝 대박상자 스폰 확률
-	static public double event_k2_spawn_probability;
-	
-	// 케이크 상자 스폰 확률
-	static public double event_p_spawn_probability;
-	
-	// 케이크 대박상자 스폰 확률
-	static public double event_p2_spawn_probability;
+	// [깜짝 대박상자 맵 활성화 스위치]
+	public static boolean event_map_809_active = true;
+	public static boolean event_map_810_active = false;
+	public static boolean event_map_811_active = false;
 	
 	// 돌발성 보스몬스터의 스폰 확률
 	static public double faust_spawn_probability;
@@ -1105,6 +1105,42 @@ public final class Lineage_Balance {
 						faust_spawn_probability = Double.valueOf(value) * 0.01;	
 					
 					else if (key.equalsIgnoreCase("event_b_spawn_probability"))
+						event_b_spawn_probability = Double.valueOf(value) * 0.01;
+					else if (key.equalsIgnoreCase("event_b2_spawn_probability"))
+						event_b2_spawn_probability = Double.valueOf(value) * 0.01;
+					// 드래곤 이벤트 맵 스위치 로드
+					else if (key.equalsIgnoreCase("event_map_781_active"))
+						event_map_781_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("event_map_400_active"))
+						event_map_400_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("event_map_452_active"))
+						event_map_452_active = Boolean.parseBoolean(value);
+
+					else if (key.equalsIgnoreCase("event_a_spawn_probability"))
+						event_a_spawn_probability = Double.valueOf(value) * 0.01;
+					else if (key.equalsIgnoreCase("event_a2_spawn_probability"))
+						event_a2_spawn_probability = Double.valueOf(value) * 0.01;
+					// 원숭이 이벤트 맵 스위치 로드
+					else if (key.equalsIgnoreCase("event_map_666_active"))
+						event_map_666_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("event_map_5167_active"))
+						event_map_5167_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("event_map_200_active"))
+						event_map_200_active = Boolean.parseBoolean(value);
+
+					else if (key.equalsIgnoreCase("event_s_spawn_probability"))
+						event_s_spawn_probability = Double.valueOf(value) * 0.01;
+					else if (key.equalsIgnoreCase("event_s2_spawn_probability"))
+						event_s2_spawn_probability = Double.valueOf(value) * 0.01;
+					// 케이크 이벤트 맵 스위치 로드
+					else if (key.equalsIgnoreCase("event_map_809_active"))
+						event_map_809_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("event_map_810_active"))
+						event_map_810_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("event_map_811_active"))
+						event_map_811_active = Boolean.parseBoolean(value);
+					
+					else if (key.equalsIgnoreCase("event_b_spawn_probability"))
 						event_b_spawn_probability = Double.valueOf(value) * 0.01;	
 					else if (key.equalsIgnoreCase("event_b2_spawn_probability"))
 						event_b2_spawn_probability = Double.valueOf(value) * 0.01;	
@@ -1116,14 +1152,9 @@ public final class Lineage_Balance {
 						event_s_spawn_probability = Double.valueOf(value) * 0.01;	
 					else if (key.equalsIgnoreCase("event_s2_spawn_probability"))
 						event_s2_spawn_probability = Double.valueOf(value) * 0.01;
-					else if (key.equalsIgnoreCase("event_k_spawn_probability"))
-						event_k_spawn_probability = Double.valueOf(value) * 0.01;	
-					else if (key.equalsIgnoreCase("event_k2_spawn_probability"))
-						event_k2_spawn_probability = Double.valueOf(value) * 0.01;
-					else if (key.equalsIgnoreCase("event_p_spawn_probability"))
-						event_p_spawn_probability = Double.valueOf(value) * 0.01;	
-					else if (key.equalsIgnoreCase("event_p2_spawn_probability"))
-						event_p2_spawn_probability = Double.valueOf(value) * 0.01;
+
+					
+					
 					else if (key.equalsIgnoreCase("grimreaper_spawn_msg"))
 						grimreaper_spawn_msg = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("grimreaper_spawn_probability"))
@@ -1682,9 +1713,13 @@ public final class Lineage_Balance {
 						DARKELF_dmg = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("WIZARD_dmg"))
 						WIZARD_dmg = Double.valueOf(value) * 0.01;
-					
+					// 다크엘프 pvp 데미지
 					else if (key.equalsIgnoreCase("darkelf_pvp_damage_bonus"))
 					    darkelf_pvp_damage_bonus = Double.valueOf(value);
+					
+					// 스팟 타워 몬스터 그룹 티어 로드
+					else if (key.equalsIgnoreCase("spot_tower_monster_tier"))
+						spot_tower_monster_tier = Integer.parseInt(value);
 					
 					else if (key.equalsIgnoreCase("bless_orim_acc_min_en"))
 						bless_orim_acc_min_en = Integer.valueOf(value);

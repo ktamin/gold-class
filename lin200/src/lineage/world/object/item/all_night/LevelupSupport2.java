@@ -5,14 +5,12 @@ import lineage.database.ExpDatabase;
 import lineage.network.packet.ClientBasePacket;
 import lineage.share.Lineage;
 import lineage.world.controller.ChattingController;
+import lineage.world.controller.RankController; // 💡 RankController import 추가
 import lineage.world.object.Character;
 import lineage.world.object.instance.ItemInstance;
 import lineage.world.object.instance.PcInstance;
 
 public class LevelupSupport2 extends ItemInstance {
-
-    // ★ 여기를 외부에서 쉽게 바꿀 수 있게 하자! (예: 95)
-    public static final int LEVELUP_TARGET = 60; // 목표 레벨
 
     static synchronized public ItemInstance clone(ItemInstance item) {
         if (item == null)
@@ -27,10 +25,20 @@ public class LevelupSupport2 extends ItemInstance {
         }
         PcInstance pc = (PcInstance) cha;
 
-        int targetLevel = Lineage.levelup_support2_target; // 외부 conf에서 불러온 값 사용!
+        // 💡 1. 랭킹 시스템에서 최고 레벨을 가져옵니다.
+        int topLevel = RankController.rank_top_level;
+        
+        // 💡 2. 랭킹이 아직 계산되지 않았거나(0), 비정상적일 경우 기존 설정값 사용
+        int targetLevel = (topLevel > 0) ? (topLevel - 2) : Lineage.levelup_support2_target;
+
+        // 타겟 레벨이 너무 낮게 설정되지 않도록 방어 (예: 5레벨 미만이면 사용 불가 등)
+        if (targetLevel < 5) {
+             ChattingController.toChatting(pc, "\\fY아직 랭킹 정보가 충분하지 않아 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+             return;
+        }
 
         if (pc.getLevel() >= targetLevel) {
-            ChattingController.toChatting(pc, String.format("\\fY이미 %d레벨 이상입니다.", targetLevel), Lineage.CHATTING_MODE_MESSAGE);
+            ChattingController.toChatting(pc, String.format("\\fY이미 %d레벨 이상입니다. (현재 서버 1위 레벨: %d)", targetLevel, topLevel), Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
 

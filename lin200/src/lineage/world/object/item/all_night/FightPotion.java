@@ -18,7 +18,10 @@ public class FightPotion extends ItemInstance {
 		if(cha.getInventory() != null){
 			BuffFight.onBuff(cha, SkillDatabase.find(601));
 			// 아이템 수량 갱신
-			cha.getInventory().count(this, getCount()-1, true);
+			if (!getItem().getName().contains("30일")) {
+				cha.getInventory().count(this, getCount() - 1, true);
+//			cha.getInventory().count(this, getCount()-1, true);
 		}
 	}
+}
 }
