@@ -1147,7 +1147,9 @@ public final class Lineage {
 	static public int world_premium_item_min;
 	static public int world_premium_item_max;
 	static public int world_premium_item_delay;
-
+	// 접속 유지 보상 고정 멤버만 유무
+	static public boolean world_premium_item_member_only;
+	
 	// 사용자들이 월드에 접속시 접속했다는 메세지를 전체 유저에게 알릴지 여부.
 	static public boolean world_message_join;
 
@@ -3022,6 +3024,9 @@ public final class Lineage {
 						elven_wafer_frame = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("holywalk_frame"))
 						holywalk_frame = value.equalsIgnoreCase("true");
+					// 고정 멤버만 접속 유지 보상 지급 유무
+					else if (key.equalsIgnoreCase("world_premium_item_member_only"))
+						world_premium_item_member_only = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("world_premium_item_is"))
 						world_premium_item_is = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("world_premium_item"))
@@ -3032,6 +3037,7 @@ public final class Lineage {
 						world_premium_item_max = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("world_premium_item_delay"))
 						world_premium_item_delay = Integer.valueOf(value) * 1000 * 60;
+					
 					else if (key.equalsIgnoreCase("item_equipped_type"))
 						item_equipped_type = value.equalsIgnoreCase("new");
 					else if (key.equalsIgnoreCase("world_message_join"))

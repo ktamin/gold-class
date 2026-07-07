@@ -4393,7 +4393,7 @@ public class PcInstance extends Character {
 				open_wait_item_time = time + Lineage.world_open_wait_item_delay;
 			}
 		} else {
-			// 아이템 자동 지급.
+			// 아이템 자동 지급=========전체 지역 접속 유지 보상 지급
 			/*
 			 * if (Lineage.world_premium_item_is && premium_item_time <= time) {
 			 * if (premium_item_time != 0) {
@@ -4408,7 +4408,7 @@ public class PcInstance extends Character {
 			 * }
 			 * premium_item_time = time + Lineage.world_premium_item_delay;
 			 * }
-			 */
+		  // ==============기란 마을 중앙만 접속 유지 보상 지급
 			if (Lineage.world_premium_item_is && premium_item_time <= time) {
 				if (premium_item_time != 0) {
 					// 캐릭터 위치 확인
@@ -4427,8 +4427,44 @@ public class PcInstance extends Character {
 				}
 				premium_item_time = time + Lineage.world_premium_item_delay;
 			}
-		}
+		} //================================
+*/
+			// 접속 유지 보상 
+			if (Lineage.world_premium_item_is && premium_item_time <= time) {
+				if (premium_item_time != 0) {
+					// 캐릭터 위치 확인
+					int x = getX();
+					int y = getY();
+					int map = getMap();
 
+					// 특정 위치에 있을 때만 아이템 지급
+					if (map == 4 && x >= 33401 && x <= 33456 && y >= 32784 && y <= 32837) {
+						
+						// 💡 [추가] 고정 멤버 체크 로직
+						// 콘프에서 '고정 멤버 전용(true)'으로 설정되어 있는데, 캐릭터가 멤버가 아니라면 지급 대상에서 제외
+						boolean canReceive = true;
+						if (Lineage.world_premium_item_member_only && !this.isMember()) {
+							canReceive = false;
+							
+							// (선택 사항) 만약 굳이 메시지를 띄우고 싶으시다면 아래 주석을 해제하세요.
+							// 단, 아이템 지급 딜레이마다 계속 메시지가 뜨므로 유저가 불편할 수 있습니다.
+							// ChattingController.toChatting(this, "고정 멤버만 대기 보상을 받을 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+						}
+
+						// 지급 조건을 만족했을 때만 아이템 생성 및 지급
+						if (canReceive) {
+							ItemInstance ii = ItemDatabase.newInstance(ItemDatabase.find(Lineage.world_premium_item));
+							if (ii != null) {
+								ii.setCount(Util.random(Lineage.world_premium_item_min, Lineage.world_premium_item_max));
+								super.toGiveItem(null, ii, ii.getCount());
+							}
+						}
+					}
+				}
+				premium_item_time = time + Lineage.world_premium_item_delay;
+			}
+		}
+		
 		// 팀대전 에러 처리.
 		checkTeamBattle(false);
 		if (getMap() != Lineage.teamBattleMap && getGm() < 1 && (getGfx() == 369 || isTransparent())) {
