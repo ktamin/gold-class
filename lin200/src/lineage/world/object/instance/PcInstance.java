@@ -109,6 +109,7 @@ import lineage.world.controller.FriendController;
 import lineage.world.controller.InventoryController;
 import lineage.world.controller.KingdomController;
 import lineage.world.controller.LetterController;
+import lineage.world.controller.Lostilandcontroller;
 import lineage.world.controller.MagicDollController;
 import lineage.world.controller.PartyController;
 import lineage.world.controller.QuestController;
@@ -149,6 +150,7 @@ import lineage.world.controller.칠흑던전4층컨트롤러;
 import lineage.world.controller.칠흑던전컨트롤러;
 import lineage.world.controller.타임이벤트컨트롤러;
 import lineage.world.controller.테베라스컨트롤러;
+import lineage.world.controller.테베사막컨트롤러;
 import lineage.world.controller.펭귄사냥컨트롤러;
 import lineage.world.object.Character;
 import lineage.world.object.object;
@@ -210,6 +212,7 @@ public class PcInstance extends Character {
 	private int attribute; // 요정 클레스들 속성마법 값 1[물] 2[바람] 3[땅] 4[불]
 	// 운영자 여부 판단 변수.
 	private int gm;
+	public int checkmenttime;
 	public int testTime;
 	public int testTime2;
 	public int gmTime;
@@ -233,9 +236,11 @@ public class PcInstance extends Character {
 	private boolean chattingWhisper;
 	private boolean chattingGlobal;
 	private boolean chattingTrade;
+
 	// 피케이 처리 변수
 	private int PkCount; // 누적된 피케이 횟수.
 	private long PkTime; // 최근에 실행한 피케이 시간.
+	public long lastDamageTime = 0;
 	public long damage_action_Time;
 	private boolean isSealBuff;
 	private int Seal_Level;
@@ -257,6 +262,7 @@ public class PcInstance extends Character {
 	private boolean isImmortalityPremiumBuff = false; // 고급 가호 효과 적용여부
 	private double premiumExpBonus = 0.0;
 	private double premiumAdenaBonus = 0.0;
+	public double rankExpBonus = 0.0; // 랭킹 전용 경험치 보너스 변수
 
 	// 자동판매
 	private static List<AutosellItem> sellList; // 자동사냥 구매목록.
@@ -303,6 +309,9 @@ public class PcInstance extends Character {
 	private boolean isBaphomet;
 	private int baphometLevel;
 
+	// 출석알림 딜레이
+	public double Levelexpname;
+
 	// 랭킹 시스템을 위한 변수
 	private int rank; // 현재 랭크
 	private int lastRank; // 직전 랭크
@@ -314,8 +323,8 @@ public class PcInstance extends Character {
 	// 마법인형을 위한 변수
 	private MagicDoll magicDoll;
 	private MagicDollInstance magicDollinstance;
-	
-	// 인형 진화 천장
+
+	// 클래스 인형 진화 천장
 	public int dollEvoCount = 0;
 	
 	// 인형 합성 실패 누적 횟수 (천장 카운트)
@@ -327,7 +336,7 @@ public class PcInstance extends Character {
 	public double dollBonus4 = 0.0; 
 	public double dollBonus5 = 0.0;
 	public double dollBonusDragon = 0.0;
-		
+
 	// exp 버프 아이콘을 위한 변수
 	private boolean icon;
 	// 팀대전 & 난투전 위한 변수
@@ -374,6 +383,9 @@ public class PcInstance extends Character {
 	public int daycount;
 	public int daycheck;
 	public int dayptime;
+
+	// 죽었을경우 시간체그
+	public int playdead;
 
 	// 자동 사냥
 	private AStar aStar; // 길찾기 변수
@@ -423,31 +435,30 @@ public class PcInstance extends Character {
 	public int scrollArmorCount7 = 0; // +7 -> +8 도전 실패 횟수
 	public int scrollArmorCount8 = 0; // +8 -> +9 도전 실패 횟수
 	public int scrollArmorCount9 = 0; // +9 -> +10 도전 실패 횟수
-	
-	//악세사리 천장
-	public int accCount5 = 0; // +5 -> +6 도전 실패 횟수 (30장 천장용)
-    public int accCount6 = 0; // +6 -> +7 도전 실패 횟수 (50장 천장용)
-    public int accCount7 = 0; // +7 -> +8 도전 실패 횟수 (100장 천장용)
-    
-    // ----------------------------------------------------
-  	// 🔮 마안 합성 천장 시스템용 실패 누적 변수
-  	// ----------------------------------------------------
-  	public int maanCountBirth = 0; // 탄생의 마안 실패 횟수
-  	public int maanCountShape = 0; // 형상의 마안 실패 횟수
-  	public int maanCountLife = 0;  // 생명의 마안 실패 횟수
-  	
- 	// 마안 실패 보너스
-  	public double maanBonusBirth = 0.0;
-  	public double maanBonusShape = 0.0;
-  	public double maanBonusLife = 0.0;
 
- 	// 디스 단독 쿨타임 타이머
- 	public long lastDisintegrateTime = 0;
-    
+	// 악세사리 천장
+	public int accCount5 = 0; // +5 -> +6 도전 실패 횟수 (30장 천장용)
+	public int accCount6 = 0; // +6 -> +7 도전 실패 횟수 (50장 천장용)
+	public int accCount7 = 0; // +7 -> +8 도전 실패 횟수 (100장 천장용)
+	
     //룸티스 귀걸이 천장
     public int roomtisCount5 = 0;
     public int roomtisCount6 = 0;
     public int roomtisCount7 = 0;
+    
+    // ----------------------------------------------------
+ 	// 🔮 마안 합성 천장 시스템용 실패 누적 변수
+ 	// ----------------------------------------------------
+ 	public int maanCountBirth = 0; // 탄생의 마안 실패 횟수
+ 	public int maanCountShape = 0; // 형상의 마안 실패 횟수
+ 	public int maanCountLife = 0;  // 생명의 마안 실패 횟수
+ 	
+ 	public double maanBonusBirth = 0.0;
+ 	public double maanBonusShape = 0.0;
+ 	public double maanBonusLife = 0.0;
+
+	// 디스 단독 쿨타임 타이머
+	public long lastDisintegrateTime = 0;
 
 	public PcInstance(LineageClient client) {
 		this.client = client;
@@ -475,6 +486,7 @@ public class PcInstance extends Character {
 		chattingWhisper = chattingGlobal = chattingTrade = isAutoPickMessage = true;
 		lost_exp = premium_item_time = register_date = join_date = message_time = PkTime = partyid = attribute = PkCount = gm = elixir = Seal_Level = 0;
 		dynamicExp = baphometLevel = autoHuntMonsterCount = 0;
+		checkmenttime = 0;
 		inv = null;
 		npc_esmereld = null;
 		db_interface = null;
@@ -558,6 +570,38 @@ public class PcInstance extends Character {
 
 	public void setAuto_count(int auto_count) {
 		this.auto_count = auto_count;
+	}
+
+	public int getCheckaccess() {
+		return checkaccess;
+	}
+
+	public void setCheckaccess(int checkaccess) {
+		this.checkaccess = checkaccess;
+	}
+
+	public int getDayptime() {
+		return dayptime;
+	}
+
+	public void setDayptime(int dayptime) {
+		this.dayptime = dayptime;
+	}
+
+	public int getDaycount() {
+		return daycount;
+	}
+
+	public void setDaycount(int daycount) {
+		this.daycount = daycount;
+	}
+
+	public int getDaycheck() {
+		return daycheck;
+	}
+
+	public void setDaycheck(int daycheck) {
+		this.daycheck = daycheck;
 	}
 
 	public int getPclevel_gift_check() {
@@ -1549,7 +1593,7 @@ public class PcInstance extends Character {
 				b.toClick(this, null);
 
 		// 고정 멤버 버프
-		고정멤버버프(false);
+		고정멤버버프(true);
 
 		if (KingdomController.find(this) != null) {
 			setDynamicAddDmg(getDynamicAddDmg() + 1);
@@ -1620,9 +1664,9 @@ public class PcInstance extends Character {
 		boolean 오만의탑정상지배부적 = false;
 		if (this != null && this.getInventory() != null)
 			오만의탑정상지배부적 = this.getInventory().find("오만의 탑 정상 지배 부적") == null ? false : true;
-		boolean 오만의탑환상의지배부적 = false;
-		if (this != null && this.getInventory() != null)
-			오만의탑환상의지배부적 = this.getInventory().find("오만의 탑 환상의 지배 부적") == null ? false : true;
+//		boolean 오만의탑환상의지배부적 = false;
+//		if (this != null && this.getInventory() != null)
+//			오만의탑환상의지배부적 = this.getInventory().find("오만의 탑 환상의 지배 부적") == null ? false : true;
 
 		if (대박의인장)
 			ChattingController.toChatting(this, "대박의인장: 경험치/드랍률+50%", Lineage.CHATTING_MODE_MESSAGE);
@@ -1651,8 +1695,8 @@ public class PcInstance extends Character {
 			ChattingController.toChatting(this, "오만의탑10층지배부적 효과를 받고 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
 		if (오만의탑정상지배부적)
 			ChattingController.toChatting(this, "오만의 탑 정상 지배 부적 효과를 받고 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
-		if (오만의탑환상의지배부적)
-			ChattingController.toChatting(this, "오만의 탑 환상의 지배 부적 효과를 받고 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+//		if (오만의탑환상의지배부적)
+//			ChattingController.toChatting(this, "오만의 탑 환상의 지배 부적 효과를 받고 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
 
 		if (getGm() == 0) {
 			Kingdom k = KingdomController.findKingdomLocation(this);
@@ -1718,6 +1762,14 @@ public class PcInstance extends Character {
 		if (TeamBattleController.checkList(this))
 			TeamBattleController.removeList(this);
 
+		// ==========================================
+		// ✅ [추가] 잊혀진섬에서 리스/종료 시 본명 복구 (DB 영구 변경 방지)
+		// ==========================================
+		if (lineage.world.controller.Lostilandcontroller.anonymousList.contains(this)) {
+			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+		}
+		// ==========================================
+
 		PluginController.init(PcInstance.class, "toWorldOut", this);
 
 		for (PcInstance master : World.getPcList()) {
@@ -1752,6 +1804,24 @@ public class PcInstance extends Character {
 			y = homeY;
 			map = homeMap;
 		}
+
+		// ✅ [추가] 잊혀진 섬 및 미지인 사냥터에서 리스/종료 시 무조건 마을로 강제 좌표 변경
+		// ==========================================
+		// 맵이 70, 809, 810, 811일 경우, DB에 저장하기 직전에 위치를 마을로 덮어씌웁니다.
+		if (this.map == 70 || this.map == 809 || this.map == 810 || this.map == 811) {
+
+			// 💡 (중요) 여기에 새로 만든 컨트롤러의 미지인 해제 코드가 들어가야 합니다!
+			Lostilandcontroller.exitAnonymous(this); // 기존 70번 맵용
+			칠흑던전3층컨트롤러.exitAnonymous(this); // 809 맵용
+			칠흑던전4층컨트롤러.exitAnonymous(this); // 810 맵용
+			칠흑던전컨트롤러.exitAnonymous(this); // 811 맵용
+
+			lineage.database.TeleportHomeDatabase.toLocation(this); // 엔진 기본 귀환 메서드
+			this.x = this.homeX;
+			this.y = this.homeY;
+			this.map = this.homeMap;
+		}
+		// ==========================================
 
 		// 사용자 정보 저장
 		toSave();
@@ -1925,6 +1995,18 @@ public class PcInstance extends Character {
 
 	@Override
 	public void toPotal(int x, int y, int map) {
+		// ==========================================
+		// ✅ [추가] 미지인 사냥터(잊섬, 칠흑) 퇴장 시 복구
+		// ==========================================
+		// 이동하려는 목적지(map)가 미지인 사냥터가 아닐 경우에만 모두 해제!
+		if (map != 70 && map != 809 && map != 810 && map != 811) {
+			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+			lineage.world.controller.칠흑던전3층컨트롤러.exitAnonymous(this);
+			lineage.world.controller.칠흑던전4층컨트롤러.exitAnonymous(this);
+			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
+		}
+		// ==========================================
+
 		resetAutoAttack();
 		// 버그방지.
 		if (World.get_map(map) == null) {
@@ -1950,6 +2032,17 @@ public class PcInstance extends Character {
 
 	@Override
 	public void toTeleport(final int x, final int y, final int map, final boolean effect) {
+		// ==========================================
+		// ✅ [추가] 미지인 사냥터(잊섬, 칠흑) 퇴장 시 복구
+		// ==========================================
+		// 이동하려는 목적지(map)가 미지인 사냥터가 아닐 경우에만 모두 해제!
+		if (map != 70 && map != 809 && map != 810 && map != 811) {
+			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+			lineage.world.controller.칠흑던전3층컨트롤러.exitAnonymous(this);
+			lineage.world.controller.칠흑던전4층컨트롤러.exitAnonymous(this);
+			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
+		}
+		// ==========================================
 		resetAutoAttack();
 		// 버그방지.
 		if (World.get_map(map) == null) {
@@ -1977,6 +2070,18 @@ public class PcInstance extends Character {
 
 	@Override
 	public void toTeleportRange(final int x, final int y, final int map, final boolean effect, int range) {
+		// ==========================================
+		// ✅ [추가] 미지인 사냥터(잊섬, 칠흑) 퇴장 시 복구
+		// ==========================================
+		// 이동하려는 목적지(map)가 미지인 사냥터가 아닐 경우에만 모두 해제!
+		if (map != 70 && map != 809 && map != 810 && map != 811) {
+			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+			lineage.world.controller.칠흑던전3층컨트롤러.exitAnonymous(this);
+			lineage.world.controller.칠흑던전4층컨트롤러.exitAnonymous(this);
+			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
+		}
+		// ==========================================
+
 		resetAutoAttack();
 		// 버그방지.
 		if (World.get_map(map) == null) {
@@ -2001,6 +2106,63 @@ public class PcInstance extends Character {
 		SummonController.toTeleport(this);
 		MagicDollController.toTeleport(this);
 	}
+	/*
+	 * public void 칼렉풀기() {
+	 * if (isDead()) {
+	 * ChattingController.toChatting(this, "죽은 상태에선 사용할 수 없습니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * return;
+	 * } else if (isLock()) {
+	 * ChattingController.toChatting(this, "기절 상태에선 사용할 수 없습니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * return;
+	 * }
+	 * 
+	 * if (lastMovingTime + 2000 > System.currentTimeMillis()) {
+	 * ChattingController.toChatting(this, "이동중에 칼렉풀기는 불가능합니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * return;
+	 * }
+	 * 
+	 * if (getLastLackTime() < System.currentTimeMillis()) {
+	 * setLastLackTime(System.currentTimeMillis() + (1000 *
+	 * Lineage.sword_rack_delay));
+	 * } else {
+	 * ChattingController.toChatting(this, String.format("\\fR칼렉풀기의 딜레이는 %d초 입니다.",
+	 * Lineage.sword_rack_delay),
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * return;
+	 * }
+	 * 
+	 * resetAutoAttack();
+	 * // 버그방지.
+	 * if (World.get_map(map) == null) {
+	 * toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class),
+	 * 0x09));
+	 * if (getGm() > 0)
+	 * ChattingController.toChatting(this, map + "맵이 존재하지 않습니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * return;
+	 * }
+	 * 
+	 * if (isFishing()) {
+	 * ChattingController.toChatting(this, "낚시중엔 텔레포트가 불가능합니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class),
+	 * 0x09));
+	 * return;
+	 * }
+	 * 
+	 * super.toTeleport(getX(), getY(), getMap(), false);
+	 * // super.toPotal(getX(), getY(), getMap());
+	 * // 소환객체 텔레포트
+	 * SummonController.toTeleport(this);
+	 * MagicDollController.toTeleport(this);
+	 * 
+	 * ChattingController.toChatting(this, "칼렉이 풀렸습니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * }
+	 */
 
 	public void 칼렉풀기() {
 		if (isDead()) {
@@ -2010,6 +2172,25 @@ public class PcInstance extends Character {
 			ChattingController.toChatting(this, "기절 상태에선 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
 			return;
 		}
+
+		// ==========================================
+		// ✅ [추가] 확실한 전투(어택 및 피격) 중 사용 제한
+		// ==========================================
+
+		// 1. 내가 누군가를 어택(공격) 중일 때 차단
+		if (this.isAutoAttack || this.autoAttackTarget != null) {
+			ChattingController.toChatting(this, "공격 중에는 칼렉풀기를 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+			return;
+		}
+
+		// 2. 내가 방금 데미지를 받았을 때(피격) 차단 (5초 딜레이)
+		long now = System.currentTimeMillis();
+		int combatDelay = 5000;
+		if (this.lastDamageTime + combatDelay > now) {
+			ChattingController.toChatting(this, "전투(피격) 직후에는 칼렉풀기를 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+			return;
+		}
+		// ==========================================
 
 		if (lastMovingTime + 2000 > System.currentTimeMillis()) {
 			ChattingController.toChatting(this, "이동중에 칼렉풀기는 불가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
@@ -2040,8 +2221,6 @@ public class PcInstance extends Character {
 		}
 
 		super.toTeleport(getX(), getY(), getMap(), false);
-		// super.toPotal(getX(), getY(), getMap());
-		// 소환객체 텔레포트
 		SummonController.toTeleport(this);
 		MagicDollController.toTeleport(this);
 
@@ -2298,18 +2477,45 @@ public class PcInstance extends Character {
 									dmg = 1;
 								}
 							}
-
+							/*
+							 * 2026,06,06일
+							 * // 트리플 중첩시 데미지 감소.
+							 * if (dmg > 0 && isTriple && Lineage_Balance.triple_damage_reduction > 0 && o
+							 * != null
+							 * && o instanceof PcInstance) {
+							 * if (0 < o.tripleAttackObjId) {
+							 * if (System.currentTimeMillis() < o.tripleDamageTime) {
+							 * if (o.tripleAttackObjId != getObjectId())
+							 * dmg = dmg * Lineage_Balance.triple_damage_reduction;
+							 * } else {
+							 * o.tripleAttackObjId = 0;
+							 * }
+							 * } else {
+							 * o.tripleAttackObjId = getObjectId();
+							 * o.tripleDamageTime = System.currentTimeMillis()
+							 * + (int) (Lineage_Balance.triple_damage_reduction_time);
+							 * }
+							 * }
+							 */
 							// 트리플 중첩시 데미지 감소.
 							if (dmg > 0 && isTriple && Lineage_Balance.triple_damage_reduction > 0 && o != null
 									&& o instanceof PcInstance) {
-								if (0 < o.tripleAttackObjId) {
-									if (System.currentTimeMillis() < o.tripleDamageTime) {
-										if (o.tripleAttackObjId != getObjectId())
-											dmg = dmg * Lineage_Balance.triple_damage_reduction;
-									} else {
-										o.tripleAttackObjId = 0;
+
+								// 1. 만약 지정된 시간(10초)이 지났다면, 기존 타격자 기록을 깔끔하게 지웁니다.
+								if (o.tripleAttackObjId > 0 && System.currentTimeMillis() >= o.tripleDamageTime) {
+									o.tripleAttackObjId = 0;
+								}
+
+								// 2. 누군가 이미 때리고 있는 중이라면? (중첩 상태)
+								if (o.tripleAttackObjId > 0) {
+									// 처음 때린 사람이 아닌, '다른 사람(다굴)'이 때렸을 때만 데미지 감소율(0.95)을 곱합니다.
+									if (o.tripleAttackObjId != getObjectId()) {
+										dmg = dmg * Lineage_Balance.triple_damage_reduction;
 									}
-								} else {
+								}
+								// 3. 기록이 없거나(처음 맞음), 방금 1번 로직에서 기록이 지워진 상태라면?
+								else {
+									// 방금 때린 나 자신을 새로운 첫 번째 타격자로 즉시 등록합니다.
 									o.tripleAttackObjId = getObjectId();
 									o.tripleDamageTime = System.currentTimeMillis()
 											+ (int) (Lineage_Balance.triple_damage_reduction_time);
@@ -2318,13 +2524,15 @@ public class PcInstance extends Character {
 						}
 						// 데미지 처리하는 구간
 
-						// ==================================2026.06.07
+						// 데미지 처리하는 구간
+
+						// ====================================2026.06.07 추가
 						// 🚨 [수정됨] 외부 콘프(Lineage_Balance) 값을 가져와서 대미지 증폭
 						// =========================================================
 						if (getClassType() == Lineage.LINEAGE_CLASS_DARKELF) {
 							if (o != null && o instanceof PcInstance) {
 								// 텍스트 파일에 적힌 배율(예: 1.2)을 그대로 곱해줍니다.
-								dmg = dmg * Lineage_Balance.darkelf_pvp_damage_bonus; 
+								dmg = dmg * Lineage_Balance.darkelf_pvp_damage_bonus;
 							}
 						}
 						// =========================================================
@@ -2408,6 +2616,7 @@ public class PcInstance extends Character {
 
 					if (!isCriticalEffect() && effect > 66)
 						effect = 0;
+					
 					////
 					//// // 자신에게 패킷 보냄.
 					//// if (무기이펙트)
@@ -2429,6 +2638,7 @@ public class PcInstance extends Character {
 					//// }
 					//// }
 					////
+					
 					// 화살 갯수 하향
 					ItemInstance arrow2 = getInventory().findArrow();
 					if (arrow2 != null && !arrow2.getName().contains("블랙미스릴")) {
@@ -2685,73 +2895,77 @@ public class PcInstance extends Character {
 			}
 		}
 
-		// 동적 변경된 추가경험치 증가.
-		if (getDynamicExp() > 0 && !(o instanceof FishExp))
-			exp += exp * getDynamicExp();
+		// -------------------------------------------------------------
+		// 💡 [수정] 경험치 보너스 합산 로직 (인형, 가호, 인장, 이벤트 통합)
+		// -------------------------------------------------------------
+				double bonusPercent = 0.0;
 
-		if (isBuffExpPotion() && !(o instanceof FishExp))
-			exp *= 2;
+				if (!(o instanceof FishExp)) {
+					// 1. 다이내믹 경험치 (자이언트 인형 등: 0.1 = 10%)
+					if (getDynamicExp() > 0) {
+						bonusPercent += getDynamicExp();
+					}
 
-		if (타임이벤트컨트롤러.isOpen && 타임이벤트컨트롤러.num == 1 && !(o instanceof FishExp)) {
-			exp *= 1.20;
-		}
-		if (타임이벤트컨트롤러.isOpen && 타임이벤트컨트롤러.num == 4 && !(o instanceof FishExp)) {
-			exp *= 1.50;
-		}
-		boolean 행운의인장 = false;
-		if (this != null && this.getInventory() != null)
-			행운의인장 = this.getInventory().find("행운의인장(20%)") == null ? false : true;
-		boolean 대박의인장 = false;
-		if (this != null && this.getInventory() != null)
-			대박의인장 = this.getInventory().find("대박의인장(50%)") == null ? false : true;
-		if (대박의인장)
-			exp = exp + (exp * 0.5);
-		else if (행운의인장)
-			exp = exp + (exp * 0.2);
+					// 2. 고급 불멸의 가호 (💡 이미 최적화되어 있는 내부 변수 활용!)
+					if (this.premiumExpBonus > 0) {
+						bonusPercent += this.premiumExpBonus;
+					}
+					
+					// 🌟 [🔥 방금 새로 만든 랭킹 전용 경험치 추가!]
+					if (this.rankExpBonus > 0) {
+						bonusPercent += this.rankExpBonus;
+					}
 
-		exp *= Lineage.rate_exp;
+					// 3. 대박의 인장 & 행운의 인장
+					if (this.getInventory() != null) {
+						if (this.getInventory().find("대박의인장(50%)") != null) {
+							bonusPercent += 0.5;
+						} else if (this.getInventory().find("행운의인장(20%)") != null) {
+							bonusPercent += 0.2;
+						}
+					}
 
-		/*
-		 * // 패널티 적용
-		 * if (level >= Lineage.penalty_level)
-		 * exp *= Lineage.penalty_exp;
-		 * 
-		 * if (isAutoHunt) {
-		 * boolean 강화자동 = false;
-		 * if (this != null && this.getInventory() != null)
-		 * 강화자동 = this.getInventory().find("자동 사냥30일경100%/드50%") != null ||
-		 * this.getInventory().find("자동 사냥7일경100%/드50%") != null ||
-		 * this.getInventory().find("자동 사냥1일경100%/드50%") != null;
-		 * if (강화자동) {
-		 * exp = exp * 1;
-		 * } else {
-		 * exp = exp * 0.2;
-		 * }
-		 * //exp = exp * Lineage.is_auto_hunt_exp_percent;
-		 * }
-		 * 
-		 * setExp(getExp() + exp);
-		 * 
-		 * if(getGm() > 0){
-		 * ChattingController.toChatting(this, String.format("경험치 획득량 %f.",exp),
-		 * Lineage.CHATTING_MODE_MESSAGE);
-		 * 
-		 * }
-		 */
-		// 패널티 적용
-		if (level >= Lineage.penalty_level)
-			exp *= Lineage.penalty_exp;
+					// 4. 타임 이벤트 보너스
+					if (타임이벤트컨트롤러.isOpen) {
+						if (타임이벤트컨트롤러.num == 1) bonusPercent += 0.20;
+						else if (타임이벤트컨트롤러.num == 4) bonusPercent += 0.50;
+					}
+				}
 
-		// 자동 사냥 경험치 배율 적용 (콘프 값만 반영)
-		if (isAutoHunt) {
-			exp *= Lineage.is_auto_hunt_exp_percent; // 예: 0.2 = 20%
-		}
+				// 💡 계산된 모든 보너스(%)를 기본 경험치에 한 번에 합산하여 적용
+				exp += (exp * bonusPercent);
 
-		setExp(getExp() + exp);
+				// -------------------------------------------------------------
+				// 5. 기본 배율 및 패널티 적용
+				// -------------------------------------------------------------
+				
+				// 특별 경험치 물약 (일반적으로 단독 2배 처리)
+				if (isBuffExpPotion() && !(o instanceof FishExp)) {
+					exp *= 2.0;
+				}
 
-		if (getGm() > 0) {
-			ChattingController.toChatting(this, String.format("경험치 획득량 %f.", exp), Lineage.CHATTING_MODE_MESSAGE);
-		}
+				// 서버 기본 경험치 배율 적용
+				exp *= Lineage.rate_exp;
+
+				// 레벨 패널티 적용
+				if (level >= Lineage.penalty_level) {
+					exp *= Lineage.penalty_exp;
+				}
+
+				// 자동 사냥 경험치 배율 적용 (콘프 값이 100일 때 1.0으로 적용되도록 100.0으로 나눔)
+				if (isAutoHunt) {
+					exp *= (Lineage.is_auto_hunt_exp_percent / 100.0); 
+				}
+
+				setExp(getExp() + exp);
+
+//		if (getGm() > 0) {
+//			ChattingController.toChatting(this, String.format("경험치 획득량 %f.", exp), Lineage.CHATTING_MODE_MESSAGE);
+//		}
+				
+				if (getGm() > 0) {
+				    ChattingController.toChatting(this, String.format("[체크] 보너스: %.1f%% / 최종 획득량: %.1f", (bonusPercent * 100), exp), Lineage.CHATTING_MODE_MESSAGE);
+				}
 
 		// 로그 기록.
 		if (Log.isLog(this)) {
@@ -2868,6 +3082,140 @@ public class PcInstance extends Character {
 	 * class), this));
 	 * }
 	 * }
+	 * 
+	 * 
+	 * // 아이콘 번호 정의 (서버 상황에 맞게 번호 수정 가능)
+	 * private static final int ICON_RANK_CLASS_1 = 81; // 1~5등
+	 * private static final int ICON_RANK_CLASS_2 = 82; // 6~15등
+	 * private static final int ICON_RANK_CLASS_3 = 83; // 16~30등
+	 * private static final int ICON_RANK_CLASS_4 = 84; // 31~50등
+	 * 
+	 * private boolean isInRankRange(int rank, int rankClass) {
+	 * if (rankClass == 1)
+	 * return rank >= 1 && rank <= 5;
+	 * if (rankClass == 2)
+	 * return rank >= 6 && rank <= 15;
+	 * if (rankClass == 3)
+	 * return rank >= 16 && rank <= 30;
+	 * if (rankClass == 4)
+	 * return rank >= 31 && rank <= 50; // Class 4 추가
+	 * return false;
+	 * }
+	 * 
+	 * private void removeRankIcon(int rankClass) {
+	 * int iconId = 0;
+	 * if (rankClass == 1)
+	 * iconId = ICON_RANK_CLASS_1;
+	 * else if (rankClass == 2)
+	 * iconId = ICON_RANK_CLASS_2;
+	 * else if (rankClass == 3)
+	 * iconId = ICON_RANK_CLASS_3;
+	 * else if (rankClass == 4)
+	 * iconId = ICON_RANK_CLASS_4;
+	 * 
+	 * if (iconId > 0) {
+	 * SC_BUFFICON_NOTI.on(this, iconId, 0,
+	 * SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+	 * }
+	 * }
+	 * 
+	 * public void rankSystem() {
+	 * int rank = RankController.getAllRank(getObjectId());
+	 * this.rank = rank;
+	 * 
+	 * boolean changed = false;
+	 * 
+	 * // 1. 현재 등수 기반의 새로운 등급 계산
+	 * int newRankClass = 0;
+	 * if (rank >= 1 && rank <= 5)
+	 * newRankClass = 1; // 1~5등 (1단계)
+	 * else if (rank >= 6 && rank <= 15)
+	 * newRankClass = 2; // 6~15등 (2단계)
+	 * else if (rank >= 16 && rank <= 30)
+	 * newRankClass = 3; // 16~30등 (3단계)
+	 * else if (rank >= 31 && rank <= 50)
+	 * newRankClass = 4; // 31~50등 (4단계)
+	 * 
+	 * // 2. 등급이 변동되었을 경우 (기존에 적용된 모든 능력치 해제)
+	 * if (lastRankClass > 0 && lastRankClass != newRankClass) {
+	 * removeRankIcon(lastRankClass); // 이전 아이콘 삭제
+	 * 
+	 * // ✅ [수정] 해제할 때 기존 버프(추타, SP) 대신 리덕션 수치를 뺍니다.
+	 * if (lastRankClass == 1) {
+	 * setDynamicHp(getDynamicHp() - 300);
+	 * setDynamicReduction(getDynamicReduction() - 3);
+	 * setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 3);
+	 * } else if (lastRankClass == 2) {
+	 * setDynamicHp(getDynamicHp() - 200);
+	 * setDynamicReduction(getDynamicReduction() - 2);
+	 * setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 2);
+	 * } else if (lastRankClass == 3) {
+	 * setDynamicHp(getDynamicHp() - 100);
+	 * setDynamicReduction(getDynamicReduction() - 1);
+	 * setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 1);
+	 * } else if (lastRankClass == 4) {
+	 * setDynamicHp(getDynamicHp() - 100);
+	 * }
+	 * 
+	 * ChattingController.toChatting(this, "[랭킹 시스템]: 기존 랭커 버프가 해제되었습니다.",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * lastRankClass = 0;
+	 * changed = true;
+	 * }
+	 * 
+	 * // 3. 새로운 등급 버프 및 아이콘 적용
+	 * if (newRankClass > 0 && newRankClass != lastRankClass) {
+	 * lastRankClass = newRankClass;
+	 * int iconId = 0;
+	 * 
+	 * // ✅ [수정] 등급별 적용할 수치 변수 변경 (dmg, sp -> reduc, pvpReduc)
+	 * int hp = 0;
+	 * int reduc = 0;
+	 * int pvpReduc = 0;
+	 * 
+	 * if (newRankClass == 1) {
+	 * iconId = ICON_RANK_CLASS_1;
+	 * hp = 300; reduc = 3; pvpReduc = 3;
+	 * } else if (newRankClass == 2) {
+	 * iconId = ICON_RANK_CLASS_2;
+	 * hp = 200; reduc = 2; pvpReduc = 2;
+	 * } else if (newRankClass == 3) {
+	 * iconId = ICON_RANK_CLASS_3;
+	 * hp = 100; reduc = 1; pvpReduc = 1;
+	 * } else if (newRankClass == 4) {
+	 * iconId = ICON_RANK_CLASS_4;
+	 * hp = 100; reduc = 0; pvpReduc = 0;
+	 * }
+	 * 
+	 * // ✅ [수정] 능력치 적용 로직 변경
+	 * if (hp > 0) setDynamicHp(getDynamicHp() + hp);
+	 * if (reduc > 0) setDynamicReduction(getDynamicReduction() + reduc);
+	 * if (pvpReduc > 0) setDynamicAddPvpReduction(getDynamicAddPvpReduction() +
+	 * pvpReduc);
+	 * 
+	 * // 아이콘 출력 (24시간 유지 패킷 전송)
+	 * SC_BUFFICON_NOTI.on(this, iconId, 86400,
+	 * SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+	 * 
+	 * // ✅ [수정] 안내 메시지 텍스트 변경
+	 * String msg =
+	 * String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (HP+%d, 리덕션+%d, PVP리덕션+%d)", rank, hp,
+	 * reduc, pvpReduc);
+	 * if (newRankClass == 4) msg = String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (HP+%d)",
+	 * rank, hp);
+	 * 
+	 * ChattingController.toChatting(this, msg, Lineage.CHATTING_MODE_MESSAGE);
+	 * changed = true;
+	 * }
+	 * 
+	 * // 4. 스태틱 갱신 패킷 전송
+	 * if (changed) {
+	 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+	 * class), this));
+	 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+	 * class), this));
+	 * }
+	 * }
 	 */
 
 	// 아이콘 번호 정의 (서버 상황에 맞게 번호 수정 가능)
@@ -2875,18 +3223,7 @@ public class PcInstance extends Character {
 	private static final int ICON_RANK_CLASS_2 = 82; // 6~15등
 	private static final int ICON_RANK_CLASS_3 = 83; // 16~30등
 	private static final int ICON_RANK_CLASS_4 = 84; // 31~50등
-
-	private boolean isInRankRange(int rank, int rankClass) {
-		if (rankClass == 1)
-			return rank >= 1 && rank <= 5;
-		if (rankClass == 2)
-			return rank >= 6 && rank <= 15;
-		if (rankClass == 3)
-			return rank >= 16 && rank <= 30;
-		if (rankClass == 4)
-			return rank >= 31 && rank <= 50; // Class 4 추가
-		return false;
-	}
+	private static final int ICON_RANK_CLASS_5 = 111; // 🔥 [추가] 50위 이하 경험치 버프 아이콘
 
 	private void removeRankIcon(int rankClass) {
 		int iconId = 0;
@@ -2898,6 +3235,8 @@ public class PcInstance extends Character {
 			iconId = ICON_RANK_CLASS_3;
 		else if (rankClass == 4)
 			iconId = ICON_RANK_CLASS_4;
+		else if (rankClass == 5)
+			iconId = ICON_RANK_CLASS_5; // 🔥 [추가] 5단계 아이콘 해제
 
 		if (iconId > 0) {
 			SC_BUFFICON_NOTI.on(this, iconId, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
@@ -2913,61 +3252,92 @@ public class PcInstance extends Character {
 		// 1. 현재 등수 기반의 새로운 등급 계산
 		int newRankClass = 0;
 		if (rank >= 1 && rank <= 5)
-			newRankClass = 1;
+			newRankClass = 1; // 별4개 (1~5등)
 		else if (rank >= 6 && rank <= 15)
-			newRankClass = 2;
+			newRankClass = 2; // 별3개 (6~15등)
 		else if (rank >= 16 && rank <= 30)
-			newRankClass = 3;
+			newRankClass = 3; // 별2개 (16~30등)
 		else if (rank >= 31 && rank <= 50)
-			newRankClass = 4; // Class 4 범위 설정
+			newRankClass = 4; // 별1개 (31~50등)
+		else
+			newRankClass = 5; // 🔥 그 외 50위 이하는 모두 5단계로 지정
 
-		// 2. 등 등급이 변동되었을 경우 (이전 등급 버프 및 아이콘 제거)
-		if (lastRankClass > 0 && lastRankClass != newRankClass) {
-			removeRankIcon(lastRankClass); // 이전 아이콘 삭제
+		// 2. 등급이 변동되었을 경우 (이전 등급 버프 및 아이콘 제거)
+        if (lastRankClass > 0 && lastRankClass != newRankClass) {
+            removeRankIcon(lastRankClass); // 이전 아이콘 삭제
 
-			if (lastRankClass == 1)
-				setDynamicHp(getDynamicHp() - 200);
-			else if (lastRankClass == 2)
-				setDynamicHp(getDynamicHp() - 150);
-			else if (lastRankClass == 3)
-				setDynamicHp(getDynamicHp() - 100);
-			else if (lastRankClass == 4)
-				setDynamicHp(getDynamicHp() - 50); // Class 4 버프 해제
+            // 🔴 [HP 버프 해제]
+            if (lastRankClass == 1)
+                setDynamicHp(getDynamicHp() - 200);
+            else if (lastRankClass == 2)
+                setDynamicHp(getDynamicHp() - 150);
+            else if (lastRankClass == 3)
+                setDynamicHp(getDynamicHp() - 100);
+            else if (lastRankClass == 4)
+                setDynamicHp(getDynamicHp() - 50);
 
-			ChattingController.toChatting(this, "[랭킹 시스템]: 기존 랭커 버프가 해제되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			lastRankClass = 0;
-			changed = true;
-		}
+            // 🔴 [🔥 수정됨: 랭킹 전용 경험치 초기화 (뺄 필요 없이 그냥 0으로 리셋하면 됨)]
+            this.rankExpBonus = 0.0;
 
-		// 3. 새로운 등급 버프 및 아이콘 적용
-		if (newRankClass > 0 && newRankClass != lastRankClass) {
-			lastRankClass = newRankClass;
-			int iconId = 0;
-			int hpBonus = 0;
+            ChattingController.toChatting(this, "[랭킹 시스템]: 기존 랭킹 버프가 변경되어 재설정됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+            lastRankClass = 0;
+            changed = true;
+        }
 
-			if (newRankClass == 1) {
-				iconId = ICON_RANK_CLASS_1;
-				hpBonus = 200;
-			} else if (newRankClass == 2) {
-				iconId = ICON_RANK_CLASS_2;
-				hpBonus = 150;
-			} else if (newRankClass == 3) {
-				iconId = ICON_RANK_CLASS_3;
-				hpBonus = 100;
-			} else if (newRankClass == 4) {
-				iconId = ICON_RANK_CLASS_4;
-				hpBonus = 50;
-			}
+        // 3. 새로운 등급 버프 및 아이콘 적용
+        if (newRankClass > 0 && newRankClass != lastRankClass) {
+            lastRankClass = newRankClass;
+            int iconId = 0;
+            int hpBonus = 0;
+            
+            // 🔴 [🔥 수정됨: 지역 변수가 아닌, 위에서 만든 클래스 변수에 바로 꽂아줌]
+            this.rankExpBonus = 0.0;
 
-			if (hpBonus > 0) {
-				setDynamicHp(getDynamicHp() + hpBonus);
-				// 아이콘 출력 (시간을 -1 또는 큰 값으로 주어 무제한 느낌 유도)
-				SC_BUFFICON_NOTI.on(this, iconId, 86400, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+            if (newRankClass == 1) {
+                iconId = ICON_RANK_CLASS_1;
+                hpBonus = 200;
+                this.rankExpBonus = 0.0; // 1~5등: 0%
+            } else if (newRankClass == 2) {
+                iconId = ICON_RANK_CLASS_2;
+                hpBonus = 150;
+                this.rankExpBonus = 0.5; // 6~15등: 50%
+            } else if (newRankClass == 3) {
+                iconId = ICON_RANK_CLASS_3;
+                hpBonus = 100;
+                this.rankExpBonus = 1.0; // 16~30등: 100%
+            } else if (newRankClass == 4) {
+                iconId = ICON_RANK_CLASS_4;
+                hpBonus = 50;
+                this.rankExpBonus = 2.0; // 31~50등: 200%
+            } else if (newRankClass == 5) {
+                iconId = ICON_RANK_CLASS_5;
+                hpBonus = 0;
+                this.rankExpBonus = 5.0; // 50위 밖 (일반): 500%
+            }
 
-				ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (HP+%d)", rank, hpBonus),
+            // 🟢 [HP 버프 적용]
+            if (hpBonus > 0) {
+                setDynamicHp(getDynamicHp() + hpBonus);
+            }
+
+            // 🟢 [버프 아이콘 출력]
+            if (iconId > 0) {
+                SC_BUFFICON_NOTI.on(this, iconId, 86400, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+            }
+
+			// 안내 메시지 출력 (수치 표시 교정)
+			if (newRankClass == 5) {
+				ChattingController.toChatting(this, "[랭킹 시스템]: 50위 이하 지원 버프 적용 (경험치 +500%)",
 						Lineage.CHATTING_MODE_MESSAGE);
-				changed = true;
+				// } else if (newRankClass == 1) {
+				// ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용
+				// (HP+%d)", rank, hpBonus), Lineage.CHATTING_MODE_MESSAGE);
+				// } else {
+				// ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용
+				// (HP+%d, 경험치 +%.0f%%)", rank, hpBonus, expBonus * 100),
+				// Lineage.CHATTING_MODE_MESSAGE);
 			}
+			changed = true;
 		}
 
 		// 4. 스태틱 갱신 패킷 전송
@@ -2978,54 +3348,86 @@ public class PcInstance extends Character {
 	}
 
 	@Override
-    public void toTimer(long time) {
-        if (this.getInventory() != null) {
-            // 현재 시간을 '초' 단위로 가져옴
-            long currentTime = System.currentTimeMillis() / 1000; 
-            
-            for (lineage.world.object.instance.ItemInstance invenItem : this.getInventory().getList()) {
-                if (invenItem == null || invenItem.getItem() == null) continue;
-                
-                // 1. 나비켓 아이템 설정값 (예: 2592000초 = 30일)
-                long duration = invenItem.getItem().getExpireTime();
-                
-                if (duration > 0) {
-                    // 2. 만약 아이템에 저장된 시간이 없다면(최초 인식), 현재시간 + 기간으로 세팅
-                    if (invenItem.getDeleteTime() <= 0) {
-                        invenItem.setDeleteTime(currentTime + duration);
-                    }
+	public void toTimer(long time) {
+		if (this.getInventory() != null) {
+			// 현재 시간을 '초' 단위로 가져옴
+			long currentTime = System.currentTimeMillis() / 1000;
 
-                    // 3. ★ 핵심: 패킷을 보내기 전에 시간을 다시 한번 확인 시켜줍니다.
-                    // 이 패킷(S_InventoryStatus)이 아이템의 '남은 시간'을 클라이언트로 보냅니다.
-                    this.toSender(lineage.network.packet.server.S_InventoryStatus.clone(lineage.network.packet.BasePacketPooling.getPool(lineage.network.packet.server.S_InventoryStatus.class), invenItem));                    
-                    // 4. 만료 처리 (현재 시간이 저장된 시간보다 크면 삭제)
-                    if (invenItem.getDeleteTime() < currentTime) {
-                        this.getInventory().count(invenItem, 0, true);
-                        lineage.world.controller.ChattingController.toChatting(this, "[알림] 기간 만료로 삭제되었습니다.", 20);
-                    }
-                }
-            }
-        }
+			// 삭제 시 에러 방지를 위해 복사본 리스트 사용
+			for (lineage.world.object.instance.ItemInstance invenItem : new java.util.ArrayList<>(
+					this.getInventory().getList())) {
+				if (invenItem == null || invenItem.getItem() == null)
+					continue;
 
+				long duration = invenItem.getItem().getExpireTime();
 
-		// ▼▼▼ [2단계] 스킬 쿨타임(딜레이) 알림 시스템 (원본 유지) ▼▼▼
-		if (isViewDelay() && getViewDelaySkillName() != null && getViewDelaySkillName().length() > 0
-				&& this.magic_time < this.delay_magic && (this.delay_magic - time) / 1000 >= 0) {
-			
-			if ((this.delay_magic - time) / 1000 > 0) {
-				lineage.world.controller.ChattingController.toChatting(this,
-						"\\fU" + getViewDelaySkillName() + " 남은시간(초) " + (this.delay_magic - time) / 1000,
-						lineage.share.Lineage.CHATTING_MODE_MESSAGE);
-			}
-			
-			if ((this.delay_magic - time) / 1000 == 0) {
-				this.magic_time = 0;
-				this.delay_magic = 0;
-				lineage.world.controller.ChattingController.toChatting(this, "\\fY재사용가능", lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+				if (duration > 0) {
+					// 1. 최초 인식 시 시간 세팅 및 DB 업데이트
+					if (invenItem.getDeleteTime() <= 0) {
+						invenItem.setDeleteTime(currentTime + duration);
+						invenItem.updateExpireTime(); // [추가] 실시간 시간 흐름 반영을 위해 DB 업데이트 호출
+					}
+
+					// 2. 실시간 시간 표시 패킷 전송
+					this.toSender(lineage.network.packet.server.S_InventoryStatus
+							.clone(lineage.network.packet.BasePacketPooling
+									.getPool(lineage.network.packet.server.S_InventoryStatus.class), invenItem));
+
+					// 3. 만료 처리
+					if (invenItem.getDeleteTime() < currentTime) {
+
+						// ★ [핵심 해결] 착용 중인 아이템인 경우 슬롯을 물리적으로 비워줌
+						if (invenItem.isEquipped()) {
+							// 아이템의 착용 상태를 false로 만들고
+							invenItem.setEquipped(false);
+							// ItemWeaponInstance에서 보신 것처럼 해당 인벤토리 슬롯을 null로 초기화합니다.
+							this.getInventory().setSlot(invenItem.getItem().getSlot(), null);
+
+							// 낚시 중이었다면 상태 초기화
+							if (invenItem.getItem().getType2().equalsIgnoreCase("fishing_rod") || this.isFishing()) {
+								this.setFishing(false);
+								this.setFishingTime(0L);
+								this.setGfxMode(0);
+
+								this.toSender(lineage.network.packet.server.S_ObjectMode.clone(
+										(lineage.network.packet.server.S_ObjectMode) lineage.network.packet.BasePacketPooling
+												.getPool(lineage.network.packet.server.S_ObjectMode.class),
+										this), true);
+
+								lineage.world.controller.ChattingController.toChatting(this,
+										"\\fR알림: 낚싯대 만료로 인해 낚시가 종료되었습니다.", 20);
+							}
+						}
+
+						// 4. 아이템 실제 삭제
+						this.getInventory().count(invenItem, 0, true);
+						lineage.world.controller.ChattingController.toChatting(this, "[알림] 기간 만료로 삭제되었습니다.", 20);
+					}
+				}
 			}
 		}
-		// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
+		// 출석체크
+		// attendancecheck();
+
+		// ▼▼▼ [2단계] 스킬 쿨타임 알림 (원본 유지) ▼▼▼
+		if (isViewDelay() && getViewDelaySkillName() != null && getViewDelaySkillName().length() > 0
+				&& this.magic_time < this.delay_magic && (this.delay_magic - time) / 1000 >= 0) {
+
+			long remainDelay = (this.delay_magic - time) / 1000;
+			if (remainDelay > 0) {
+				lineage.world.controller.ChattingController.toChatting(this,
+						"\\fU" + getViewDelaySkillName() + " 남은시간(초) " + remainDelay,
+						lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+			}
+
+			if (remainDelay == 0) {
+				this.magic_time = 0;
+				this.delay_magic = 0;
+				lineage.world.controller.ChattingController.toChatting(this, "\\fY재사용가능",
+						lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+			}
+		}
 
 		// ▼▼▼ [3단계] 63번 맵 외 메테오 스트라이크 자동 압수 로직 (원본 유지) ▼▼▼
 		if (this.getMap() != 63 && this.getInventory() != null && this.getInventory().find("메테오 스트라이크") != null) {
@@ -3035,7 +3437,6 @@ public class PcInstance extends Character {
 			}
 		}
 		// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-		
 
 		if (보물찾기컨트롤러.isOpen && getMap() == 807) {
 
@@ -3445,7 +3846,7 @@ public class PcInstance extends Character {
 					this.setDynamicBowCritical(this.getDynamicBowCritical() + 10);
 					this.setDynamicHp(this.getDynamicHp() + 100);
 					ChattingController.toChatting(this,
-							String.format("[알림] %s 효과 적용 : 근거리치명+10 원거리치명+10 HP+100", item.getItem().getName()),
+							String.format("[알림] 환상의 부적 효과 적용:근거리치명+10 원거리치명+10 HP+100", item.getItem().getName()),
 							Lineage.CHATTING_MODE_MESSAGE);
 					toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 					toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
@@ -3455,34 +3856,38 @@ public class PcInstance extends Character {
 			}
 		}
 		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("오만의 탑 9층 지배 부적"));
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("오만의 탑 환상의 부적"));
 			int check = 0;
 
 			// 수량 체크
 			for (ItemInstance check_item : this.getInventory().getList()) {
-				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("오만의 탑 9층 지배 부적"))
+				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("오만의 탑 환상의 부적"))
 					check = check + 1;
 			}
 
 			if (check == 0 && isSealBuff90) {
-				this.setDynamicStunHit(this.getDynamicStunHit() - 0.10);
-				this.setDynamicStunResist(this.getDynamicStunResist() - 0.10);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 2);
+				this.setDynamicAddPvpReduction(this.getDynamicReduction() - 2);
+				// this.setDynamicStunHit(this.getDynamicStunHit() - 0.10);
+				// this.setDynamicStunResist(this.getDynamicStunResist() - 0.10);
 				this.setDynamicHp(this.getDynamicHp() - 100);
 				isSealBuff90 = false;
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-				ChattingController.toChatting(this, "[알림] 오만의 탑 9층 지배 부적 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(this, "[알림] 오만의 탑 환상의 부적 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
 			if (item != null) {
 				// 정상적으로 효과 적용할 경우
 				if (check == 1 && !isSealBuff90) {
 					isSealBuff90 = true;
-					this.setDynamicStunHit(this.getDynamicStunHit() + 0.10);
-					this.setDynamicStunResist(this.getDynamicStunResist() + 0.10);
+					this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 2);
+					this.setDynamicAddPvpReduction(this.getDynamicReduction() - 2);
+					// this.setDynamicStunHit(this.getDynamicStunHit() + 0.10);
+					// this.setDynamicStunResist(this.getDynamicStunResist() + 0.10);
 					this.setDynamicHp(this.getDynamicHp() + 100);
 					ChattingController.toChatting(this,
-							String.format("[알림] %s 효과 적용 : 스턴적중+10 스턴내성+10 HP+100", item.getItem().getName()),
+							String.format("[알림] %s 효과 적용 :PVP리덕션+2,리덕션+2,HP+100", item.getItem().getName()),
 							Lineage.CHATTING_MODE_MESSAGE);
 					toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 					toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
@@ -3492,34 +3897,34 @@ public class PcInstance extends Character {
 			}
 		}
 		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("오만의 탑 10층 지배 부적"));
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("랭킹변신카드30일"));
 			int check = 0;
 
 			// 수량 체크
 			for (ItemInstance check_item : this.getInventory().getList()) {
-				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("오만의 탑 10층 지배 부적"))
+				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("랭킹변신카드30일"))
 					check = check + 1;
 			}
 
 			if (check == 0 && isSealBuff100) {
-				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 3);
-				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 3);
-				this.setDynamicHp(this.getDynamicHp() - 100);
+				// this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 3);
+				// this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 3);
+				this.setDynamicHp(this.getDynamicHp() - 200);
 				isSealBuff100 = false;
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-				ChattingController.toChatting(this, "[알림] 오만의 탑 10층 지배 부적 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(this, "[알림] 랭킹변신카드30일 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
 			if (item != null) {
 				// 정상적으로 효과 적용할 경우
 				if (check == 1 && !isSealBuff100) {
 					isSealBuff100 = true;
-					this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 3);
-					this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 3);
-					this.setDynamicHp(this.getDynamicHp() + 100);
+					// this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 3);
+					// this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 3);
+					this.setDynamicHp(this.getDynamicHp() + 200);
 					ChattingController.toChatting(this,
-							String.format("[알림] %s 효과 적용 : PVP추타+3 PVP리덕+3 HP+100", item.getItem().getName()),
+							String.format("[알림] %s 효과 적용 : HP+200", item.getItem().getName()),
 							Lineage.CHATTING_MODE_MESSAGE);
 					toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 					toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
@@ -3741,30 +4146,207 @@ public class PcInstance extends Character {
 				// Lineage.CHATTING_MODE_MESSAGE);
 			}
 		}
+		/*
+		 * if (this.getInventory() != null && !this.isWorldDelete()) {
+		 * ItemInstance item = this.getInventory().find(ItemDatabase.find("전투가호"));
+		 * if (item == null)
+		 * item = this.getInventory().find(ItemDatabase.find("전투가호(각인)"));
+		 * int check = 0;
+		 * 
+		 * // 현재 인벤토리에 존재하는 '전투가호' 또는 '전투가호(각인)' 개수 체크
+		 * for (ItemInstance check_item : this.getInventory().getList()) {
+		 * if (check_item != null && check_item.getItem() != null) {
+		 * String name = check_item.getItem().getName();
+		 * if (name.equalsIgnoreCase("전투가호") || name.equalsIgnoreCase("전투가호(각인)")) {
+		 * check++;
+		 * }
+		 * }
+		 * }
+		 * 
+		 * // 아이템이 사라졌을 때 효과 해제 (인벤토리에 없는 경우)
+		 * if (check == 0 && isSealBuff) {
+		 * // this.setDynamicAddDmg(this.getDynamicAddDmg() - 3);
+		 * // this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() - 3);
+		 * this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 10);
+		 * this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 10);
+		 * // this.setDynamicSp(this.getDynamicSp() - 3);
+		 * this.setDynamicHp(this.getDynamicHp() - 500);
+		 * 
+		 * isSealBuff = false;
+		 * 
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * 
+		 * ChattingController.toChatting(this, "[알림] 전투가호 효과가 해제됩니다.",
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * }
+		 * 
+		 * // 아이템이 존재하면서, 효과가 적용되지 않은 경우 효과 적용
+		 * if (item != null && check == 1 && !isSealBuff) {
+		 * isSealBuff = true;
+		 * 
+		 * // this.setDynamicAddDmg(this.getDynamicAddDmg() + 3);
+		 * // this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() + 3);
+		 * this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 10);
+		 * this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 10);
+		 * // this.setDynamicSp(this.getDynamicSp() - 3);
+		 * this.setDynamicHp(this.getDynamicHp() + 500);
+		 * 
+		 * ChattingController.toChatting(this,
+		 * String.format("[알림] %s 효과적용:pvp데미지+10,pvp리덕+10,HP+500",
+		 * item.getItem().getName()),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * 
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * }
+		 * }
+		 * 
+		 * if (this.getInventory() != null && !this.isWorldDelete()) {
+		 * ItemInstance item =
+		 * this.getInventory().find(ItemDatabase.find("순간이동 지배 반지"));
+		 * int check = 0;
+		 * 
+		 * // 현재 인벤토리에 존재하는 '순간이동 지배 반지' 개수 체크
+		 * for (ItemInstance check_item : this.getInventory().getList()) {
+		 * if (check_item != null && check_item.getItem() != null
+		 * && check_item.getItem().getName().equalsIgnoreCase("순간이동 지배 반지"))
+		 * check++;
+		 * }
+		 * 
+		 * // 아이템이 사라졌을 때 효과 해제 (인벤토리에 없는 경우)
+		 * if (check == 0 && isSealBuff2) {
+		 * 
+		 * this.setDynamicAddDmg(this.getDynamicAddDmg() - 3);
+		 * this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() - 3);
+		 * this.setDynamicSp(this.getDynamicSp() - 3);
+		 * this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 5);
+		 * this.setDynamicHp(this.getDynamicHp() - 300);
+		 * 
+		 * isSealBuff2 = false;
+		 * Seal_Level2 = 0; // 💡 Seal_Level2 초기화 추가
+		 * 
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * 
+		 * ChattingController.toChatting(this, "[알림] 순간이동 지배 반지 효과가 해제됩니다.",
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * }
+		 * 
+		 * // 아이템이 존재하면서, 효과가 적용되지 않은 경우 효과 적용
+		 * if (item != null && check >= 1 && !isSealBuff2) { // 💡 `check >= 1` 조건 변경
+		 * isSealBuff2 = true;
+		 * Seal_Level2 = item.getEnLevel(); // 💡 아이템의 인첸트 레벨 저장
+		 * 
+		 * this.setDynamicAddDmg(this.getDynamicAddDmg() + 3);
+		 * this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() + 3);
+		 * this.setDynamicSp(this.getDynamicSp() + 3);
+		 * this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 5);
+		 * this.setDynamicHp(this.getDynamicHp() + 300);
+		 * 
+		 * ChattingController.toChatting(this,
+		 * String.format("[알림] %s:추타+3,SP+3,PVP데미지+5,HP+300", item.getItem().getName()),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * 
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * }
+		 * }
+		 */
 
 		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("전투가호"));
-			if (item == null)
-				item = this.getInventory().find(ItemDatabase.find("전투가호(각인)"));
-			int check = 0;
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("오만의 탑 환상의 지배 부적"));
 
+			// (1) 개수 세기 (혹시 모를 중복 소지 체크)
+			int check = 0;
+			for (ItemInstance check_item : this.getInventory().getList()) {
+				if (check_item != null && check_item.getItem() != null &&
+						check_item.getItem().getName().equalsIgnoreCase("오만의 탑 환상의 지배 부적")) {
+					check++;
+				}
+			}
+
+			// (2) 해제 조건: 아이템이 0개가 되었는데 버프는 켜져 있는 경우
+			if (check == 0 && isSealBuff2) {
+				// [아이콘 삭제] 98번 아이콘을 제거 (시간을 0으로 전송)
+				// SC_BUFFICON_NOTI 클래스를 사용하신다면 아래와 같이 사용하세요.
+				SC_BUFFICON_NOTI.on(this, 98, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+
+				// 능력치 제거
+//				this.setDynamicAddDmg(this.getDynamicAddDmg() - 3);
+//				this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() - 3);
+//				this.setDynamicSp(this.getDynamicSp() - 3);
+//				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 5);
+//				this.setDynamicHp(this.getDynamicHp() - 300);
+				this.setDynamicReduction(this.getDynamicReduction() + 5);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 5);
+				this.setDynamicHp(this.getDynamicHp() + 500);
+
+				isSealBuff2 = false;
+				Seal_Level2 = 0;
+
+				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
+				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
+//				ChattingController.toChatting(this, "[알림] 오만의 탑 환상의 지배 부적 효과가 해제되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
+			}
+
+			// (3) 적용 조건: 아이템은 있는데 버프가 꺼져 있는 경우 (또는 갱신이 필요한 경우)
+			if (item != null && check >= 1 && !isSealBuff2) {
+				SC_BUFFICON_NOTI.on(this, 98, -1, 0);
+
+				// 능력치 적용
+				isSealBuff2 = true;
+				Seal_Level2 = item.getEnLevel();
+
+//				this.setDynamicAddDmg(this.getDynamicAddDmg() + 3);
+//				this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() + 3);
+//				this.setDynamicSp(this.getDynamicSp() + 3);
+//				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 5);
+//				this.setDynamicHp(this.getDynamicHp() + 300);
+				this.setDynamicReduction(this.getDynamicReduction() + 5);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 5);
+				this.setDynamicHp(this.getDynamicHp() + 500);
+
+				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
+				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
+
+//				ChattingController.toChatting(this,
+//						String.format("[알림] %s:리덕션+5,PVP리덕션+5,HP+500", item.getItem().getName()),
+//						Lineage.CHATTING_MODE_MESSAGE);
+			}
+		}
+
+		if (this.getInventory() != null && !this.isWorldDelete()) {
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("전투의 룬"));
+			if (item == null)
+				item = this.getInventory().find(ItemDatabase.find("전투의 룬(각인)"));
+
+			int check = 0;
 			// 현재 인벤토리에 존재하는 '전투가호' 또는 '전투가호(각인)' 개수 체크
 			for (ItemInstance check_item : this.getInventory().getList()) {
 				if (check_item != null && check_item.getItem() != null) {
 					String name = check_item.getItem().getName();
-					if (name.equalsIgnoreCase("전투가호") || name.equalsIgnoreCase("전투가호(각인)")) {
+					if (name.equalsIgnoreCase("전투의 룬") || name.equalsIgnoreCase("전투의 룬(각인)")) {
 						check++;
 					}
 				}
 			}
 
-			// 아이템이 사라졌을 때 효과 해제 (인벤토리에 없는 경우)
+			// (1) 아이템이 사라졌을 때 효과 해제
 			if (check == 0 && isSealBuff) {
-				// this.setDynamicAddDmg(this.getDynamicAddDmg() - 3);
-				// this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() - 3);
+				// ★ [아이콘 삭제] 전투가호 아이콘 제거 (아이콘 번호 99번 가정)
+				SC_BUFFICON_NOTI.on(this, 101, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+
 				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 5);
-				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 50);
-				// this.setDynamicSp(this.getDynamicSp() - 3);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 5);
 				this.setDynamicHp(this.getDynamicHp() - 500);
 
 				isSealBuff = false;
@@ -3772,77 +4354,30 @@ public class PcInstance extends Character {
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 
-				ChattingController.toChatting(this, "[알림] 전투가호 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(this, "[알림] 전투의 룬 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
-			// 아이템이 존재하면서, 효과가 적용되지 않은 경우 효과 적용
-			if (item != null && check == 1 && !isSealBuff) {
+			// (2) 아이템이 존재하면서, 효과가 적용되지 않은 경우 효과 적용
+			if (item != null && check >= 1 && !isSealBuff) {
 				isSealBuff = true;
 
-				// this.setDynamicAddDmg(this.getDynamicAddDmg() + 3);
-				// this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() + 3);
+				// ★ [아이콘 출력] 전투가호 아이콘 출력 (99번, 시간 숫자 표시 안함)
+				SC_BUFFICON_NOTI.on(this, 101, -1, 0);
+
 				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 5);
-				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 50);
-				// this.setDynamicSp(this.getDynamicSp() - 3);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 5);
 				this.setDynamicHp(this.getDynamicHp() + 500);
 
-				ChattingController.toChatting(this,
-						String.format("[알림] %s 효과적용:pvp데미지+5,pvp리덕+50,HP+500", item.getItem().getName()),
-						Lineage.CHATTING_MODE_MESSAGE);
+				// ChattingController.toChatting(this,
+				// String.format("[알림] %s 효과적용:PVP데미지+5,PVP리덕+5,HP+500",
+				// item.getItem().getName()),
+				// Lineage.CHATTING_MODE_MESSAGE);
 
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 			}
 		}
 
-		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("순간이동 지배 반지"));
-			int check = 0;
-
-			// 현재 인벤토리에 존재하는 '순간이동 지배 반지' 개수 체크
-			for (ItemInstance check_item : this.getInventory().getList()) {
-				if (check_item != null && check_item.getItem() != null
-						&& check_item.getItem().getName().equalsIgnoreCase("순간이동 지배 반지"))
-					check++;
-			}
-
-			// 아이템이 사라졌을 때 효과 해제 (인벤토리에 없는 경우)
-			if (check == 0 && isSealBuff2) {
-
-				this.setDynamicAddDmg(this.getDynamicAddDmg() - 3);
-				this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() - 3);
-				this.setDynamicSp(this.getDynamicSp() - 3);
-				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 30);
-				this.setDynamicHp(this.getDynamicHp() - 300);
-
-				isSealBuff2 = false;
-				Seal_Level2 = 0; // 💡 Seal_Level2 초기화 추가
-
-				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
-				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-
-				ChattingController.toChatting(this, "[알림] 순간이동 지배 반지 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
-			}
-
-			// 아이템이 존재하면서, 효과가 적용되지 않은 경우 효과 적용
-			if (item != null && check >= 1 && !isSealBuff2) { // 💡 `check >= 1` 조건 변경
-				isSealBuff2 = true;
-				Seal_Level2 = item.getEnLevel(); // 💡 아이템의 인첸트 레벨 저장
-
-				this.setDynamicAddDmg(this.getDynamicAddDmg() + 3);
-				this.setDynamicAddDmgBow(this.getDynamicAddDmgBow() + 3);
-				this.setDynamicSp(this.getDynamicSp() + 3);
-				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 30);
-				this.setDynamicHp(this.getDynamicHp() + 300);
-
-				ChattingController.toChatting(this,
-						String.format("[알림] %s:추타+3,PVP데미지+30,SP+3,HP+300", item.getItem().getName()),
-						Lineage.CHATTING_MODE_MESSAGE);
-
-				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
-				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-			}
-		}
 		/*
 		 * if (this.getInventory() != null && !this.isWorldDelete()) {
 		 * // 1. 아이템 인스턴스 찾기 (이름으로)
@@ -3896,128 +4431,307 @@ public class PcInstance extends Character {
 		 * }
 		 * 
 		 */
+		/*
+		 * if (this.getInventory() != null && !this.isWorldDelete()) {
+		 * ItemInstance item =
+		 * this.getInventory().find(ItemDatabase.find("변신 조종 지배 반지"));
+		 * if (item == null)
+		 * item = this.getInventory().find(ItemDatabase.find("신화변신 지배 반지(각인)"));
+		 * int check = 0;
+		 * 
+		 * // 현재 인벤토리에 존재하는 '변신 지배 반지' 또는 '변신 지배 반지(각인)' 개수 체크
+		 * for (ItemInstance check_item : this.getInventory().getList()) {
+		 * if (check_item != null && check_item.getItem() != null) {
+		 * String name = check_item.getItem().getName();
+		 * if (name.equalsIgnoreCase("신화변신 지배 반지") ||
+		 * name.equalsIgnoreCase("변신 조종 지배 반지")) {
+		 * check++;
+		 * }
+		 * }
+		 * }
+		 * 
+		 * // 아이템이 사라졌을 때 효과 해제 (인벤토리에 없는 경우)
+		 * if (check == 0 && isSealBuff110) {
+		 * this.setDynamicSp(this.getDynamicSp() - 3);
+		 * this.setDynamicReduction(this.getDynamicReduction() - 3);
+		 * this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 5);
+		 * this.setDynamicHp(this.getDynamicHp() - 300);
+		 * 
+		 * isSealBuff110 = false; // 효과 해제
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * ChattingController.toChatting(this, "[알림] 변신 조종 지배 반지 효과가 해제됩니다.",
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * }
+		 * 
+		 * // 아이템이 존재하면서, 효과가 적용되지 않은 경우만 효과 적용
+		 * if (item != null && check > 0 && !isSealBuff110) {
+		 * isSealBuff110 = true; // 효과 적용됨을 표시
+		 * 
+		 * this.setDynamicSp(this.getDynamicSp() + 3);
+		 * this.setDynamicReduction(this.getDynamicReduction() + 3);
+		 * this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 5);
+		 * this.setDynamicHp(this.getDynamicHp() + 300);
+		 * 
+		 * ChattingController.toChatting(this,
+		 * String.format("[알림] %s:리덕션+3,SP+3,PVP리덕션+5,HP+300",
+		 * item.getItem().getName()),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * 
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * }
+		 * }
+		 */
+
 		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("신화변신 지배 반지"));
+			// (1) 아이템 찾기 (대표 아이템 설정)
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("변신 조종 반지"));
 			if (item == null)
 				item = this.getInventory().find(ItemDatabase.find("신화변신 지배 반지(각인)"));
-			int check = 0;
 
-			// 현재 인벤토리에 존재하는 '변신 지배 반지' 또는 '변신 지배 반지(각인)' 개수 체크
+			int check = 0;
+			// (2) 인벤토리 내 개수 체크
 			for (ItemInstance check_item : this.getInventory().getList()) {
 				if (check_item != null && check_item.getItem() != null) {
 					String name = check_item.getItem().getName();
-					if (name.equalsIgnoreCase("신화변신 지배 반지") || name.equalsIgnoreCase("변신 조종 지배 반지")) {
+					// 조건에 맞는 모든 지배 반지 이름을 체크
+					if (name.equalsIgnoreCase("변신 조종 반지") ||
+							name.equalsIgnoreCase("변신 조종 지배 반지") ||
+							name.equalsIgnoreCase("신화변신 지배 반지(각인)")) {
 						check++;
 					}
 				}
 			}
 
-			// 아이템이 사라졌을 때 효과 해제 (인벤토리에 없는 경우)
+			// (3) 효과 해제: 아이템이 사라졌을 때
 			if (check == 0 && isSealBuff110) {
-				this.setDynamicSp(this.getDynamicSp() - 3);
-				this.setDynamicReduction(this.getDynamicReduction() - 3);
-				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 30);
-				this.setDynamicHp(this.getDynamicHp() - 300);
+				// ★ [아이콘 삭제] 99번 아이콘 제거
+				SC_BUFFICON_NOTI.on(this, 99, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
 
-				isSealBuff110 = false; // 효과 해제
+				this.setDynamicSp(this.getDynamicSp() - 2);
+				this.setDynamicReduction(this.getDynamicReduction() - 2);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 2);
+				this.setDynamicHp(this.getDynamicHp() - 200);
+
+				isSealBuff110 = false;
+
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-				ChattingController.toChatting(this, "[알림] 신화변신 지배 반지 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(this, "[알림] 변신 조종 반지 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
-			// 아이템이 존재하면서, 효과가 적용되지 않은 경우만 효과 적용
+			// (4) 효과 적용: 아이템이 존재하고 효과가 적용되지 않은 경우
 			if (item != null && check > 0 && !isSealBuff110) {
-				isSealBuff110 = true; // 효과 적용됨을 표시
+				isSealBuff110 = true;
 
-				this.setDynamicSp(this.getDynamicSp() + 3);
-				this.setDynamicReduction(this.getDynamicReduction() + 3);
-				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 30);
-				this.setDynamicHp(this.getDynamicHp() + 300);
+				// ★ [아이콘 출력] 99번 아이콘 출력 (시간 숫자 표시 안함)
+				SC_BUFFICON_NOTI.on(this, 99, -1, 0);
 
-				ChattingController.toChatting(this,
-						String.format("[알림] %s:리덕션+3,PVP리덕션+30,SP+3,HP+300", item.getItem().getName()),
-						Lineage.CHATTING_MODE_MESSAGE);
+				this.setDynamicSp(this.getDynamicSp() + 2);
+				this.setDynamicReduction(this.getDynamicReduction() + 2);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 2);
+				this.setDynamicHp(this.getDynamicHp() + 200);
+
+				// ChattingController.toChatting(this,
+				// String.format("[알림] %s:리덕션+2,SP+2,PVP리덕션+2,HP+200",
+				// item.getItem().getName()),
+				// Lineage.CHATTING_MODE_MESSAGE);
 
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 			}
 		}
+		/*
+		 * if (this.getInventory() != null && !this.isWorldDelete()) {
+		 * ItemInstance item =
+		 * this.getInventory().find(ItemDatabase.find("오만의 탑 환상의 지배 부적"));
+		 * int check = 0;
+		 * 
+		 * // 수량 체크
+		 * for (ItemInstance check_item : this.getInventory().getList()) {
+		 * if (check_item != null &&
+		 * check_item.getItem().getName().equalsIgnoreCase("오만의 탑 환상의 지배 부적"))
+		 * check = check + 1;
+		 * }
+		 * 
+		 * if (check == 0 && isSealBuff120) {
+		 * this.setDynamicReduction(this.getDynamicReduction() - 5);
+		 * this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 5);
+		 * this.setDynamicHp(this.getDynamicHp() - 500);
+		 * 
+		 * isSealBuff120 = false;
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * ChattingController.toChatting(this, "[알림] 오만의 탑 환상의 지배 부적 효과가 해제됩니다.",
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * }
+		 * 
+		 * if (item != null) {
+		 * // 정상적으로 효과 적용할 경우
+		 * if (check == 1 && !isSealBuff120) {
+		 * isSealBuff120 = true;
+		 * this.setDynamicReduction(this.getDynamicReduction() + 5);
+		 * this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 5);
+		 * this.setDynamicHp(this.getDynamicHp() + 500);
+		 * 
+		 * ChattingController.toChatting(this,
+		 * String.format("[알림] %s:PVP리덕션+5,리덕션+5,HP+500", item.getItem().getName()),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * 
+		 * // 정상적으로 효과 적용 중이면서 인첸트 레벨이 변경 될 경우
+		 * }
+		 * }
+		 * }
+		 */
 
 		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("오만의 탑 환상의 지배 부적"));
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("방어의 룬"));
 			int check = 0;
 
 			// 수량 체크
 			for (ItemInstance check_item : this.getInventory().getList()) {
-				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("오만의 탑 환상의 지배 부적"))
+				if (check_item != null && check_item.getItem() != null &&
+						check_item.getItem().getName().equalsIgnoreCase("방어의 룬")) {
 					check = check + 1;
+				}
 			}
 
+			// (1) 효과 해제: 아이템이 인벤토리에서 사라진 경우
 			if (check == 0 && isSealBuff120) {
+				// ★ [아이콘 삭제] 102번 아이콘 제거
+				SC_BUFFICON_NOTI.on(this, 102, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+
 				this.setDynamicReduction(this.getDynamicReduction() - 5);
-				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 50);
-				this.setDynamicHp(this.getDynamicHp() - 500);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 5);
+				this.setDynamicHp(this.getDynamicHp() - 300);
 
 				isSealBuff120 = false;
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-				ChattingController.toChatting(this, "[알림] 오만의 탑 환상의 지배 부적 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(this, "[알림] 방어의 룬 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
-			if (item != null) {
-				// 정상적으로 효과 적용할 경우
-				if (check == 1 && !isSealBuff120) {
-					isSealBuff120 = true;
-					this.setDynamicReduction(this.getDynamicReduction() + 5);
-					this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 50);
-					this.setDynamicHp(this.getDynamicHp() + 500);
+			// (2) 효과 적용: 아이템이 존재하고 버프가 꺼져 있는 경우
+			if (item != null && check >= 1 && !isSealBuff120) {
+				isSealBuff120 = true;
 
-					ChattingController.toChatting(this,
-							String.format("[알림] %s:PVP리덕션+50,리덕션+5,HP+500", item.getItem().getName()),
-							Lineage.CHATTING_MODE_MESSAGE);
-					toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
-					toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
+				// ★ [아이콘 출력] 102번 아이콘 출력 (시간 표시 제거 타입)
+				SC_BUFFICON_NOTI.on(this, 102, -1, 0);
 
-					// 정상적으로 효과 적용 중이면서 인첸트 레벨이 변경 될 경우
-				}
+				this.setDynamicReduction(this.getDynamicReduction() + 5);
+				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 5);
+				this.setDynamicHp(this.getDynamicHp() + 300);
+
+				// ChattingController.toChatting(this,
+				// String.format("[알림] %s:PVP리덕션+5,리덕션+5,HP+300", item.getItem().getName()),
+				// Lineage.CHATTING_MODE_MESSAGE);
+
+				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
+				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 			}
 		}
+		/*
+		 * if (this.getInventory() != null && !this.isWorldDelete()) {
+		 * ItemInstance item = this.getInventory().find(ItemDatabase.find("신성한 룬"));
+		 * int check = 0;
+		 * 
+		 * // 수량 체크
+		 * for (ItemInstance check_item : this.getInventory().getList()) {
+		 * if (check_item != null &&
+		 * check_item.getItem().getName().equalsIgnoreCase("신성한 룬"))
+		 * check = check + 1;
+		 * }
+		 * 
+		 * if (check == 0 && isSealBuff130) {
+		 * this.setDynamicAc(getDynamicAc() - 5);
+		 * this.setDynamicMr(this.getDynamicMr() - 20);
+		 * this.setDynamicHp(this.getDynamicHp() - 500);
+		 * isSealBuff130 = false;
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * ChattingController.toChatting(this, "[알림] 신성한 룬 효과가 해제됩니다.",
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * }
+		 * 
+		 * if (item != null) {
+		 * // 정상적으로 효과 적용할 경우
+		 * if (check == 1 && !isSealBuff130) {
+		 * isSealBuff130 = true;
+		 * this.setDynamicAc(getDynamicAc() + 5);
+		 * this.setDynamicMr(this.getDynamicMr() + 20);
+		 * this.setDynamicHp(this.getDynamicHp() + 500);
+		 * ChattingController.toChatting(this,
+		 * String.format("[알림] %s 효과 적용:AC+5 MR+20 HP+500", item.getItem().getName()),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+		 * class), this));
+		 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+		 * class), this));
+		 * 
+		 * // 정상적으로 효과 적용 중이면서 인첸트 레벨이 변경 될 경우
+		 * }
+		 * }
+		 * }
+		 */
 
 		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("신성한 룬"));
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("생명의 룬"));
 			int check = 0;
 
 			// 수량 체크
 			for (ItemInstance check_item : this.getInventory().getList()) {
-				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("신성한 룬"))
+				if (check_item != null && check_item.getItem() != null &&
+						check_item.getItem().getName().equalsIgnoreCase("생명의 룬")) {
 					check = check + 1;
+				}
 			}
 
+			// (1) 효과 해제: 아이템이 인벤토리에서 사라진 경우
 			if (check == 0 && isSealBuff130) {
+				// ★ [아이콘 삭제] 100번 아이콘 제거
+				SC_BUFFICON_NOTI.on(this, 100, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+
 				this.setDynamicAc(getDynamicAc() - 5);
-				this.setDynamicMr(this.getDynamicMr() - 20);
-				this.setDynamicHp(this.getDynamicHp() - 500);
+				this.setDynamicMr(this.getDynamicMr() - 15);
+				this.setDynamicHp(this.getDynamicHp() - 300);
+
 				isSealBuff130 = false;
+
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-				ChattingController.toChatting(this, "[알림] 신성한 룬 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(this, "[알림] 생명의 룬 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
-			if (item != null) {
-				// 정상적으로 효과 적용할 경우
-				if (check == 1 && !isSealBuff130) {
-					isSealBuff130 = true;
-					this.setDynamicAc(getDynamicAc() + 5);
-					this.setDynamicMr(this.getDynamicMr() + 20);
-					this.setDynamicHp(this.getDynamicHp() + 500);
-					ChattingController.toChatting(this,
-							String.format("[알림] %s 효과 적용:AC+5 MR+20 HP+500", item.getItem().getName()),
-							Lineage.CHATTING_MODE_MESSAGE);
-					toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
-					toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
+			// (2) 효과 적용: 아이템이 존재하고 버프가 꺼져 있는 경우
+			if (item != null && check >= 1 && !isSealBuff130) {
+				isSealBuff130 = true;
 
-					// 정상적으로 효과 적용 중이면서 인첸트 레벨이 변경 될 경우
-				}
+				// ★ [아이콘 출력] 100번 아이콘 출력 (시간 표시 제거 타입)
+				SC_BUFFICON_NOTI.on(this, 100, -1, 0);
+
+				this.setDynamicAc(getDynamicAc() + 5);
+				this.setDynamicMr(this.getDynamicMr() + 15);
+				this.setDynamicHp(this.getDynamicHp() + 300);
+
+				// ChattingController.toChatting(this,
+				// String.format("[알림] %s 효과 적용:AC+5 MR+15 HP+300", item.getItem().getName()),
+				// Lineage.CHATTING_MODE_MESSAGE);
+
+				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
+				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 			}
 		}
 
@@ -4039,8 +4753,18 @@ public class PcInstance extends Character {
 			}
 		}
 
-		// 테베라스 사막
+		// 테베던전 사막
 		if (!테베라스컨트롤러.isOpen && getGm() == 0 && (getMap() == 781)) {
+			if (isAutoHunt) {
+				endAutoHunt(false, false);
+			}
+
+			int[] loc = Lineage.getHomeXY();
+			toTeleport(loc[0], loc[1], loc[2], true);
+		}
+
+		// 테베라스 사막
+		if (!테베사막컨트롤러.isOpen && getGm() == 0 && (getMap() == 58)) {
 			if (isAutoHunt) {
 				endAutoHunt(false, false);
 			}
@@ -4298,6 +5022,15 @@ public class PcInstance extends Character {
 			toTeleport(loc[0], loc[1], loc[2], true);
 		}
 
+		if (!Lostilandcontroller.isOpen && getGm() == 0 && getMap() == 70) {
+			if (isAutoHunt) {
+				endAutoHunt(false, false);
+			}
+
+			int[] loc = Lineage.getHomeXY();
+			toTeleport(loc[0], loc[1], loc[2], true);
+		}
+
 		if (!라바던전컨트롤러.isOpen && getGm() == 0
 				&& (getMap() == 451 || getMap() == 452 || getMap() == 453 || getMap() == 454 || getMap() == 455 ||
 						getMap() == 456 || getMap() == 457 || getMap() == 460 ||
@@ -4448,7 +5181,7 @@ public class PcInstance extends Character {
 							
 							// (선택 사항) 만약 굳이 메시지를 띄우고 싶으시다면 아래 주석을 해제하세요.
 							// 단, 아이템 지급 딜레이마다 계속 메시지가 뜨므로 유저가 불편할 수 있습니다.
-							// ChattingController.toChatting(this, "고정 멤버만 대기 보상을 받을 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+							 ChattingController.toChatting(this, "고정 멤버만 대기 보상을 받을 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
 
 						// 지급 조건을 만족했을 때만 아이템 생성 및 지급
@@ -4464,7 +5197,7 @@ public class PcInstance extends Character {
 				premium_item_time = time + Lineage.world_premium_item_delay;
 			}
 		}
-		
+
 		// 팀대전 에러 처리.
 		checkTeamBattle(false);
 		if (getMap() != Lineage.teamBattleMap && getGm() < 1 && (getGfx() == 369 || isTransparent())) {
@@ -4491,7 +5224,6 @@ public class PcInstance extends Character {
 				for (ItemInstance item : inv.getList()) {
 					if (item.getItemNowTime() > 0) {
 						toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-
 					}
 
 				}
@@ -4608,6 +5340,34 @@ public class PcInstance extends Character {
 			}
 		}
 	}
+
+	/**
+	 * 출석체크 (죽림) 2023-03-08 by 오픈카톡 https://open.kakao.com/o/sbONOzMd
+	 */
+	// public void attendancecheck() {
+	// // 출석체크 시간 카운팅
+	// try {
+	// if (!this.isWorldDelete()) {
+	// if (this.getDaycount() < Lineage.lastday) {
+	//
+	// if (this.getDaycheck() == 0) {
+	// if (++dayptime >= Lineage.dayc && this.getDaycheck() == 0) {
+	// if (++checkmenttime >= Lineage.checkment) {
+	// checkmenttime = 0;
+	// ChattingController.toChatting(this, String.format("\\fU 출석체크 시간을 채우셧습니다 보상을
+	// 받아주세요."),
+	// Lineage.CHATTING_MODE_MESSAGE);
+	// }
+	//
+	// }
+
+	// AccountDatabase.updateptime(dayptime, this.accountUid);
+	// }
+	// }
+	// }
+	// } catch (Exception e) {
+	// }
+	// }
 
 	/**
 	 * 51레벨 이상 스탯 보너스 계산 메서드.
@@ -4730,7 +5490,6 @@ public class PcInstance extends Character {
 			}
 		}
 	}
-
 
 	/**
 	 * 자동칼질 타겟 정보 초기화.
@@ -5359,15 +6118,40 @@ public class PcInstance extends Character {
 	 * 2020-11-19
 	 * by connector12@nate.com
 	 */
+	/*
+	 * public void 고정멤버버프(boolean isPacket) {
+	 * if (isMember()) {
+	 * setDynamicCritical(getDynamicCritical() + 2);
+	 * setDynamicBowCritical(getDynamicBowCritical() + 2);
+	 * setDynamicMagicCritical(getDynamicMagicCritical() + 2);
+	 * ChattingController.toChatting(this,
+	 * "\\fY고정 멤버: 근거리 치명타, 원거리 치명타, 마법 치명타 +2%",
+	 * Lineage.CHATTING_MODE_MESSAGE);
+	 * 
+	 * if (isPacket) {
+	 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
+	 * class), this));
+	 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
+	 * class), this));
+	 * }
+	 * }
+	 * }
+	 */
+
 	public void 고정멤버버프(boolean isPacket) {
 		if (isMember()) {
+
+			SC_BUFFICON_NOTI.on(this, 110, 86400, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+
 			setDynamicCritical(getDynamicCritical() + 2);
 			setDynamicBowCritical(getDynamicBowCritical() + 2);
 			setDynamicMagicCritical(getDynamicMagicCritical() + 2);
-			ChattingController.toChatting(this, "\\fY고정 멤버: 근거리 치명타, 원거리 치명타, 마법 치명타 +2%",
-					Lineage.CHATTING_MODE_MESSAGE);
+			// ChattingController.toChatting(this, "\\fY고정 멤버: 근거리 치명타, 원거리 치명타, 마법 치명타
+			// +2%",
+			// Lineage.CHATTING_MODE_MESSAGE);
 
 			if (isPacket) {
+
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 			}
@@ -5986,116 +6770,127 @@ public class PcInstance extends Character {
 				}
 			}
 
-			// ▼▼▼ 자동 매입(판매) 버튼 액션 처리 ▼▼▼
+			// ▼▼▼ 자동 매입(판매) 버튼 액션 처리 (정상 작동 버전) ▼▼▼
 			if (action != null && action.startsWith("autosell-")) {
-				
-				// [운영자 전역 설정 체크]
-			    // Config 파일에서 false로 바꾸면 모든 유저가 이 아래 로직으로 못 들어옵니다.
-			    if (!lineage.share.Lineage.is_autosell_global) { // 변수 위치는 팩에 따라 다를 수 있음
-			        lineage.world.controller.ChattingController.toChatting(this, "\\f3[알림] 현재 운영자에 의해 자동매입 기능이 중지되었습니다.", lineage.share.Lineage.CHATTING_MODE_MESSAGE);
-			        return;
-			    }
 
-				// 0. 처음에 자동판매 HTML 창을 열어주는 역할 (복구 완료!)
+				// [운영자 전역 설정 체크]
+				// Config 파일에서 false로 바꾸면 모든 유저가 이 아래 로직으로 못 들어옵니다.
+				if (!lineage.share.Lineage.is_autosell_global) { // 변수 위치는 팩에 따라 다를 수 있음
+					lineage.world.controller.ChattingController.toChatting(this,
+							"\\f3[알림] 현재 운영자에 의해 자동매입 기능이 중지되었습니다.", lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+					return;
+				}
+
+				// 0. 자동판매 설정창 열기
 				if (action.equals("autosell-")) {
 					this.showAutoSellHtml();
 					return;
 				}
 
-				// 1. 기능 ON
+				// 1. 자동매입 ON 클릭 시
 				if (action.equals("autosell-on")) {
-					this.is_auto_sell = true;
+					this.is_auto_sell = true; // 기능 활성화
 
-					// ▼▼▼ [업그레이드!] ON 누르는 순간 인벤토리 싹 훑어서 즉시 판매! ▼▼▼
+					// 유저에게 정상 작동 알림
+					lineage.world.controller.ChattingController.toChatting(this, "\\fU[안내] 자동매입 기능이 활성화되었습니다.",
+							lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+
+					// ▼▼▼ [핵심] ON 누르는 순간 인벤토리를 싹 훑어서 즉시 판매 실행 ▼▼▼
 					try {
-						// 내 가방(인벤토리)에 있는 모든 아이템 목록을 가져옵니다.
-						java.util.List<lineage.world.object.instance.ItemInstance> invList = this.getInventory()
-								.getList();
+						if (this.getInventory() != null) {
+							// 실시간으로 변하는 리스트 에러를 방지하기 위해 복사본 생성
+							java.util.List<lineage.world.object.instance.ItemInstance> invList = new java.util.ArrayList<>(
+									this.getInventory().getList());
 
-						// 가방 안의 아이템을 하나씩 꺼내서 무적판 판매기에 던져 넣습니다!
-						for (lineage.world.object.instance.ItemInstance item : invList) {
-							// 무적판 코드가 알아서 리스트에 있는 템만 골라서 아데나로 바꿔줍니다.
-							this.tryAutoSellOnPickup(item);
+							for (lineage.world.object.instance.ItemInstance invItem : invList) {
+								if (invItem == null)
+									continue;
+
+								// 사장님 팩의 실제 판매기(메서드)를 호출합니다.
+								this.tryAutoSellOnPickup(invItem);
+							}
 						}
 					} catch (Exception e) {
 						lineage.share.System.println("[자동매입 ON 소급적용 에러] : " + e.toString());
 					}
-					// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-					this.showAutoSellHtml(); // 창 새로고침하여 상태 반영
-					return;
+					this.showAutoSellHtml(); // UI 갱신
+					return; // 여기서 작업 종료
 				}
 
-				// 1-2. 기능 OFF
+				// 2. 자동매입 OFF 클릭 시
 				if (action.equals("autosell-off")) {
-					this.is_auto_sell = false;
-					this.showAutoSellHtml(); // 창 새로고침하여 상태 반영
-					return;
-				}
-
-				// 2. 물품 추가 창
-				if (action.equals("autosell-add")) {
-					this.setPersnalShopInsert(true);
-					this.setPersnalShopSellEdit(false);
-
-					// ▼▼▼ [아이템 보호 필터링] 가방을 뒤져서 안전한 템만 골라냅니다 ▼▼▼
-					java.util.List<lineage.world.object.instance.ItemInstance> safeList = new java.util.ArrayList<lineage.world.object.instance.ItemInstance>();
-
-					for (lineage.world.object.instance.ItemInstance item : this.getInventory().getList()) {
-						if (item == null)
-							continue;
-
-						// 1. 착용 중인 장비 제외 (목록에 안 띄움)
-						if (item.isEquipped())
-							continue;
-
-						// 2. 인챈트(+1 이상이거나 저주받은 템)된 장비 제외
-						if (item.getEnLevel() != 0)
-							continue;
-
-						// 위 검사를 모두 통과한 안전한(착용 안 한 +0) 아이템만 리스트에 넣습니다.
-						safeList.add(item);
-					}
-
-					// 전체 인벤토리가 아닌, 안전하게 걸러진 safeList만 클라이언트 창에 띄워줍니다!
-					this.toSender(party_auto_sell.S_AutoSell.clone(
-							lineage.network.packet.BasePacketPooling.getPool(party_auto_sell.S_AutoSell.class), this,
-							safeList));
-					// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-					return;
-				}
-
-				// 3. 물품 목록 창
-				if (action.equals("autosell-list")) {
-					java.util.List<party_auto_sell.AutosellItem> list = party_auto_sell.AutosellDatabase
-							.getList(this.getObjectId());
-					this.toSender(party_auto_sell.S_AutoSellList.clone(
-							lineage.network.packet.BasePacketPooling.getPool(party_auto_sell.S_AutoSellList.class),
-							this, list));
-					return;
-				}
-
-				// 4. 물품 삭제 창
-				if (action.equals("autosell-delete")) {
-					this.setPersnalShopSellEdit(true); // ★ 핵심: 삭제 스위치 ON
-					this.setPersnalShopInsert(false);
-					java.util.List<party_auto_sell.AutosellItem> list = party_auto_sell.AutosellDatabase
-							.getList(this.getObjectId());
-					this.toSender(party_auto_sell.S_AutoSellDelete.clone(
-							lineage.network.packet.BasePacketPooling.getPool(party_auto_sell.S_AutoSellDelete.class),
-							this, list));
-					return;
-				}
-
-				// 5. 물품 전체 삭제
-				if (action.equals("autosell-alldelete")) {
-					party_auto_sell.AutosellDatabase.AlldeleteautoSell(this);
-					lineage.world.controller.ChattingController.toChatting(this, "자동매입 물품이 전체 삭제되었습니다.",
+					this.is_auto_sell = false; // 기능 비활성화
+					lineage.world.controller.ChattingController.toChatting(this, "\\f2[안내] 자동매입 기능이 해제되었습니다.",
 							lineage.share.Lineage.CHATTING_MODE_MESSAGE);
 					this.showAutoSellHtml();
 					return;
 				}
 			}
+
+			// 2. 물품 추가 창
+			if (action.equals("autosell-add")) {
+				this.setPersnalShopInsert(true);
+				this.setPersnalShopSellEdit(false);
+
+				// ▼▼▼ [아이템 보호 필터링] 가방을 뒤져서 안전한 템만 골라냅니다 ▼▼▼
+				java.util.List<lineage.world.object.instance.ItemInstance> safeList = new java.util.ArrayList<lineage.world.object.instance.ItemInstance>();
+
+				for (lineage.world.object.instance.ItemInstance item : this.getInventory().getList()) {
+					if (item == null)
+						continue;
+
+					// 1. 착용 중인 장비 제외 (목록에 안 띄움)
+					if (item.isEquipped())
+						continue;
+
+					// 2. 인챈트(+1 이상이거나 저주받은 템)된 장비 제외
+					if (item.getEnLevel() != 0)
+						continue;
+
+					// 위 검사를 모두 통과한 안전한(착용 안 한 +0) 아이템만 리스트에 넣습니다.
+					safeList.add(item);
+				}
+
+				// 전체 인벤토리가 아닌, 안전하게 걸러진 safeList만 클라이언트 창에 띄워줍니다!
+				this.toSender(party_auto_sell.S_AutoSell.clone(
+						lineage.network.packet.BasePacketPooling.getPool(party_auto_sell.S_AutoSell.class), this,
+						safeList));
+				// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+				return;
+			}
+
+			// 3. 물품 목록 창
+			if (action.equals("autosell-list")) {
+				java.util.List<party_auto_sell.AutosellItem> list = party_auto_sell.AutosellDatabase
+						.getList(this.getObjectId());
+				this.toSender(party_auto_sell.S_AutoSellList.clone(
+						lineage.network.packet.BasePacketPooling.getPool(party_auto_sell.S_AutoSellList.class), this,
+						list));
+				return;
+			}
+
+			// 4. 물품 삭제 창
+			if (action.equals("autosell-delete")) {
+				this.setPersnalShopSellEdit(true); // ★ 핵심: 삭제 스위치 ON
+				this.setPersnalShopInsert(false);
+				java.util.List<party_auto_sell.AutosellItem> list = party_auto_sell.AutosellDatabase
+						.getList(this.getObjectId());
+				this.toSender(party_auto_sell.S_AutoSellDelete.clone(
+						lineage.network.packet.BasePacketPooling.getPool(party_auto_sell.S_AutoSellDelete.class), this,
+						list));
+				return;
+			}
+
+			// 5. 물품 전체 삭제
+			if (action.equals("autosell-alldelete")) {
+				party_auto_sell.AutosellDatabase.AlldeleteautoSell(this);
+				lineage.world.controller.ChattingController.toChatting(this, "자동매입 물품이 전체 삭제되었습니다.",
+						lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+				this.showAutoSellHtml();
+				return;
+			}
+
 			// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 		} catch (Exception e) {
@@ -7668,90 +8463,184 @@ public class PcInstance extends Character {
 	/**
 	 * 자동 사냥시 아이템 자동 판매
 	 */
+	/*
+	 * public void autoHuntItemSell() {
+	 * 
+	 * List<ItemInstance> sellitemlist1 = new ArrayList<ItemInstance>();
+	 * 
+	 * try {
+	 * if (getInventory() != null) {
+	 * 
+	 * if (this.is_auto_sell) {
+	 * for (AutosellItem item : AutosellDatabase.getList(this.getObjectId())) {
+	 * 
+	 * if (item.getchaobjid() == this.getObjectId()) {
+	 * 
+	 * ItemInstance sellitem = this.getInventory().find(item.getName(),
+	 * item.getEnLevel(),
+	 * item.getBless());
+	 * 
+	 * String name = null;
+	 * long solvent_cnt = 0;
+	 * long price = 0;
+	 * long count = 0;
+	 * 
+	 * if (sellitem != null) {
+	 * 
+	 * // if (NpcSpawnlistDatabase.sellShop == null
+	 * // || NpcSpawnlistDatabase.sellShop.getNpc() == null
+	 * // || !sellitem.getItem().isSell())
+	 * // solvent_cnt = 0;
+	 * 
+	 * if (NpcSpawnlistDatabase.sellShop == null
+	 * || NpcSpawnlistDatabase.sellShop.getNpc() == null
+	 * || !sellitem.getItem().isSell()) {
+	 * continue; // 상점이 없거나 팔 수 없는 템이면 이 아이템은 무시하고 다음 아이템으로 넘어감
+	 * }
+	 * 
+	 * Shop shop = NpcSpawnlistDatabase.sellShop.getNpc()
+	 * .findShopItemId(sellitem.getItem().getName(), sellitem.getBless());
+	 * if (shop != null && shop.isItemSell()) {
+	 * if (shop.getPrice() != 0)
+	 * solvent_cnt = shop.getPrice();
+	 * 
+	 * sellitemlist1.add(sellitem);
+	 * 
+	 * for (ItemInstance si : sellitemlist1) {
+	 * count = si.getCount();
+	 * price = solvent_cnt * count;
+	 * name = si.getItem().getName();
+	 * }
+	 * 
+	 * Item i = ItemDatabase.find("아데나");
+	 * 
+	 * if (i != null) {
+	 * ItemInstance temp = this.getInventory().find(i.getName(), i.isPiles());
+	 * 
+	 * if (temp == null) {
+	 * // 겹칠수 있는 아이템이 존재하지 않을경우.
+	 * if (i.isPiles()) {
+	 * temp = ItemDatabase.newInstance(i);
+	 * temp.setObjectId(ServerDatabase.nextItemObjId());
+	 * temp.setBless(1);
+	 * temp.setEnLevel(0);
+	 * temp.setCount(price);
+	 * temp.setDefinite(true);
+	 * this.getInventory().append(temp, true);
+	 * } else {
+	 * for (int idx = 0; idx < solvent_cnt; idx++) {
+	 * temp = ItemDatabase.newInstance(i);
+	 * temp.setObjectId(ServerDatabase.nextItemObjId());
+	 * temp.setBless(1);
+	 * temp.setEnLevel(0);
+	 * temp.setDefinite(true);
+	 * this.getInventory().append(temp, true);
+	 * }
+	 * }
+	 * } else {
+	 * // 겹치는 아이템이 존재할 경우.
+	 * this.getInventory().count(temp, temp.getCount() + price, true);
+	 * }
+	 * 
+	 * Log.appendItem(this, "type|자동매입 매입금", "매입금|" + solvent_cnt,
+	 * "아이템|" + sellitem.getItem().getName(),
+	 * "아이템_objid|" + sellitem.getObjectId());
+	 * ChattingController.toChatting(this,
+	 * String.format("[자동매입] %s(%d개): %s(%d) 획득.",
+	 * name, count, i.getName(), price), Lineage.CHATTING_MODE_MESSAGE);
+	 * 
+	 * // 아이템 수량 갱신
+	 * this.getInventory().count(sellitem, 0, true);
+	 * 
+	 * }
+	 * 
+	 * }
+	 * 
+	 * }
+	 * }
+	 * }
+	 * }
+	 * }
+	 * } catch (Exception e) {
+	 * lineage.share.System.printf("[자동 사냥] autoHuntItemSell()\r\n : %s\r\n",
+	 * e.toString());
+	 * }
+	 * }
+	 */
+
+	/**
+	 * 자동 사냥시 아이템 자동 판매
+	 */
 	public void autoHuntItemSell() {
-
-		List<ItemInstance> sellitemlist1 = new ArrayList<ItemInstance>();
-
 		try {
-			if (getInventory() != null) {
+			if (getInventory() == null || !this.is_auto_sell) {
+				return;
+			}
 
-				if (this.is_auto_sell) {
-					for (AutosellItem item : AutosellDatabase.getList(this.getObjectId())) {
+			for (AutosellItem item : AutosellDatabase.getList(this.getObjectId())) {
+				if (item.getchaobjid() == this.getObjectId()) {
 
-						if (item.getchaobjid() == this.getObjectId()) {
+					ItemInstance sellitem = this.getInventory().find(item.getName(), item.getEnLevel(),
+							item.getBless());
 
-							ItemInstance sellitem = this.getInventory().find(item.getName(), item.getEnLevel(),
-									item.getBless());
+					// 1. 판매할 아이템이 없거나 판매 불가 아이템이면 패스
+					if (sellitem == null || !sellitem.getItem().isSell()) {
+						continue;
+					}
 
-							String name = null;
-							long solvent_cnt = 0;
-							long price = 0;
-							long count = 0;
+					// 2. ★ 핵심 방어 코드: 매입 상점이 세팅되지 않았으면 무조건 패스 (NPE 방지)
+					if (NpcSpawnlistDatabase.sellShop == null || NpcSpawnlistDatabase.sellShop.getNpc() == null) {
+						continue;
+					}
 
-							if (sellitem != null) {
+					// 3. 상점 데이터에서 매입가 확인
+					Shop shop = NpcSpawnlistDatabase.sellShop.getNpc().findShopItemId(sellitem.getItem().getName(),
+							sellitem.getBless());
 
-								if (NpcSpawnlistDatabase.sellShop == null
-										|| NpcSpawnlistDatabase.sellShop.getNpc() == null
-										|| !sellitem.getItem().isSell())
-									solvent_cnt = 0;
+					if (shop != null && shop.isItemSell() && shop.getPrice() > 0) {
+						long solvent_cnt = shop.getPrice(); // 단가
+						long count = sellitem.getCount(); // 판매 수량
+						long price = solvent_cnt * count; // 총 획득 아데나
+						String name = sellitem.getItem().getName();
 
-								Shop shop = NpcSpawnlistDatabase.sellShop.getNpc()
-										.findShopItemId(sellitem.getItem().getName(), sellitem.getBless());
-								if (shop != null && shop.isItemSell()) {
-									if (shop.getPrice() != 0)
-										solvent_cnt = shop.getPrice();
+						Item i = ItemDatabase.find("아데나");
+						if (i != null) {
+							ItemInstance temp = this.getInventory().find(i.getName(), i.isPiles());
 
-									sellitemlist1.add(sellitem);
-
-									for (ItemInstance si : sellitemlist1) {
-										count = si.getCount();
-										price = solvent_cnt * count;
-										name = si.getItem().getName();
+							if (temp == null) {
+								// 아데나가 인벤토리에 없을 경우 새로 생성
+								if (i.isPiles()) {
+									temp = ItemDatabase.newInstance(i);
+									temp.setObjectId(ServerDatabase.nextItemObjId());
+									temp.setBless(1);
+									temp.setEnLevel(0);
+									temp.setCount(price);
+									temp.setDefinite(true);
+									this.getInventory().append(temp, true);
+								} else {
+									for (int idx = 0; idx < price; idx++) {
+										temp = ItemDatabase.newInstance(i);
+										temp.setObjectId(ServerDatabase.nextItemObjId());
+										temp.setBless(1);
+										temp.setEnLevel(0);
+										temp.setDefinite(true);
+										this.getInventory().append(temp, true);
 									}
-
-									Item i = ItemDatabase.find("아데나");
-
-									if (i != null) {
-										ItemInstance temp = this.getInventory().find(i.getName(), i.isPiles());
-
-										if (temp == null) {
-											// 겹칠수 있는 아이템이 존재하지 않을경우.
-											if (i.isPiles()) {
-												temp = ItemDatabase.newInstance(i);
-												temp.setObjectId(ServerDatabase.nextItemObjId());
-												temp.setBless(1);
-												temp.setEnLevel(0);
-												temp.setCount(price);
-												temp.setDefinite(true);
-												this.getInventory().append(temp, true);
-											} else {
-												for (int idx = 0; idx < solvent_cnt; idx++) {
-													temp = ItemDatabase.newInstance(i);
-													temp.setObjectId(ServerDatabase.nextItemObjId());
-													temp.setBless(1);
-													temp.setEnLevel(0);
-													temp.setDefinite(true);
-													this.getInventory().append(temp, true);
-												}
-											}
-										} else {
-											// 겹치는 아이템이 존재할 경우.
-											this.getInventory().count(temp, temp.getCount() + price, true);
-										}
-
-										Log.appendItem(this, "type|자동매입 매입금", "매입금|" + solvent_cnt,
-												"아이템|" + sellitem.getItem().getName(),
-												"아이템_objid|" + sellitem.getObjectId());
-										ChattingController.toChatting(this, String.format("[자동매입] %s(%d개): %s(%d) 획득.",
-												name, count, i.getName(), price), Lineage.CHATTING_MODE_MESSAGE);
-
-										// 아이템 수량 갱신
-										this.getInventory().count(sellitem, 0, true);
-
-									}
-
 								}
+							} else {
+								// 기존 아데나에 수량만 플러스
+								this.getInventory().count(temp, temp.getCount() + price, true);
 							}
+
+							// 로그 및 채팅 알림
+							Log.appendItem(this, "type|자동매입 매입금", "매입금|" + solvent_cnt, "아이템|" + name,
+									"아이템_objid|" + sellitem.getObjectId());
+							ChattingController.toChatting(this,
+									String.format("[자동매입] %s(%d개): %s(%d) 획득.", name, count, i.getName(), price),
+									Lineage.CHATTING_MODE_MESSAGE);
+
+							// 마지막으로 판매된 아이템 인벤토리에서 완전 삭제
+							this.getInventory().count(sellitem, 0, true);
 						}
 					}
 				}

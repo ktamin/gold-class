@@ -353,6 +353,10 @@ public final class Lineage_Balance {
 	
 	// 파우스트 등장시 스폰 알림 여부
 	static public boolean faust_spawn_msg;
+	// 파우스트 출현 맵별 ON/OFF 스위치
+	static public boolean faust_map_53_active = true;
+	static public boolean faust_map_54_active = false;
+	static public boolean faust_map_55_active = false;
 	
 	// 드래곤 스폰 확률
 	static public double event_b_spawn_probability;
@@ -1103,6 +1107,14 @@ public final class Lineage_Balance {
 						faust_spawn_msg = value.equalsIgnoreCase("true");		
 					else if (key.equalsIgnoreCase("faust_spawn_probability"))
 						faust_spawn_probability = Double.valueOf(value) * 0.01;	
+					
+					//파우스트 맵 스위치로드
+					else if (key.equalsIgnoreCase("faust_map_53_active"))
+						faust_map_53_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("faust_map_54_active"))
+						faust_map_54_active = Boolean.parseBoolean(value);
+					else if (key.equalsIgnoreCase("faust_map_55_active"))
+						faust_map_55_active = Boolean.parseBoolean(value);
 					
 					else if (key.equalsIgnoreCase("event_b_spawn_probability"))
 						event_b_spawn_probability = Double.valueOf(value) * 0.01;

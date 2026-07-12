@@ -46,6 +46,7 @@ import lineage.world.object.item.Solvent;
 import lineage.world.object.item.ThrowingKnife;
 import lineage.world.object.item.Whetstone;
 import lineage.world.object.item.all_night.다엘변경권;
+import lineage.world.object.item.all_night.룬조각;
 import lineage.world.object.item.all_night.SelfSpell;
 import lineage.world.object.item.all_night.ItemFinal;
 import lineage.world.object.item.all_night.AutoPotion;
@@ -78,6 +79,7 @@ import lineage.world.object.item.all_night.ScrollOfOrimArmor;
 import lineage.world.object.item.all_night.ScrollOfOrimWeapon;
 import lineage.world.object.item.all_night.ScrollOfRankPoly;
 import lineage.world.object.item.all_night.ScrollOfRoomtisEnchant;
+import lineage.world.object.item.all_night.ScrollOfSnapperEnchant;
 import lineage.world.object.item.all_night.ScrollOfWeapon;
 import lineage.world.object.item.all_night.ScrollOfmythRankPoly;
 import lineage.world.object.item.all_night.ScrollTOITeleport;
@@ -1895,6 +1897,52 @@ public final class ItemDatabase {
 		} else if (item.getType2().equalsIgnoreCase("집행 강화 주문서")) {
 			// 집행 강화 주문서
 			return 발라카스의숨결.clone(getPool(발라카스의숨결.class)).clone(item);
+			
+		} else if (item.getType2().equalsIgnoreCase("roomtis_scroll")) {
+			// 룸티스 강화 주문서
+			return ScrollOfRoomtisEnchant.clone(getPool(ScrollOfRoomtisEnchant.class)).clone(item);
+
+		} else if (item.getType2().equalsIgnoreCase("스냅퍼 강화 주문서")) {
+			// 스냅퍼 강화 주문서
+			return ScrollOfSnapperEnchant.clone(getPool(ScrollOfSnapperEnchant.class)).clone(item);
+
+			// ==========================================
+			// ✅ [추가] 룬 조각 3종 세트 통합 연결
+			// ==========================================
+		} else if (item.getName().equalsIgnoreCase("생명의 룬 조각") ||
+				item.getName().equalsIgnoreCase("방어의 룬 조각") ||
+				item.getName().equalsIgnoreCase("전투의 룬 조각") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 나이트발드의 양손검") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 포르세의 검") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 악몽의 장궁") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 포효의 이도류") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 제로스의 지팡이") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 기술서 (카운터 배리어)") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 마법서 (디스인티그레이트)") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 마법서 (브레이브 멘탈)") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 정령의 수정 (소울 오브 프레임)") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 정령의 수정 (스트라이커 게일)") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 흑정령의 수정 (아머 브레이크)") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 임페리얼 아머") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 포스 스턴") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 엘리멘탈 샷") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 네메시스") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 쉐도우 스턴") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 지휘관의 투구") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 머미로드의 왕관") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 대마법사의 모자") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 뱀파이어의 망토") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 격분의 장갑") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 아이리스의 장갑") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 머미로드의 장갑") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 나이트발드의 부츠") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 뱀파이어의 부츠") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 아이리스의 부츠") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 우그누스의 가더") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 쿠거의 가더") ||
+				item.getName().equalsIgnoreCase("기운을 잃은 시어의 심안") ||
+				item.getName().equalsIgnoreCase("한양 코인 조각")) {
+			return 룬조각.clone(getPool(룬조각.class)).clone(item);	
 
 		} else if (item.getType2().equalsIgnoreCase("자동사냥 계정 시간 초기화")) {
 			return 자동사냥시간초기화.clone(getPool(자동사냥시간초기화.class)).clone(item);

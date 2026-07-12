@@ -2076,6 +2076,8 @@ public final class Lineage {
 	static public String world_dungeon_time = "";
 	// 월드보스 진행 시간(초)
 	static public int world_play_time = 600;
+	// 월드보스 차수 (기본값 1차)
+	public static int world_boss_step = 1;
 
 	// 얼던 입장 레벨
 	static public int ice_level = 1;
@@ -4253,6 +4255,10 @@ public final class Lineage {
 						teamBattleTime(world_dungeon_time_list, value);
 					} else if (key.equalsIgnoreCase("world_play_time"))
 						world_play_time = Integer.valueOf(value);
+					// (월드보스[1차],[2차].)
+					else if (key.equalsIgnoreCase("world_boss_step")) {
+					    world_boss_step = Integer.parseInt(value);
+					}
 
 					else if (key.equalsIgnoreCase("ice_level"))
 						ice_level = Integer.valueOf(value);

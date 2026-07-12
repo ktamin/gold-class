@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI;
+import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI.ToastType;
 import all_night.Lineage_Balance;
 import lineage.bean.database.Drop;
 import lineage.bean.database.Exp;
@@ -989,17 +990,18 @@ public class MonsterInstance extends Character {
 						&& !Util.isDistance(x, y, map, homeX, homeY, homeMap, Lineage.SEARCH_MONSTER_TARGET_LOCATION)) {
 					// setNowHp(getTotalHp());
 					// setNowMp(getTotalMp());
-					
-					// ==============2026.06.08 보스 스폰 자리 리젠시 데미지 및 경험치 초기화
+					// =============2026.06.08 보스 스폰 자리로 돌아올시 데미지/경험치 초기화
 					// 🚨 [추가] 보스 어그로 및 타겟 초기화
 					// =========================================================
 					clearAttackList(); // 나를 때린 유저 목록(원한 관계)을 싹 비웁니다.
 					clearExpList();    // 누적 대미지(경험치) 목록도 함께 초기화합니다.
 					// =========================================================
+					
 					toTeleport(homeX, homeY, homeMap, true);
 				}
 				if (map == 807 && !Util.isDistance(x, y, map, homeX, homeY, homeMap, 10)) {
-					// ===============2026.06.08 보스 스폰 자리 리젠시 데미지 및 경험치 초기화
+					
+					// ==============2026.06.08 보스 스폰 자리로 돌아올시 데미지/경험치 초기화
 					// 🚨 [추가] 807 맵 보스 어그로 및 타겟 초기화
 					// =========================================================
 					clearAttackList();
@@ -1260,6 +1262,40 @@ public class MonsterInstance extends Character {
 			chance5 += 0.05;
 			chance6 += 0.05;
 		}
+		
+		// =========================================================
+		// ✨ [수정] 맵별 파우스트 출현 ON/OFF 스위치 적용
+		// =========================================================
+		if (!getMonster().getName().contains("파우스트") && !mon.isBoss() && summon == null && 
+			(  (getMap() == 53 && all_night.Lineage_Balance.faust_map_53_active) 
+			|| (getMap() == 54 && all_night.Lineage_Balance.faust_map_54_active) 
+			|| (getMap() == 55 && all_night.Lineage_Balance.faust_map_55_active) ) ) {
+			
+			Monster monster = null;
+			
+			// =========================================================
+			// ✨ [확률 및 맵별 분기 처리]
+			// =========================================================
+			if (getMap() == 54 || getMap() == 55) {
+				
+				// 🎲 54, 55번 맵은 악령 단계를 패스하고 0.1% 확률 검사를 직접 수행
+				if (Math.random() < all_night.Lineage_Balance.faust_spawn_probability && !lineage.world.controller.BossController.isSpawn("파우스트", getMap())) {
+					// 확률에 당첨되면 보스 "파우스트"를 준비
+					monster = MonsterDatabase.find("파우스트");
+				}
+				
+			} else {
+				// 💀 기존 53번 맵은 조무래기 "파우스트의 악령(잔인)"을 100% 소환
+				monster = MonsterDatabase.find("파우스트의 악령(잔인)");
+			}
+			// =========================================================
+			
+			// 결정된 몬스터(확률 뚫은 파우스트 혹은 53번의 악령)가 존재할 때만 맵에 스폰
+			if (monster != null) {
+				MonsterSpawnlistDatabase.toSpawnMonster2(monster, x, y, map, heading, false, this);
+			}
+		}
+		// ==================================코드 추가 완료
 
 		//--------------------------54,55맵에 "파우스트의 악령(잔인)"을 출현하지 않고 54,55번 맵에 파우스트 출현 시키기 위해 주석처리 2026.06.14
 //		if (!getMonster().getName().contains("파우스트") && !mon.isBoss() && summon == null && (getMap() == 53 || getMap() == 54 || getMap() == 55)) {
@@ -1268,7 +1304,7 @@ public class MonsterInstance extends Character {
 //				MonsterSpawnlistDatabase.toSpawnMonster2(monster, x, y, map, heading, false, this);
 //			}
 //		}
-		
+/*	--------------53,54,55 번에 파우 모두 출현	
 		// 💡 [조건문] 파우스트 이름이 아니고, 보스도 아니고, 서몬/펫이 아닐 때 지정된 맵들(53, 54, 55)이라면!
 		//------54,55맵에 "파우스트의 악령(잔인)"을 출현하지 않고 파우스트 출현 시키기 위해 코드 추가 2026.06.14
 		// 💡 [조건문] 파우스트 이름이 아니고, 보스도 아니고, 서몬/펫이 아닐 때 지정된 맵들(53, 54, 55)이라면!
@@ -1300,7 +1336,7 @@ public class MonsterInstance extends Character {
 					}
 				}
 				// ==================================코드 추가 완료
-
+*/
 		// 💡 드래곤 이벤트 스위치가 켜진(true) 맵에서만 출현하도록 조건 수정
 				if (Math.random() < chance1 && !getMonster().getName().contains("드래곤") && !mon.isBoss() && summon == null
 						&& (   (getMap() == 781 && Lineage_Balance.event_map_781_active) 
@@ -1335,20 +1371,20 @@ public class MonsterInstance extends Character {
 				}
 
 		// 💡 이벤트 스위치가 켜진(true) 맵에서만 출현하도록 조건 수정
-				if (Math.random() < chance3 && !getMonster().getName().contains("원숭이") && !mon.isBoss() && summon == null
+				if (Math.random() < chance3 && !getMonster().getName().contains("케이크") && !mon.isBoss() && summon == null
 						&& (   (getMap() == 666 && Lineage_Balance.event_map_666_active) 
-							|| (getMap() == 5167 && Lineage_Balance.event_map_5167_active) 
+							|| (getMap() == 410 && Lineage_Balance.event_map_5167_active) 
 							|| (getMap() == 200 && Lineage_Balance.event_map_200_active)  )) {
 					
 					if (Math.random() < chance4) {
-						Monster monster = MonsterDatabase.find("원숭이");
+						Monster monster = MonsterDatabase.find("케이크");
 						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 6082), true);
 						if (monster != null
 								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
 							return;
 						}
 					} else {
-						Monster monster = MonsterDatabase.find("거대 원숭이");
+						Monster monster = MonsterDatabase.find("자이언트 케이크");
 						this.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), this, 4784), true);
 						if (monster != null
 								&& MonsterSpawnlistDatabase.toSpawnMonster(monster, x, y, map, heading, false, this)) {
@@ -1595,99 +1631,99 @@ public class MonsterInstance extends Character {
 		}
 */
 		
-        // ---------------------------------------------------------
-		// [3] 경험치 지급 (펫 & 테이밍 밸런스 분리 적용)
-		// ---------------------------------------------------------
-		double total_dmg = 0;
-		for (Exp e : getExpList())
-			total_dmg += e.getDmg();
+		        // ---------------------------------------------------------
+				// [3] 경험치 지급 (펫 & 테이밍 밸런스 분리 적용)
+				// ---------------------------------------------------------
+				double total_dmg = 0;
+				for (Exp e : getExpList())
+					total_dmg += e.getDmg();
 
-		for (Exp e : getExpList()) {
-			if (e == null)
-				continue;
-			object oo = e.getObject();
-			if (oo == null)
-				continue;
+				for (Exp e : getExpList()) {
+					if (e == null)
+						continue;
+					object oo = e.getObject();
+					if (oo == null)
+						continue;
 
-			// 각자 넣은 데미지 지분율만큼 파이를 나눔
-			double percent = e.getDmg() / total_dmg;
-			e.setExp(getMonster().getExp() * percent);
+					// 각자 넣은 데미지 지분율만큼 파이를 나눔
+					double percent = e.getDmg() / total_dmg;
+					e.setExp(getMonster().getExp() * percent);
 
-			if (oo instanceof Character) {
-				Character cha = (Character) oo;
+					if (oo instanceof Character) {
+						Character cha = (Character) oo;
 
-				if (Util.isDistance(this, cha, Lineage.SEARCH_LOCATIONRANGE)) {
-					
-					// =========================================================
-					// 🟢 1. 주인이 직접 때린 경우 (정상 지급)
-					// =========================================================
-					if (cha instanceof PcInstance) {
-						if (!PartyController.toExp(cha, this, e.getExp()) && !cha.isDead()) {
-							cha.toExp(this, e.getExp());
+						if (Util.isDistance(this, cha, Lineage.SEARCH_LOCATIONRANGE)) {
 							
-							// 라우풀 처리
-							double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
-							if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
-								int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
-								lawful = Util.random(tempLawful * 0.8, tempLawful);
+							// =========================================================
+							// 🟢 1. 주인이 직접 때린 경우 (정상 지급)
+							// =========================================================
+							if (cha instanceof PcInstance) {
+								if (!PartyController.toExp(cha, this, e.getExp()) && !cha.isDead()) {
+									cha.toExp(this, e.getExp());
+									
+									// 라우풀 처리
+									double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
+									if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
+										int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
+										lawful = Util.random(tempLawful * 0.8, tempLawful);
+									}
+									cha.setLawful(cha.getLawful() + (int) lawful);
+								}
+								if (Lineage.is_auto_hunt_check && oo.getGm() == 0)
+									AutoHuntCheckController.addCount((PcInstance) oo);
 							}
-							cha.setLawful(cha.getLawful() + (int) lawful);
-						}
-						if (Lineage.is_auto_hunt_check && oo.getGm() == 0)
-							AutoHuntCheckController.addCount((PcInstance) oo);
-					}
-					
-					// =========================================================
-					// 🔵 2. 펫(도베르만, 허스키 등)이 때린 경우
-					// =========================================================
-					else if (cha instanceof PetInstance) {
-						PetInstance pet = (PetInstance) cha;
-						if (!pet.isDead()) {
-							pet.toExp(this, e.getExp()); // 펫 자체 경험치 획득 (레벨업)
 							
-							// 라우풀 처리 (원래 코드 유지)
-							double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
-							if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
-								int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
-								lawful = Util.random(tempLawful * 0.8, tempLawful);
+							// =========================================================
+							// 🔵 2. 펫(도베르만, 허스키 등)이 때린 경우
+							// =========================================================
+							else if (cha instanceof PetInstance) {
+								PetInstance pet = (PetInstance) cha;
+								if (!pet.isDead()) {
+									pet.toExp(this, e.getExp()); // 펫 자체 경험치 획득 (레벨업)
+									
+									// 라우풀 처리 (원래 코드 유지)
+									double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
+									if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
+										int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
+										lawful = Util.random(tempLawful * 0.8, tempLawful);
+									}
+									pet.setLawful(pet.getLawful() + (int) lawful);
+								}
+								
+								// 💡 [혜택] 펫이 뺏어간 경험치는 주인에게 그대로 복사해서 돌려줌!
+//								PcInstance master = (PcInstance) pet.getMaster();
+//								if (master != null && !master.isDead() && Util.isDistance(this, master, Lineage.SEARCH_LOCATIONRANGE)) {
+//									if (!PartyController.toExp(master, this, e.getExp())) {
+//										master.toExp(this, e.getExp());
+//									}
+//								}
 							}
-							pet.setLawful(pet.getLawful() + (int) lawful);
-						}
-						
-						// 💡 [혜택] 펫이 뺏어간 경험치는 주인에게 그대로 복사해서 돌려줌!
-//						PcInstance master = (PcInstance) pet.getMaster();
-//						if (master != null && !master.isDead() && Util.isDistance(this, master, Lineage.SEARCH_LOCATIONRANGE)) {
-//							if (!PartyController.toExp(master, this, e.getExp())) {
-//								master.toExp(this, e.getExp());
-//							}
-//						}
-					}
-					
-					// =========================================================
-					// 🔴 3. 테이밍/서먼 몬스터가 때린 경우 (법사 소환수)
-					// =========================================================
-					else if (cha instanceof lineage.world.object.instance.SummonInstance) {
-						// 테이밍 몬스터는 원래 경험치를 먹지 않습니다.
-						// 🚨 [핵심] 얘네가 획득한 경험치는 주인에게 돌려주지 않고 증발시킵니다!
-						// 이렇게 해야 법사가 소환수 여러 마리를 끌고 다닐 때 경험치를 폭식하는 밸런스 붕괴를 막을 수 있습니다.
-						
-						// 단, 주인이 성향치(라우풀)는 획득할 수 있도록 처리
-						lineage.world.object.instance.SummonInstance summon = (lineage.world.object.instance.SummonInstance) cha;
-						PcInstance master = (PcInstance) summon.getMaster();
-						if (master != null && !master.isDead() && Util.isDistance(this, master, Lineage.SEARCH_LOCATIONRANGE)) {
-							double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
-							if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
-								int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
-								lawful = Util.random(tempLawful * 0.8, tempLawful);
+							
+							// =========================================================
+							// 🔴 3. 테이밍/서먼 몬스터가 때린 경우 (법사 소환수)
+							// =========================================================
+							else if (cha instanceof lineage.world.object.instance.SummonInstance) {
+								// 테이밍 몬스터는 원래 경험치를 먹지 않습니다.
+								// 🚨 [핵심] 얘네가 획득한 경험치는 주인에게 돌려주지 않고 증발시킵니다!
+								// 이렇게 해야 법사가 소환수 여러 마리를 끌고 다닐 때 경험치를 폭식하는 밸런스 붕괴를 막을 수 있습니다.
+								
+								// 단, 주인이 성향치(라우풀)는 획득할 수 있도록 처리
+								lineage.world.object.instance.SummonInstance summon = (lineage.world.object.instance.SummonInstance) cha;
+								PcInstance master = (PcInstance) summon.getMaster();
+								if (master != null && !master.isDead() && Util.isDistance(this, master, Lineage.SEARCH_LOCATIONRANGE)) {
+									double lawful = Math.round(((getLevel() * 3) / 2) * Lineage.rate_lawful);
+									if (getMonster().getLawful() - Lineage.NEUTRAL > 0) {
+										int tempLawful = (getMonster().getLawful() - Lineage.NEUTRAL) * -1;
+										lawful = Util.random(tempLawful * 0.8, tempLawful);
+									}
+									master.setLawful(master.getLawful() + (int) lawful);
+								}
 							}
-							master.setLawful(master.getLawful() + (int) lawful);
 						}
 					}
+					ExpDatabase.setPool(e);
 				}
-			}
-			ExpDatabase.setPool(e);
-		}
-		
+				
 		if (Lineage.event_christmas && Util.random(0, 100) < 10 && getAttackListSize() > 0) {
 			if (o != null && o instanceof PcInstance && !(o instanceof RobotInstance)) {
 				ItemInstance ii = ItemDatabase.newInstance(ItemDatabase.find("빨간 양말"));
@@ -2122,7 +2158,6 @@ public class MonsterInstance extends Character {
 				setAiStatus(Lineage.AI_STATUS_WALK);
 			}
 		}
-
 	}
 
 	@Override
@@ -2316,7 +2351,7 @@ public class MonsterInstance extends Character {
 			if (p != null && p.isParty(pc, p)) {
 
 				boolean isAden = (ii.getItem().getNameIdNumber() == 4); // 아데나
-				boolean isWing = ii.getItem().getName().equalsIgnoreCase("신비한 날개깃털");
+				boolean isWing = ii.getItem().getName().equalsIgnoreCase("포인트");
 
 				if (isAden || isWing) {
 
@@ -2386,7 +2421,7 @@ public class MonsterInstance extends Character {
 
 									// 파티 요약 1줄
 									if (Lineage.party_autopickup_item_print) {
-										String n = isAden ? "아데나" : "신비한 날개깃털";
+										String n = isAden ? "아데나" : "포인트";
 										ChattingController.toChatting(pc,
 												String.format("%s %d 획득 (총 %d/%d명)", n, share, (share * memberCount),
 														memberCount),
@@ -2439,7 +2474,7 @@ public class MonsterInstance extends Character {
 
 									// 파티 요약 1줄
 									if (Lineage.party_autopickup_item_print) {
-										String n = isAden ? "아데나" : "신비한 날개깃털";
+										String n = isAden ? "아데나" : "포인트";
 										ChattingController.toChatting(pc,
 												String.format("%s %d 획득 (총 %d/%d명)", n, share, (share * memberCount),
 														memberCount),
@@ -2477,13 +2512,12 @@ public class MonsterInstance extends Character {
 						Lineage.CHATTING_MODE_MESSAGE);
 			}
 			// ✅ [여기에 추가] 전 서버 드랍 공지 호출
-			// 설정에서 몬스터 드랍 메시지가 켜져 있을 때만 발송
-			if (Lineage.is_item_drop_msg_monster) {
-				ItemDropMessageDatabase.sendMessage(pc, ii.getItem().getName(), getMonster().getName());
-			}
+						// 설정에서 몬스터 드랍 메시지가 켜져 있을 때만 발송
+						if (Lineage.is_item_drop_msg_monster) {
+							ItemDropMessageDatabase.sendMessage(pc, ii.getItem().getName(), getMonster().getName());
+						}
 			return true;
 		}
-
 		return true;
 	}
 

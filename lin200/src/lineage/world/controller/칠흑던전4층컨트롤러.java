@@ -1,7 +1,9 @@
 package lineage.world.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import Fx.server.MJTemplate.MJProto.Models.SC_TIMER_UI_NOTI;
 import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI;
@@ -10,10 +12,16 @@ import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI.ToastType;
 import lineage.bean.database.TeamBattleTime;
 import lineage.network.packet.BasePacketPooling;
 import lineage.network.packet.server.S_BlueMessage;
+import lineage.network.packet.server.S_Message;
 import lineage.network.packet.server.S_ObjectChatting;
+import lineage.network.packet.server.S_ObjectLock;
+import lineage.network.packet.server.S_ObjectName;
+import lineage.network.packet.server.S_ObjectTitle;
+import lineage.plugin.PluginController;
 import lineage.share.Lineage;
 import lineage.share.TimeLine;
 import lineage.world.World;
+import lineage.world.object.object;
 import lineage.world.object.instance.PcInstance;
 
 public class 칠흑던전4층컨트롤러 {
@@ -28,6 +36,7 @@ public class 칠흑던전4층컨트롤러 {
     
     // 항상 열려있는 사냥터로 운용할 때 true
     private static final boolean ALWAYS_OPEN = false;
+    public static List<PcInstance> anonymousList = new ArrayList<>();
 
     public static void init() {
         TimeLine.start("칠흑던전4층 컨트롤러..");
@@ -125,6 +134,65 @@ public class 칠흑던전4층컨트롤러 {
         nextTimerBroadcastAt = 0L;
         sendMessage(); // 종료 안내
     }
+    
+    /**
+     * [입장]  미지인 맵으로 보낼 때 NPC에서 호출
+     */
+    public static void enterAnonymous(PcInstance pc, int locX, int locY, int mapId) {
+        // 이미 명단에 있는 유저라면 중복 실행 방지
+        if (anonymousList.contains(pc)) return;
+
+        // 1. 원본 데이터 백업
+        pc.setTempName(pc.getName());
+        pc.setTempTitle(pc.getTitle());
+        pc.setTempClanName(pc.getClanName());
+        pc.setTempClanId(pc.getClanId());
+        pc.setTempClanGrade(pc.getClanGrade());
+
+        // 2. 익명화 변조
+        pc.setName("미지인");
+        pc.setTitle("");
+        pc.setClanName("");
+        pc.setClanId(0);
+        pc.setClanGrade(0);
+
+        // 3. 잊섬 입장자 명단에 추가
+        anonymousList.add(pc);
+
+        // 4. 본인에게 정보 갱신 패킷 전송 (이름, 타이틀 지우기)
+        pc.toSender(S_ObjectName.clone(BasePacketPooling.getPool(S_ObjectName.class), pc));
+        pc.toSender(S_ObjectTitle.clone(BasePacketPooling.getPool(S_ObjectTitle.class), pc), true);
+
+        // 5. 익명화 세팅이 끝난 후, 텔레포트 실행
+        pc.toPotal(locX, locY, mapId);
+    }
+
+    /**
+     * [퇴장] 귀환, 사망, 리스타트 시 PcInstance에서 호출
+     */
+    public static void exitAnonymous(PcInstance pc) {
+        // 명단에 없는 유저라면 무시
+        if (!anonymousList.contains(pc)) return;
+
+        // 1. 원본 데이터 복구
+        if (pc.getTempName() != null) pc.setName(pc.getTempName());
+        if (pc.getTempTitle() != null) pc.setTitle(pc.getTempTitle());
+        if (pc.getTempClanName() != null) pc.setClanName(pc.getTempClanName());
+        pc.setClanId(pc.getTempClanId());
+        pc.setClanGrade(pc.getTempClanGrade());
+
+        // 2. 백업 데이터 초기화 (다음을 위해 비워둠)
+        pc.setTempName(null);
+        pc.setTempTitle(null);
+        pc.setTempClanName(null);
+
+        // 3. 명단에서 제거
+        anonymousList.remove(pc);
+
+        // 4. 이름과 타이틀 갱신 패킷 전송
+        pc.toSender(S_ObjectName.clone(BasePacketPooling.getPool(S_ObjectName.class), pc));
+        pc.toSender(S_ObjectTitle.clone(BasePacketPooling.getPool(S_ObjectTitle.class), pc), true);
+    }
 
     // 공지/토스트
     public static void sendMessage() {
@@ -207,4 +275,57 @@ public class 칠흑던전4층컨트롤러 {
         Calendar rightNow = Calendar.getInstance();
         return rightNow.get(Calendar.DAY_OF_WEEK);
     }
-}
+    
+    // ==========================================
+ 	// ✅ [추가] 텔레포트 및 귀환 가능 여부 확인 함수
+ 	// ==========================================
+
+ 	/**
+ 	 * 귀환 가능한 맵인지 확인해주는 함수.
+ 	 * 축순 및 이반도 확인함.
+ 	 * @param o
+ 	 * @param packet
+ 	 * @return
+ 	 */
+ 	static public boolean isTeleportVerrYedHoraeZone(object o, boolean packet){
+ 		//
+ 		if(PluginController.init(LocationController.class, "isTeleportVerrYedHoraeZone", o, packet) != null)
+ 			return false;
+ 		//
+ 		for(int i=0 ; i<Lineage.TeleportHomeImpossibilityMapLength ; ++i){
+ 			if(Lineage.TeleportHomeImpossibilityMap[i] == o.getMap()){
+ 				// 주변의 에너지가 순간 이동을 방해하고 있습니다. 여기에서 순간 이동은 사용할 수 없습니다.
+ 				if(packet){
+ 					o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 647));
+ 					o.toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class), 0x09));
+ 				}
+ 				return false;
+ 			}
+ 		}
+ 		return true;
+ 	}
+ 	
+ 	/**
+ 	 * 텔레포트 가능한 맵인지 확인해주는 함수.
+ 	 * @param o
+ 	 * @param packet
+ 	 * @param ment
+ 	 * @return
+ 	 */
+ 	static public boolean isTeleportZone(object o, boolean packet, boolean ment){
+ 		for(int i=0 ; i<Lineage.TeleportPossibleMapLength ; ++i){
+ 			if(Lineage.TeleportPossibleMap[i] == o.getMap())
+ 				return true;
+ 		}
+ 		
+ 		// [추가] 잘려있던 나머지 닫기 및 텔레포트 불가 멘트 처리
+ 		if(packet && ment){
+ 			// 지정된 위치에서만 사용할 수 있습니다. (276번 메시지)
+ 			o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 276));
+ 			o.toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class), 0x09));
+ 		}
+ 		return false;
+ 	}
+
+ } // <--- 칠흑던전3층컨트롤러 클래스가 끝나는 마지막 중괄호
+
