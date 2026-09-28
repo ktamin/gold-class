@@ -24,9 +24,7 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 	@Override
 	public void toClick(Character cha, ClientBasePacket cbp) {
 		if (!equipped)
-			ChattingController.toChatting(cha,
-					String.format("\\fY[%s] 안전인첸트: %d", getItem().getName(), getItem().getSafeEnchant()),
-					Lineage.CHATTING_MODE_MESSAGE);
+			ChattingController.toChatting(cha, String.format("\\fY[%s] 안전인첸트: %d", getItem().getName(), getItem().getSafeEnchant()), Lineage.CHATTING_MODE_MESSAGE);
 		if (isLvCheck(cha)) {
 			if (isClassCheck(cha)) {
 				Inventory inv = cha.getInventory();
@@ -38,11 +36,11 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 								cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 150));
 								return;
 							}
-							setEquipped(false);
+							setEquipped(false);                          
 						} else {
 							if (item.getType2().equalsIgnoreCase("shield")) {
 								ItemInstance weapon = inv.getSlot(Lineage.SLOT_WEAPON);
-
+								
 								if (weapon != null && weapon.getItem().isTohand()) {
 									// \f1두손 무기를 무장하고 방패를 착용할 수 없습니다.
 									cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 129));
@@ -66,7 +64,7 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 				}
 			} else {
 				if (equipped) {
-					setEquipped(false);
+					setEquipped(false);			
 					toSetoption(cha, true);
 					toEquipped(cha, cha.getInventory());
 					toOption(cha, true);
@@ -91,138 +89,117 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 		}
 
 		switch (item.getSlot()) {
-			case Lineage.SLOT_RING_LEFT:
-			case Lineage.SLOT_RING_RIGHT:
-				if (equipped) {
-					if (inv.getSlot(Lineage.SLOT_RING_RIGHT) == null) {
-						inv.setSlot(Lineage.SLOT_RING_RIGHT, this);
-					} else {
-						inv.setSlot(Lineage.SLOT_RING_LEFT, this);
-					}
+		case Lineage.SLOT_RING_LEFT:
+		case Lineage.SLOT_RING_RIGHT:
+			if (equipped) {
+				if (inv.getSlot(Lineage.SLOT_RING_RIGHT) == null) {
+					inv.setSlot(Lineage.SLOT_RING_RIGHT, this);
 				} else {
-					if (inv.getSlot(Lineage.SLOT_RING_RIGHT) != null
-							&& inv.getSlot(Lineage.SLOT_RING_RIGHT).getObjectId() == getObjectId()) {
-						inv.setSlot(Lineage.SLOT_RING_RIGHT, null);
-					} else if (inv.getSlot(Lineage.SLOT_RING_LEFT) != null
-							&& inv.getSlot(Lineage.SLOT_RING_LEFT).getObjectId() == getObjectId()) {
-						inv.setSlot(Lineage.SLOT_RING_LEFT, null);
-					} else {
-						inv.setSlot(Lineage.SLOT_RING_RIGHT, null);
-						inv.setSlot(Lineage.SLOT_RING_LEFT, null);
-					}
+					inv.setSlot(Lineage.SLOT_RING_LEFT, this);
 				}
-				break;
-			default:
-				inv.setSlot(item.getSlot(), equipped ? this : null);
-				break;
+			} else {
+				if (inv.getSlot(Lineage.SLOT_RING_RIGHT) != null && inv.getSlot(Lineage.SLOT_RING_RIGHT).getObjectId() == getObjectId()) {
+					inv.setSlot(Lineage.SLOT_RING_RIGHT, null);
+				} else if (inv.getSlot(Lineage.SLOT_RING_LEFT) != null && inv.getSlot(Lineage.SLOT_RING_LEFT).getObjectId() == getObjectId()) {
+					inv.setSlot(Lineage.SLOT_RING_LEFT, null);
+				} else {
+					inv.setSlot(Lineage.SLOT_RING_RIGHT, null);
+					inv.setSlot(Lineage.SLOT_RING_LEFT, null);
+				}
+			}
+			break;
+		default:
+			inv.setSlot(item.getSlot(), equipped ? this : null);
+			break;
 		}
-
-		if (!cha.isBlessArmor() && inv.getSlot(Lineage.SLOT_HELM) != null && inv.getSlot(Lineage.SLOT_SHIRT) != null
-				&& inv.getSlot(Lineage.SLOT_ARMOR) != null
-				&& inv.getSlot(Lineage.SLOT_CLOAK) != null && inv.getSlot(Lineage.SLOT_GLOVE) != null
-				&& inv.getSlot(Lineage.SLOT_BOOTS) != null) {
+		
+		if (!cha.isBlessArmor() && inv.getSlot(Lineage.SLOT_HELM) != null && inv.getSlot(Lineage.SLOT_SHIRT) != null && inv.getSlot(Lineage.SLOT_ARMOR) != null
+			&& inv.getSlot(Lineage.SLOT_CLOAK) != null && inv.getSlot(Lineage.SLOT_GLOVE) != null && inv.getSlot(Lineage.SLOT_BOOTS) != null) {
 			if ((inv.getSlot(Lineage.SLOT_HELM).getBless() == 0 || inv.getSlot(Lineage.SLOT_HELM).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_HELM).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_HELM).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_SHIRT).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_SHIRT).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_ARMOR).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_ARMOR).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_CLOAK).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_CLOAK).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_GLOVE).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_GLOVE).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_BOOTS).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_BOOTS).getBless() == -128)) {
+				&& (inv.getSlot(Lineage.SLOT_HELM).getBless() == 0 || inv.getSlot(Lineage.SLOT_HELM).getBless() == -128)
+				&& (inv.getSlot(Lineage.SLOT_SHIRT).getBless() == 0 || inv.getSlot(Lineage.SLOT_SHIRT).getBless() == -128)
+				&& (inv.getSlot(Lineage.SLOT_ARMOR).getBless() == 0 || inv.getSlot(Lineage.SLOT_ARMOR).getBless() == -128)
+				&& (inv.getSlot(Lineage.SLOT_CLOAK).getBless() == 0 || inv.getSlot(Lineage.SLOT_CLOAK).getBless() == -128)
+				&& (inv.getSlot(Lineage.SLOT_GLOVE).getBless() == 0 || inv.getSlot(Lineage.SLOT_GLOVE).getBless() == -128)
+				&& (inv.getSlot(Lineage.SLOT_BOOTS).getBless() == 0 || inv.getSlot(Lineage.SLOT_BOOTS).getBless() == -128)) {
 				ChattingController.toChatting(cha, "축복받은 방어구 세트 효과 적용: AC-5", Lineage.CHATTING_MODE_MESSAGE);
 				cha.setDynamicAc(cha.getDynamicAc() + 5);
 				cha.setBlessArmor(true);
-			}
+			}		
 		}
-
-		if (!cha.isBlessAcc() && inv.getSlot(Lineage.SLOT_NECKLACE) != null
-				&& inv.getSlot(Lineage.SLOT_RING_LEFT) != null
-				&& inv.getSlot(Lineage.SLOT_RING_RIGHT) != null && inv.getSlot(Lineage.SLOT_BELT) != null) {
-			if ((inv.getSlot(Lineage.SLOT_NECKLACE).getBless() == 0
-					|| inv.getSlot(Lineage.SLOT_NECKLACE).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_RING_LEFT).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_RING_LEFT).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_RING_RIGHT).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_RING_RIGHT).getBless() == -128)
-					&& (inv.getSlot(Lineage.SLOT_BELT).getBless() == 0
-							|| inv.getSlot(Lineage.SLOT_BELT).getBless() == -128)) {
-				ChattingController.toChatting(cha, "축복받은 장신구 세트 효과 적용: 대미지 감소+2, mr+5", Lineage.CHATTING_MODE_MESSAGE);
-				cha.setDynamicReduction(cha.getDynamicReduction() + 2);
-				cha.setDynamicMr(cha.getDynamicMr() + 5);
-
-				cha.setBlessAcc(true);
+		
+		if (!cha.isBlessAcc() && inv.getSlot(Lineage.SLOT_NECKLACE) != null && inv.getSlot(Lineage.SLOT_RING_LEFT) != null 
+			&& inv.getSlot(Lineage.SLOT_RING_RIGHT) != null && inv.getSlot(Lineage.SLOT_BELT) != null) {
+				if ((inv.getSlot(Lineage.SLOT_NECKLACE).getBless() == 0 || inv.getSlot(Lineage.SLOT_NECKLACE).getBless() == -128)
+					&& (inv.getSlot(Lineage.SLOT_RING_LEFT).getBless() == 0 || inv.getSlot(Lineage.SLOT_RING_LEFT).getBless() == -128)
+					&& (inv.getSlot(Lineage.SLOT_RING_RIGHT).getBless() == 0 || inv.getSlot(Lineage.SLOT_RING_RIGHT).getBless() == -128)
+					&& (inv.getSlot(Lineage.SLOT_BELT).getBless() == 0 || inv.getSlot(Lineage.SLOT_BELT).getBless() == -128)) {
+					ChattingController.toChatting(cha, "축복받은 장신구 세트 효과 적용: 대미지 감소+2, mr+5", Lineage.CHATTING_MODE_MESSAGE);
+					cha.setDynamicReduction(cha.getDynamicReduction() + 2);
+					cha.setDynamicMr(cha.getDynamicMr() + 5);
+					
+					cha.setBlessAcc(true);
+				}		
 			}
-		}
-
-		if (cha.isBlessArmor() && (inv.getSlot(Lineage.SLOT_HELM) == null || inv.getSlot(Lineage.SLOT_SHIRT) == null
-				|| inv.getSlot(Lineage.SLOT_ARMOR) == null
-				|| inv.getSlot(Lineage.SLOT_CLOAK) == null || inv.getSlot(Lineage.SLOT_GLOVE) == null
-				|| inv.getSlot(Lineage.SLOT_BOOTS) == null)) {
+		
+		if (cha.isBlessArmor() && (inv.getSlot(Lineage.SLOT_HELM) == null || inv.getSlot(Lineage.SLOT_SHIRT) == null || inv.getSlot(Lineage.SLOT_ARMOR) == null
+			|| inv.getSlot(Lineage.SLOT_CLOAK) == null || inv.getSlot(Lineage.SLOT_GLOVE) == null || inv.getSlot(Lineage.SLOT_BOOTS) == null)) {
 			ChattingController.toChatting(cha, "축복받은 방어구 세트 효과 해제", Lineage.CHATTING_MODE_MESSAGE);
 			cha.setDynamicAc(cha.getDynamicAc() - 5);
 			cha.setBlessArmor(false);
 		}
-
-		if (cha.isBlessAcc()
-				&& (inv.getSlot(Lineage.SLOT_NECKLACE) == null || inv.getSlot(Lineage.SLOT_RING_LEFT) == null
-						|| inv.getSlot(Lineage.SLOT_RING_RIGHT) == null || inv.getSlot(Lineage.SLOT_BELT) == null)) {
-			ChattingController.toChatting(cha, "축복받은 장신구 세트 효과 해제", Lineage.CHATTING_MODE_MESSAGE);
-			cha.setDynamicReduction(cha.getDynamicReduction() - 2);
-			cha.setDynamicMr(cha.getDynamicMr() - 5);
-			cha.setBlessAcc(false);
-		}
-		if ((!cha.armorEnchant8) && (!cha.armorEnchant9) && (inv.getSlot(0) != null) && (inv.getSlot(3) != null)
-				&& (inv.getSlot(4) != null) &&
-				/* 175 */ (inv.getSlot(5) != null) && (inv.getSlot(9) != null) && (inv.getSlot(12) != null) &&
-				/* 176 */ (inv.getSlot(0).getEnLevel() >= 8) &&
-				/* 177 */ (inv.getSlot(0).getEnLevel() >= 8) &&
-				/* 178 */ (inv.getSlot(3).getEnLevel() >= 8) &&
-				/* 179 */ (inv.getSlot(4).getEnLevel() >= 8) &&
-				/* 180 */ (inv.getSlot(5).getEnLevel() >= 8) &&
-				/* 181 */ (inv.getSlot(9).getEnLevel() >= 8) &&
-				/* 182 */ (inv.getSlot(12).getEnLevel() >= 8)) {
-			/* 183 */ if ((inv.getSlot(0).getEnLevel() >= 8) &&
-			/* 184 */ (inv.getSlot(0).getEnLevel() >= 9) &&
-			/* 185 */ (inv.getSlot(3).getEnLevel() >= 9) &&
-			/* 186 */ (inv.getSlot(4).getEnLevel() >= 9) &&
-			/* 187 */ (inv.getSlot(5).getEnLevel() >= 9) &&
-			/* 188 */ (inv.getSlot(9).getEnLevel() >= 9) &&
-			/* 189 */ (inv.getSlot(12).getEnLevel() >= 9)) {
-				/* 190 */ ChattingController.toChatting(cha, "+9 방어구 세트 효과 적용: 대미지 감소+5", 20);
-				/* 191 */ cha.setDynamicReduction(cha.getDynamicReduction() + 5);
-				/* 192 */ cha.armorEnchant8 = false;
-				/* 193 */ cha.armorEnchant9 = true;
-				/*     */ } else {
-				/* 195 */ ChattingController.toChatting(cha, "+8 방어구 세트 효과 적용: 대미지 감소+3", 20);
-				/* 196 */ cha.setDynamicReduction(cha.getDynamicReduction() + 3);
-				/* 197 */ cha.armorEnchant8 = true;
-				/* 198 */ cha.armorEnchant9 = false;
-				/*     */ }
-			/*     */
-			/*     */ }
-		/*     */
-		/* 203 */ if ((cha.armorEnchant8)
-				&& ((inv.getSlot(0) == null) || (inv.getSlot(3) == null) || (inv.getSlot(4) == null) ||
-				/* 204 */ (inv.getSlot(5) == null) || (inv.getSlot(9) == null) || (inv.getSlot(12) == null))) {
-			/* 205 */ ChattingController.toChatting(cha, "+8 방어구 세트 효과 해제", 20);
-			/* 206 */ cha.setDynamicReduction(cha.getDynamicReduction() - 3);
-			/* 207 */ cha.armorEnchant8 = false;
-			/*     */ }
-		/*     */
-		/* 210 */ if ((cha.armorEnchant9)
-				&& ((inv.getSlot(0) == null) || (inv.getSlot(3) == null) || (inv.getSlot(4) == null) ||
-				/* 211 */ (inv.getSlot(5) == null) || (inv.getSlot(9) == null) || (inv.getSlot(12) == null))) {
-			/* 212 */ ChattingController.toChatting(cha, "+9 방어구 세트 효과 해제", 20);
-			/* 213 */ cha.setDynamicReduction(cha.getDynamicReduction() - 5);
-			/* 214 */ cha.armorEnchant9 = false;
-			/*     */ }
+		
+		if (cha.isBlessAcc() && (inv.getSlot(Lineage.SLOT_NECKLACE) == null || inv.getSlot(Lineage.SLOT_RING_LEFT) == null 
+			|| inv.getSlot(Lineage.SLOT_RING_RIGHT) == null || inv.getSlot(Lineage.SLOT_BELT) == null)) {
+				ChattingController.toChatting(cha, "축복받은 장신구 세트 효과 해제", Lineage.CHATTING_MODE_MESSAGE);
+				cha.setDynamicReduction(cha.getDynamicReduction() - 2);
+				cha.setDynamicMr(cha.getDynamicMr() - 5);
+				cha.setBlessAcc(false);
+			}
+		 if ((!cha.armorEnchant8) && (!cha.armorEnchant9) && (inv.getSlot(0) != null) && (inv.getSlot(3) != null) && (inv.getSlot(4) != null) && 
+				 /* 175 */       (inv.getSlot(5) != null) && (inv.getSlot(9) != null) && (inv.getSlot(12) != null) && 
+				 /* 176 */       (inv.getSlot(0).getEnLevel() >= 8) && 
+				 /* 177 */       (inv.getSlot(0).getEnLevel() >= 8) && 
+				 /* 178 */       (inv.getSlot(3).getEnLevel() >= 8) && 
+				 /* 179 */       (inv.getSlot(4).getEnLevel() >= 8) && 
+				 /* 180 */       (inv.getSlot(5).getEnLevel() >= 8) && 
+				 /* 181 */       (inv.getSlot(9).getEnLevel() >= 8) && 
+				 /* 182 */       (inv.getSlot(12).getEnLevel() >= 8)) {
+				 /* 183 */       if ((inv.getSlot(0).getEnLevel() >= 8) && 
+				 /* 184 */         (inv.getSlot(0).getEnLevel() >= 9) && 
+				 /* 185 */         (inv.getSlot(3).getEnLevel() >= 9) && 
+				 /* 186 */         (inv.getSlot(4).getEnLevel() >= 9) && 
+				 /* 187 */         (inv.getSlot(5).getEnLevel() >= 9) && 
+				 /* 188 */         (inv.getSlot(9).getEnLevel() >= 9) && 
+				 /* 189 */         (inv.getSlot(12).getEnLevel() >= 9)) {
+				 /* 190 */         ChattingController.toChatting(cha, "+9 방어구 세트 효과 적용: 대미지 감소+5", 20);
+				 /* 191 */         cha.setDynamicReduction(cha.getDynamicReduction() + 5);
+				 /* 192 */         cha.armorEnchant8 = false;
+				 /* 193 */         cha.armorEnchant9 = true;
+				 /*     */       } else {
+				 /* 195 */         ChattingController.toChatting(cha, "+8 방어구 세트 효과 적용: 대미지 감소+3", 20);
+				 /* 196 */         cha.setDynamicReduction(cha.getDynamicReduction() + 3);
+				 /* 197 */         cha.armorEnchant8 = true;
+				 /* 198 */         cha.armorEnchant9 = false;
+				 /*     */       }
+				 /*     */ 
+				 /*     */     }
+				 /*     */ 
+				 /* 203 */     if ((cha.armorEnchant8) && ((inv.getSlot(0) == null) || (inv.getSlot(3) == null) || (inv.getSlot(4) == null) || 
+				 /* 204 */       (inv.getSlot(5) == null) || (inv.getSlot(9) == null) || (inv.getSlot(12) == null))) {
+				 /* 205 */       ChattingController.toChatting(cha, "+8 방어구 세트 효과 해제", 20);
+				 /* 206 */       cha.setDynamicReduction(cha.getDynamicReduction() - 3);
+				 /* 207 */       cha.armorEnchant8 = false;
+				 /*     */     }
+				 /*     */ 
+				 /* 210 */     if ((cha.armorEnchant9) && ((inv.getSlot(0) == null) || (inv.getSlot(3) == null) || (inv.getSlot(4) == null) || 
+				 /* 211 */       (inv.getSlot(5) == null) || (inv.getSlot(9) == null) || (inv.getSlot(12) == null))) {
+				 /* 212 */       ChattingController.toChatting(cha, "+9 방어구 세트 효과 해제", 20);
+				 /* 213 */       cha.setDynamicReduction(cha.getDynamicReduction() - 5 );
+				 /* 214 */       cha.armorEnchant9 = false;
+				 /*     */     }
 		if (getBless() == 2 && equipped) {
-			// \f1%0%s 손에 달라 붙었습니다.
+			//\f1%0%s 손에 달라 붙었습니다.
 			cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 149, getName()));
 		}
 
@@ -235,7 +212,7 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 	private boolean isEquipped(Character cha, Inventory inv) {
 		// 착용해제 하려는가?
 		if (equipped) {
-			if (!Lineage.item_equipped_type) {
+			if(!Lineage.item_equipped_type) {
 				// 갑옷해제시 망토 확인
 				if (item.getSlot() == Lineage.SLOT_ARMOR && inv.getSlot(Lineage.SLOT_CLOAK) != null) {
 					cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 127));
@@ -254,7 +231,7 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 			}
 			// 착용 하려는가?
 		} else {
-			if (!Lineage.item_equipped_type) {
+			if(!Lineage.item_equipped_type) {
 				// 갑옷 착용시 망토 확인
 				if (item.getSlot() == Lineage.SLOT_ARMOR && inv.getSlot(Lineage.SLOT_CLOAK) != null) {
 					cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 126, "$226", "$225"));
@@ -272,9 +249,8 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 				}
 			}
 			// 방패 착용시 양손무기 확인
-			if (item.getSlot() == Lineage.SLOT_SHIELD && inv.getSlot(Lineage.SLOT_WEAPON) != null
-					&& inv.getSlot(Lineage.SLOT_WEAPON).getItem().isTohand()) {
-				if (!Lineage.item_equipped_type) {
+			if (item.getSlot() == Lineage.SLOT_SHIELD && inv.getSlot(Lineage.SLOT_WEAPON) != null && inv.getSlot(Lineage.SLOT_WEAPON).getItem().isTohand()) {
+				if(!Lineage.item_equipped_type) {
 					cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 129));
 					return false;
 				} else {
@@ -283,35 +259,35 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 			}
 			// 방패 착용시 가더 해제.
 			if (item.getSlot() == Lineage.SLOT_SHIELD && inv.getSlot(Lineage.SLOT_GUARDER) != null)
-				inv.getSlot(Lineage.SLOT_GUARDER).toClick(cha, null);
+				inv.getSlot(Lineage.SLOT_GUARDER).toClick(cha, null);			
 			// 가더 착용시 방패 해제.
 			if (item.getSlot() == Lineage.SLOT_GUARDER && inv.getSlot(Lineage.SLOT_SHIELD) != null)
 				inv.getSlot(Lineage.SLOT_SHIELD).toClick(cha, null);
-
+			
 			switch (item.getSlot()) {
-				case Lineage.SLOT_RING_LEFT:
-				case Lineage.SLOT_RING_RIGHT:
-					if (inv.getSlot(Lineage.SLOT_RING_LEFT) != null && inv.getSlot(Lineage.SLOT_RING_RIGHT) != null) {
-						if (Lineage.item_equipped_type && inv.getSlot(item.getSlot()).getBless() != 2) {
-							do {
-								inv.getSlot(item.getSlot()).toClick(cha, null);
-							} while (inv.getSlot(item.getSlot()) != null);
-						} else {
-							return false;
-						}
+			case Lineage.SLOT_RING_LEFT:
+			case Lineage.SLOT_RING_RIGHT:
+				if (inv.getSlot(Lineage.SLOT_RING_LEFT) != null && inv.getSlot(Lineage.SLOT_RING_RIGHT) != null) {
+					if (Lineage.item_equipped_type && inv.getSlot(item.getSlot()).getBless() != 2) {
+						do {
+							inv.getSlot(item.getSlot()).toClick(cha, null);
+						} while (inv.getSlot(item.getSlot()) != null);
+					} else {
+						return false;
 					}
-					return true;
-				default:
-					if (inv.getSlot(item.getSlot()) != null) {
-						if (Lineage.item_equipped_type && inv.getSlot(item.getSlot()).getBless() != 2) {
-							do {
-								inv.getSlot(item.getSlot()).toClick(cha, null);
-							} while (inv.getSlot(item.getSlot()) != null);
-						} else {
-							return false;
-						}
+				}
+				return true;
+			default:
+				if (inv.getSlot(item.getSlot()) != null) {
+					if (Lineage.item_equipped_type && inv.getSlot(item.getSlot()).getBless() != 2) {
+						do {
+							inv.getSlot(item.getSlot()).toClick(cha, null);
+						} while (inv.getSlot(item.getSlot()) != null);
+					} else {
+						return false;
 					}
-					return true;
+				}
+				return true;
 			}
 		}
 		return true;
@@ -320,39 +296,40 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 	/**
 	 * 방어구 상태에따라 ac전체값 계산하여 리턴.
 	 */
-	/*
-	 * private int getTotalAc() {
-	 * int enLevel = getEnLevel();
-	 * 
-	 * int ac = getItem().getAc() + enLevel + getDynamicAc();
-	 * 
-	 * // 장신구는 따로 처리
-	 * 
-	 * 
-	 * return ac < 0 ? 0 : ac;
-	 * }
-	 */
+/*	
 	private int getTotalAc() {
 		int enLevel = getEnLevel();
-
-		// 기본 AC 계산
-		int ac = getItem().getAc();
-
-		// 아이템의 타입을 확인 (악세사리 구분)
-		String type2 = getItem().getType2();
-
-		// 방어구(armor)이거나 방패(shield)인 경우에만 인챈트 수치를 AC에 더함
-		// 장신구(ring, belt, necklace, earring 등)는 인챈트 수치를 더하지 않음
-		if (type2.equalsIgnoreCase("armor") || type2.equalsIgnoreCase("shield")) {
-			ac += enLevel;
-		}
-
-		// 추가적인 다이내믹 AC가 있다면 합산
-		ac += getDynamicAc();
-
+	
+		int ac = getItem().getAc() + enLevel + getDynamicAc();
+		
+		// 장신구는 따로 처리
+	
+		
 		return ac < 0 ? 0 : ac;
 	}
-
+*/
+	private int getTotalAc() {
+		int enLevel = getEnLevel();
+		
+		// 기본 AC 계산
+		int ac = getItem().getAc();
+		
+		// 아이템의 타입을 확인 (악세사리 구분)
+		String type2 = getItem().getType2();
+		
+		// ✅ [수정] 장신구(반지, 목걸이, 귀걸이, 벨트)가 '아닐' 경우에만 인챈트 수치를 더함
+		// 즉 투구, 장갑, 부츠, 망토, 티셔츠 등은 모두 포함됨!
+		if (!type2.equalsIgnoreCase("ring") && !type2.equalsIgnoreCase("necklace") 
+			&& !type2.equalsIgnoreCase("earring") && !type2.equalsIgnoreCase("belt")) {
+			ac += enLevel;
+		}
+		
+		// 추가적인 다이내믹 AC가 있다면 합산
+		ac += getDynamicAc();
+		
+		return ac < 0 ? 0 : ac;
+	}
+	
 	/**
 	 * 리니지 월드에 접속했을때 착용중인 아이템 처리를 위해 사용되는 메서드.
 	 */
@@ -369,44 +346,41 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 	/**
 	 * 인첸트 활성화 됫을때 아이템의 뒷처리를 처리하도록 요청하는 메서드.
 	 */
-	/*
-	 * @Override
-	 * public void toEnchant(PcInstance pc, int en) {
-	 * //
-	 * if (en == -125 || en == -127)
-	 * return;
-	 * //
-	 * if (en != 0) {
-	 * if (equipped && getTotalAc() > 0) {
-	 * pc.setAc(pc.getAc() + en);
-	 * 
-	 * if ((getItem().getName().equalsIgnoreCase("수호성의 파워 글로브") ||
-	 * getItem().getName().equalsIgnoreCase("수호성의 활 골무")) && getEnLevel() > 4) {
-	 * if (getItem().getName().equalsIgnoreCase("수호성의 파워 글로브"))
-	 * pc.setDynamicAddHit(pc.getDynamicAddHit() + en);
-	 * else
-	 * pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() + en);
-	 * }
-	 * 
-	 * pc.toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
-	 * class), pc));
-	 * }
-	 * } else {
-	 * Inventory inv = pc.getInventory();
-	 * if (equipped) {
-	 * setEquipped(false);
-	 * toEquipped(pc, inv);
-	 * toOption(pc, true);
-	 * toSetoption(pc, true);
-	 * toBuffCheck(pc);
-	 * }
-	 * inv.count(this, 0, true);
-	 * }
-	 * //
-	 * super.toEnchant(pc, en);
-	 * }
-	 */
-
+/*	
+	@Override
+	public void toEnchant(PcInstance pc, int en) {
+		//
+		if (en == -125 || en == -127)
+			return;
+		//
+		if (en != 0) {
+			if (equipped && getTotalAc() > 0) {
+				pc.setAc(pc.getAc() + en);
+				
+				if ((getItem().getName().equalsIgnoreCase("수호성의 파워 글로브") || getItem().getName().equalsIgnoreCase("수호성의 활 골무")) && getEnLevel() > 4) {
+					if (getItem().getName().equalsIgnoreCase("수호성의 파워 글로브"))
+						pc.setDynamicAddHit(pc.getDynamicAddHit() + en);
+					else
+						pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() + en);
+				}
+				
+				pc.toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), pc));
+			}
+		} else {
+			Inventory inv = pc.getInventory();
+			if (equipped) {
+				setEquipped(false);
+				toEquipped(pc, inv);
+				toOption(pc, true);
+				toSetoption(pc, true);
+				toBuffCheck(pc);
+			}
+			inv.count(this, 0, true);
+		}
+		//
+		super.toEnchant(pc, en);
+	}
+*/
 	@Override
 	public void toEnchant(PcInstance pc, int en) {
 		// 특수 강화 연출 관련 리턴
@@ -416,22 +390,22 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 		if (en != 0) {
 			// 착용 중이고 실제 방어력이 있는 아이템일 때
 			if (equipped && getTotalAc() > 0) {
-
-				// [추가] 아이템 타입 체크 (방어구/방패만 AC 실시간 갱신)
+				
+				// ✅ [수정] 여기도 마찬가지로 장신구가 아닐 때만 실시간 방어력 갱신
 				String type2 = getItem().getType2();
-				if (type2.equalsIgnoreCase("armor") || type2.equalsIgnoreCase("shield")) {
+				if (!type2.equalsIgnoreCase("ring") && !type2.equalsIgnoreCase("necklace") 
+					&& !type2.equalsIgnoreCase("earring") && !type2.equalsIgnoreCase("belt")) {
 					pc.setAc(pc.getAc() + en);
 				}
 
 				// 수호성 장갑 시리즈 전용 옵션 (인챈트 5부터 명중 추가)
-				if ((getItem().getName().equalsIgnoreCase("수호성의 파워 글로브")
-						|| getItem().getName().equalsIgnoreCase("수호성의 활 골무")) && getEnLevel() > 4) {
+				if ((getItem().getName().equalsIgnoreCase("수호성의 파워 글로브") || getItem().getName().equalsIgnoreCase("수호성의 활 골무")) && getEnLevel() > 4) {
 					if (getItem().getName().equalsIgnoreCase("수호성의 파워 글로브"))
 						pc.setDynamicAddHit(pc.getDynamicAddHit() + en);
 					else
 						pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() + en);
 				}
-
+				
 				// 캐릭터 스태틱 패킷 전송 (방어력/명중 변화 적용)
 				pc.toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), pc));
 			}
@@ -452,5 +426,4 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 		// 부모 클래스의 인챈트 뒷처리 호출
 		super.toEnchant(pc, en);
 	}
-
 }

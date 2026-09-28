@@ -44,8 +44,10 @@ public class ScrollOfOrimArmor extends Enchant{
 
 						armor.toEnchant((PcInstance) cha, en);
 
-						if (en != -127)
+						if (en != -127) {
+							// 주문서 소모
 							cha.getInventory().count(this, getCount() - 1, true);
+						}
 					}
 				} else {
 					ChattingController.toChatting(cha, "장신구에 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);

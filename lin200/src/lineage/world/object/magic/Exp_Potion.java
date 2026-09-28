@@ -59,19 +59,25 @@ public class Exp_Potion extends Magic {
 		if (o instanceof PcInstance) {
 			SC_BUFFICON_NOTI.on((PcInstance) o, 79, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
 		}
-		ChattingController.toChatting(o, "\\fY경험치 2배 물약 종료", Lineage.CHATTING_MODE_MESSAGE);
+//		ChattingController.toChatting(o, "\\fY경험치 2배 물약 종료", Lineage.CHATTING_MODE_MESSAGE);
 	}
 
 	@Override
 	public void toBuff(object o) {
-		if (getTime() == Lineage.buff_magic_time_max || getTime() == Lineage.buff_magic_time_min)
-			ChattingController.toChatting(o, "\\fY경험치 2배 물약: " + getTime() + "초 후 종료", Lineage.CHATTING_MODE_MESSAGE);
+		// 종료 멘트 출력 주석
+//		if (getTime() == Lineage.buff_magic_time_max || getTime() == Lineage.buff_magic_time_min)
+//			ChattingController.toChatting(o, "\\fY경험치 2배 물약: " + getTime() + "초 후 종료", Lineage.CHATTING_MODE_MESSAGE);
 	}
 
 	static public void onBuff(Character cha, Skill skill, int time, boolean restart) {
 		// 중복 제거 및 시간 합산 (원본 로직 유지)
 		if (!restart)
 			time = BuffController.addBuffTime(cha, skill, time);
+		
+		// 💡 [추가된 부분] 2배 물약을 먹으면 기존 10, 20, 50% 물약 버프를 삭제하여 중복을 방지합니다.
+				BuffController.remove(cha, ExpDropBuff_10.class);
+				BuffController.remove(cha, ExpDropBuff_20.class);
+				BuffController.remove(cha, ExpDropBuff_50.class);
 
 		if (skill.getCastGfx() > 0)
 			cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, skill.getCastGfx()),
@@ -80,6 +86,6 @@ public class Exp_Potion extends Magic {
 		// BuffController에 등록 (NPE 방지를 위해 cha 전달)
 		BuffController.append(cha, Exp_Potion.clone(BuffController.getPool(Exp_Potion.class), cha, skill, time));
 
-		ChattingController.toChatting(cha, "경험치 2배 효과 적용", Lineage.CHATTING_MODE_MESSAGE);
+//		ChattingController.toChatting(cha, "경험치 2배 효과 적용", Lineage.CHATTING_MODE_MESSAGE);
 	}
 }

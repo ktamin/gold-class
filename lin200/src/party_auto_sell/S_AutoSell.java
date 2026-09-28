@@ -57,7 +57,8 @@ public class S_AutoSell extends ServerBasePacket {
 			if (wh.getItem().getName().equalsIgnoreCase("아데나") || wh.getInnRoomKey() > 0)
 				continue;
 
-			if (!wh.getItem().isTrade())
+			// 💡 [수정] 교환(isTrade) 불가 템이 아니라 상점 판매(isSell) 불가 템을 걸러내도록 변경
+			if (!wh.getItem().isSell())
 				continue;
 			
 			boolean check_shop_item = false;

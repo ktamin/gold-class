@@ -72,10 +72,10 @@ public class SpotTower extends Character {
 				} else {
 					// 🟩 1군 몬스터 그룹 (서버 초반부용 - 기본값)
 					monsterNameList = new String[][] {
-						{"[1차타워]네크로맨서(2)"},                   // 80% 스폰
-						{"[1차타워]드레이크(2)"},                     // 60% 스폰
-						{"[1차타워]바포메트"},                        // 40% 스폰
-						{"[1차타워]정예 데스나이트"}                       // 20% 스폰
+						{"[1차타워]네크로맨서"},                   // 80% 스폰
+						{"[1차타워]드레이크"},                     // 60% 스폰
+						{"[1차타워]이프리트"},                        // 40% 스폰
+						{"[1차타워]카스파", "[1차타워]발터자르", "[1차타워]세마", "[1차타워]메르키오르"}                       // 20% 스폰
 					};
 				}
 	       }	
@@ -118,7 +118,7 @@ public class SpotTower extends Character {
 		endTime = time + (1000 * Lineage.spot_tower_time);
 		toTeleport(Lineage.spot_tower_x, Lineage.spot_tower_y, Lineage.spot_tower_map, false);
 		
-		String msg = "\\fY         ***** 스팟 쟁탈전이 시작되었습니다. *****";
+		String msg = "\\fY         *** 스팟 쟁탈전이 시작되었습니다. ***";
 		World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), msg));
 		if (Lineage.is_blue_message)
 			World.toSender(S_BlueMessage.clone(BasePacketPooling.getPool(S_BlueMessage.class), 556, msg));
@@ -137,7 +137,7 @@ public class SpotTower extends Character {
 		World.remove(this);
 		
 		if (isTimeOver) {
-			String msg = "\\fY         ***** 스팟 쟁탈전이 종료되었습니다. *****";
+			String msg = "\\fY         *** 스팟 쟁탈전이 종료되었습니다. ***";
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), msg));
 			if (Lineage.is_blue_message)
 				World.toSender(S_BlueMessage.clone(BasePacketPooling.getPool(S_BlueMessage.class), 556, msg));

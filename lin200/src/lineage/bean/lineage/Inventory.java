@@ -6,6 +6,7 @@ import java.util.List;
 import lineage.bean.database.Item;
 import lineage.bean.database.ItemSetoption;
 import lineage.database.ItemDatabase;
+import lineage.database.ItemDropMessageDatabase;
 import lineage.database.ServerDatabase;
 import lineage.database.SpriteFrameDatabase;
 import lineage.gui.GuiMain;
@@ -1188,7 +1189,7 @@ public class Inventory {
 	}
 
 	public boolean isDallor(long count, boolean remove) {
-		return isAden("달러", count, remove);
+		return isAden("코인", count, remove);
 	}
 
 	/**
@@ -1336,7 +1337,7 @@ public class Inventory {
 				int count = (int) ((aden.getCount() - Common.MAX_COUNT) / Common.ONE_HUNDRED_MILLION);
 
 				if (count > 0) {
-					Item i = ItemDatabase.find("1억 아데나");
+					Item i = ItemDatabase.find("1억 수표");
 
 					if (i != null) {
 						for (int idx = 0; idx < count; idx++) {

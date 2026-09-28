@@ -54,8 +54,129 @@ public class 액세서리제작사 extends object {
 			List<CreateItem> createList = new ArrayList<CreateItem>();
 			List<CreateItem> createList2 = new ArrayList<CreateItem>();
 			List<ItemInstance> itemList = new ArrayList<ItemInstance>();
+
+//-------------------------------목걸이
 			
-			if (action.equalsIgnoreCase("신성한완력의목걸이6")) {				
+			if (action.equalsIgnoreCase("신성한완력의목걸이")) {				
+				createList.add(new CreateItem("완력의 목걸이", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 완력의 목걸이", 1, 0, 1);
+				
+			} else if (action.equalsIgnoreCase("신성한민첩의목걸이")) {				
+				createList.add(new CreateItem("민첩의 목걸이", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 민첩의 목걸이", 1, 0, 1);
+				
+			} else if (action.equalsIgnoreCase("신성한지식의목걸이")) {				
+				createList.add(new CreateItem("지식의 목걸이", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 지식의 목걸이", 1, 0, 1);
+				
+//-------------------------------반지				
+				
+			} else if (action.equalsIgnoreCase("신성한완력의반지")) {				
+				createList.add(new CreateItem("완력의 반지", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 완력의 반지", 1, 0, 1);
+				
+			} else if (action.equalsIgnoreCase("신성한민첩의반지")) {				
+				createList.add(new CreateItem("민첩의 반지", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 민첩의 반지", 1, 0, 1);	
+				
+			} else if (action.equalsIgnoreCase("신성한지식의반지")) {				
+				createList.add(new CreateItem("지식의 반지", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 지식의 반지", 1, 0, 1);	
+				
+//-------------------------------벨트			
+				
+			} else if (action.equalsIgnoreCase("신성한완력의벨트")) {				
+				createList.add(new CreateItem("완력의 벨트", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 완력의 벨트", 1, 0, 1);	
+				
+			} else if (action.equalsIgnoreCase("신성한민첩의벨트")) {				
+				createList.add(new CreateItem("민첩의 벨트", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 민첩의 벨트", 1, 0, 1);	
+				
+			} else if (action.equalsIgnoreCase("신성한지식의벨트")) {				
+				createList.add(new CreateItem("지식의 벨트", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 300));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 지식의 벨트", 1, 0, 1);		
+				
+//-------------------------------투구				
+				
+			} else if (action.equalsIgnoreCase("신성한마법방어투구")) {				
+				createList.add(new CreateItem("마법 방어 투구", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 200));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 마법 방어 투구", 1, 0, 1);	
+				
+			} else if (action.equalsIgnoreCase("신성한엘름의축복")) {				
+				createList.add(new CreateItem("엘름의 축복", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 200));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 엘름의 축복", 1, 0, 1);	
+				
+//-------------------------------갑옷			
+				
+			} else if (action.equalsIgnoreCase("신성한요정족판금갑옷")) {				
+				createList.add(new CreateItem("요정족 판금 갑옷", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 200));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 요정족 판금 갑옷", 1, 0, 1);	
+				
+//-------------------------------장갑		
+				
+			} else if (action.equalsIgnoreCase("수호성의파워글로브")) {				
+				createList.add(new CreateItem("파워 글로브", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 200));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "수호성의 파워 글로브", 1, 0, 1);	
+				
+			} else if (action.equalsIgnoreCase("수호성의활골무")) {				
+				createList.add(new CreateItem("활 골무", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 200));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "수호성의 활 골무", 1, 0, 1);	
+				
+//-------------------------------방패			
+				
+			} else if (action.equalsIgnoreCase("신성한요정족방패")) {				
+				createList.add(new CreateItem("요정족 방패", false, 0, false, 0, 1));
+				createList.add(new CreateItem("신성한 조각", false, 1, false, 0, 200));	
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
+				checkItem(pc, createList, itemList);				
+				createItem(pc, createList, createList2, itemList, "신성한 요정족 방패", 1, 0, 1);	
+				
+// --------------------------------------------------------------------------------------			
+				
+			} else if (action.equalsIgnoreCase("신성한완력의목걸이6")) {				
 				createList.add(new CreateItem("완력의 목걸이", true, 0, true, 7, 1));
 				createList.add(new CreateItem("희귀 제작 비법서(악세)", false, 1, false, 0, 1));	
 				createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));

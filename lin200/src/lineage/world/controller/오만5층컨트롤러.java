@@ -27,7 +27,7 @@ public class 오만5층컨트롤러 {
     private static long nextTimerBroadcastAt = 0L; // 다음 갱신 전송 시각(ms)
     
     // 항상 열려있는 사냥터로 운용할 때 true
-    private static final boolean ALWAYS_OPEN = true;
+    private static final boolean ALWAYS_OPEN = false;
 
     public static void init() {
         TimeLine.start("오만5층 컨트롤러..");
@@ -95,13 +95,15 @@ public class 오만5층컨트롤러 {
                 sendTimerUI(false, nowMs); // 0초 내려서 타이머 끄기
                 return;
             }
-
+            // 타이머 삭제를 위해 주석처리
+            /*
             // 1초 간격으로만 브로드캐스트 (원하면 5000L로 줄여 부하 감소)
             if (nowMs >= nextTimerBroadcastAt && remainSec != lastRemainSecSent) {
                 sendTimerUI(true, nowMs);         // 남은 시간(초) 전송
                 lastRemainSecSent = remainSec;
                 nextTimerBroadcastAt = nowMs + 1000L;
             }
+            */
         }
     }
 
@@ -132,11 +134,11 @@ public class 오만5층컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 오만5층으로 가는길이 열렸습니다. *****";
+            chatMsg   = "\\fY      *** 오만 5층으로 가는길이 열렸습니다. ***";
             toastTitle = "★오만 5층 입장 가능 ★";
             toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 오만5층으로 가는길이 닫혔습니다. *****";
+            chatMsg   = "\\fY      *** 오만 5층으로 가는길이 닫혔습니다. ***";
             toastTitle = "■ 오만 5층 닫힘 안내";
             toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }
@@ -162,6 +164,8 @@ public class 오만5층컨트롤러 {
      * @param nowMs 현재 서버 ms
      */
     private static void sendTimerUI(boolean show, long nowMs) {
+        // 타이머 삭제를 위해 주석처리
+        /*
         int remainSec = 0;
         if (show) {
             long diff = oman5EndTime - nowMs;
@@ -174,15 +178,18 @@ public class 오만5층컨트롤러 {
                 .setRemainTime(remainSec)       // 0이면 클라가 숨김
                 .send(pc);
         }
+        */
     }
 
     /**
      * 특정 유저에게 현재 타이머 상태 푸시 (입장/텔레포트 시 호출 추천)
      */
     public static void pushTimerTo(PcInstance pc) {
+        // 타이머 삭제를 위해 주석처리
+        /*
         int remainSec = 0;
         
-        /*상시개방*/
+        // 상시개방
         if (ALWAYS_OPEN) {
             // 상시 오픈: 타이머 숨김1
             SC_TIMER_UI_NOTI.newInstance()
@@ -201,6 +208,7 @@ public class 오만5층컨트롤러 {
             .setTimerType(TimerType.Normal)
             .setRemainTime(remainSec)
             .send(pc);
+            */
     }
 
     public static int getDayOfWeek() {

@@ -274,7 +274,8 @@ public final class ClanController {
 				}
 			} else {
 				// 233 \f1레벨 5 이하는 혈맹을 만들 수 없습니다.
-				pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 233));
+//				pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 233));
+				ChattingController.toChatting(pc, "\\f1레벨 " + Lineage.CLAN_MAKE_LEV + " 이상부터 혈맹을 창설할 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 		} else {
 			// 86 \f1이미 혈맹을 창설하였습니다.

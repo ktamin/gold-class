@@ -187,10 +187,10 @@ public class 클래스변경권 extends ItemInstance {
 			ItemInstance item3 = pc.getInventory().find("트리플 애로우(부스트)", 0, 1);
 			ItemInstance item4 = pc.getInventory().find("임페리얼 아머", 0, 1);
 			
-			ItemInstance item5 = pc.getInventory().find("포스스턴", 0, 1);
-			ItemInstance item6 = pc.getInventory().find("엘리멘탈샷", 0, 1);
-			ItemInstance item7 = pc.getInventory().find("디스(에이션트)", 0, 1);
-			ItemInstance item8 = pc.getInventory().find("엘리멘탈샷", 0, 1);
+			ItemInstance item5 = pc.getInventory().find("포스 스턴", 0, 1);
+			ItemInstance item6 = pc.getInventory().find("엘리멘탈 샷", 0, 1);
+			ItemInstance item7 = pc.getInventory().find("네메시스", 0, 1);
+			ItemInstance item8 = pc.getInventory().find("쉐도우 스턴", 0, 1);
 			
 			if(item1 != null ){
 				

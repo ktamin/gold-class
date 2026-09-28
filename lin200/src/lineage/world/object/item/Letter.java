@@ -144,42 +144,16 @@ public class Letter extends ItemInstance {
 			}
 
 			// =========================================================
-			// ✨ [기능 추가] 운영자 전용 "전체" 편지 발송 로직 (getGm 적용)
+			// ✨ [기능 추가] 운영자 전용 "전체" 편지 발송 로직 (최적화 버전)
 			// =========================================================
 			if (pc != null && pc.getGm() > 0 && to.equalsIgnoreCase("전체")) {
 
-				java.sql.Connection con = null;
-				java.sql.PreparedStatement st = null;
-				java.sql.ResultSet rs = null;
-				int sendCount = 0;
+				// 💡 LetterController에 새로 만든 전용 함수를 호출! (발송 인원수를 알아서 계산해 옴)
+				int count = LetterController.toGlobalLetter(pc.getName(), subject, memo);
 
-				try {
-					con = lineage.database.DatabaseConnection.getLineage();
-
-					// 💡 DB에서 모든 캐릭터 이름을 가져옵니다. (컬럼명이 다를 경우 char_name 부분을 수정하세요)
-					st = con.prepareStatement("SELECT char_name FROM characters");
-					rs = st.executeQuery();
-
-					// DB에 있는 모든 캐릭터에게 편지를 복사해서 발송
-					while (rs.next()) {
-						String targetName = rs.getString(1);
-						LetterController.toLetter(pc.getName(), targetName, subject, memo, 0);
-						sendCount++;
-					}
-
-					lineage.world.controller.ChattingController.toChatting(pc,
-							"전체 유저(" + sendCount + "명)에게 편지를 성공적으로 발송했습니다.",
-							lineage.share.Lineage.CHATTING_MODE_MESSAGE);
-
-				} catch (Exception e) {
-					lineage.world.controller.ChattingController.toChatting(pc, "전체 편지 발송 중 오류가 발생했습니다.",
-							lineage.share.Lineage.CHATTING_MODE_MESSAGE);
-					e.printStackTrace();
-				} finally {
-					// 💡 팩에 따라 close(st, rs)에서 에러가 날 경우 close(st); close(rs); 로 나눠 적어주세요.
-					lineage.database.DatabaseConnection.close(st, rs);
-					lineage.database.DatabaseConnection.close(con);
-				}
+				lineage.world.controller.ChattingController.toChatting(pc,
+						"전체 유저(" + count + "명)에게 편지를 성공적으로 발송했습니다.",
+						lineage.share.Lineage.CHATTING_MODE_MESSAGE);
 
 			} else {
 				// =========================================================

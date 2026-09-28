@@ -46,28 +46,35 @@ public class 악마왕의영토컨트롤러 {
 
         // 요일(1=일, 7=토)
         int day = getDayOfWeek();
+        
+        // 💡 외부 Config(0=일 ~ 6=토) 기준과 맞추기 위해 자바 요일에서 1을 뺌
+        int configDay = day - 1;
 
         // 스케줄 체크 (열릴 때만 트리거)
         if (!isOpen) {
-            if (day == 1 || day == 7) {
-                // 주말 스케줄
-                for (TeamBattleTime t : Lineage.devil_dungeon_time_list2) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+            // 1. 오늘 요일이 Config(gomu_open_day_list)에 등록된 요일인지 확인
+            if (Lineage.devil_open_day_list.contains(configDay)) {
+                
+                // 2. 포함되어 있다면, 오늘이 주말(토, 일)인지 평일인지 구분하여 시간 체크
+                if (configDay == 0 || configDay == 6) {
+                    // [주말 스케줄] (일요일=0, 토요일=6) -> time_list2 사용
+                    for (TeamBattleTime t : Lineage.devil_dungeon_time_list2) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
                     }
-                }
-            } else {
-                // 평일 스케줄
-                for (TeamBattleTime t : Lineage.devil_dungeon_time_list) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+                } else {
+                    // [평일 스케줄] (월~금) -> time_list 사용
+                    for (TeamBattleTime t : Lineage.devil_dungeon_time_list) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
                     }
                 }
             }
         }
-
+        }
         // 열려 있으면 주기 갱신/종료 처리
         if (isOpen) {
             long diffMs   = devilEndTime - nowMs;
@@ -116,11 +123,11 @@ public class 악마왕의영토컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 악마왕의 영토로 가는길이 열렸습니다. *****";
+            chatMsg    = "\\fY      ***** 악마왕의 영토로 가는길이 열렸습니다. *****";
             toastTitle = "★ 악마왕의 영토 입장 가능 ★";
             toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 악마왕의 영토로 가는길이 닫혔습니다. *****";
+            chatMsg    = "\\fY      ***** 악마왕의 영토로 가는길이 닫혔습니다. *****";
             toastTitle = "■ 악마왕의 영토 닫힘 안내";
             toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }

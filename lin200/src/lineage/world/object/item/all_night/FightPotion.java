@@ -8,20 +8,20 @@ import lineage.world.object.magic.BuffFight;
 
 public class FightPotion extends ItemInstance {
 
-	static synchronized public ItemInstance clone(ItemInstance item){
-		if(item == null)
+	static synchronized public ItemInstance clone(ItemInstance item) {
+		if (item == null)
 			item = new FightPotion();
 		return item;
 	}
-	
-	public void toClick(Character cha, ClientBasePacket cbp){
-		if(cha.getInventory() != null){
+
+	public void toClick(Character cha, ClientBasePacket cbp) {
+		if (cha.getInventory() != null) {
 			BuffFight.onBuff(cha, SkillDatabase.find(601));
 			// 아이템 수량 갱신
-			if (!getItem().getName().contains("30일")) {
+			if (!getItem().getName().contains("무한")) {
 				cha.getInventory().count(this, getCount() - 1, true);
-//			cha.getInventory().count(this, getCount()-1, true);
+				// cha.getInventory().count(this, getCount()-1, true);
+			}
 		}
 	}
-}
 }

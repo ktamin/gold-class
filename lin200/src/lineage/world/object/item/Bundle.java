@@ -105,10 +105,10 @@ public class Bundle extends ItemInstance {
 					return;
 				}
 			}
-			if( item.getName().equalsIgnoreCase("신화 정령서(엘리멘탈샷)")){
+			if( item.getName().equalsIgnoreCase("신화 정령서(엘리멘탈 샷)")){
 				
 	
-				if(cha.getInventory().find("엘리멘탈샷") != null){
+				if(cha.getInventory().find("엘리멘탈 샷") != null){
 					ChattingController.toChatting(cha, String.format("이미 습득 하였습니다."), Lineage.CHATTING_MODE_MESSAGE);
 					return;
 				}

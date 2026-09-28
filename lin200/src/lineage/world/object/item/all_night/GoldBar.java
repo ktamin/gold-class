@@ -22,12 +22,12 @@ public class GoldBar extends ItemInstance {
 		if(cha.getInventory() != null){
 			int adenCount = 0;
 			ItemInstance aden = cha.getInventory().find("아데나", true);
-                        ItemInstance aden2 = cha.getInventory().find("1억 아데나", true);
+                        ItemInstance aden2 = cha.getInventory().find("1억 수표", true);
 			
-                        if (getItem().getName().equals("1억 아데나")) {
-			if (getItem().getName().equals("1억 아데나")) {
+                        if (getItem().getName().equals("1억 수표")) {
+			if (getItem().getName().equals("1억 수표")) {
 				adenCount = 100000000;
-			} else if (getItem().getName().equals("10억 아데나")) {
+			} else if (getItem().getName().equals("10억 수표")) {
 				adenCount = 1000000000;
 			} else {
 				return;
@@ -53,14 +53,14 @@ public class GoldBar extends ItemInstance {
 				return;
                             }
                         if(aden2 == null){
-				aden2 = ItemDatabase.newInstance(ItemDatabase.find("1억 아데나"));
+				aden2 = ItemDatabase.newInstance(ItemDatabase.find("1억 수표"));
 				aden2.setObjectId(ServerDatabase.nextItemObjId());
 				aden2.setCount(0);
 				cha.getInventory().append(aden2, true);
 			}
 			cha.getInventory().count(aden2, aden2.getCount() + 1 , true);
 			//cha.getInventory().count(aden, getCount() - 100000000, true);
-			ChattingController.toChatting(cha, String.format("1억 아데나 수표 를 획득하였습니다.", adenCount), Lineage.CHATTING_MODE_MESSAGE);
+			ChattingController.toChatting(cha, String.format("1억 수표 를 획득하였습니다.", adenCount), Lineage.CHATTING_MODE_MESSAGE);
                         }
                 }
 	}

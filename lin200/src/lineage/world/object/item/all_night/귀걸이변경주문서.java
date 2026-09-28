@@ -20,16 +20,15 @@ public class 귀걸이변경주문서 extends ItemInstance {
 
     // 1급 / 2급 그룹 정의 (표기명은 서버 아이템 이름과 정확히 맞추세요)
     private static final List<String> GRADE1 = Arrays.asList(
-        "화령의 귀걸이",
-        "풍령의 귀걸이",
-        "수령의 귀걸이",
-        "지령의 귀걸이"
+        "(축)룸티스의 검은빛 귀걸이",
+        "(축)룸티스의 붉은빛 귀걸이",
+        "(축)룸티스의 보랏빛 귀걸이"
     );
 
     private static final List<String> GRADE2 = Arrays.asList(
-         "룸티스의검은빛귀걸이",
-         "룸티스의붉은빛귀걸이",
-         "룸티스의보라빛귀걸이"
+         "룸티스의 검은빛 귀걸이",
+         "룸티스의 붉은빛 귀걸이",
+         "룸티스의 보라빛 귀걸이"
     );
 
     static synchronized public ItemInstance clone(ItemInstance item) {

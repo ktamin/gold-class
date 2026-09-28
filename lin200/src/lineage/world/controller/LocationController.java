@@ -121,9 +121,9 @@ public class LocationController {
 					return true;
 			}
 			break;			
- //               case 811: // 순간이동 지배 반지/칠흑던전
+ //             case 811: // 순간이동 지배 반지/칠흑던전
                 case 2004: // 순간이동 지배 반지 
-//                case 452: // 순간이동 지배 반지 
+//              case 452: // 순간이동 지배 반지 
 //	            case 74: // 순간이동 지배 반지/얼던 3층
 //	            case 56: // 순간이동 지배 반지/기감 4층
 //		        case 781: // 순간이동 지배 반지/테베 던전	  

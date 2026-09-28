@@ -55,6 +55,9 @@ public final class ColosseumController {
 		// 켄트 마을
 		if(Lineage.colosseum_kent)
 			toKent();
+		// 기란마을
+		if(Lineage.colosseum_giran)
+			toGiran();
 		
 		TimeLine.end();
 	}
@@ -153,7 +156,7 @@ public final class ColosseumController {
 		// 최종 보스
 		c.getListBoss().add("데스나이트");
 		// 기본 정보
-		c.setJoinClass(1+2+4+8);		// 참가 가능 클래스
+		c.setJoinClass(1+2+4+8+16);		// 참가 가능 클래스
 		c.setJoinSex(0);				// 참가 가능 성별
 		c.setJoinMinLevel(1);			// 참가 가능 최저 레벨
 		c.setJoinMaxLevel(70);			// 참가 가능 최고 레벨
@@ -228,7 +231,7 @@ public final class ColosseumController {
 		// 최종 보스
 		c.getListBoss().add("데스나이트");
 		// 기본 정보
-		c.setJoinClass(1+2+4+8);		// 참가 가능 클래스
+		c.setJoinClass(1+2+4+8+16);		// 참가 가능 클래스
 		c.setJoinSex(0);				// 참가 가능 성별
 		c.setJoinMinLevel(1);			// 참가 가능 최저 레벨
 		c.setJoinMaxLevel(70);			// 참가 가능 최고 레벨
@@ -303,7 +306,7 @@ public final class ColosseumController {
 		// 최종 보스
 		c.getListBoss().add("데스나이트");
 		// 기본 정보
-		c.setJoinClass(1+2+4+8);		// 참가 가능 클래스
+		c.setJoinClass(1+2+4+8+16);		// 참가 가능 클래스
 		c.setJoinSex(0);				// 참가 가능 성별
 		c.setJoinMinLevel(1);			// 참가 가능 최저 레벨
 		c.setJoinMaxLevel(70);			// 참가 가능 최고 레벨
@@ -378,7 +381,7 @@ public final class ColosseumController {
 		// 최종 보스
 		c.getListBoss().add("데스나이트");
 		// 기본 정보
-		c.setJoinClass(1+2+4+8);		// 참가 가능 클래스
+		c.setJoinClass(1+2+4+8+16);		// 참가 가능 클래스
 		c.setJoinSex(0);				// 참가 가능 성별
 		c.setJoinMinLevel(1);			// 참가 가능 최저 레벨
 		c.setJoinMaxLevel(70);			// 참가 가능 최고 레벨
@@ -448,7 +451,80 @@ public final class ColosseumController {
 		// 최종 보스
 		c.getListBoss().add("데스나이트");
 		// 기본 정보
-		c.setJoinClass(1+2+4+8);		// 참가 가능 클래스
+		c.setJoinClass(1+2+4+8+16);		// 참가 가능 클래스
+		c.setJoinSex(0);				// 참가 가능 성별
+		c.setJoinMinLevel(1);			// 참가 가능 최저 레벨
+		c.setJoinMaxLevel(70);			// 참가 가능 최고 레벨
+		c.setJoinTeleport(false);		// 텔레포트
+		c.setJoinResurrection(true);	// 부활
+		c.setJoinPotion(true);			// 포션 사용
+		c.setJoinHp(true);				// 자연 HP 변화
+		c.setJoinMp(true);				// 자연 MP 변화
+		c.setJoinSummon(true);			// 서먼/테이밍 몬스터 및 개 사용
+		c.setJoinPvP(false);			// PvP 방식
+		list.add(c);
+	}
+	
+	/**
+	 * ✅ 기란 콜롯세움 세팅 (새로 추가됨)
+	 */
+	static private void toGiran(){
+		Colosseum c = new Colosseum();
+		c.setType("giran");
+		c.setName("시 20분부터 기란마을");
+		c.setX(32699);
+		c.setY(32896);
+		
+		// 💡 중요: 기란 콜로세움의 기본 맵 번호는 53번입니다. 
+		// 만약 서버에서 기란 전용 인스턴스 맵 번호(예: 96 등)를 따로 쓴다면 변경해 주세요.
+		c.setMap(53); 
+		
+		c.setMaxStage(3);							// 최대 3군.
+		c.setTimeStart(new int[]{0, 6, 12, 18});	// 다른 마을과 겹치지 않는 시간대 배정!
+		c.setTimeEnd(new int[]{274, 278, 282});			// 각군 마다 진행되는 대기시간. 초단위
+		c.setTimeCool(new int[]{120, 360, 480});			// 각군이 완료된후 휴식시간. 초단위
+		// 각 군에 따른 아이템 갯수
+		c.setStageItemCount(new int[][]{
+				{200, 5, 3, 1, 1},
+				{500, 12, 5, 7, 1, 1},
+				{800, 18, 8, 10, 1, 5, 1},
+		});
+		// 1군 아이템
+		List<String> l = new ArrayList<String>();
+		l.add("아데나");l.add("주홍 물약");l.add("비취 물약");l.add("귀환 주문서");l.add("숫돌");
+		c.getListItem().put(0, l);
+		// 2군 아이템
+		l = new ArrayList<String>();
+		l.add("아데나");l.add("주홍 물약");l.add("맑은 물약");l.add("비취 물약");l.add("숫돌");l.add("빈 주문서 (레벨 3)");
+		c.getListItem().put(1, l);
+		// 3군 아이템
+		l = new ArrayList<String>();
+		l.add("아데나");l.add("주홍 물약");l.add("맑은 물약");l.add("비취 물약");l.add("숫돌");l.add("용기의 물약");l.add("빈 주문서 (레벨 4)");
+		c.getListItem().put(2, l);
+		// 각군에 스폰될 몬스터 개체수
+		c.setStageCount(new int[][]{
+				{20,10,20,10,10,20,20,15,10},
+				{20,10,10,20},
+				{20,10,20,10,10,20,20},
+		});
+		// 1군 몬스터
+		l = new ArrayList<String>();
+		l.add("난쟁이");l.add("여우");l.add("괴물눈");l.add("오크 전사");l.add("놀");l.add("해골");l.add("해골 궁수");l.add("슬라임");l.add("셸로브");
+		c.getList().put(0, l);
+		// 2군 몬스터 좀비리자드맨해골도끼병
+		l = new ArrayList<String>();
+		l.add("좀비");l.add("해골 도끼병");l.add("해골 창병");l.add("리자드맨");
+		c.getList().put(1, l);
+		// 3군 몬스터
+		l = new ArrayList<String>();
+		l.add("돌골렘");l.add("미믹");l.add("유령(그린)");l.add("유령(레드)");l.add("아울베어");l.add("크랩맨");l.add("흑기사");
+		c.getList().put(2, l);
+		// 보스 개체수
+		c.setBossCount(new int[]{2});
+		// 최종 보스 (기란 특색에 맞춰 보스를 바꿔주셔도 좋습니다)
+		c.getListBoss().add("데스나이트");
+		// 기본 정보
+		c.setJoinClass(31);				// ✅ 다크엘프(16) 포함 (1+2+4+8+16 = 31)
 		c.setJoinSex(0);				// 참가 가능 성별
 		c.setJoinMinLevel(1);			// 참가 가능 최저 레벨
 		c.setJoinMaxLevel(70);			// 참가 가능 최고 레벨

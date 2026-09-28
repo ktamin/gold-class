@@ -1485,7 +1485,7 @@ public class Character extends object {
 	 * 
 	 */
 	public boolean isFishingZone() {
-		return getMap() == 4 && getX() >= Lineage.FISHZONEX1 && getX() <= Lineage.FISHZONEX2 && getY() >= Lineage.FISHZONEY1 && getY() <= Lineage.FISHZONEY2;
+		return getMap() == 5300 && getX() >= Lineage.FISHZONEX1 && getX() <= Lineage.FISHZONEX2 && getY() >= Lineage.FISHZONEY1 && getY() <= Lineage.FISHZONEY2;
 	}
 
 	/**

@@ -23,12 +23,41 @@ import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI;
 import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI.ToastType;
 
 public class 마안합성사 extends object {
-	
+
+/*	
 	@Override
 	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
 		pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "maanNpc"));
 	}
+*/
+	
+	@Override
+	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
+		List<String> htmlArgs = new ArrayList<>();
+		
+		// 기본 확률 (0 ~ 2)
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.maan_birth_percent));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.maan_shape_percent));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.maan_life_percent));
+		
+		// 보너스 상승치 (3 ~ 5)
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.maan_birth_bonus_val));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.maan_shape_bonus_val));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.maan_life_bonus_val));
+		
+		// 천장 수치 (6 ~ 8)
+		htmlArgs.add(String.valueOf(Lineage_Balance.maan_pity_count_birth) + "회");
+		htmlArgs.add(String.valueOf(Lineage_Balance.maan_pity_count_shape) + "회");
+		htmlArgs.add(String.valueOf(Lineage_Balance.maan_pity_count_life) + "회");
+		
+		// 합성 비용 (아데나, 코인 등 이름까지 결합) (9 ~ 11)
+		htmlArgs.add(String.format("%,d %s", Lineage_Balance.maan_birth_aden_count, Lineage_Balance.maan_birth_aden_name));
+		htmlArgs.add(String.format("%,d %s", Lineage_Balance.maan_shape_aden_count, Lineage_Balance.maan_shape_aden_name));
+		htmlArgs.add(String.format("%,d %s", Lineage_Balance.maan_life_aden_count, Lineage_Balance.maan_life_aden_name));
 
+		pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "maanNpc", null, htmlArgs));
+	}
+	
 	@Override
 	public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp) {
 		if (pc.isWorldDelete() || pc.isDead() || pc.isLock() || pc.getInventory() == null) return;

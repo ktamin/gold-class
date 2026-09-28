@@ -29,7 +29,7 @@ public class 용갑옷변경주문서 extends ItemInstance {
 
 			if (item != null && item.getItem() != null) {
 				if (item instanceof ItemArmorInstance) {
-//					if (item.getEnLevel() > 4) {
+					if (item.getEnLevel() > 4) {
 						List<String> itemList = new ArrayList<String>();
 						itemList.add("안타라스");
 						itemList.add("파푸리온");
@@ -67,9 +67,9 @@ public class 용갑옷변경주문서 extends ItemInstance {
 						} else {
 							ChattingController.toChatting(cha, "해당 아이템에 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
-//					} else {
-//						ChattingController.toChatting(cha, "+5이상 사용 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
-//					}
+					} else {
+						ChattingController.toChatting(cha, "+5이상 사용 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+					}
 				} else {
 					ChattingController.toChatting(cha, "방어구에 사용 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
 				}

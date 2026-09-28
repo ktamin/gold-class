@@ -71,559 +71,304 @@ public class S_Inventory extends ServerBasePacket {
 		// AC 0+enlevel
 		if (enlevel != 0) {
 			int ac = enlevel;
-
+			
 			// --- [수정 시작] ---
-			// 아이템이 장신구(Acc)이거나 반지, 목걸이, 벨트, 귀걸이 등인 경우 표시되는 AC를 0으로 설정
-			if (item.isAcc() ||
-					item.getType2().equalsIgnoreCase("ring") ||
-					item.getType2().equalsIgnoreCase("necklace") ||
-					item.getType2().equalsIgnoreCase("belt") ||
-					item.getType2().equalsIgnoreCase("earring")) {
-				ac = 0;
+						// 아이템이 장신구(Acc)이거나 반지, 목걸이, 벨트, 귀걸이 등인 경우 표시되는 AC를 0으로 설정
+						if (item.isAcc() || 
+							item.getType2().equalsIgnoreCase("ring") || 
+							item.getType2().equalsIgnoreCase("necklace") || 
+							item.getType2().equalsIgnoreCase("belt") || 
+							item.getType2().equalsIgnoreCase("earring")) {
+							ac = 0;
+						}
+						// ------------------
+		if (ac != 0) {
+			// ------------------[수정 종료]
+			writeC(0x02);
+			writeC(ac);
+		}
+	}
+		int type = item.getRoyal() != 1 ? 0 : 1;
+		type += item.getKnight() != 1 ? 0 : 2;
+		type += item.getElf() != 1 ? 0 : 4;
+		type += item.getWizard() != 1 ? 0 : 8;
+		type += item.getDarkElf() != 1 ? 0 : 16;
+		type += item.getDragonKnight() != 1 ? 0 : 32;
+		type += item.getBlackWizard() != 1 ? 0 : 64;
+		writeC(7);
+		writeC(type);
+
+		if (item.getAddDmg() != 0 || ((bless == 0 || bless == -128) && item.isAcc())
+				|| (item.getType2().equalsIgnoreCase("ring") && enlevel > 4)) {
+			int addDmg = item.getAddDmg();
+
+			if ((bless == 0 || bless == -128) && item.isAcc()) {
+				addDmg += 1;
 			}
 
-			if (ac != 0) {
-				// ------------------[수정 종료]
-
-				writeC(0x02);
-				writeC(ac);
-			}
-
-			int type = item.getRoyal() != 1 ? 0 : 1;
-			type += item.getKnight() != 1 ? 0 : 2;
-			type += item.getElf() != 1 ? 0 : 4;
-			type += item.getWizard() != 1 ? 0 : 8;
-			type += item.getDarkElf() != 1 ? 0 : 16;
-			type += item.getDragonKnight() != 1 ? 0 : 32;
-			type += item.getBlackWizard() != 1 ? 0 : 64;
-			writeC(7);
-			writeC(type);
-
-			if (item.getAddDmg() != 0 || ((bless == 0 || bless == -128) && item.isAcc())
-					|| (item.getType2().equalsIgnoreCase("ring") && enlevel > 4)) {
-				int addDmg = item.getAddDmg();
-
-				if ((bless == 0 || bless == -128) && item.isAcc()) {
-					addDmg += 1;
-				}
-
-				if (item.getType2().equalsIgnoreCase("ring") && enlevel > 4) {
-					switch (enlevel) {
-						case 5:
-							addDmg += 1;
-							break;
-						case 6:
-							addDmg += 2;
-							break;
-						case 7:
-							addDmg += 3;
-							break;
-						case 8:
-							addDmg += 4;
-							break;
-						case 9:
-							addDmg += 5;
-							break;
-						case 10:
-							addDmg += 6;
-							break;
-					}
-				}
-
-				if (addDmg > 0) {
-					writeC(6);
-					writeC(addDmg);
+			if (item.getType2().equalsIgnoreCase("ring") && enlevel > 4) {
+				switch (enlevel) {
+					case 5:
+						addDmg += 0;
+						break;
+					case 6:
+						addDmg += 0;
+						break;
+					case 7:
+						addDmg += 0;
+						break;
+					case 8:
+						addDmg += 0;
+						break;
+					case 9:
+						addDmg += 0;
+						break;
+					case 10:
+						addDmg += 6;
+						break;
 				}
 			}
 
-			if (item.getAddHit() != 0 || ((bless == 0 || bless == -128) && item.isAcc())
-					|| (item.getName().equalsIgnoreCase("수호성의 파워 글로브") || item.getName().equalsIgnoreCase("수호성의 활 골무")
-							|| item.getName().equalsIgnoreCase("빛나는 마력의 장갑"))) {
-				int addHit = item.getAddHit();
+			if (addDmg > 0) {
+				writeC(6);
+				writeC(addDmg);
+			}
+		}
 
-				if ((bless == 0 || bless == -128) && item.isAcc()) {
-					addHit += 1;
+/*		
+		// 1. 추가 데미지 부분 (완력/기백/민첩/일격 통합)
+		if (item.getAddDmg() != 0 || ((bless == 0 || bless == -128) && item.isAcc())
+		        || (item.getType2().equalsIgnoreCase("ring") && enlevel > 4)) {
+		    
+		    int addDmg = item.getAddDmg();
+		    // [수정] item에서 이름을 직접 가져오도록 변경 (에러 방지)
+		    String itemName = item.getName(); 
+
+		    // 축복 아이템 보너스 (기존 로직 유지)
+		    if ((bless == 0 || bless == -128) && item.isAcc()) {
+		        addDmg += 1;
+		    }
+
+		    // 반지 추가 데미지 (이름 체크)
+		    if (item.getType2().equalsIgnoreCase("ring") && enlevel > 4) {
+		        // 이름에 '완력', '기백', '민첩', '일격'이 포함된 경우만 추뎀 합산
+		        if (itemName.contains("완력") || itemName.contains("용사") || itemName.contains("민첩") || itemName.contains("체력") || itemName.contains("아누비스")) {
+		            switch (enlevel) {
+		                case 5:  addDmg += 1; break;
+		                case 6:  addDmg += 2; break;
+		                case 7:  addDmg += 3; break;
+		                case 8:  addDmg += 4; break;
+		                case 9:  addDmg += 5; break;
+		                case 10: addDmg += 6; break;
+		            }
+		        }
+		    }
+
+		    if (addDmg > 0) {
+		        writeC(6);
+		        writeC(addDmg);
+		    }
+		}
+*/		
+		if (item.getAddHit() != 0 || ((bless == 0 || bless == -128) && item.isAcc())
+				|| (item.getName().equalsIgnoreCase("수호성의 파워 글로브") || item.getName().equalsIgnoreCase("수호성의 활 골무")
+						|| item.getName().equalsIgnoreCase("빛나는 마력의 장갑"))) {
+			int addHit = item.getAddHit();
+
+			if ((bless == 0 || bless == -128) && item.isAcc()) {
+				addHit += 1;
+			}
+
+			if (item.getName().equalsIgnoreCase("수호성의 파워 글로브") || item.getName().equalsIgnoreCase("수호성의 활 골무")
+					|| item.getName().equalsIgnoreCase("빛나는 마력의 장갑")) {
+				switch (enlevel) {
+
+				    case 5:
+					    addHit += 1;
+					    break;
+				    case 6:
+					    addHit += 2;
+					    break;
+					case 7:
+						addHit += 3;
+						break;
+					case 8:
+						addHit += 4;
+						break;
+					case 9:
+						addHit += 3;
+						break;
+					case 10:
+						addHit += 6;
+						break;
 				}
-
-				if (item.getName().equalsIgnoreCase("수호성의 파워 글로브") || item.getName().equalsIgnoreCase("수호성의 활 골무")
-						|| item.getName().equalsIgnoreCase("빛나는 마력의 장갑")) {
-					switch (enlevel) {
-
-						case 7:
-							addHit += 1;
-							break;
-						case 8:
-							addHit += 2;
-							break;
-						case 9:
-							addHit += 3;
-							break;
-						case 10:
-							addHit += 6;
-							break;
-					}
-				}
-
-				if (addHit > 0) {
-					writeC(5);
-					writeC(addHit);
-				}
 			}
 
-			if (item.getAddStr() != 0) {
-				writeC(8);
-				writeC(item.getAddStr());
+			if (addHit > 0) {
+				writeC(5);
+				writeC(addHit);
 			}
+		}
 
-			if (item.getAddDex() != 0) {
-				writeC(9);
-				writeC(item.getAddDex());
-			}
+		if (item.getAddStr() != 0) {
+			writeC(8);
+			writeC(item.getAddStr());
+		}
 
-			if (item.getAddCon() != 0) {
-				writeC(10);
-				writeC(item.getAddCon());
-			}
+		if (item.getAddDex() != 0) {
+			writeC(9);
+			writeC(item.getAddDex());
+		}
 
-			if (item.getAddInt() != 0) {
-				writeC(12);
-				writeC(item.getAddInt());
-			}
+		if (item.getAddCon() != 0) {
+			writeC(10);
+			writeC(item.getAddCon());
+		}
 
-			if (item.getAddWis() != 0) {
-				writeC(11);
-				writeC(item.getAddWis());
-			}
+		if (item.getAddInt() != 0) {
+			writeC(12);
+			writeC(item.getAddInt());
+		}
 
-			if (item.getAddCha() != 0) {
-				writeC(13);
-				writeC(item.getAddCha());
-			}
+		if (item.getAddWis() != 0) {
+			writeC(11);
+			writeC(item.getAddWis());
+		}
 
-			if (item.getAddHp() != 0 || ((bless == 0 || bless == -128) && item.getType1().equalsIgnoreCase("armor"))
-					|| (item.getType2().equals("necklace") || item.getType2().equalsIgnoreCase("ring")) && enlevel > 0
-					|| (item.getType2().equalsIgnoreCase("belt") && enlevel > 0)
-					|| (item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
-							|| item.getName().equalsIgnoreCase("지식의 부츠"))) {
+		if (item.getAddCha() != 0) {
+			writeC(13);
+			writeC(item.getAddCha());
+		}
 
-				int addHp = (bless == 0 || bless == -128) && item.getType1().equalsIgnoreCase("armor") && !item.isAcc()
-						? item.getAddHp() + 10
-						: item.getAddHp();
-
-				if ((item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
+		if (item.getAddHp() != 0 || ((bless == 0 || bless == -128) && item.getType1().equalsIgnoreCase("armor"))
+				|| (item.getType2().equals("necklace") || item.getType2().equalsIgnoreCase("ring")) && enlevel > 0
+				|| (item.getType2().equalsIgnoreCase("belt") && enlevel > 0)
+				|| (item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
 						|| item.getName().equalsIgnoreCase("지식의 부츠"))) {
-					switch (enlevel) {
-						case 7:
-							addHp += 10;
-							break;
-						case 8:
-							addHp += 20;
-							break;
-						case 9:
-							addHp += 30;
-							break;
-						case 10:
-							addHp += 70;
-							break;
-					}
-				}
 
-				if ((item.getType2().equals("necklace") || item.getType2().equalsIgnoreCase("ring")) && enlevel > 0) {
-					switch (enlevel) {
-						case 1:
-							addHp += 10;
-							break;
-						case 2:
-							addHp += 20;
-							break;
-						case 3:
-							addHp += 30;
-							break;
-						case 4:
-							addHp += 40;
-							break;
-						case 5:
-							addHp += 50;
-							break;
-						case 6:
-							addHp += 60;
-							break;
-						case 7:
-							addHp += 70;
-							break;
-						case 8:
-							addHp += 80;
-							break;
-						case 9:
-							addHp += 90;
-							break;
-						case 10:
-							addHp += 100;
-							break;
-					}
-				}
+			int addHp = (bless == 0 || bless == -128) && item.getType1().equalsIgnoreCase("armor") && !item.isAcc()
+					? item.getAddHp() + 10
+					: item.getAddHp();
 
-				if (item.getType2().equalsIgnoreCase("belt") && enlevel > 0) {
-					switch (enlevel) {
-						case 1:
-							addHp += 5;
-							break;
-						case 2:
-							addHp += 10;
-							break;
-						case 3:
-							addHp += 15;
-							break;
-						case 4:
-							addHp += 20;
-							break;
-						case 5:
-							addHp += 25;
-							break;
-						case 6:
-							addHp += 30;
-							break;
-						case 7:
-							addHp += 35;
-							break;
-						case 8:
-							addHp += 40;
-							break;
-						case 9:
-							addHp += 45;
-							break;
-						case 10:
-							addHp += 50;
-							break;
-					}
-				}
-
-				if (addHp > 0) {
-					writeC(14);
-					writeH(addHp);
-				}
-			}
-
-			if (((item.getAddReduction() != 0 || dynamic_reduction != 0) && !item.getType2().equalsIgnoreCase("belt"))
-					|| (item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
-							|| item.getName().equalsIgnoreCase("지식의 부츠"))) {
-
-				int reduction = item.getAddReduction() + dynamic_reduction;
-
-				if ((item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
-						|| item.getName().equalsIgnoreCase("지식의 부츠")) && enlevel == 9)
-					reduction += 1;
-
-				if (item.getName().equalsIgnoreCase("안타라스의 완력") || item.getName().equalsIgnoreCase("안타라스의 마력")
-						|| item.getName().equalsIgnoreCase("안타라스의 인내력")
-						|| item.getName().equalsIgnoreCase("안타라스의 예지력")) {
-					switch (enlevel) {
-						case 1:
-							reduction += 0;
-							break;
-						case 2:
-							reduction += 0;
-							break;
-						case 3:
-							reduction += 0;
-							break;
-						case 4:
-							reduction += 0;
-							break;
-						case 5:
-							reduction += 1;
-							break;
-						case 6:
-							reduction += 2;
-							break;
-						case 7:
-							reduction += 3;
-							break;
-						case 8:
-							reduction += 4;
-							break;
-						case 9:
-							reduction += 5;
-							break;
-						case 10:
-							reduction += 6;
-							break;
-					}
-				}
-
-				if (reduction > 0) {
-					writeC(20);
-					writeC(reduction);
-				}
-			}
-
-			if (item.getName().equalsIgnoreCase("고대 암석의 장갑") ||
-					item.getName().equalsIgnoreCase("고대 암석의 부츠") ||
-					item.getName().equalsIgnoreCase("고대 암석의 망토")) {
-
-				// [수정] DB(나비켓)에 설정된 기본 PVP 리덕션 값을 가져옵니다.
-				int pvpReduction = item.getPvpReduction();
-
-				// 인첸트별 보너스 수치 합산 (+= 사용)
+			if ((item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
+					|| item.getName().equalsIgnoreCase("지식의 부츠"))) {
 				switch (enlevel) {
-					case 5:
-						pvpReduction += 5;
-						break;
-					case 6:
-						pvpReduction += 10;
-						break;
 					case 7:
-						pvpReduction += 15;
+						addHp += 10;
 						break;
 					case 8:
-						pvpReduction += 20;
+						addHp += 20;
 						break;
 					case 9:
-						pvpReduction += 25;
+						addHp += 30;
 						break;
 					case 10:
-						pvpReduction += 30;
+						addHp += 70;
 						break;
-				}
-
-				// 합산된 값이 있을 때만 전송 (Opcode 30: PVP 리덕션)
-				if (pvpReduction > 0) {
-					writeC(30);
-					writeC(pvpReduction);
 				}
 			}
 
-			if (item.getName().equalsIgnoreCase("고대 마물의 장갑") ||
-					item.getName().equalsIgnoreCase("고대 마물의 부츠") ||
-					item.getName().equalsIgnoreCase("고대 마물의 망토")) {
-
-				// [수정] 0이 아니라, DB에 설정된 기본값을 가져옵니다.
-				int pvpDmg = item.getPvpDamage();
-
-				// 인첸트 보너스 추가 (기존 값에 더하기 +=)
-				switch (enlevel) {
-					case 5:
-						pvpDmg += 5;
-						break;
-					case 6:
-						pvpDmg += 10;
-						break;
-					case 7:
-						pvpDmg += 15;
-						break;
-					case 8:
-						pvpDmg += 20;
-						break;
-					case 9:
-						pvpDmg += 25;
-						break;
-					case 10:
-						pvpDmg += 6;
-						break;
-				}
-
-				// 합산된 결과가 0보다 크면 전송
-				if (pvpDmg > 0) {
-					writeC(29);
-					writeC(pvpDmg);
-				}
-			}
-
-			if ((item.getStunDefense() != 0 || dynamic_stun_defence != 0)
-					&& !item.getType2().equalsIgnoreCase("necklace")) {
-				int stunDefence = (int) ((item.getStunDefense() + dynamic_stun_defence) * 100);
-				writeC(28);
-				writeC(stunDefence);
-			}
-
-			// 물약 회복량, 스턴 내성
-			if (item.getType2().equalsIgnoreCase("necklace")) {
-				int potion = 0;
-				int stunResist = (int) (item.getStunDefense() * 100);
-
+			if ((item.getType2().equals("necklace") || item.getType2().equalsIgnoreCase("ring")) && enlevel > 0) {
 				switch (enlevel) {
 					case 1:
-						potion += 0;
+						addHp += 5;
 						break;
 					case 2:
-						potion += 0;
+						addHp += 10;
 						break;
 					case 3:
-						potion += 0;
+						addHp += 15;
 						break;
 					case 4:
-						potion += 0;
+						addHp += 20;
 						break;
 					case 5:
-						potion += 1;
+						addHp += 25;
 						break;
 					case 6:
-						potion += 2;
+						addHp += 30;
 						break;
 					case 7:
-						potion += 3;
-						stunResist += 5;
+						addHp += 35;
 						break;
 					case 8:
-						potion += 4;
-						stunResist += 10;
+						addHp += 40;
 						break;
 					case 9:
-						potion += 5;
-						stunResist += 4;
+						addHp += 90;
 						break;
 					case 10:
-						potion += 6;
-						stunResist += 5;
+						addHp += 100;
 						break;
 				}
-
-				if (potion > 0) {
-					writeC(27);
-					writeC(potion);
-				}
-
-				if (stunResist > 0) {
-					writeC(28);
-					writeC(stunResist);
-				}
 			}
 
-			if (item.getAddSp() != 0 || dynamic_sp != 0 || (item.getType2().equalsIgnoreCase("ring") && enlevel > 6)) {
-				int addSp = item.getAddSp() + dynamic_sp;
-
-				if (item.getType2().equalsIgnoreCase("ring") && enlevel > 6) {
-					switch (enlevel) {
-						case 5:
-							addSp += 1;
-							break;
-						case 6:
-							addSp += 2;
-							break;
-						case 7:
-							addSp += 3;
-							break;
-						case 8:
-							addSp += 4;
-							break;
-						case 9:
-							addSp += 3;
-							break;
-						case 10:
-							addSp += 4;
-							break;
-					}
-				}
-
-				if (addSp > 0) {
-					writeC(17);
-					writeC(addSp);
-				}
-			}
-
-			if (item.getAddMr() != 0 || dynamic_mr != 0 || (item.getType2().equalsIgnoreCase("ring") && enlevel > 5)) {
-				int addMr = item.getAddMr() + dynamic_mr;
-
-				if (item.getType2().equals("ring") && enlevel > 5) {
-					switch (enlevel) {
-						case 6:
-							addMr += 0;
-							break;
-						case 7:
-							addMr += 3;
-							break;
-						case 8:
-							addMr += 5;
-							break;
-						case 9:
-							addMr += 7;
-							break;
-						case 10:
-							addMr += 8;
-							break;
-					}
-				}
-
-				if (addMr > 0) {
-					writeC(15);
-					writeH(addMr);
-				}
-			}
-
-			// PvP 대미지
-			if (item.getType2().equalsIgnoreCase("ring") && enlevel > 6) {
-				int pvpDmg = 0;
-
+			if (item.getType2().equalsIgnoreCase("belt") && enlevel > 0) {
 				switch (enlevel) {
+					case 1:
+						addHp += 5;
+						break;
+					case 2:
+						addHp += 10;
+						break;
+					case 3:
+						addHp += 15;
+						break;
+					case 4:
+						addHp += 20;
+						break;
+					case 5:
+						addHp += 25;
+						break;
+					case 6:
+						addHp += 30;
+						break;
 					case 7:
-						pvpDmg += 10;
+						addHp += 35;
 						break;
 					case 8:
-						pvpDmg += 30;
+						addHp += 40;
+						break;
+					case 9:
+						addHp += 45;
 						break;
 					case 10:
-						pvpDmg += 40;
+						addHp += 50;
 						break;
 				}
-				if (pvpDmg > 0) {
-					writeC(29);
-					writeC(pvpDmg);
-				}
 			}
 
-			if (setoption != null && (setoption.isBrave() || setoption.isHaste()))
-				writeC(18);
-
-			if (item.getAddMp() != 0 || (item.getType2().equalsIgnoreCase("belt") && enlevel > 0)) {
-				int addMp = item.getAddMp();
-
-				if (item.getType2().equalsIgnoreCase("belt") && enlevel > 0) {
-					switch (enlevel) {
-						case 1:
-							addMp += 5;
-							break;
-						case 2:
-							addMp += 10;
-							break;
-						case 3:
-							addMp += 15;
-							break;
-						case 4:
-							addMp += 20;
-							break;
-						case 5:
-							addMp += 25;
-							break;
-						case 6:
-							addMp += 30;
-							break;
-						case 7:
-							addMp += 35;
-							break;
-						case 8:
-							addMp += 40;
-							break;
-						case 9:
-							addMp += 45;
-							break;
-						case 10:
-							addMp += 50;
-							break;
-					}
-				}
-
-				if (addMp > 0) {
-					writeC(24);
-					writeC(addMp);
-				}
+			if (addHp > 0) {
+				writeC(14);
+				writeH(addHp);
 			}
+		}
 
-			// 벨트
-			if (item.getType2().equalsIgnoreCase("belt")) {
-				int reduction = item.getAddReduction() + dynamic_reduction;
-				int pvpDmgReduction = 0;
+		if (((item.getAddReduction() != 0 || dynamic_reduction != 0) && !item.getType2().equalsIgnoreCase("belt"))
+				|| (item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
+						|| item.getName().equalsIgnoreCase("지식의 부츠"))) {
 
+			int reduction = item.getAddReduction() + dynamic_reduction;
+
+			if ((item.getName().equalsIgnoreCase("완력의 부츠") || item.getName().equalsIgnoreCase("민첩의 부츠")
+					|| item.getName().equalsIgnoreCase("지식의 부츠")) && enlevel == 9)
+				reduction += 1;
+
+			if (item.getName().equalsIgnoreCase("안타라스의 완력") || item.getName().equalsIgnoreCase("안타라스의 마력")
+					|| item.getName().equalsIgnoreCase("안타라스의 인내력") || item.getName().equalsIgnoreCase("안타라스의 예지력")) {
 				switch (enlevel) {
+					case 1:
+						reduction += 0;
+						break;
+					case 2:
+						reduction += 0;
+						break;
+					case 3:
+						reduction += 0;
+						break;
+					case 4:
+						reduction += 0;
+						break;
 					case 5:
 						reduction += 1;
 						break;
@@ -632,31 +377,391 @@ public class S_Inventory extends ServerBasePacket {
 						break;
 					case 7:
 						reduction += 3;
-						pvpDmgReduction = 10;
 						break;
 					case 8:
 						reduction += 4;
-						pvpDmgReduction = 30;
 						break;
 					case 9:
 						reduction += 5;
-						pvpDmgReduction += 4;
 						break;
 					case 10:
 						reduction += 6;
-						pvpDmgReduction += 5;
 						break;
 				}
+			}
 
-				if (reduction > 0) {
-					writeC(20);
-					writeC(reduction);
-				}
+			if (reduction > 0) {
+				writeC(20);
+				writeC(reduction);
+			}
+		}
 
-				if (pvpDmgReduction > 0) {
-					writeC(30);
-					writeC(pvpDmgReduction);
+		if (item.getName().equalsIgnoreCase("고대 암석의 장갑") ||
+				item.getName().equalsIgnoreCase("고대 암석의 부츠") ||
+				item.getName().equalsIgnoreCase("고대 암석의 망토")) {
+
+			// [수정] DB(나비켓)에 설정된 기본 PVP 리덕션 값을 가져옵니다.
+			int pvpReduction = item.getPvpReduction();
+
+			// 인첸트별 보너스 수치 합산 (+= 사용)
+			switch (enlevel) {
+				case 5:
+					pvpReduction += 1;
+					break;
+				case 6:
+					pvpReduction += 2;
+					break;
+				case 7:
+					pvpReduction += 3;
+					break;
+				case 8:
+					pvpReduction += 4;
+					break;
+				case 9:
+					pvpReduction += 5;
+					break;
+				case 10:
+					pvpReduction += 30;
+					break;
+			}
+
+			// 합산된 값이 있을 때만 전송 (Opcode 30: PVP 리덕션)
+			if (pvpReduction > 0) {
+				writeC(30);
+				writeC(pvpReduction);
+			}
+		}
+
+		if (item.getName().equalsIgnoreCase("고대 마물의 장갑") ||
+				item.getName().equalsIgnoreCase("고대 마물의 부츠") ||
+				item.getName().equalsIgnoreCase("고대 마물의 망토")) {
+
+			// [수정] 0이 아니라, DB에 설정된 기본값을 가져옵니다.
+			int pvpDmg = item.getPvpDamage();
+
+			// 인첸트 보너스 추가 (기존 값에 더하기 +=)
+			switch (enlevel) {
+				case 5:
+					pvpDmg += 1;
+					break;
+				case 6:
+					pvpDmg += 2;
+					break;
+				case 7:
+					pvpDmg += 3;
+					break;
+				case 8:
+					pvpDmg += 4;
+					break;
+				case 9:
+					pvpDmg += 5;
+					break;
+				case 10:
+					pvpDmg += 6;
+					break;
+			}
+
+			// 합산된 결과가 0보다 크면 전송
+			if (pvpDmg > 0) {
+				writeC(29);
+				writeC(pvpDmg);
+			}
+		}
+
+		if ((item.getStunDefense() != 0 || dynamic_stun_defence != 0)
+				&& !item.getType2().equalsIgnoreCase("necklace")) {
+			int stunDefence = (int) ((item.getStunDefense() + dynamic_stun_defence) * 100);
+			writeC(28);
+			writeC(stunDefence);
+		}
+
+		// 물약 회복량, 스턴 내성
+		if (item.getType2().equalsIgnoreCase("necklace")) {
+			int potion = 0;
+			int stunResist = (int) (item.getStunDefense() * 100);
+
+			switch (enlevel) {
+				case 1:
+					potion += 0;
+					break;
+				case 2:
+					potion += 0;
+					break;
+				case 3:
+					potion += 0;
+					break;
+				case 4:
+					potion += 0;
+					break;
+				case 5:
+					potion += 0;
+					break;
+				case 6:
+					potion += 3;
+					stunResist += 3;
+					break;
+				case 7:
+					potion += 6;
+					stunResist += 6;
+					break;
+				case 8:
+					potion += 10;
+					stunResist += 10;
+					break;
+				case 9:
+					potion += 5;
+					stunResist += 4;
+					break;
+				case 10:
+					potion += 6;
+					stunResist += 5;
+					break;
+			}
+
+			if (potion > 0) {
+				writeC(27);
+				writeC(potion);
+			}
+
+			if (stunResist > 0) {
+				writeC(28);
+				writeC(stunResist);
+			}
+		}
+
+		if (item.getAddSp() != 0 || dynamic_sp != 0 || (item.getType2().equalsIgnoreCase("ring") && enlevel > 6)) {
+			int addSp = item.getAddSp() + dynamic_sp;
+
+			if (item.getType2().equalsIgnoreCase("ring") && enlevel > 5) {
+				switch (enlevel) {
+
+				    case 5:
+					    addSp += 1;
+					break;
+					case 6:
+						addSp += 2;
+						break;
+					case 7:
+						addSp += 3;
+						break;
+					case 8:
+						addSp += 4;
+						break;
+					case 9:
+						addSp += 3;
+						break;
+					case 10:
+						addSp += 4;
+						break;
 				}
+			}
+
+			if (addSp > 0) {
+				writeC(17);
+				writeC(addSp);
+			}
+		}
+
+/*		
+		// [1단계] 아이템 자체(DB)에 붙은 기본 SP 가져오기 (방어구, 목걸이 등 공통)
+		int addSp = item.getAddSp() + dynamic_sp; 
+
+		// [2단계] 반지(Ring)일 때만 이름 체크해서 '강화 보너스 SP' 더해주기
+		if (item.getType2().equalsIgnoreCase("ring")) {
+		    String name = item.getName();
+		    // 지식/마왕 반지에만 강화 보너스 SP를 더함
+		    if (name.contains("지식") || name.contains("지혜")) {
+		        if (enlevel == 6)      addSp += 2;
+		        else if (enlevel == 7) addSp += 3;
+		        else if (enlevel == 8) addSp += 4;
+		        else if (enlevel == 9) addSp += 5;
+		        else if (enlevel == 10) addSp += 6;
+		    }
+		}
+
+		// [3단계] 최종 합산된 SP가 있으면 출력 (이게 밖으로 나와있어야 진짜 방어구도 나옵니다!)
+		if (addSp != 0) {
+		    writeC(17); // SP 패킷 번호
+		    writeC(addSp);
+		}
+*/		
+		if (item.getAddMr() != 0 || dynamic_mr != 0 || (item.getType2().equalsIgnoreCase("ring") && enlevel > 5)) {
+			int addMr = item.getAddMr() + dynamic_mr;
+
+			if (item.getType2().equals("ring") && enlevel > 5) {
+				switch (enlevel) {
+					case 6:
+						addMr += 1;
+						break;
+					case 7:
+						addMr += 3;
+						break;
+					case 8:
+						addMr += 5;
+						break;
+					case 9:
+						addMr += 7;
+						break;
+					case 10:
+						addMr += 8;
+						break;
+				}
+			}
+
+			if (addMr > 0) {
+				writeC(15);
+				writeH(addMr);
+			}
+		}
+
+		// PvP 대미지
+		if (item.getType2().equalsIgnoreCase("ring") && enlevel >= 5) {
+			int pvpDmg = 0;
+
+			switch (enlevel) {
+		        case 5:
+			        pvpDmg += 1;
+			    break;
+			    case 6:
+				    pvpDmg += 2;
+				    break;
+				case 7:
+					pvpDmg += 3;
+					break;
+				case 8:
+					pvpDmg += 4;
+					break;
+				case 9:
+					pvpDmg += 5;
+					break;
+				case 10:
+					pvpDmg += 6;
+					break;
+			}
+			if (pvpDmg > 0) {
+				writeC(29);
+				writeC(pvpDmg);
+			}
+		}
+
+/*		
+		// 반지(Ring) 툴팁 처리
+		if (item.getType2().equalsIgnoreCase("ring") && enlevel >= 6) { 
+		    int value = 0;
+		    String itemName = item.getName();
+
+		    switch (enlevel) {
+		        case 6:  value = 3;  break; // 이제 6강도 이 로직을 탑니다!
+		        case 7:  value = 6;  break;
+		        case 8:  value = 10; break;
+		        case 9:  value = 30; break;
+		        case 10: value = 40; break;
+		    }
+
+		    if (value > 0) {
+		        // 1. PvP 대미지 그룹 (완력, 기백, 민첩, 일격)
+		        if (itemName.contains("완력") || itemName.contains("용사") || 
+		            itemName.contains("민첩") || itemName.contains("체력")) {
+		            
+		            writeC(29);    // 29번: 클라이언트에서 'PvP 대미지'를 담당하는 번호 (서버마다 다를 수 있음)
+		            writeC(value);
+		        } 
+		        // 2. PvP 리덕션 그룹 (지식, 마왕)
+		        else if (itemName.contains("지식") || itemName.contains("지혜")) {
+		            
+		            writeC(30);    // ★ 30번: 보통 'PvP 대미지 리덕션'을 담당하는 패킷 번호 (확인 필요)
+		            writeC(value);
+		        }
+		    }
+		}
+*/		
+		if (setoption != null && (setoption.isBrave() || setoption.isHaste()))
+			writeC(18);
+
+		if (item.getAddMp() != 0 || (item.getType2().equalsIgnoreCase("belt") && enlevel > 0)) {
+			int addMp = item.getAddMp();
+
+			if (item.getType2().equalsIgnoreCase("belt") && enlevel > 0) {
+				switch (enlevel) {
+					case 1:
+						addMp += 5;
+						break;
+					case 2:
+						addMp += 10;
+						break;
+					case 3:
+						addMp += 15;
+						break;
+					case 4:
+						addMp += 20;
+						break;
+					case 5:
+						addMp += 25;
+						break;
+					case 6:
+						addMp += 30;
+						break;
+					case 7:
+						addMp += 35;
+						break;
+					case 8:
+						addMp += 40;
+						break;
+					case 9:
+						addMp += 45;
+						break;
+					case 10:
+						addMp += 50;
+						break;
+				}
+			}
+
+			if (addMp > 0) {
+				writeC(24);
+				writeC(addMp);
+			}
+		}
+
+		// 벨트
+		if (item.getType2().equalsIgnoreCase("belt")) {
+			int reduction = item.getAddReduction() + dynamic_reduction;
+			int pvpDmgReduction = 0;
+
+			switch (enlevel) {
+				case 5:
+					reduction += 1;
+					pvpDmgReduction += 1;
+					break;
+				case 6:
+					reduction += 2;
+					pvpDmgReduction += 2;
+					break;
+				case 7:
+					reduction += 3;
+					pvpDmgReduction += 3;
+					break;
+				case 8:
+					reduction += 4;
+					pvpDmgReduction += 4;
+					break;
+				case 9:
+					reduction += 5;
+					pvpDmgReduction += 5;
+					break;
+				case 10:
+					reduction += 6;
+					pvpDmgReduction += 5;
+					break;
+			}
+
+			if (reduction > 0) {
+				writeC(20);
+				writeC(reduction);
+			}
+
+			if (pvpDmgReduction > 0) {
+				writeC(30);
+				writeC(pvpDmgReduction);
 			}
 		}
 	}
@@ -667,7 +772,6 @@ public class S_Inventory extends ServerBasePacket {
 	// 28 스턴 내성
 	// 29 PvP 대미지
 	// 30 PvP 대미지 감소
-
 	protected void toWeapon(Item item, int durability, int enlevel, int weight, int bless, int dynamic_mr,
 			double dynamic_stun_defence, int dynamic_sp, int dynamic_reduction) {
 		ItemSetoption setoption = Lineage.server_version >= 250 ? ItemSetoptionDatabase.find(item.getSetId()) : null;
@@ -795,9 +899,8 @@ public class S_Inventory extends ServerBasePacket {
 				writeC(20);
 				writeC(reduction);
 			}
-		}
-
-	}
+		}	
+	}	
 
 	protected void toEtc(Item item, int weight) {
 		writeC(0x06);
@@ -842,29 +945,29 @@ public class S_Inventory extends ServerBasePacket {
 			 * + sec + "초] ");
 			 * }
 			 */
-
+			
 			if (item.getDeleteTime() > 0) {
 				long currentTime = System.currentTimeMillis() / 1000;
 				long 남은시간 = item.getDeleteTime() - currentTime;
-
+				
 				if (남은시간 <= 0) {
 					sb.append("남은시간[만료됨] ");
 				} else {
 					// 1. 일(Day) 계산
 					long day = 남은시간 / 86400;
 					남은시간 %= 86400;
-
+					
 					// 2. 시간 계산
 					long hour = 남은시간 / 3600;
 					남은시간 %= 3600;
-
+					
 					// 3. 분/초 계산
 					long min = 남은시간 / 60;
 					long sec = 남은시간 % 60;
-
+					
 					// 4. [사장님 오더 적용] 기간에 따른 스마트 출력
 					sb.append("남은시간[");
-
+					
 					if (day > 0) {
 						// 30일 등 하루 이상 남았을 때 ➔ 남은시간[30일]
 						sb.append(day + "일");
@@ -875,11 +978,11 @@ public class S_Inventory extends ServerBasePacket {
 						// 1시간 미만일 때 ➔ 남은시간[59분 30초]
 						sb.append(min + "분 " + sec + "초");
 					}
-
+					
 					sb.append("] ");
 				}
 			}
-
+			
 			// 봉인 표현
 			if (item.isDefinite() && item.getBless() < 0) {
 				sb.append("[봉인]");
@@ -919,8 +1022,35 @@ public class S_Inventory extends ServerBasePacket {
 				sb.append(item.getEnLevel());
 				sb.append(" ");
 			}
+			
 			sb.append(item.getName());
+			
+			// =========================================================
+			// 💡 [추가] 8검 이상 무기 보너스 스탯 텍스트 추가 (확인된 아이템만)
+			// =========================================================
+						if (item.isDefinite() && item.getItem().getType1().equalsIgnoreCase("weapon")) {
+							int enLevel = item.getEnLevel();
+							int encDmg = 0;
+							int encHit = 0;
 
+							if (enLevel == 10) {
+								encDmg = 2;
+								encHit = 2;
+//							} else if (enLevel == 9) {
+//								encDmg = 2;
+//								encHit = 2;
+//							} else if (enLevel >= 10) {
+//								encDmg = 4;
+//								encHit = 4;
+							}
+
+							// 보너스가 존재할 경우에만 이름 뒤에 텍스트 덧붙임 (\f4 = 빨간색)
+							if (encDmg > 0 || encHit > 0) {
+								sb.append(String.format(" \\f4[추타+%d/명중+%d]", encDmg, encHit));
+							}
+						}
+			// ====================================================
+			
 			if (item.isDefinite() && item.getQuantity() > 0/*
 															 * (item instanceof MapleWand || item instanceof PineWand ||
 															 * item instanceof EbonyWand)
@@ -979,7 +1109,6 @@ public class S_Inventory extends ServerBasePacket {
 			// }
 			// }
 		}
-
 		return sb.toString().trim();
 	}
 
@@ -1058,6 +1187,7 @@ public class S_Inventory extends ServerBasePacket {
 				}
 			}
 
+
 			if (item.getType2().equalsIgnoreCase("necklace")) {
 				if (item.getAddDmg() != 0 || (bless == 0 || bless == -128))
 					size += 2;
@@ -1110,6 +1240,7 @@ public class S_Inventory extends ServerBasePacket {
 				return size;
 			}
 
+			
 			if (item.getType2().equalsIgnoreCase("belt")) {
 				if (item.getAddDmg() != 0 || (bless == 0 || bless == -128))
 					size += 2;
@@ -1117,8 +1248,10 @@ public class S_Inventory extends ServerBasePacket {
 					size += 2;
 				if (item.getAddHp() != 0 || enlevel > 0)
 					size += 3;
-				if (item.getAddMp() != 0 || enlevel > 0)
-					size += 3;
+//				if (item.getAddMp() != 0 || enlevel > 0)
+//					size += 3;
+				if (item.getAddMp() != 0)
+					size += 2;
 				if (item.getAddMr() != 0 || dynamic_mr != 0)
 					size += 3;
 				if (item.getAddSp() != 0 || dynamic_sp != 0)
@@ -1129,7 +1262,7 @@ public class S_Inventory extends ServerBasePacket {
 					size += 2;
 
 				// PvP 리덕션
-				if (enlevel > 6)
+				if (enlevel > 4)
 					size += 2;
 
 				return size;
@@ -1155,6 +1288,8 @@ public class S_Inventory extends ServerBasePacket {
 
 				return size;
 			}
+
+			
 		} else if (item.getType1().equalsIgnoreCase("weapon")) {
 			size += 10;
 			if (enlevel != 0)
@@ -1189,11 +1324,12 @@ public class S_Inventory extends ServerBasePacket {
 			size += 2;
 		if (item.getAddMr() != 0 || dynamic_mr != 0)
 			size += 3;
+		
 		if (item.getAddSp() != 0 || ((bless == 0 || bless == -128) && item.getType2().equalsIgnoreCase("wand"))
 				|| dynamic_sp != 0)
 			size += 2;
 		if (item.getAddHp() != 0 || (bless == 0 || bless == -128) && item.getType1().equalsIgnoreCase("armor"))
-			size += 3;
+			size += 3;	
 		if (item.getAddDmg() != 0 || ((bless == 0 || bless == -128) && item.getType1().equalsIgnoreCase("weapon")
 				&& !item.getType2().equalsIgnoreCase("wand")))
 			size += 2;
@@ -1203,8 +1339,8 @@ public class S_Inventory extends ServerBasePacket {
 			size += 2;
 		if (setoption != null && (setoption.isBrave() || setoption.isHaste()))
 			size += 1;
-
+		
 		return size;
+		
 	}
-
 }

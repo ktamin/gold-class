@@ -36,36 +36,52 @@ public class S_PcShopBuy extends S_Inventory {
 			writeH(s.getItem().getInvGfx());
 			writeD(s.getPrice());
 
-			StringBuffer sb = new StringBuffer();
-			// 화폐타입
-			if (!Lineage.is_market_only_aden) {
-				sb.append("[").append(s.getAdenType().equalsIgnoreCase("아데나") ? "아덴" : "달러").append("]");
-				// 축저주 구분
-				sb.append(s.getInvItemBress() == 0 ? " (축)" : (s.getInvItemBress() == 1 ? "" : " (저주)"));
-				// 인첸트 레벨 표현
-				if ((s.getItem().getType1().equalsIgnoreCase("weapon") || s.getItem().getType1().equalsIgnoreCase("armor")))
-					sb.append(" ").append(s.getInvItemEn() >= 0 ? "+" : "-").append(s.getInvItemEn()).append(" ");
-			} else {
-				// 축저주 구분
-				sb.append(s.getInvItemBress() == 0 ? "(축) " : (s.getInvItemBress() == 1 ? "" : "(저주) "));
-				// 인첸트 레벨 표현
-				if ((s.getItem().getType1().equalsIgnoreCase("weapon") || s.getItem().getType1().equalsIgnoreCase("armor")))
-					sb.append(s.getInvItemEn() >= 0 ? "+" : "-").append(s.getInvItemEn()).append(" ");
+			StringBuilder sb = new StringBuilder();
+
+			// 💡 1. [아덴] / [코인] 화폐 접두어 표시
+			sb.append("[").append(s.getAdenType().equalsIgnoreCase("아데나") ? "아덴" : "코인").append("] ");
+
+			// 💡 2. (축) / (저주) 표시
+			if (s.getInvItemBress() == 0) {
+				sb.append("(축) ");
+			} else if (s.getInvItemBress() != 1) {
+				sb.append("(저주) ");
 			}
 
-			// 이름 표현
+			// 💡 3. 무기 / 방어구 인챈트 (+9, -1 등) 표시
+			if (s.getItem().getType1().equalsIgnoreCase("weapon") || s.getItem().getType1().equalsIgnoreCase("armor")) {
+				sb.append(s.getInvItemEn() >= 0 ? "+" : "").append(s.getInvItemEn()).append(" ");
+			}
+
+			// 💡 4. 무기 속성 인챈트 (화령 3단계 등) 표시
+			if (s.getItem().getType1().equalsIgnoreCase("weapon")) {
+				if (s.getInvItemEnFire() > 0) {
+					sb.append("화령 ").append(s.getInvItemEnFire()).append("단계 ");
+				} else if (s.getInvItemEnWater() > 0) {
+					sb.append("수령 ").append(s.getInvItemEnWater()).append("단계 ");
+				} else if (s.getInvItemEnWind() > 0) {
+					sb.append("풍령 ").append(s.getInvItemEnWind()).append("단계 ");
+				} else if (s.getInvItemEnEarth() > 0) {
+					sb.append("지령 ").append(s.getInvItemEnEarth()).append("단계 ");
+				}
+			}
+
+			// 💡 5. 아이템 명칭 표시
 			String itemName = CharacterMarbleDatabase.getItemName(s.getInvItemObjectId());
 			if (itemName != null) {
 				sb.append(itemName);
 			} else {
-				sb.append(" ").append(s.getItem().getName());
+				sb.append(s.getItem().getName());
 			}
 
-			// 수량 표현
-			if (s.getInvItemCount() > 1)
+			// 💡 6. 수량 표현 (2개 이상일 때만 표시)
+			if (s.getInvItemCount() > 1) {
 				sb.append(" (").append(Util.changePrice(s.getInvItemCount())).append(")");
-			writeS(sb.toString());
+			}
 
+			writeS(sb.toString().trim()); // 끝부분 불필요한 공백 제거
+
+			// 스탯 및 상세 속성 패킷 전송 구간 (기존 로직 유지)
 			if (Lineage.server_version > 144) {
 				if (s.getItem().getType1().equalsIgnoreCase("armor")) {
 					if (s.getItem().getName().equalsIgnoreCase("신성한 엘름의 축복"))

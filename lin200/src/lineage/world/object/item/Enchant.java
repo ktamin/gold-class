@@ -64,9 +64,9 @@ public class Enchant extends ItemInstance {
 				&& Lineage.item_enchant_armor_max <= item.getEnLevel())
 			return false;
 		// 장신구 확인.
-		if (item.isAcc() && Lineage.item_enchant_accessory_max > 0
-				&& Lineage.item_enchant_accessory_max <= item.getEnLevel())
-			return false;
+				if (item.isAcc() && Lineage.item_enchant_accessory_max >= 0
+						&& Lineage.item_enchant_accessory_max <= item.getEnLevel())
+					return false;
 		// 무기 확인.
 
 		if (item instanceof ItemWeaponInstance && item.getItem().getmaxEnchant() <= item.getEnLevel()
@@ -114,7 +114,7 @@ public class Enchant extends ItemInstance {
 						String.format("방어구는 +%d까지 인챈트 가능합니다.", Lineage.item_enchant_armor_max),
 						Lineage.CHATTING_MODE_MESSAGE);
 
-			if (item instanceof ItemArmorInstance && Lineage.item_enchant_accessory_max > 0
+			if (item instanceof ItemArmorInstance && Lineage.item_enchant_accessory_max >= 0
 					&& Lineage.item_enchant_accessory_max <= item.getEnLevel() && item.isAcc())
 				ChattingController.toChatting(cha,
 						String.format("장신구는 +%d까지 인챈트 가능합니다.", Lineage.item_enchant_accessory_max),

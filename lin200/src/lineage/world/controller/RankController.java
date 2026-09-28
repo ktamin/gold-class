@@ -102,6 +102,15 @@ public class RankController {
 
 				toRankRead(con, time);
 				temp_list = new ArrayList<Rank>(list);
+				
+				// ==========================================
+				// 💡 [추가] 랭킹 갱신 완료 시 월드 전체 안내 멘트 발송
+				// ==========================================
+				for (PcInstance pc : World.getPcList()) {
+					if (pc != null && !pc.isDead()) {
+						ChattingController.toChatting(pc, "          \\fS[알림] 랭킹 시스템이 갱신 되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
+					}
+				}
 
 				
 			} catch (Exception e) {
@@ -281,12 +290,13 @@ public class RankController {
 					         : classType.equals("3") ? "마법사"
 					         : classType.equals("4") ? "다크엘프"
 					         : classType;
+					
 					if (r.getType().equals("전체 랭킹"))
-						//sb.append( String.format("%d위 %s [%s]\r\n", i + 1, name, classType) );
-                                                sb.append( String.format("[%s] Lv.%s %s\r\n", classType, level, name) );
+						sb.append( String.format("%d위 %s [%s]\r\n", i + 1, name, classType) );
+//                        sb.append( String.format("[%s] Lv.%s %s\r\n", classType, level, name) );
 					else
-						//sb.append( String.format("%d위 %s\r\n", i + 1, name) );
-                                                sb.append( String.format("[%s] Lv.%s %s\r\n", classType, level, name) );
+						sb.append( String.format("%d위 %s\r\n", i + 1, name) );
+//                        sb.append( String.format("[%s] Lv.%s %s\r\n", classType, level, name) );
 				} catch (Exception e) { }
 			}
 		} else {

@@ -441,11 +441,19 @@ public class Util {
 		    }
 		    
 			// 칠흑던전 맵커팅 텔 안되도록
-		    if (m.mapid == 811) {
-		       x1 = 32719;
+		    if (m.mapid == 810) {
+		       x1 = 32714;
 		       x2 = 32815;
-		       y1 = 32720;
+		       y1 = 32729;
 		       y2 = 32813;
+		    }	
+		    
+			// 칠흑던전 맵커팅 텔 안되도록
+		    if (m.mapid == 810) {
+		       x1 = 32719;
+		       x2 = 32790;
+		       y1 = 32720;
+		       y2 = 32726;
 		    }	
 		    
 			if(m.mapid == 304) {
@@ -456,6 +464,20 @@ public class Util {
 				// 공백 잇어서 그부분 접근 안되도록 하기 위해.
 				y2 = 32980;
 			}
+			
+			if(m.mapid == 707) {
+				// 공백 잇어서 그부분 접근 안되도록 하기 위해.
+				y2 = 32980;
+			}
+			
+			if(m.mapid == 783) {
+				// 공백 잇어서 그부분 접근 안되도록 하기 위해.
+			       x1 = 32793;
+			       x2 = 33245;
+			       y1 = 32664;
+			       y2 = 32866;
+			}
+			
 			do {
 				result = true;
 				o.setHomeX(random(x1, x2));
@@ -814,12 +836,26 @@ public class Util {
 			local = "[용의 계곡 던전 7층]";
 			break;
 		case 43:
+			local = "[무슨 맵1]";
+			break;
 		case 44:
+			local = "[무슨 맵2]";
+			break;
 		case 45:
+			local = "[무슨 맵3]";
+			break;
 		case 46:
+			local = "[무슨 맵3]";
+			break;
 		case 47:
+			local = "[무슨 맵4]";
+			break;
 		case 48:
+			local = "[무슨 맵5]";
+			break;
 		case 49:
+			local = "[무슨 맵6]";
+			break;
 		case 50:
 			local = "[개미굴 1층]";
 			break;
@@ -838,6 +874,9 @@ public class Util {
 		case 56:
 			local = "[기란감옥 4층]";
 			break;
+		case 58:
+			local = "[수렵 이벤트]";
+			break;	
 		case 59:
 			local = "[수던 1층]";
 			break;
@@ -907,6 +946,9 @@ public class Util {
 		case 85:
 			local = "[지하수로]";
 			break;
+		case 98:
+			local = "[타워 공성전]";
+			break;	
 		case 99:
 			local = "[운영자의 방]";
 			break;
@@ -1104,8 +1146,11 @@ public class Util {
 			local = "[테베 오시리스의 제단]";
 			break;
 		case 783:
-			local = "[용의 안식처]";
+			local = "[티칼]";
 			break;
+		case 784:
+			local = "[티칼 신전]";
+			break;	
 		case 800:
 			local = "[시장]";
 			break;
@@ -1135,6 +1180,9 @@ public class Util {
 			break;
 		case 1400:
 			local = "[이벤트 맵]";
+			break;
+		case 1931:
+			local = "[몽환의 섬]";
 			break;
 		case 2004:
 			local = "[고라스]";
@@ -1268,12 +1316,26 @@ public class Util {
 				local = "[용의 계곡 던전 7층]";
 				break;
 			case 43:
+				local = "[무슨 맵1]";
+				break;
 			case 44:
+				local = "[무슨 맵2]";
+				break;
 			case 45:
+				local = "[무슨 맵3]";
+				break;
 			case 46:
+				local = "[무슨 맵3]";
+				break;
 			case 47:
+				local = "[무슨 맵4]";
+				break;
 			case 48:
+				local = "[무슨 맵5]";
+				break;
 			case 49:
+				local = "[무슨 맵6]";
+				break;
 			case 50:
 				local = "[개미굴 1층]";
 				break;
@@ -1292,6 +1354,9 @@ public class Util {
 			case 56:
 				local = "[기란감옥 4층]";
 				break;
+			case 58:
+				local = "[수렵 이벤트]";
+				break;		
 			case 59:
 				local = "[수던 1층]";
 				break;
@@ -1358,10 +1423,12 @@ public class Util {
 			case 82:
 				local = "[상아탑 8층]";
 				break;
-
 			case 85:
 				local = "[지하수로]";
 				break;
+			case 98:
+				local = "[타워 공성전]";
+				break;	
 			case 99:
 				local = "[운영자의 방]";
 				break;
@@ -1566,7 +1633,9 @@ public class Util {
 				break;
 				//야도란추가 버땅
 				//ses950317@nate.com
-
+			case 707:
+				local = "[뒤틀린 잊혀진 섬]";
+				break;
 			case 777:
 				local = "[버림받은 자들의 땅]";
 				break;
@@ -1580,8 +1649,11 @@ public class Util {
 				local = "[테베 오시리스의 제단]";
 				break;
 			case 783:
-				local = "[용의 안식처]";
+				local = "[티칼]";
 				break;
+			case 784:
+				local = "[티칼 신전]";
+				break;	
 			case 800:
 				local = "[시장]";
 				break;
@@ -1609,6 +1681,9 @@ public class Util {
 				break;
 			case 1400:
 				local = "[이벤트 맵]";
+				break;
+			case 1931:
+				local = "[몽환의 섬]";
 				break;
 			case 2004:
 				local = "[고라스]";
@@ -1806,12 +1881,26 @@ public class Util {
 				local = "[용의 계곡 던전 7층]";
 				break;
 			case 43:
+				local = "[무슨 맵1]";
+				break;
 			case 44:
+				local = "[무슨 맵2]";
+				break;
 			case 45:
+				local = "[무슨 맵3]";
+				break;
 			case 46:
+				local = "[무슨 맵3]";
+				break;
 			case 47:
+				local = "[무슨 맵4]";
+				break;
 			case 48:
+				local = "[무슨 맵5]";
+				break;
 			case 49:
+				local = "[무슨 맵6]";
+				break;
 			case 50:
 				local = "[개미굴 1층]";
 				break;
@@ -1830,6 +1919,9 @@ public class Util {
 			case 56:
 				local = "[기란감옥 4층]";
 				break;
+			case 58:
+				local = "[수렵 이벤트]";
+				break;		
 			case 59:
 				local = "[수던 1층]";
 				break;
@@ -1900,6 +1992,9 @@ public class Util {
 			case 85:
 				local = "[지하수로]";
 				break;
+			case 98:
+				local = "[타워 공성전]";
+				break;	
 			case 99:
 				local = "[운영자의 방]";
 				break;
@@ -2097,15 +2192,17 @@ public class Util {
 				local = "[테베 오시리스의 제단]";
 				break;
 			case 783:
-				local = "[용의 안식처]";
+				local = "[티칼]";
 				break;
+			case 784:
+				local = "[티칼 신전]";
+				break;	
 			case 800:
 				local = "[시장]";
 				break;
 			case 807:
 				local = "[오크 보물 창고]";
 				break;
-
 			case 809:
 				local = "[리뉴얼 본던 3층]";
 				break;
@@ -2126,6 +2223,9 @@ public class Util {
 				break;
 			case 1400:
 				local = "[이벤트 맵]";
+				break;
+			case 1931:
+				local = "[몽환의 섬]";
 				break;
 			case 2004:
 				local = "[고라스]";

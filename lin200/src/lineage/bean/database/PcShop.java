@@ -21,6 +21,19 @@ public class PcShop {
 	private int InvItemBress;
 	private boolean InvItemDefinite;
 	
+	private int InvItemEnFire;    
+	private int InvItemEnWater;    
+	private int InvItemEnWind;    
+	private int InvItemEnEarth;    
+	
+	
+	//-- pc용
+	private int InvDolloptionA;
+	private int InvDolloptionB;
+	private int InvDolloptionC;
+	private int InvDolloptionD;
+	private int InvDolloptionE;
+	
 	public PcShop(PcShopInstance pc_shop, long price, String adenType, long InvItemCount){
 		this.pc = pc_shop;
 		this.price = price;
@@ -120,6 +133,66 @@ public class PcShop {
 
 	public void setAdenType(String adenType) {
 		this.adenType = adenType;
+	}
+	
+	public int getInvItemEnFire() {   
+	    return InvItemEnFire;
+	}
+
+	public void setInvItemEnFire(int invItemEnFire) {
+	    InvItemEnFire = invItemEnFire;
+	}
+	public int getInvItemEnWater() {   
+		return InvItemEnWater;
+	}
+
+	public void setInvItemEnWater(int invItemEnWater) {
+		InvItemEnWater = invItemEnWater;
+	}
+	public int getInvItemEnWind() {   
+		return InvItemEnWind;
+	}
+
+	public void setInvItemEnWind(int invItemEnWind) {
+		InvItemEnWind = invItemEnWind;
+	}
+	public int getInvItemEnEarth() {   
+		return InvItemEnEarth;
+	}
+
+	public void setInvItemEnEarth(int invItemEnEarth) {
+		InvItemEnEarth = invItemEnEarth;
+	}
+	
+	public int getInvDolloptionA() {
+		return InvDolloptionA;
+	}
+	public void setInvDolloptionA(int invDolloptionA) {
+		InvDolloptionA = invDolloptionA;
+	}
+	public int getInvDolloptionB() {
+		return InvDolloptionB;
+	}
+	public void setInvDolloptionB(int invDolloptionB) {
+		InvDolloptionB = invDolloptionB;
+	}
+	public int getInvDolloptionC() {
+		return InvDolloptionC;
+	}
+	public void setInvDolloptionC(int invDolloptionC) {
+		InvDolloptionC = invDolloptionC;
+	}
+	public int getInvDolloptionD() {
+		return InvDolloptionD;
+	}
+	public void setInvDolloptionD(int invDolloptionD) {
+		InvDolloptionD = invDolloptionD;
+	}
+	public int getInvDolloptionE() {
+		return InvDolloptionE;
+	}
+	public void setInvDolloptionE(int invDolloptionE) {
+		InvDolloptionE = invDolloptionE;
 	}
 	
 }

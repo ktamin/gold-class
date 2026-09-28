@@ -32,6 +32,8 @@ public final class BookController {
 			{34083, 34285, 32159, 32417, 4},
 			// 말섬 커츠 근처 사냥터
 			{32546, 32744, 32805, 32903, 0},
+			// 스팟 공성전(용계삼거리) 근처 사냥터
+			{33306, 33358, 32421, 32485, 4},
 	};
 	
 	static public void init(){
@@ -117,6 +119,33 @@ public final class BookController {
 		}else{
 			// \f1이곳을 기억할 수 없습니다.
 			pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 214));
+		}
+	}
+	
+	/**
+	 * [추가] 희미한 기억의 구슬 등 특정 좌표를 강제로 기억시킬 때 사용하는 함수
+	 * @param pc
+	 * @param location (기억할 이름)
+	 * @param x (강제 지정 X좌표)
+	 * @param y (강제 지정 Y좌표)
+	 * @param map (강제 지정 맵번호)
+	 */
+	static public void append(PcInstance pc, String location, int x, int y, int map){
+		List<Book> list = find(pc);
+		
+		// 같은 이름이 있는지 검사
+		if(!isContains(list, location)){
+			Book b = getPool();
+			b.setLocation(location);
+			b.setX(x);     // 💡 PC의 현재 위치가 아니라, 구슬에 적힌 X 좌표를 저장!
+			b.setY(y);     // 💡 구슬에 적힌 Y 좌표 저장!
+			b.setMap(map); // 💡 구슬에 적힌 Map 번호 저장!
+			
+			list.add(b);
+			pc.toSender(S_Book.clone(BasePacketPooling.getPool(S_Book.class), b)); // 클라이언트(기억창) 갱신
+		} else {
+			// 같은 이름이 이미 존재합니다.
+			pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 327));
 		}
 	}
 	

@@ -29,7 +29,7 @@ public class 혈맹버프물약 extends ItemInstance {
 				ShiningShield.onBuff(pc, SkillDatabase.find(101));
 				BraveAvatar.onBuff(pc, SkillDatabase.find(307));
 				// 아이템 수량 갱신
-                                if (!getItem().getName().contains("30일")) {
+                                if (!getItem().getName().contains("무한")) {
 				pc.getInventory().count(this, getCount() - 1, true);
                                 }
 			} else {

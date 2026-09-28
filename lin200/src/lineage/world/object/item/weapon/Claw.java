@@ -21,7 +21,7 @@ public class Claw extends ItemWeaponInstance {
 	    boolean triggeredByParent = super.toDamage(cha, o);
 
 	    // 2) 이도류(Edoryu)만의 추가 발동 20% (원하면 유지)
-	    boolean triggeredByEdoryu = Util.random(0, 100) < 20;
+	    boolean triggeredByEdoryu = Util.random(0, 100) < 10;
 
 	    // 3) 둘 중 하나라도 발동했으면 true
 	    return triggeredByParent || triggeredByEdoryu;

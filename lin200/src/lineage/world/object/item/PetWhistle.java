@@ -26,5 +26,4 @@ public class PetWhistle extends ItemInstance {
 		if(s != null)
 			s.setModePet(SUMMON_MODE.Call);
 	}
-
 }

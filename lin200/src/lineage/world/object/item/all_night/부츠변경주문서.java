@@ -27,8 +27,8 @@ public class 부츠변경주문서 extends ItemInstance {
 
     private static final List<String> GRADE2 = Arrays.asList(
         "아이리스의 부츠",
-        "타라스의 부츠",
-        "크로노스의 부츠"
+        "뱀파이어의 부츠",
+        "나이트발드의 부츠"
     );
 
     static synchronized public ItemInstance clone(ItemInstance item) {

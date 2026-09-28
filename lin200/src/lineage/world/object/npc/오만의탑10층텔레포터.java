@@ -35,14 +35,14 @@ public class 오만의탑10층텔레포터 extends object {
         // GM이면 모든 제한 무시하고 바로 입장
         if (pc.getGm() > 0) {
             // 입장
-        	pc.toPotal(Util.random(32796, 32796), Util.random(32796, 32803), 110);
+        	pc.toPotal(Util.random(32729, 32736), Util.random(32798, 32799), 101);
             return;
         }
 
         // 1) 레벨 체크
         if (pc.getLevel() < Lineage.oman10_level) {
             ChattingController.toChatting(pc,
-                String.format("오만의 탑 10층은 %d레벨 이상 입장 가능합니다.", Lineage.oman10_level),
+                String.format("오만의 탑은 %d레벨 이상 입장 가능합니다.", Lineage.oman10_level),
                 Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
@@ -51,13 +51,13 @@ public class 오만의탑10층텔레포터 extends object {
         // wh_wanted = true  → 수배자만 입장
         // wh_wanted = false → 수배 필요 없음(= 수배자는 입장 가능/불가 정책이 없으니 통과)
         if (Lineage.oman10_wanted && !WantedController.checkWantedPc(pc)) {
-            ChattingController.toChatting(pc, "오만의 탑 10층은 수배자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+            ChattingController.toChatting(pc, "오만의 탑은 수배자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
 
         // 3) 혈맹 조건
         if (Lineage.oman10_clan && pc.getClanId() <= 0) {
-            ChattingController.toChatting(pc, "오만의 탑 10층은 혈맹 가입자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+            ChattingController.toChatting(pc, "오만의 탑은 혈맹 가입자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
 
@@ -75,6 +75,6 @@ public class 오만의탑10층텔레포터 extends object {
         }
 
         // 5) 입장
-        pc.toPotal(Util.random(32796, 32796), Util.random(32796, 32803), 110);
+        pc.toPotal(Util.random(32729, 32736), Util.random(32798, 32799), 101);
     }
 }

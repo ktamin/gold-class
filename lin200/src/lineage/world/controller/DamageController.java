@@ -104,7 +104,7 @@ public final class DamageController {
 
 		// 아머브레이크 들어가는 데미지에 2배
         if (o.isBuffArmorBreak() == true) {
-	     dmg *= 1.25;
+	     dmg *= 1.8;
          }
      		
 		// hp 처리
@@ -271,14 +271,14 @@ public final class DamageController {
 				if (!bow && target.isBuffCounterBarrier() && Math.random() < Lineage_Balance.count_barrier_knight && targetWeapon != null
 						&& (targetWeapon.getItem().getType2().equalsIgnoreCase("tohandsword") || targetWeapon.getItem().isTohand())) {
 					// 착용한 양손무기의 (큰 몬스터 타격치 + 추가 대미지 + 인챈트 수치 ) x 3
-					double tempDmg = (targetWeapon.getItem().getBigDmg() + targetWeapon.getItem().getAddDmg() + targetWeapon.getEnLevel()) * 2;
+					double tempDmg = (targetWeapon.getItem().getBigDmg() + targetWeapon.getItem().getAddDmg() + targetWeapon.getEnLevel()) * 3;
 
 					// 리덕션 적용
 					Character c = (Character) target;
 					Character use = (Character) cha;
 					// 리덕션, 리덕션 무시 적용
 					tempDmg -= use.getTotalReduction() - c.getDynamicIgnoreReduction() < 0 ? 0 : use.getTotalReduction() - c.getDynamicIgnoreReduction();
-
+/*
 					if (cha.isBuffImmuneToHarm()){
 						if(cha.getInventory().find("세인트 이뮨 투함") != null){
 							tempDmg *= Lineage_Balance.immuneToHarmReduction2;
@@ -286,7 +286,16 @@ public final class DamageController {
 							tempDmg *= Lineage_Balance.immuneToHarmReduction;
 						}
 					}
-						
+*/						
+					
+					if (cha.isBuffImmuneToHarm()){
+					    // 👇 "마법사"이면서 "법서"를 가지고 있을 때만 세인트 적용!
+					    if(cha.getInventory().find("세인트 이뮨 투함") != null && cha.getClassType() == Lineage.LINEAGE_CLASS_WIZARD){
+					        tempDmg *= Lineage_Balance.immuneToHarmReduction2;
+					    }else{
+					        tempDmg *= Lineage_Balance.immuneToHarmReduction; // 기사, 요정 등은 무조건 일반 이뮨!
+					    }
+					}
 
 					toDamage((Character) target, cha, (int) Math.round(tempDmg), Lineage.ATTACK_TYPE_WEAPON);
 
@@ -322,18 +331,18 @@ public final class DamageController {
 			if (!bow && cha.isBuffBurningSpirit() && Util.random(1, 100) <= 20)
 				dmg *= 1.5;
 
-			// 더블 브레이크 2배--------------2026.06.09 주석처리
+			// 더블 브레이크 2배-------------2026.06.09 주석처리
 //			if (!bow && cha.isBuffDoubleBreak() && Util.random(1, 100) <= 10)
 //				dmg *= 2.0;
 			
-			// 더블 브레이크 2배
+			// 더블 브레이크 2배----------------2026.06.09 추가
 						if (!bow && cha.isBuffDoubleBreak()) {
 							if (weapon != null) {
 								String wType = weapon.getItem().getType2();
 								
 								// 1. 무기 제한: 이도류(edoryu 또는 dualblade) 또는 크로우(claw)일 경우에만 발동
 								// (주의: 서버 DB의 weapon 테이블 type2 컬럼에 적힌 영문명과 일치해야 합니다)
-								if (wType.equalsIgnoreCase("claw") || wType.equalsIgnoreCase("edoryu") || wType.equalsIgnoreCase("dualblade")) {
+								if (wType.equalsIgnoreCase("claw") || wType.equalsIgnoreCase("edoryu")) {
 									
 									// 2. 확률 계산: 기본 10% + (45레벨부터 5레벨당 1%씩 상승)
 									int doubleChance = 10; // 기본 확률 (본섭은 보통 30% 내외이지만, 기존 코드를 존중하여 10으로 시작)
@@ -363,6 +372,29 @@ public final class DamageController {
 					dmg *= 1.25;
 					target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 6319), target instanceof PcInstance);
 				}
+			
+            if (cha.getInventory().find("엘리멘탈 샷") != null && cha.getClassType() == Lineage.LINEAGE_CLASS_ELF && bow ) {
+				
+				// ✅ 주사위를 1000 단위로 확장! (5% -> 50)
+				int chance = 50;
+				
+				if (cha.getLevel() >= 52) {
+					// 공식: 1레벨 당 0.5%씩 증가 (0.5%는 1000 기준으로 '5' 입니다)
+					chance += (cha.getLevel() - 52) * 5; 
+					
+					// 🚨 최대 발동 확률 제한: 15% (1000 기준으로 '150')
+					if (chance > 150) {
+						chance = 150;
+					}
+				}
+				
+				// ✅ 100면체 주사위 대신 1000면체 주사위를 굴립니다!
+				if (Util.random(1, 1000) <= chance) {
+					dmg *= 1.5;
+					target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 22045), target instanceof PcInstance);
+				}
+			}
+/*			
 			if (cha.getInventory().find("엘리멘탈샷") != null &&  cha.getClassType() == Lineage.LINEAGE_CLASS_ELF && bow ) {
 				
 				int chance = 8;
@@ -403,11 +435,9 @@ public final class DamageController {
 				if(Util.random(1, 100) <= chance ){
 						dmg *= 1.5;
 						target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 13543), target instanceof PcInstance);
-				}
-				
-			
-			
+				}										
 			}
+*/			
 			// 화룡의 마안.
 			if (!bow && cha.isBuffMaanFire() && Util.random(1, 100) <= 6) {
 				dmg += 2;
@@ -417,13 +447,19 @@ public final class DamageController {
 			}
 
 			if (target instanceof PcInstance) {
+				// ==========================================
+				// ✅ [추가] 유저가 맞았을 때 현재 시간을 기록!
+				// ==========================================
+				((PcInstance) target).lastDamageTime = System.currentTimeMillis();
+				// ==========================================
+
 				if (target.getInventory() != null) {
 					ItemInstance targetArmor = target.getInventory().getSlot(Lineage.SLOT_ARMOR);
 					ItemInstance targetShiled = target.getInventory().getSlot(Lineage.SLOT_SHIELD);
 					ItemInstance targetSkill = target.getInventory().find("임페리얼 아머");						
-					if (targetArmor != null && targetArmor.getItem().getName().equalsIgnoreCase("신성한 요정족 판금 갑옷") && Util.random(1, 100) <= Util.random(5, 7)) {
+					if (targetArmor != null && targetArmor.getItem().getName().equalsIgnoreCase("신성한 요정족 판금 갑옷") && Util.random(1, 100) <= Util.random(4, 7)) {
 						target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 13429), target instanceof PcInstance);
-						target.setNowHp(target.getNowHp() + Util.random(30, 60));
+						target.setNowHp(target.getNowHp() + Util.random(20, 50));
 					}
 					
 					if (targetShiled != null && targetShiled.getItem().getName().equalsIgnoreCase("신성한 요정족 방패") && Util.random(1, 100) <= targetShiled.getEnLevel()) {
@@ -439,7 +475,7 @@ public final class DamageController {
 					// 결속된 파푸리온의 가호
 					// 힐계열로 인식하기때문에 폴루트 워터, 워터라이프의 영향을 받음.
 					if (target.isFafurionArmor() && Util.random(1, 100) <= 5) {
-						int hp = Util.random(70, 90);
+						int hp = Util.random(80, 100);
 						
 						switch (targetArmor.getEnLevel()) {
 						case 7:
@@ -474,13 +510,15 @@ public final class DamageController {
 					}
 					
 					//임페리얼 아머
-					if (targetSkill != null &&  targetSkill.getItem().getName().equalsIgnoreCase("임페리얼 아머")  && Util.random(1, 100) <= 20  ) {
-						int hp = Util.random(30, 70);
-						dmg *= Lineage_Balance.ipReduction;
-						target.setNowHp(target.getNowHp() + hp);
-						target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 15846), target instanceof PcInstance);
-
-					}
+					if (targetSkill != null && targetSkill.getItem().getName().equalsIgnoreCase("임페리얼 아머") 
+							&& target.getClassType() == Lineage.LINEAGE_CLASS_ROYAL // 💡 [추가됨] 오직 군주 클래스만 발동!
+							&& Util.random(1, 100) <= 15) {
+							
+							int hp = Util.random(80, 120);
+							dmg *= Lineage_Balance.ipReduction; // 밸런스 설정에서 데미지 감소율 적용
+							target.setNowHp(target.getNowHp() + hp); // 피 회복
+							target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 15846), target instanceof PcInstance);
+						}
 				}
 			}
 	
@@ -1331,10 +1369,10 @@ public final class DamageController {
 				Character c = (Character) target;
 				tempProbability = acProbability(c, bow);
 				
-				// ======================2026.06.09 근거리 회피 추가
-				// 💡 [핵심 추가] 근거리 회피율(DG)을 합산해 줍니다!
+				// =========================2026.06.09 근거리회피 추가
+				// 💡 [에러 해결] getDg() 대신 getDynamicDg()를 사용합니다!
 				// =========================================================
-				tempProbability += c.getDynamicDg(); // 또는 서버에 따라 c.getTotalDg() 일 수 있습니다.
+				tempProbability += c.getDynamicDg(); 
 				// =========================================================
 				
 				// 보스는 유저 공격시 좀더 잘박히게 설정.
@@ -1433,6 +1471,7 @@ public final class DamageController {
 //				tempProbability -= 20;
 //			}
 //		}
+		
 		// 1레벨 차이당 1%감소
 		if (cha instanceof MonsterInstance){
 			if (cha.getLevel() < target.getLevel()){
@@ -1456,10 +1495,22 @@ public final class DamageController {
 		}
 		
 		probability -= tempProbability;
-		//-------------2026.06.09 몬스터 명중 100% 주석처리
+//-----------------------2026.06.09 몬스터 명중 100% 주석처리
 //                if (cha instanceof MonsterInstance){
 //                   probability = 100;
-//                }
+//               }
+
+				// 💡 [수정됨] 몬스터 명중률 보정 (외부 밸런스 콘피그 적용)
+				if (cha instanceof MonsterInstance) {
+					// 1. 밸런스 설정 파일에 있는 배율을 곱해줍니다. (예: 1.5로 설정 시 명중률 50% 상승)
+					probability *= Lineage_Balance.monster_hit_rate;
+					
+					// 2. (선택사항) 유저 방어력이 너무 높아서 곱해도 1%가 나오는 것을 방지하기 위한 최소 명중 보장선
+					// 몬스터는 아무리 유저 방어력이 높아도 최소 25% 확률로는 때리게 만들고 싶다면 아래 주석을 푸세요.
+					 if (probability < 25) {
+					     probability = 25;
+					 }
+				}
 
 
 		if (probability < 1)
@@ -1521,9 +1572,6 @@ public final class DamageController {
 			else
 				probability += 1;
 		}
-		
-	
-		
 		return probability;
 	}
 

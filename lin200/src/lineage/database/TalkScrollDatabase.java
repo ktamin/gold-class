@@ -37,6 +37,13 @@ public class TalkScrollDatabase {
 				ts.setName(rs.getString("ts_name"));
 				ts.setX(rs.getInt("ts_x"));
 				ts.setY(rs.getInt("ts_y"));
+				
+				// 💡 [추가됨] 2번, 3번 분산 좌표를 DB에서 읽어옵니다.
+				ts.setX2(rs.getInt("ts_x2"));
+				ts.setY2(rs.getInt("ts_y2"));
+				ts.setX3(rs.getInt("ts_x3"));
+				ts.setY3(rs.getInt("ts_y3"));
+				
 				ts.setMap(rs.getInt("ts_map"));
 				ts.setMinLevel(rs.getInt("ts_min_level"));
 				ts.setClassType(rs.getString("ts_class"));
@@ -72,6 +79,10 @@ public class TalkScrollDatabase {
 		addDisplayGroup(result, "마을");
 		addDisplayGroup(result, "사냥터");
 		addDisplayGroup(result, "던전");
+		addDisplayGroup(result, "하급보스");
+		addDisplayGroup(result, "중급보스");
+		addDisplayGroup(result, "상급보스");
+		addDisplayGroup(result, "최상급보스");
 
 		return result;
 	}
@@ -91,7 +102,7 @@ public class TalkScrollDatabase {
 
 		// 그룹 제목 슬롯
 		TalkScroll title = new TalkScroll();
-		title.setName("========== [ " + group + " ] ==========");
+		title.setName("======== [ " + group + " ] ========");
 		title.setGroup("__TITLE__");
 		result.add(title);
 
@@ -131,6 +142,13 @@ public class TalkScrollDatabase {
 				ts.setName(rs.getString("ts_name"));
 				ts.setX(rs.getInt("ts_x"));
 				ts.setY(rs.getInt("ts_y"));
+				
+				// 💡 [추가됨] 리로드 시에도 2번, 3번 분산 좌표를 DB에서 읽어옵니다.
+				ts.setX2(rs.getInt("ts_x2"));
+				ts.setY2(rs.getInt("ts_y2"));
+				ts.setX3(rs.getInt("ts_x3"));
+				ts.setY3(rs.getInt("ts_y3"));
+				
 				ts.setMap(rs.getInt("ts_map"));
 				ts.setMinLevel(rs.getInt("ts_min_level"));
 				ts.setClassType(rs.getString("ts_class"));
@@ -150,4 +168,3 @@ public class TalkScrollDatabase {
 		TimeLine.end();
 	}
 }
-

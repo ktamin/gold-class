@@ -3,12 +3,14 @@ package lineage.thread;
 import lineage.share.Common;
 import lineage.share.Lineage;
 import lineage.share.TimeLine;
+import lineage.world.controller.AbandonedController;
 import lineage.world.controller.AgitController;
 import lineage.world.controller.AuctionController;
 import lineage.world.controller.ColosseumController;
 import lineage.world.controller.ElvenforestController;
 import lineage.world.controller.FightController;
 import lineage.world.controller.KingdomController;
+import lineage.world.controller.뒤틀린잊혀진섬컨트롤러;
 import lineage.world.controller.SpotController;
 import lineage.world.controller.TeamBattleController;
 import lineage.world.controller.고라스컨트롤러;
@@ -19,6 +21,8 @@ import lineage.world.controller.드워프컨트롤러;
 import lineage.world.controller.라바던전컨트롤러;
 import lineage.world.controller.마족신전컨트롤러;
 import lineage.world.controller.보물찾기컨트롤러;
+import lineage.world.controller.수렵이벤트컨트롤러;
+import lineage.world.controller.스팟타워컨트롤러;
 import lineage.world.controller.악마왕의영토컨트롤러;
 import lineage.world.controller.얼던컨트롤러;
 import lineage.world.controller.오만10층컨트롤러;
@@ -41,6 +45,8 @@ import lineage.world.controller.칠흑던전4층컨트롤러;
 import lineage.world.controller.칠흑던전컨트롤러;
 import lineage.world.controller.타임이벤트컨트롤러;
 import lineage.world.controller.테베라스컨트롤러;
+import lineage.world.controller.테베사막컨트롤러;
+import lineage.world.controller.티칼컨트롤러;
 import lineage.world.controller.펭귄사냥컨트롤러;
 
 public class ControllerTherad implements Runnable {
@@ -99,6 +105,14 @@ public class ControllerTherad implements Runnable {
 					테베라스컨트롤러.toTimer(time);
 				} catch (Exception e) {
 					lineage.share.System.println("테베 던전 관리.");
+					lineage.share.System.println(e);
+				}
+				
+				// 테베 던전 관리.
+				try {
+					테베사막컨트롤러.toTimer(time);
+				} catch (Exception e) {
+					lineage.share.System.println("테베사막 던전 관리.");
 					lineage.share.System.println(e);
 				}
 
@@ -324,6 +338,46 @@ public class ControllerTherad implements Runnable {
 					lineage.share.System.println("오만정상 던전 관리.");
 					lineage.share.System.println(e);
 				}
+				
+				//잊혀진 섬
+				try {
+					뒤틀린잊혀진섬컨트롤러.toTimer(time);
+				} catch (Exception e) {
+					lineage.share.System.println("잊섬 던전 관리.");
+					lineage.share.System.println(e);
+				}
+				
+				//버땅
+				try {
+					AbandonedController.toTimer(time);
+				} catch (Exception e) {
+					lineage.share.System.println("버땅 관리.");
+					lineage.share.System.println(e);
+				}
+				
+				//수렵 이벤트
+				try {
+					수렵이벤트컨트롤러.toTimer(time);
+				} catch (Exception e) {
+					lineage.share.System.println("수렵 이벤트 관리.");
+					lineage.share.System.println(e);
+				}
+				
+				//티칼 신전
+				try {
+					티칼컨트롤러.toTimer(time);
+				} catch (Exception e) {
+					lineage.share.System.println("수렵 신전 관리.");
+					lineage.share.System.println(e);
+				}
+				
+				// 타워 공성전
+				try {
+					스팟타워컨트롤러.toTimer(time);
+				} catch (Exception e) {
+					lineage.share.System.println("타워 공성전 관리.");
+					lineage.share.System.println(e);
+				}
 
 				try {
 					월드보스컨트롤러.toTimer(time);
@@ -358,23 +412,23 @@ public class ControllerTherad implements Runnable {
 				}
 
 				// 콜로세움 관리
-				// try { if(Lineage.server_version >= 200){ColosseumController.toTimer(time);} }
-				// catch (Exception e) {
-				// lineage.share.System.println("콜로세움 관리");
-				// lineage.share.System.println(e);
-				// }
+				 try { if(Lineage.server_version >= 200){ColosseumController.toTimer(time);} }
+				 catch (Exception e) {
+				 lineage.share.System.println("콜로세움 관리");
+				 lineage.share.System.println(e);
+				 }
 
 				// 요정숲 관리
-				// try { ElvenforestController.toTimer(time); } catch (Exception e) {
-				// lineage.share.System.println("요정숲 관리");
-				// lineage.share.System.println(e);
-				// }
+				 try { ElvenforestController.toTimer(time); } catch (Exception e) {
+				 lineage.share.System.println("요정숲 관리");
+				 lineage.share.System.println(e);
+				 }
 
 				// 투기장 관리
-				// try { FightController.toTimer(time); } catch (Exception e) {
-				// lineage.share.System.println("투기장 관리");
-				// lineage.share.System.println(e);
-				// }
+				 try { FightController.toTimer(time); } catch (Exception e) {
+				 lineage.share.System.println("투기장 관리");
+				lineage.share.System.println(e);
+				 }
 
 				Thread.sleep(Common.TIMER_SLEEP);
 			} catch (Exception e) {

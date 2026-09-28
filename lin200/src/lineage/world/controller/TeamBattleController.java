@@ -141,7 +141,7 @@ public final class TeamBattleController {
             teamLine.toTeleport(32738, y++, Lineage.teamBattleMap, false);
         }
     }
-
+/* --------------고정 멤버 유무 관계 없을시 사용 코드
     static public void toAskTeamBattle(String time) {
         for (PcInstance pc : World.getPcList()) {
             if (!pc.isWorldDelete() && !checkList(pc)) {
@@ -151,10 +151,29 @@ public final class TeamBattleController {
             }
         }
     }
-
+*/
+    
+    static public void toAskTeamBattle(String time) {
+		for (PcInstance pc : World.getPcList()) {
+			// ✅ [수정] pc.isMember() 조건을 추가하여 고정 멤버에게만 Y/N 창을 띄웁니다.
+			if (!pc.isWorldDelete() && !checkList(pc) && pc.isMember()) {
+				pc.toSender(S_MessageYesNo.clone(
+						BasePacketPooling.getPool(S_MessageYesNo.class), 773, time
+				));
+			}
+		}
+	}
+    
 	// YES / NO 대답을 했을시
 	static public void toAsk(PcInstance pc, boolean yes) {
 		if (yes && !pc.isWorldDelete() && !pc.isDead() && !pc.isLock() && !startTeamBattle && pc.getMap() != Lineage.teamBattleMap && !joinEnd && askTeamBattle && !pc.isFishing()) {
+
+			// ✅ [수정] isFixed() 대신 isMember() 사용----고정 멤버만 팀배틀 사용가능
+			if (!pc.isMember()) {
+				ChattingController.toChatting(pc, "[알림] 팀대전은 고정 멤버만 참여 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+				return;
+			}
+			
 			if (Lineage.teamBattle_max_pc > 0 && getJoinListSize() > Lineage.teamBattle_max_pc) {
 				ChattingController.toChatting(pc, String.format("팀대전 입장 인원(%d명)을 초과하여 입장이 불가능합니다.", Lineage.teamBattle_max_pc), Lineage.CHATTING_MODE_MESSAGE);
 				return;

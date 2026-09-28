@@ -25,6 +25,9 @@ public class 지옥컨트롤러 {
     // 타이머 브로드캐스트 제어
     private static int  lastRemainSecSent    = -1; // 마지막 전송한 remainSec (중복 방지)
     private static long nextTimerBroadcastAt = 0L; // 다음 갱신 전송 시각(ms)
+    
+    // 항상 열려있는 사냥터로 운용할 때 true
+    private static final boolean ALWAYS_OPEN = false;
 
     public static void init() {
         TimeLine.start("지옥 컨트롤러..");
@@ -33,11 +36,35 @@ public class 지옥컨트롤러 {
         hellEndTime = 0L;
         lastRemainSecSent = -1;
         nextTimerBroadcastAt = 0L;
+    
+        /*상시개방*/
+        if (ALWAYS_OPEN) {
+            // 상시 오픈: 열림 상태로 전환하고 타이머는 숨김(0초)
+            isOpen = true;
+            hellEndTime = Long.MAX_VALUE; // 의미 없음이지만 닫히지 않도록 매우 크게
+            sendMessage();                                      // “열렸습니다” 1회 안내
+            sendTimerUI(false, System.currentTimeMillis()); // 타이머 UI 끄기
+            TimeLine.end();
+            return; // 스케줄 기반 로직 건너뜀
+        }
+    
         TimeLine.end();
     }
 
     @SuppressWarnings("deprecation")
     public static void toTimer(long nowMs) {
+        
+        /*상시개방*/
+        if (ALWAYS_OPEN) {
+            // 상시 모드: 스케줄 체크/타이머 브로드캐스트 전부 비활성
+            if (!isOpen) {
+                isOpen = true;
+                sendMessage(); // 혹시 모를 재시작 시 1회만
+            }
+            // 타이머 UI는 항상 숨김 유지
+            return;
+        }
+        
         // 현재 시/분
         calendar.setTimeInMillis(nowMs);
         Date date = calendar.getTime();
@@ -46,24 +73,31 @@ public class 지옥컨트롤러 {
 
         // 요일(1=일, 7=토)
         int day = getDayOfWeek();
+        
+        // 💡 외부 Config(0=일 ~ 6=토) 기준과 맞추기 위해 자바 요일에서 1을 뺌
+        int configDay = day - 1;
 
         // 스케줄 체크 (열릴 때만 트리거)
         if (!isOpen) {
-            if (day == 1 || day == 7) {
-                // 주말 스케줄
-                for (TeamBattleTime t : Lineage.hell_dungeon_time_list2) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+            // 1. 오늘 요일이 Config(hell_open_day_list)에 등록된 요일인지 확인
+            if (Lineage.hell_open_day_list.contains(configDay)) {
+                
+                // 2. 포함되어 있다면, 오늘이 주말(토, 일)인지 평일인지 구분하여 시간 체크
+                if (configDay == 0 || configDay == 6) {
+                    // [주말 스케줄] (일요일=0, 토요일=6) -> time_list2 사용
+                    for (TeamBattleTime t : Lineage.hell_dungeon_time_list2) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
                     }
-                }
-            } else {
-                // 평일 스케줄
-                for (TeamBattleTime t : Lineage.hell_dungeon_time_list) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
-                    }
+                } else {
+                    // [평일 스케줄] (월~금) -> time_list 사용
+                    for (TeamBattleTime t : Lineage.hell_dungeon_time_list) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
                 }
             }
         }
@@ -86,6 +120,7 @@ public class 지옥컨트롤러 {
                 lastRemainSecSent = remainSec;
                 nextTimerBroadcastAt = nowMs + 1000L;
             }
+        }
         }
     }
 
@@ -116,11 +151,11 @@ public class 지옥컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 지옥 던전으로 가는길이 열렸습니다. *****";
+            chatMsg    = "\\fY      ***** 지옥 던전으로 가는길이 열렸습니다. *****";
             toastTitle = "★ 지옥 던전 입장 가능 ★";
             toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 지옥 던전으로 가는길이 닫혔습니다. *****";
+            chatMsg    = "\\fY      ***** 지옥 던전으로 가는길이 닫혔습니다. *****";
             toastTitle = "■ 지옥 던전 닫힘 안내";
             toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }
@@ -165,6 +200,17 @@ public class 지옥컨트롤러 {
      */
     public static void pushTimerTo(PcInstance pc) {
         int remainSec = 0;
+        
+        /*상시개방*/
+        if (ALWAYS_OPEN) {
+            // 상시 오픈: 타이머 숨김1
+            SC_TIMER_UI_NOTI.newInstance()
+                .setTimerType(TimerType.Normal)
+                .setRemainTime(0)
+                .send(pc);
+            return;
+        }
+        
         if (isOpen) {
             long diff = hellEndTime - System.currentTimeMillis();
             if (diff < 0) diff = 0;

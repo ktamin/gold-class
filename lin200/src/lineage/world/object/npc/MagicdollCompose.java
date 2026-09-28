@@ -37,14 +37,45 @@ public class MagicdollCompose extends object {
 		else if (key.equalsIgnoreCase("doll_aden_cost_4")) 인형_4단계_합성_아데나 = Integer.valueOf(value);
 		else if (key.equalsIgnoreCase("doll_aden_cost_5")) 인형_5단계_합성_아데나 = Integer.valueOf(value);
 	}
-
+/*
 	@Override
 	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
 		List<String> ynlist2 = new ArrayList<>();
 		ynlist2.add(String.format("소모되는 아데나 : %s (단계별로 상이)", "설정값 참조"));
 		pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "Magicdoll", null, ynlist2));
 	}
+*/
+	
+	@Override
+	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
+		List<String> htmlArgs = new ArrayList<>();
+		
+		// 확률 정보 (0 ~ 7)
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_1_probability * 100));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_1_perfect_probability * 100));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_2_probability * 100));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_2_perfect_probability * 100));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_3_probability * 100));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_3_perfect_probability * 100));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_4_probability * 100));
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.magicDoll_class_5_probability * 100));
+		
+		// 보너스 확률 및 천장 (8 ~ 11)
+		htmlArgs.add(String.format("%.1f%%", Lineage_Balance.doll_bonus_val_4));
+		htmlArgs.add(String.valueOf(Lineage_Balance.doll_pity_count_4) + "회");
+		htmlArgs.add(String.valueOf(Lineage_Balance.doll_pity_count_5) + "회");
+		htmlArgs.add(String.valueOf(Lineage_Balance.doll_pity_count_dragon) + "회");
+		
+		// 합성 비용 (12 ~ 16)
+		htmlArgs.add(String.format("%,d", 인형_1단계_합성_아데나));
+		htmlArgs.add(String.format("%,d", 인형_2단계_합성_아데나));
+		htmlArgs.add(String.format("%,d", 인형_3단계_합성_아데나));
+		htmlArgs.add(String.format("%,d", 인형_4단계_합성_아데나));
+		htmlArgs.add(String.format("%,d", 인형_5단계_합성_아데나));
 
+		pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "Magicdoll", null, htmlArgs));
+	}
+	
 	@Override
 	public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp) {
 		if (pc.isWorldDelete() || pc.isDead() || pc.isLock() || pc.getInventory() == null) return;

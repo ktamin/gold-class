@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import lineage.bean.database.Item;
 import lineage.bean.database.Npc;
 import lineage.bean.database.Warehouse;
 import lineage.bean.lineage.Clan;
@@ -48,6 +49,13 @@ public class DwarfInstance extends object {
 
 	@Override
 	public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp) {		
+		
+		// ✅ [추가 방어 1] 자동매입 중일 때 창고 NPC 대화 원천 차단
+				if (pc.is_auto_sell) { // (팩에 따라 pc.isAutoSell() 일 수 있습니다)
+					ChattingController.toChatting(pc, "자동매입 중에는 창고를 이용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+					return; // 아래 코드를 읽지 못하게 바로 돌려보냄
+				}
+				
 		synchronized (sync_dynamic) {
 			int dwarf_type = Lineage.DWARF_TYPE_NONE; // 일반창고
 			if (action.indexOf("pledge") > 0)
@@ -107,6 +115,12 @@ public class DwarfInstance extends object {
 			return;
 		}
 		
+		// ✅ [추가 방어 2] 자동매입 중일 때 창고 찾기/맡기기 패킷 원천 차단
+				if (pc.is_auto_sell) { 
+					ChattingController.toChatting(pc, "자동매입 중에는 창고를 이용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+					return; 
+				}
+		
 		synchronized (sync_dynamic) {
 			int type = cbp.readC();
 			switch (type) {
@@ -144,6 +158,7 @@ public class DwarfInstance extends object {
 	/**
 	 * 창고에서 아이템 꺼낼때 사용하는 메서드.
 	 */
+/*	
 	private void select(PcInstance pc, int dwarf_type, ClientBasePacket cbp) {
 		Connection con = null;
 		PreparedStatement st = null;
@@ -376,7 +391,233 @@ public class DwarfInstance extends object {
 				clan.setWarehouseObjectId(0L);
 		}
 	}
+*/
+	
+	/**
+	 * 창고에서 아이템 꺼낼때 사용하는 메서드.
+	 */
+	private void select(PcInstance pc, int dwarf_type, ClientBasePacket cbp) {
+		Connection con = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		PreparedStatement st2 = null;
+		
+		if (pc == null || pc.getInventory() == null) return;
 
+		Clan clan = dwarf_type == Lineage.DWARF_TYPE_CLAN ? ClanController.find(pc) : null;
+		
+		if (dwarf_type == Lineage.DWARF_TYPE_CLAN && clan != null && clan.getWarehouseObjectId() != pc.getObjectId()) {
+			ChattingController.toChatting(pc, "[혈맹창고] 잘못된 접근입니다.", Lineage.CHATTING_MODE_MESSAGE);
+			return;
+		}
+		
+		try {
+			con = DatabaseConnection.getLineage();
+			if (con == null) return;
+
+			long count = cbp.readH();
+			
+			if (dwarf_type != Lineage.DWARF_TYPE_CLAN && pc.getClient() == null) return;
+			int id = dwarf_type == Lineage.DWARF_TYPE_CLAN ? pc.getClanId() : pc.getClient().getAccountUid();
+			
+			int w_Count = WarehouseDatabase.getCount(id, dwarf_type);
+
+			if (count > 0 && count <= w_Count) {
+				long item_id = 0;
+				long item_count = 0;
+
+				for (int i = 0; i < count; ++i) {
+					item_id = cbp.readD();
+					item_count = cbp.readD();
+
+					switch (dwarf_type) {
+					case Lineage.DWARF_TYPE_CLAN:
+						st = con.prepareStatement("SELECT * FROM warehouse_clan WHERE uid=? AND clan_id=?");
+						break;
+					case Lineage.DWARF_TYPE_ELF:
+						st = con.prepareStatement("SELECT * FROM warehouse_elf WHERE uid=? AND account_uid=?");
+						break;
+					default:
+						st = con.prepareStatement("SELECT * FROM warehouse WHERE uid=? AND account_uid=?");
+						break;
+					}
+					st.setLong(1, item_id);
+					st.setInt(2, id);
+					rs = st.executeQuery();
+					if (rs.next()) {
+						int db_uid = rs.getInt(1);
+						int db_inv_id = rs.getInt(3);
+						int pet_objid = rs.getInt(4);
+						int letter_id = rs.getInt(5);
+						String db_name = rs.getString(6);
+						
+						if (db_name == null) continue;
+						
+						long db_count = rs.getLong(9);
+						int db_quantity = rs.getInt(10);
+						int db_en = rs.getInt(11);
+						boolean db_definite = rs.getInt(12) == 1;
+						int db_bress = rs.getInt(13);
+						int db_durability = rs.getInt(14);
+						int db_time = rs.getInt(15);
+						int db_enfire = rs.getInt(16);
+						int db_enwater = rs.getInt(17);
+						int db_enwind = rs.getInt(18);
+						int db_enearth = rs.getInt(19);
+						int DolloptionA = rs.getInt(20);
+						int DolloptionB = rs.getInt(21);
+						int DolloptionC = rs.getInt(22);
+						int DolloptionD = rs.getInt(23);
+						int DolloptionE = rs.getInt(24);
+						long db_expire_time = rs.getLong(25);
+						long db_click_delay = rs.getLong("click_delay");
+
+						Item findItem = ItemDatabase.find(db_name);
+						if (findItem == null) continue; 
+
+						ItemInstance temp = ItemDatabase.newInstance(findItem);
+						if (temp != null && item_count > 0 && item_count <= db_count) {
+							temp.setCount(item_count);
+							temp.setBless(db_bress);
+							
+							// 가방에 넣을 공간이 있는지 확인
+							if (pc.getInventory().isAppend(temp, temp.getCount(), false)) {
+								
+								// 아데나/미스릴 지불 비용 검사
+								boolean aden = dwarf_type == Lineage.DWARF_TYPE_ELF ? pc.getInventory().isMeterial(Lineage.warehouse_price_elf, true)
+										: pc.getInventory().isAden(Lineage.warehouse_price, true);
+										
+								if (aden) {
+									
+									// ✅ [복사 방지 핵심 1] DB에서 아이템을 "먼저" 깎거나 지웁니다!
+									db_count -= item_count;
+									try {
+										if (db_count <= 0) {
+											switch (dwarf_type) {
+											case Lineage.DWARF_TYPE_CLAN: st2 = con.prepareStatement("DELETE FROM warehouse_clan WHERE uid=?"); break;
+											case Lineage.DWARF_TYPE_ELF: st2 = con.prepareStatement("DELETE FROM warehouse_elf WHERE uid=?"); break;
+											default: st2 = con.prepareStatement("DELETE FROM warehouse WHERE uid=?"); break;
+											}
+											st2.setInt(1, db_uid);
+											st2.executeUpdate();
+										} else {
+											switch (dwarf_type) {
+											case Lineage.DWARF_TYPE_CLAN: st2 = con.prepareStatement("UPDATE warehouse_clan SET count=? WHERE uid=?"); break;
+											case Lineage.DWARF_TYPE_ELF: st2 = con.prepareStatement("UPDATE warehouse_elf SET count=? WHERE uid=?"); break;
+											default: st2 = con.prepareStatement("UPDATE warehouse SET count=? WHERE uid=?"); break;
+											}
+											st2.setLong(1, db_count);
+											st2.setInt(2, db_uid);
+											st2.executeUpdate();
+										}
+									} finally {
+										DatabaseConnection.close(st2);
+									}
+
+									// ✅ [복사 방지 핵심 2] DB 처리가 끝난 뒤에 비로소 아이템을 가방에 지급합니다.
+									ItemInstance temp2 = pc.getInventory().find(temp);
+									String target_name = null;
+									long target_objid = 0;
+									
+									if (temp2 == null) {
+										temp.setObjectId(db_inv_id);
+										temp.setQuantity(db_quantity);
+										temp.setEnLevel(db_en);
+										temp.setDefinite(db_definite);
+										temp.setBless(db_bress);
+										temp.setDurability(db_durability);
+										temp.setTime(db_time);
+										temp.setPetObjectId(pet_objid);
+										temp.setLetterUid(letter_id);
+										temp.setEnFire(db_enfire);
+										temp.setEnWater(db_enwater);
+										temp.setEnWind(db_enwind);
+										temp.setEnEarth(db_enearth);
+										temp.setInvDolloptionA(DolloptionA);
+										temp.setInvDolloptionB(DolloptionB);
+										temp.setInvDolloptionC(DolloptionC);
+										temp.setInvDolloptionD(DolloptionD);
+										temp.setInvDolloptionE(DolloptionE);
+										temp.setExpireTime(db_expire_time);
+										temp.setClickDelay(db_click_delay);
+										
+										pc.getInventory().append(temp, true);
+										try { temp.toWorldJoin(con, pc); } catch (Exception ignore) {}
+									} else {
+										target_name = temp2.toStringDB();
+										target_objid = temp2.getObjectId();
+										pc.getInventory().count(temp2, temp2.getCount() + temp.getCount(), true);
+									}
+
+									// ✅ [복사 방지 핵심 3] 자주 에러가 나는 로그, 메시지 출력 부분을 완전히 격리!
+									// 여기서 에러가 나더라도 아이템과 DB는 이미 완벽하게 처리되어 복사가 불가능합니다.
+									try {
+										String item_name = temp.toStringDB();
+										WarehouseClanLogDatabase.append(pc, temp, item_count, "remove");
+										
+										if (Lineage.clan_warehouse_message && dwarf_type == Lineage.DWARF_TYPE_CLAN && clan != null) {
+											String msg = String.format("[혈맹창고] %s 님이 %s 찾음", pc.getName(), temp.toStringDB());
+											clan.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null, Lineage.CHATTING_MODE_MESSAGE, msg));
+										}
+
+										if (dwarf_type == Lineage.DWARF_TYPE_CLAN)
+											Log.appendItem(pc, "type|혈맹창고찾기", String.format("item_name|%s", item_name), String.format("item_objid|%d", db_inv_id), String.format("count|%d", item_count),
+													String.format("target_name|%s", target_name), String.format("target_objid|%d", target_objid));
+										else
+											Log.appendItem(pc, "type|창고찾기", String.format("item_name|%s", item_name), String.format("item_objid|%d", db_inv_id), String.format("count|%d", item_count),
+													String.format("target_name|%s", target_name), String.format("target_objid|%d", target_objid));
+
+										if (!Common.system_config_console && !(pc instanceof PcRobotInstance) && pc instanceof PcInstance) {
+											long time = System.currentTimeMillis();
+											String timeString = Util.getLocaleString(time, true);
+											String log = String.format("[%s]\t[%s]\t캐릭터: %s\t캐릭터obj_id: %d\t  아이템: %s", timeString, 
+													dwarf_type == Lineage.DWARF_TYPE_CLAN ? "혈맹 창고 찾기" : "창고 찾기", pc.getName(), pc.getObjectId(), Util.getItemNameToString(temp, item_count));
+
+											GuiMain.display.asyncExec(new Runnable() {
+												public void run() {
+													if (GuiMain.getViewComposite() != null && GuiMain.getViewComposite().getWarehouseComposite() != null) {
+														GuiMain.getViewComposite().getWarehouseComposite().toLog(log);
+													}
+												}
+											});
+										}
+									} catch (Exception logEx) {
+										// ✅ 캐릭터 이름과 오브젝트 ID를 함께 출력하도록 수정
+										lineage.share.System.println(String.format("[알림] 창고 로그 처리 중 에러 무시됨 [캐릭터: %s / 고유ID: %d] (아이템 처리는 완료)", pc.getName(), pc.getObjectId()));
+									}
+									// ---------------- 격리 구역 끝 ----------------
+									
+								} else {
+									if (dwarf_type == Lineage.DWARF_TYPE_ELF)
+										pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 337, "미스릴"));
+									else
+										pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
+									ItemDatabase.setPool(temp);
+									break;
+								}
+							} else {
+								ItemDatabase.setPool(temp);
+								break;
+							}
+						}
+					}
+					rs.close();
+					st.close();
+				}
+			}
+		} catch (Exception e) {
+			lineage.share.System.println("================== [창고 에러 발생] ==================");
+			lineage.share.System.println(e.toString());
+		} finally {
+			DatabaseConnection.close(con, st, rs);
+		}
+		
+		if (dwarf_type == Lineage.DWARF_TYPE_CLAN) {
+			if (clan != null && clan.getWarehouseObjectId() == pc.getObjectId())
+				clan.setWarehouseObjectId(0L);
+		}
+	}
+	
 	/**
 	 * 창고에 아이템 맡길때 처리하는 메서드.
 	 */

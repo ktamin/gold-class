@@ -16,12 +16,14 @@ import org.apache.log4j.PropertyConfigurator;
 import all_night.Lineage_Balance;
 import all_night.Npc_promotion;
 import all_night.Plugins;
+import lineage.database.AfkDatabase;
 import lineage.database.BackgroundDatabase;
 import lineage.database.BadIpDatabase;
 import lineage.database.DatabaseConnection;
 import lineage.database.DefiniteDatabase;
 import lineage.database.DungeonDatabase;
 import lineage.database.EnchantLostItemDatabase;
+import lineage.database.ExchangeDatabase;
 import lineage.database.ExpDatabase;
 import lineage.database.FishItemListDatabase;
 import lineage.database.GmCommandDatabase;
@@ -56,6 +58,7 @@ import lineage.database.ServerReloadDatabase;
 import lineage.database.SkillDatabase;
 import lineage.database.SpriteFrameDatabase;
 import lineage.database.SummonListDatabase;
+import lineage.database.TalkScrollDatabase;
 import lineage.database.TeamBattleDatabase;
 import lineage.database.TeleportHomeDatabase;
 import lineage.database.TeleportResetDatabase;
@@ -86,6 +89,8 @@ import lineage.util.PakTools;
 import lineage.util.Shutdown;
 import lineage.world.AStar;
 import lineage.world.World;
+import lineage.world.controller.AbandonedController;
+import lineage.world.controller.AfkController;
 import lineage.world.controller.AgitController;
 import lineage.world.controller.AuctionController;
 import lineage.world.controller.AutoHuntController;
@@ -102,6 +107,7 @@ import lineage.world.controller.CraftController;
 import lineage.world.controller.DamageController;
 import lineage.world.controller.DogRaceController;
 import lineage.world.controller.DungeonController;
+import lineage.world.controller.ElvenforestController;
 import lineage.world.controller.EventController;
 import lineage.world.controller.FightController;
 import lineage.world.controller.FishingController;
@@ -111,6 +117,7 @@ import lineage.world.controller.InnController;
 import lineage.world.controller.InventoryController;
 import lineage.world.controller.KingdomController;
 import lineage.world.controller.LetterController;
+import lineage.world.controller.뒤틀린잊혀진섬컨트롤러;
 import lineage.world.controller.MagicDollController;
 import lineage.world.controller.NoticeController;
 import lineage.world.controller.PartyController;
@@ -135,11 +142,14 @@ import lineage.world.controller.고라스컨트롤러;
 import lineage.world.controller.고무컨트롤러;
 import lineage.world.controller.그신컨트롤러;
 import lineage.world.controller.기감컨트롤러;
+import lineage.world.controller.뒤틀린잊혀진섬컨트롤러;
 import lineage.world.controller.드워프컨트롤러;
 import lineage.world.controller.라바던전컨트롤러;
 import lineage.world.controller.마족신전컨트롤러;
 import lineage.world.controller.무인혈맹컨트롤러;
 import lineage.world.controller.보물찾기컨트롤러;
+import lineage.world.controller.수렵이벤트컨트롤러;
+import lineage.world.controller.스팟타워컨트롤러;
 import lineage.world.controller.악마왕의영토컨트롤러;
 import lineage.world.controller.얼던컨트롤러;
 import lineage.world.controller.오만10층컨트롤러;
@@ -162,6 +172,8 @@ import lineage.world.controller.칠흑던전4층컨트롤러;
 import lineage.world.controller.칠흑던전컨트롤러;
 import lineage.world.controller.타임이벤트컨트롤러;
 import lineage.world.controller.테베라스컨트롤러;
+import lineage.world.controller.테베사막컨트롤러;
+import lineage.world.controller.티칼컨트롤러;
 import lineage.world.controller.펭귄사냥컨트롤러;
 import lineage.world.object.instance.PcInstance;
 import lineage.world.object.instance.PcRobotInstance;
@@ -306,6 +318,7 @@ public final class Main implements Runnable {
 			WorldClearController.init();
 			SpotController.init();
 			테베라스컨트롤러.init();
+			테베사막컨트롤러.init();
 			지옥컨트롤러.init();
 			지하수로컨트롤러.init();
 			보물찾기컨트롤러.init();
@@ -332,11 +345,17 @@ public final class Main implements Runnable {
 			오만9층컨트롤러.init();
 			오만10층컨트롤러.init();
 			오만정상컨트롤러.init();
+			뒤틀린잊혀진섬컨트롤러.init();
+			AbandonedController.init();
 			기감컨트롤러.init();
 			고라스컨트롤러.init();
 			드워프컨트롤러.init();
 			타임이벤트컨트롤러.init();
+			수렵이벤트컨트롤러.init();
+			티칼컨트롤러.init();
+			스팟타워컨트롤러.init();
 			AutoHuntController.init();
+			AfkController.init();
 
 			GeneralThreadPool.getInstance();
 			GameTimeClock.init();
@@ -364,6 +383,7 @@ public final class Main implements Runnable {
 			PolyDatabase.init(con);
 			DungeonDatabase.init(con);
 			DefiniteDatabase.init(con);
+			TalkScrollDatabase.init(con);
 			ExpDatabase.init(con);
 			BackgroundDatabase.init(con);
 			SpriteFrameDatabase.init(con);
@@ -402,6 +422,8 @@ public final class Main implements Runnable {
 			HackNoCheckDatabase.init(con);
 			EnchantLostItemDatabase.init(con);
 			ItemDropMessageDatabase.init(con);
+			AfkDatabase.load();
+			ExchangeDatabase.init(con);
 			DatabaseConnection.close(con);
 
 			FishingController.init();
@@ -411,7 +433,7 @@ public final class Main implements Runnable {
 			// 성 스폰처리
 			KingdomController.readKingdom();
 			// 요정숲 관리 초기화. 디비값을 참고하기때문에 디비로딩후 처리해야함.
-			// ElvenforestController.init();
+			ElvenforestController.init();
 			// 로봇 처리. etc_objectid 때문에 여기에서 처리.
 			RobotController.init();
 
@@ -429,7 +451,7 @@ public final class Main implements Runnable {
 			DatabaseThread.init();
 			CharacterControlThread.init();
 			// AutoAttackThread.init();
-			// DogRaceController.start();
+			DogRaceController.start();
 			FightController.init();
 			TimeThread.init();
 			AutoHuntThread.init();
@@ -549,7 +571,33 @@ public final class Main implements Runnable {
 
 	public static void main(String[] args) {
 		PluginController.setPlugin(new Plugins());
+		// ==========================================
+		// 💡 [핵심 추가] GUI 닫기(X버튼)나 서버 크래시 발생 시 강제로 발동하는 방어막
+		// ==========================================
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				// 서버가 정상적인 종료 명령(toDelete)을 거치지 않고 강제로 꺼질 때만 발동!
+				if (running) {
+					lineage.share.System.println("\n[긴급] 서버 비정상 종료 감지! 메모리 증발(백섭)을 막기 위해 강제 저장을 시작합니다...");
+					try {
+						java.sql.Connection con = DatabaseConnection.getLineage();
 
+						// 1. 필드에서 사냥 중인 모든 일반 캐릭터 강제 저장
+						save(con);
+
+						// 2. 돌아가고 있는 모든 자동낚시 봇(미끼, 획득 아이템) 강제 저장
+						FishingController.close(con);
+
+						DatabaseConnection.close(con);
+						lineage.share.System.println("[긴급 백업 완료] 모든 데이터가 안전하게 DB에 백업되었습니다.");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		// ==========================================
 		GuiMain.open();
 	}
 }

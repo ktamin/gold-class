@@ -132,7 +132,7 @@ public class Haste extends Magic {
 	static public void onBuff(object o, Skill skill) {
 		onBuff(o, skill, skill.getBuffDuration());
 	}
-
+/*
 	static public void onBuff(object o, Skill skill, int time) {
 		ItemInstance item1 = o.getInventory() != null ? o.getInventory().getSlot(Lineage.SLOT_WEAPON) : null;
 		ItemInstance item2 = o.getInventory() != null ? o.getInventory().getSlot(Lineage.SLOT_SHIELD) : null;
@@ -153,6 +153,28 @@ public class Haste extends Magic {
 		BuffController.remove(o, Haste.class);
 
 		o.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), o, skill.getCastGfx()), true);
+		BuffController.append(o, Haste.clone(BuffController.getPool(Haste.class), skill, time, false));
+	}
+*/	
+	static public void onBuff(object o, Skill skill, int time) {
+		ItemInstance item1 = o.getInventory() != null ? o.getInventory().getSlot(Lineage.SLOT_WEAPON) : null;
+		ItemInstance item2 = o.getInventory() != null ? o.getInventory().getSlot(Lineage.SLOT_SHIELD) : null;
+		if ((item1 != null && item1.getItem().getNameIdNumber() == 418)
+				|| (item2 != null && item2.getItem().getNameIdNumber() == 419))
+			return;
+
+		if (o.getSpeed() == 2) {
+			BuffController.remove(o, Slow.class);
+			return;
+		}
+
+		// 하위/동급의 다른 헤이스트류 버프만 지웁니다. (Haste.class 삭제 제거)
+		BuffController.remove(o, HastePotionMagic.class);
+		BuffController.remove(o, GreaterHaste.class);
+
+		o.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), o, skill.getCastGfx()), true);
+		
+		// 💡 Controller가 내부적으로 중복 체크를 하여 toBuffUpdate를 호출하도록 유도합니다.
 		BuffController.append(o, Haste.clone(BuffController.getPool(Haste.class), skill, time, false));
 	}
 }

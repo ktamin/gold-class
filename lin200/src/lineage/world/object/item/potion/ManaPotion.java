@@ -24,7 +24,7 @@ public class ManaPotion extends ItemInstance {
 		// 이팩트 표현
 		cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, getItem().getEffect()), true);
 		// 메세지 표현
-		cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 818));
+//		cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 818));
 		// 마나 상승
 		cha.setNowMp( cha.getNowMp()+Util.random(getItem().getSmallDmg(), getItem().getBigDmg()) );
 		// 아이템 수량 갱신

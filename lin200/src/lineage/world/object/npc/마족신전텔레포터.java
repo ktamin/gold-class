@@ -20,16 +20,31 @@ public class 마족신전텔레포터 extends object {
 	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
 		List<String> list = new ArrayList<String>();
 		
-		int nowday = getDayOfWeek ();
+		// 1. Config에 설정된 오픈 요일 숫자(0~6)를 한글(일~토)로 변환
+		String[] dayNames = {"일", "월", "화", "수", "목", "금", "토"};
+		String openDays = "";
+		
+		for (int d : Lineage.dete_open_day_list) {
+			if(d >= 0 && d <= 6) {
+				openDays += dayNames[d] + " ";
+			}
+		}
+		// 끝에 남는 공백을 없애고 쉼표(,)로 예쁘게 이어줍니다. (예: "화, 목, 토")
+		openDays = openDays.trim().replace(" ", ", ");
+		if(openDays.isEmpty()) {
+			openDays = "설정 없음";
+		}
+		
+		// 2. 정보 출력 (안내 문구 추가)
+		list.add(String.format("오픈 요일: %s요일", openDays)); // ★ 요일 안내 추가
 		list.add(String.format("입장 레벨: %d이상 입장 가능", Lineage.dete_level));
 		list.add(String.format("수배 조건: %s", Lineage.dete_wanted ? "수배자만 입장 가능" : "수배 필요없음"));
 		list.add(String.format("혈맹 조건: %s", Lineage.dete_clan ? "혈맹 필요" : "혈맹 필요없음"));
 		
-		if(nowday == 1 || nowday == 7){
-			list.add(String.format("입장 시간: %s", Lineage.dete_dungeon_time2));	
-		}else{
-			list.add(String.format("입장 시간: %s", Lineage.dete_dungeon_time));
-		}
+		// 3. 평일/주말 시간을 유저가 모두 확인할 수 있도록 각각 출력
+		list.add(String.format("평일 시간: %s", Lineage.dete_dungeon_time));
+		list.add(String.format("주말 시간: %s", Lineage.dete_dungeon_time2));
+		
 		list.add(String.format("진행 시간: %s", Lineage.dete_play_time < 60 ? Lineage.dete_play_time + "초" : (Lineage.dete_play_time / 60) + "분"));
 		list.add(String.format("입장 가능 여부: %s", 마족신전컨트롤러.isOpen ? "현재 입장 가능" : "입장 불가"));
 		
@@ -39,6 +54,18 @@ public class 마족신전텔레포터 extends object {
 	@Override
 	public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp) {
 	    if (!"dete_teleport".equalsIgnoreCase(action)) return;
+	    
+        // * 오픈대기
+		if (Lineage.open_wait) {
+			ChattingController.toChatting(pc, "[오픈대기] 오픈대기에는 이동 하실수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+			return;
+		}	
+	    
+		// ✅ [추가] 고정 멤버 제한 (가장 먼저 체크)
+ 		if (pc.getGm() == 0 && !pc.isMember()) {
+			ChattingController.toChatting(pc, "고정 멤버만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+ 			return;
+		}
 
 	    // 1. 혈맹 제한 (GM은 무시)
 	    if (pc.getGm() == 0 && (pc.getClanId() == 0 || pc.getClanName().equalsIgnoreCase(Lineage.new_clan_name))) {
@@ -77,7 +104,22 @@ public class 마족신전텔레포터 extends object {
 	    }
 
 	    // 7. 모든 조건 만족 → 입장 처리 (맵/좌표 랜덤)
-	    pc.toPotal(Util.random(32908, 32917), Util.random(32990, 32992), 410);
+//	    pc.toPotal(Util.random(32908, 32917), Util.random(32990, 32992), 410);
+	       // 7. 모든 조건 만족 → 입장 처리 (3개의 지점 중 랜덤)
+	 		int rnd = Util.random(1, 3); // 💡 1, 2, 3 중 랜덤으로 숫자 하나를 뽑습니다.
+	 		
+	 		if (rnd == 1) {
+	 			// 📍 첫 번째 위치 (기존 좌표)
+	 			pc.toPotal(Util.random(32932, 32930), Util.random(32993, 32995), 410);
+	 		} 
+	 		else if (rnd == 2) {
+	 			// 📍 두 번째 위치 (좌표 숫자를 원하시는 곳으로 수정하세요)
+	 			pc.toPotal(Util.random(32757, 32761), Util.random(32975, 32978), 410); 
+	 		} 
+	 		else {
+	 			// 📍 세 번째 위치 (좌표 숫자를 원하시는 곳으로 수정하세요)
+	 			pc.toPotal(Util.random(32934, 32929), Util.random(32904, 32901), 410);
+	 		}
 	}
 
 	

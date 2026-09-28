@@ -20,9 +20,17 @@ public class LevelupSupport2 extends ItemInstance {
 
     @Override
     public void toClick(Character cha, ClientBasePacket cbp) {
+    	
+		// 💡 [추가] 오픈 대기 상태 체크
+		if (Lineage.open_wait) {
+			ChattingController.toChatting(cha, "[오픈대기] 오픈대기 상태에서는 아이템을 사용하실 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+			return;
+		}
+		
         if (!(cha instanceof PcInstance) || cha.getInventory() == null || cha.isWorldDelete() || cha.isLock() || cha.isDead()) {
             return;
         }
+		
         PcInstance pc = (PcInstance) cha;
 
         // 💡 1. 랭킹 시스템에서 최고 레벨을 가져옵니다.

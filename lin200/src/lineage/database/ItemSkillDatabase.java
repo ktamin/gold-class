@@ -29,7 +29,8 @@ public class ItemSkillDatabase {
 				i.setSkillUid(rs.getInt("skill_uid"));
 				i.setEnLevel(rs.getInt("enchant_level"));
 				i.setDefaultProbability(rs.getInt("default_probability"));
-				i.setAddEnchantProbability(rs.getInt("add_enchant_probability"));
+//				i.setAddEnchantProbability(rs.getInt("add_enchant_probability"));
+				i.setAddEnchantProbability(rs.getDouble("add_enchant_probability"));
 				i.setSetInt(rs.getString("set_int").equalsIgnoreCase("true"));
 				i.setEffectTarget(rs.getString("effect_target").equalsIgnoreCase("target"));
 				i.setRateDmg(rs.getInt("대미지 조절") * 0.01);
@@ -72,7 +73,8 @@ public class ItemSkillDatabase {
 				i.setSkillUid(rs.getInt("skill_uid"));
 				i.setEnLevel(rs.getInt("enchant_level"));
 				i.setDefaultProbability(rs.getInt("default_probability"));
-				i.setAddEnchantProbability(rs.getInt("add_enchant_probability"));
+//				i.setAddEnchantProbability(rs.getInt("add_enchant_probability"));
+				i.setAddEnchantProbability(rs.getDouble("add_enchant_probability"));
 				i.setSetInt(rs.getString("set_int").equalsIgnoreCase("true"));
 				i.setEffectTarget(rs.getString("effect_target").equalsIgnoreCase("target"));
 				i.setRateDmg(rs.getInt("대미지 조절") * 0.01);

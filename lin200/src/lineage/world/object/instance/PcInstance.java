@@ -94,6 +94,8 @@ import lineage.util.Util;
 import lineage.world.AStar;
 import lineage.world.Node;
 import lineage.world.World;
+import lineage.world.controller.AbandonedController;
+import lineage.world.controller.AfkController;
 import lineage.world.controller.AgitController;
 import lineage.world.controller.AutoHuntCheckController;
 import lineage.world.controller.BaphometSystemController;
@@ -109,7 +111,7 @@ import lineage.world.controller.FriendController;
 import lineage.world.controller.InventoryController;
 import lineage.world.controller.KingdomController;
 import lineage.world.controller.LetterController;
-import lineage.world.controller.Lostilandcontroller;
+import lineage.world.controller.뒤틀린잊혀진섬컨트롤러;
 import lineage.world.controller.MagicDollController;
 import lineage.world.controller.PartyController;
 import lineage.world.controller.QuestController;
@@ -128,6 +130,8 @@ import lineage.world.controller.드워프컨트롤러;
 import lineage.world.controller.라바던전컨트롤러;
 import lineage.world.controller.마족신전컨트롤러;
 import lineage.world.controller.보물찾기컨트롤러;
+import lineage.world.controller.수렵이벤트컨트롤러;
+import lineage.world.controller.스팟타워컨트롤러;
 import lineage.world.controller.악마왕의영토컨트롤러;
 import lineage.world.controller.얼던컨트롤러;
 import lineage.world.controller.오만10층컨트롤러;
@@ -151,6 +155,7 @@ import lineage.world.controller.칠흑던전컨트롤러;
 import lineage.world.controller.타임이벤트컨트롤러;
 import lineage.world.controller.테베라스컨트롤러;
 import lineage.world.controller.테베사막컨트롤러;
+import lineage.world.controller.티칼컨트롤러;
 import lineage.world.controller.펭귄사냥컨트롤러;
 import lineage.world.object.Character;
 import lineage.world.object.object;
@@ -231,6 +236,8 @@ public class PcInstance extends Character {
 	private long lastPremiumMentTime = 0;
 
 	private long expPotionAdenaUntil = 0L;
+	// 접속 후 대기 시간
+	private long loginTime = System.currentTimeMillis();
 
 	// 채팅 사용 유무
 	private boolean chattingWhisper;
@@ -259,6 +266,7 @@ public class PcInstance extends Character {
 	private boolean isSealBuff110;
 	private boolean isSealBuff120;
 	private boolean isSealBuff130;
+	private boolean isSealBuff140;
 	private boolean isImmortalityPremiumBuff = false; // 고급 가호 효과 적용여부
 	private double premiumExpBonus = 0.0;
 	private double premiumAdenaBonus = 0.0;
@@ -459,6 +467,10 @@ public class PcInstance extends Character {
 
 	// 디스 단독 쿨타임 타이머
 	public long lastDisintegrateTime = 0;
+	
+	// 💡 [통합 거래소 NPC 전용] 임시 상태 기억 변수
+	private int exchangeShopStep = 0;      // 거래소 판매 등록 진행 상태 (0: 대기, 1: 가격/수량 입력 중)
+	private int exchangeCurrencyType = 0;  // 선택한 화폐 종류 (0: 아데나, 1: 코인)
 
 	public PcInstance(LineageClient client) {
 		this.client = client;
@@ -481,7 +493,7 @@ public class PcInstance extends Character {
 		auto_save_time = 0;
 		persnalShopInsert = false;
 		age = accountUid = tempClanId = tempClanGrade = battleTeam = lastRankClass = rank = giran_dungeon_time = 0;
-		tempPoly = member = isBaphomet = isTeamBattleDead = isBattlezone = isSealBuff = isSealBuff2 = isSealBuff10 = isSealBuff20 = isSealBuff30 = isSealBuff40 = isSealBuff50 = isSealBuff60 = isSealBuff70 = isSealBuff80 = isSealBuff90 = isSealBuff100 = isSealBuff110 = isSealBuff120 = isSealBuff130 = isImmortalityPremiumBuff = false;
+		tempPoly = member = isBaphomet = isTeamBattleDead = isBattlezone = isSealBuff = isSealBuff2 = isSealBuff10 = isSealBuff20 = isSealBuff30 = isSealBuff40 = isSealBuff50 = isSealBuff60 = isSealBuff70 = isSealBuff80 = isSealBuff90 = isSealBuff100 = isSealBuff110 = isSealBuff120 = isSealBuff130 = isSealBuff140 = isImmortalityPremiumBuff = false;
 		auto_pickup = is_hpbar = false;
 		chattingWhisper = chattingGlobal = chattingTrade = isAutoPickMessage = true;
 		lost_exp = premium_item_time = register_date = join_date = message_time = PkTime = partyid = attribute = PkCount = gm = elixir = Seal_Level = 0;
@@ -504,6 +516,10 @@ public class PcInstance extends Character {
 		auto_count = 0;
 		daycount = 0;
 		daycheck = 0;
+		checkTimes = 0;
+		checkTime = 0;
+		checkaccess = 0;
+		testTime2 = 0;
 		damage_action_Time = 0;
 		pclevel_gift_check = 0;
 		if (listBlockName != null)
@@ -541,6 +557,22 @@ public class PcInstance extends Character {
 
 	public void setExpPotionAdenaUntil(long untilMillis) {
 		this.expPotionAdenaUntil = untilMillis;
+	}
+	
+	public int getExchangeShopStep() {
+		return exchangeShopStep;
+	}
+
+	public void setExchangeShopStep(int exchangeShopStep) {
+		this.exchangeShopStep = exchangeShopStep;
+	}
+
+	public int getExchangeCurrencyType() {
+		return exchangeCurrencyType;
+	}
+
+	public void setExchangeCurrencyType(int exchangeCurrencyType) {
+		this.exchangeCurrencyType = exchangeCurrencyType;
 	}
 
 	// f1상점
@@ -989,6 +1021,15 @@ public class PcInstance extends Character {
 
 	public void setLostExp(double lost_exp) {
 		this.lost_exp = lost_exp;
+	}
+	
+	public long getLoginTime() {
+		return loginTime;
+	}
+	
+	// 💡 [새로 추가할 코드] 리스나 재접속 시 타이머를 새롭게 초기화해주는 스위치
+	public void resetLoginTime() {
+		this.loginTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -1518,12 +1559,16 @@ public class PcInstance extends Character {
 		// 버그 방지.
 		if (!isWorldDelete())
 			return;
+		
+		// 💡 [여기에 추가!] 로그인, 리스 등 월드에 진입하는 모든 순간에 창고 쿨타임을 초기화!
+			this.resetLoginTime();
 
 		// 인터페이스 전송. db_interface
 		if (db_interface != null)
 			toSender(S_InterfaceRead.clone(BasePacketPooling.getPool(S_InterfaceRead.class), db_interface));
 
 		FishingController.toWorldJoin(this);
+		AfkController.toWorldJoin(this); //무인잠수
 
 		// 메모리 세팅
 		setAutoPickup(Lineage.auto_pickup);
@@ -1765,8 +1810,8 @@ public class PcInstance extends Character {
 		// ==========================================
 		// ✅ [추가] 잊혀진섬에서 리스/종료 시 본명 복구 (DB 영구 변경 방지)
 		// ==========================================
-		if (lineage.world.controller.Lostilandcontroller.anonymousList.contains(this)) {
-			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+		if (lineage.world.controller.뒤틀린잊혀진섬컨트롤러.anonymousList.contains(this)) {
+			lineage.world.controller.뒤틀린잊혀진섬컨트롤러.exitAnonymous(this);
 		}
 		// ==========================================
 
@@ -1808,13 +1853,13 @@ public class PcInstance extends Character {
 		// ✅ [추가] 잊혀진 섬 및 미지인 사냥터에서 리스/종료 시 무조건 마을로 강제 좌표 변경
 		// ==========================================
 		// 맵이 70, 809, 810, 811일 경우, DB에 저장하기 직전에 위치를 마을로 덮어씌웁니다.
-		if (this.map == 70 || this.map == 809 || this.map == 810 || this.map == 811) {
+		if (this.map == 707 || this.map == 809 || this.map == 810) {
 
 			// 💡 (중요) 여기에 새로 만든 컨트롤러의 미지인 해제 코드가 들어가야 합니다!
-			Lostilandcontroller.exitAnonymous(this); // 기존 70번 맵용
+			뒤틀린잊혀진섬컨트롤러.exitAnonymous(this); // 기존 70번 맵용
 			칠흑던전3층컨트롤러.exitAnonymous(this); // 809 맵용
 			칠흑던전4층컨트롤러.exitAnonymous(this); // 810 맵용
-			칠흑던전컨트롤러.exitAnonymous(this); // 811 맵용
+//			칠흑던전컨트롤러.exitAnonymous(this); // 811 맵용
 
 			lineage.database.TeleportHomeDatabase.toLocation(this); // 엔진 기본 귀환 메서드
 			this.x = this.homeX;
@@ -1999,11 +2044,11 @@ public class PcInstance extends Character {
 		// ✅ [추가] 미지인 사냥터(잊섬, 칠흑) 퇴장 시 복구
 		// ==========================================
 		// 이동하려는 목적지(map)가 미지인 사냥터가 아닐 경우에만 모두 해제!
-		if (map != 70 && map != 809 && map != 810 && map != 811) {
-			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+		if (map != 707 && map != 809 && map != 810) {
+			lineage.world.controller.뒤틀린잊혀진섬컨트롤러.exitAnonymous(this);
 			lineage.world.controller.칠흑던전3층컨트롤러.exitAnonymous(this);
 			lineage.world.controller.칠흑던전4층컨트롤러.exitAnonymous(this);
-			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
+//			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
 		}
 		// ==========================================
 
@@ -2036,11 +2081,11 @@ public class PcInstance extends Character {
 		// ✅ [추가] 미지인 사냥터(잊섬, 칠흑) 퇴장 시 복구
 		// ==========================================
 		// 이동하려는 목적지(map)가 미지인 사냥터가 아닐 경우에만 모두 해제!
-		if (map != 70 && map != 809 && map != 810 && map != 811) {
-			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+		if (map != 707 && map != 809 && map != 810) {
+			lineage.world.controller.뒤틀린잊혀진섬컨트롤러.exitAnonymous(this);
 			lineage.world.controller.칠흑던전3층컨트롤러.exitAnonymous(this);
 			lineage.world.controller.칠흑던전4층컨트롤러.exitAnonymous(this);
-			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
+//			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
 		}
 		// ==========================================
 		resetAutoAttack();
@@ -2074,11 +2119,11 @@ public class PcInstance extends Character {
 		// ✅ [추가] 미지인 사냥터(잊섬, 칠흑) 퇴장 시 복구
 		// ==========================================
 		// 이동하려는 목적지(map)가 미지인 사냥터가 아닐 경우에만 모두 해제!
-		if (map != 70 && map != 809 && map != 810 && map != 811) {
-			lineage.world.controller.Lostilandcontroller.exitAnonymous(this);
+		if (map != 707 && map != 809 && map != 810) {
+			lineage.world.controller.뒤틀린잊혀진섬컨트롤러.exitAnonymous(this);
 			lineage.world.controller.칠흑던전3층컨트롤러.exitAnonymous(this);
 			lineage.world.controller.칠흑던전4층컨트롤러.exitAnonymous(this);
-			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
+//			lineage.world.controller.칠흑던전컨트롤러.exitAnonymous(this);
 		}
 		// ==========================================
 
@@ -2616,7 +2661,6 @@ public class PcInstance extends Character {
 
 					if (!isCriticalEffect() && effect > 66)
 						effect = 0;
-					
 					////
 					//// // 자신에게 패킷 보냄.
 					//// if (무기이펙트)
@@ -2638,7 +2682,6 @@ public class PcInstance extends Character {
 					//// }
 					//// }
 					////
-					
 					// 화살 갯수 하향
 					ItemInstance arrow2 = getInventory().findArrow();
 					if (arrow2 != null && !arrow2.getName().contains("블랙미스릴")) {
@@ -2991,239 +3034,27 @@ public class PcInstance extends Character {
 				Log.appendExp(getRegisterDate(), getLevel(), (int) exp, (int) getExp(), o_lv, o_name, o_exp);
 		}
 	}
-	/*
-	 * private boolean isInRankRange(int rank, int rankClass) {
-	 * if (rankClass == 1) return rank >= 1 && rank <= 5;
-	 * if (rankClass == 2) return rank >= 6 && rank <= 15;
-	 * if (rankClass == 3) return rank >= 16 && rank <= 30;
-	 * return false;
-	 * }
-	 * 
-	 * public void rankSystem() {
-	 * int rank = RankController.getAllRank(getObjectId());
-	 * this.rank = rank;
-	 * this.lastRank = rank; // 필요 없으면 지워도 OK
-	 * 
-	 * boolean changed = false;
-	 * 
-	 * // 기존 랭커였는데 범위를 벗어나면 먼저 해제
-	 * if (lastRankClass > 0 && !isInRankRange(rank, lastRankClass)) {
-	 * if (lastRankClass == 1) {
-	 * setDynamicHp(getDynamicHp() - 300);
-	 * // setDynamicAc(getDynamicAc() - 5);
-	 * // setDynamicSp(getDynamicSp() - 5);
-	 * // setDynamicAddDmg(getDynamicAddDmg() - 5);
-	 * // setDynamicAddDmgBow(getDynamicAddDmgBow() - 5);
-	 * } else if (lastRankClass == 2) {
-	 * setDynamicHp(getDynamicHp() - 200);
-	 * // setDynamicAc(getDynamicAc() - 3);
-	 * // setDynamicSp(getDynamicSp() - 3);
-	 * // setDynamicAddDmg(getDynamicAddDmg() - 3);
-	 * // setDynamicAddDmgBow(getDynamicAddDmgBow() - 3);
-	 * } else if (lastRankClass == 3) {
-	 * setDynamicHp(getDynamicHp() - 100);
-	 * // setDynamicAc(getDynamicAc() - 1);
-	 * // setDynamicSp(getDynamicSp() - 1);
-	 * // setDynamicAddDmg(getDynamicAddDmg() - 1);
-	 * // setDynamicAddDmgBow(getDynamicAddDmgBow() - 1);
-	 * }
-	 * ChattingController.toChatting(this, "[랭킹 시스템]: 랭킹 버프가 제거되었습니다.",
-	 * Lineage.CHATTING_MODE_MESSAGE);
-	 * lastRankClass = 0;
-	 * changed = true;
-	 * }
-	 * 
-	 * // 이번 랭크로 등급 계산
-	 * int newRankClass = 0;
-	 * if (rank >= 1 && rank <= 5) newRankClass = 1;
-	 * else if (rank >= 6 && rank <= 15) newRankClass = 2;
-	 * else if (rank >= 16 && rank <= 30)newRankClass = 3;
-	 * 
-	 * // 새 등급 적용
-	 * if (newRankClass > 0 && newRankClass != lastRankClass) {
-	 * lastRankClass = newRankClass;
-	 * 
-	 * ChattingController.toChatting(this,
-	 * String.format("[랭킹 시스템]: %d등 랭커 버프가 적용됩니다.", rank),
-	 * Lineage.CHATTING_MODE_MESSAGE);
-	 * 
-	 * if (newRankClass == 1) {
-	 * setDynamicHp(getDynamicHp() + 300);
-	 * // setDynamicAc(getDynamicAc() + 5);
-	 * // setDynamicSp(getDynamicSp() + 5);
-	 * // setDynamicAddDmg(getDynamicAddDmg() + 5);
-	 * // setDynamicAddDmgBow(getDynamicAddDmgBow() + 5);
-	 * ChattingController.toChatting(this, "[랭킹 시스템]: HP+300",
-	 * Lineage.CHATTING_MODE_MESSAGE);
-	 * } else if (newRankClass == 2) {
-	 * setDynamicHp(getDynamicHp() + 200);
-	 * // setDynamicAc(getDynamicAc() + 3);
-	 * // setDynamicSp(getDynamicSp() + 3);
-	 * // setDynamicAddDmg(getDynamicAddDmg() + 3);
-	 * // setDynamicAddDmgBow(getDynamicAddDmgBow() + 3);
-	 * ChattingController.toChatting(this, "[랭킹 시스템]: HP+200",
-	 * Lineage.CHATTING_MODE_MESSAGE);
-	 * } else if (newRankClass == 3) {
-	 * setDynamicHp(getDynamicHp() + 100);
-	 * // setDynamicAc(getDynamicAc() + 1);
-	 * // setDynamicSp(getDynamicSp() + 1);
-	 * // setDynamicAddDmg(getDynamicAddDmg() + 1);
-	 * // setDynamicAddDmgBow(getDynamicAddDmgBow() + 1);
-	 * ChattingController.toChatting(this, "[랭킹 시스템]: HP+100",
-	 * Lineage.CHATTING_MODE_MESSAGE);
-	 * }
-	 * changed = true;
-	 * }
-	 * 
-	 * if (changed) {
-	 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
-	 * class), this));
-	 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
-	 * class), this));
-	 * }
-	 * }
-	 * 
-	 * 
-	 * // 아이콘 번호 정의 (서버 상황에 맞게 번호 수정 가능)
-	 * private static final int ICON_RANK_CLASS_1 = 81; // 1~5등
-	 * private static final int ICON_RANK_CLASS_2 = 82; // 6~15등
-	 * private static final int ICON_RANK_CLASS_3 = 83; // 16~30등
-	 * private static final int ICON_RANK_CLASS_4 = 84; // 31~50등
-	 * 
-	 * private boolean isInRankRange(int rank, int rankClass) {
-	 * if (rankClass == 1)
-	 * return rank >= 1 && rank <= 5;
-	 * if (rankClass == 2)
-	 * return rank >= 6 && rank <= 15;
-	 * if (rankClass == 3)
-	 * return rank >= 16 && rank <= 30;
-	 * if (rankClass == 4)
-	 * return rank >= 31 && rank <= 50; // Class 4 추가
-	 * return false;
-	 * }
-	 * 
-	 * private void removeRankIcon(int rankClass) {
-	 * int iconId = 0;
-	 * if (rankClass == 1)
-	 * iconId = ICON_RANK_CLASS_1;
-	 * else if (rankClass == 2)
-	 * iconId = ICON_RANK_CLASS_2;
-	 * else if (rankClass == 3)
-	 * iconId = ICON_RANK_CLASS_3;
-	 * else if (rankClass == 4)
-	 * iconId = ICON_RANK_CLASS_4;
-	 * 
-	 * if (iconId > 0) {
-	 * SC_BUFFICON_NOTI.on(this, iconId, 0,
-	 * SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
-	 * }
-	 * }
-	 * 
-	 * public void rankSystem() {
-	 * int rank = RankController.getAllRank(getObjectId());
-	 * this.rank = rank;
-	 * 
-	 * boolean changed = false;
-	 * 
-	 * // 1. 현재 등수 기반의 새로운 등급 계산
-	 * int newRankClass = 0;
-	 * if (rank >= 1 && rank <= 5)
-	 * newRankClass = 1; // 1~5등 (1단계)
-	 * else if (rank >= 6 && rank <= 15)
-	 * newRankClass = 2; // 6~15등 (2단계)
-	 * else if (rank >= 16 && rank <= 30)
-	 * newRankClass = 3; // 16~30등 (3단계)
-	 * else if (rank >= 31 && rank <= 50)
-	 * newRankClass = 4; // 31~50등 (4단계)
-	 * 
-	 * // 2. 등급이 변동되었을 경우 (기존에 적용된 모든 능력치 해제)
-	 * if (lastRankClass > 0 && lastRankClass != newRankClass) {
-	 * removeRankIcon(lastRankClass); // 이전 아이콘 삭제
-	 * 
-	 * // ✅ [수정] 해제할 때 기존 버프(추타, SP) 대신 리덕션 수치를 뺍니다.
-	 * if (lastRankClass == 1) {
-	 * setDynamicHp(getDynamicHp() - 300);
-	 * setDynamicReduction(getDynamicReduction() - 3);
-	 * setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 3);
-	 * } else if (lastRankClass == 2) {
-	 * setDynamicHp(getDynamicHp() - 200);
-	 * setDynamicReduction(getDynamicReduction() - 2);
-	 * setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 2);
-	 * } else if (lastRankClass == 3) {
-	 * setDynamicHp(getDynamicHp() - 100);
-	 * setDynamicReduction(getDynamicReduction() - 1);
-	 * setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 1);
-	 * } else if (lastRankClass == 4) {
-	 * setDynamicHp(getDynamicHp() - 100);
-	 * }
-	 * 
-	 * ChattingController.toChatting(this, "[랭킹 시스템]: 기존 랭커 버프가 해제되었습니다.",
-	 * Lineage.CHATTING_MODE_MESSAGE);
-	 * lastRankClass = 0;
-	 * changed = true;
-	 * }
-	 * 
-	 * // 3. 새로운 등급 버프 및 아이콘 적용
-	 * if (newRankClass > 0 && newRankClass != lastRankClass) {
-	 * lastRankClass = newRankClass;
-	 * int iconId = 0;
-	 * 
-	 * // ✅ [수정] 등급별 적용할 수치 변수 변경 (dmg, sp -> reduc, pvpReduc)
-	 * int hp = 0;
-	 * int reduc = 0;
-	 * int pvpReduc = 0;
-	 * 
-	 * if (newRankClass == 1) {
-	 * iconId = ICON_RANK_CLASS_1;
-	 * hp = 300; reduc = 3; pvpReduc = 3;
-	 * } else if (newRankClass == 2) {
-	 * iconId = ICON_RANK_CLASS_2;
-	 * hp = 200; reduc = 2; pvpReduc = 2;
-	 * } else if (newRankClass == 3) {
-	 * iconId = ICON_RANK_CLASS_3;
-	 * hp = 100; reduc = 1; pvpReduc = 1;
-	 * } else if (newRankClass == 4) {
-	 * iconId = ICON_RANK_CLASS_4;
-	 * hp = 100; reduc = 0; pvpReduc = 0;
-	 * }
-	 * 
-	 * // ✅ [수정] 능력치 적용 로직 변경
-	 * if (hp > 0) setDynamicHp(getDynamicHp() + hp);
-	 * if (reduc > 0) setDynamicReduction(getDynamicReduction() + reduc);
-	 * if (pvpReduc > 0) setDynamicAddPvpReduction(getDynamicAddPvpReduction() +
-	 * pvpReduc);
-	 * 
-	 * // 아이콘 출력 (24시간 유지 패킷 전송)
-	 * SC_BUFFICON_NOTI.on(this, iconId, 86400,
-	 * SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
-	 * 
-	 * // ✅ [수정] 안내 메시지 텍스트 변경
-	 * String msg =
-	 * String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (HP+%d, 리덕션+%d, PVP리덕션+%d)", rank, hp,
-	 * reduc, pvpReduc);
-	 * if (newRankClass == 4) msg = String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (HP+%d)",
-	 * rank, hp);
-	 * 
-	 * ChattingController.toChatting(this, msg, Lineage.CHATTING_MODE_MESSAGE);
-	 * changed = true;
-	 * }
-	 * 
-	 * // 4. 스태틱 갱신 패킷 전송
-	 * if (changed) {
-	 * toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.
-	 * class), this));
-	 * toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.
-	 * class), this));
-	 * }
-	 * }
-	 */
-
+	
 	// 아이콘 번호 정의 (서버 상황에 맞게 번호 수정 가능)
 	private static final int ICON_RANK_CLASS_1 = 81; // 1~5등
 	private static final int ICON_RANK_CLASS_2 = 82; // 6~15등
 	private static final int ICON_RANK_CLASS_3 = 83; // 16~30등
 	private static final int ICON_RANK_CLASS_4 = 84; // 31~50등
-	private static final int ICON_RANK_CLASS_5 = 111; // 🔥 [추가] 50위 이하 경험치 버프 아이콘
+	private static final int ICON_RANK_CLASS_5 = 111; // 🔥 [추가] 50위 이하 일반 유저 아이콘
+
+	private boolean isInRankRange(int rank, int rankClass) {
+		if (rankClass == 1)
+			return rank >= 1 && rank <= 5;
+		if (rankClass == 2)
+			return rank >= 6 && rank <= 15;
+		if (rankClass == 3)
+			return rank >= 16 && rank <= 30;
+		if (rankClass == 4)
+			return rank >= 31 && rank <= 50; 
+		if (rankClass == 5)
+			return rank == 0 || rank > 50; // 🔥 [추가] 50위 이하 혹은 랭킹에 없는 경우
+		return false;
+	}
 
 	private void removeRankIcon(int rankClass) {
 		int iconId = 0;
@@ -3236,13 +3067,13 @@ public class PcInstance extends Character {
 		else if (rankClass == 4)
 			iconId = ICON_RANK_CLASS_4;
 		else if (rankClass == 5)
-			iconId = ICON_RANK_CLASS_5; // 🔥 [추가] 5단계 아이콘 해제
+			iconId = ICON_RANK_CLASS_5; // 🔥 [추가] 5단계 아이콘 삭제 대응
 
 		if (iconId > 0) {
 			SC_BUFFICON_NOTI.on(this, iconId, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
 		}
 	}
-
+	
 	public void rankSystem() {
 		int rank = RankController.getAllRank(getObjectId());
 		this.rank = rank;
@@ -3263,87 +3094,103 @@ public class PcInstance extends Character {
 			newRankClass = 5; // 🔥 그 외 50위 이하는 모두 5단계로 지정
 
 		// 2. 등급이 변동되었을 경우 (이전 등급 버프 및 아이콘 제거)
-        if (lastRankClass > 0 && lastRankClass != newRankClass) {
-            removeRankIcon(lastRankClass); // 이전 아이콘 삭제
+		if (lastRankClass > 0 && lastRankClass != newRankClass) {
+			removeRankIcon(lastRankClass); // 이전 아이콘 삭제
 
-            // 🔴 [HP 버프 해제]
-            if (lastRankClass == 1)
-                setDynamicHp(getDynamicHp() - 200);
-            else if (lastRankClass == 2)
-                setDynamicHp(getDynamicHp() - 150);
-            else if (lastRankClass == 3)
-                setDynamicHp(getDynamicHp() - 100);
-            else if (lastRankClass == 4)
-                setDynamicHp(getDynamicHp() - 50);
-
-            // 🔴 [🔥 수정됨: 랭킹 전용 경험치 초기화 (뺄 필요 없이 그냥 0으로 리셋하면 됨)]
-            this.rankExpBonus = 0.0;
-
-            ChattingController.toChatting(this, "[랭킹 시스템]: 기존 랭킹 버프가 변경되어 재설정됩니다.", Lineage.CHATTING_MODE_MESSAGE);
-            lastRankClass = 0;
-            changed = true;
-        }
-
-        // 3. 새로운 등급 버프 및 아이콘 적용
-        if (newRankClass > 0 && newRankClass != lastRankClass) {
-            lastRankClass = newRankClass;
-            int iconId = 0;
-            int hpBonus = 0;
-            
-            // 🔴 [🔥 수정됨: 지역 변수가 아닌, 위에서 만든 클래스 변수에 바로 꽂아줌]
-            this.rankExpBonus = 0.0;
-
-            if (newRankClass == 1) {
-                iconId = ICON_RANK_CLASS_1;
-                hpBonus = 200;
-                this.rankExpBonus = 0.0; // 1~5등: 0%
-            } else if (newRankClass == 2) {
-                iconId = ICON_RANK_CLASS_2;
-                hpBonus = 150;
-                this.rankExpBonus = 0.5; // 6~15등: 50%
-            } else if (newRankClass == 3) {
-                iconId = ICON_RANK_CLASS_3;
-                hpBonus = 100;
-                this.rankExpBonus = 1.0; // 16~30등: 100%
-            } else if (newRankClass == 4) {
-                iconId = ICON_RANK_CLASS_4;
-                hpBonus = 50;
-                this.rankExpBonus = 2.0; // 31~50등: 200%
-            } else if (newRankClass == 5) {
-                iconId = ICON_RANK_CLASS_5;
-                hpBonus = 0;
-                this.rankExpBonus = 5.0; // 50위 밖 (일반): 500%
-            }
-
-            // 🟢 [HP 버프 적용]
-            if (hpBonus > 0) {
-                setDynamicHp(getDynamicHp() + hpBonus);
-            }
-
-            // 🟢 [버프 아이콘 출력]
-            if (iconId > 0) {
-                SC_BUFFICON_NOTI.on(this, iconId, 86400, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
-            }
-
-			// 안내 메시지 출력 (수치 표시 교정)
-			if (newRankClass == 5) {
-				ChattingController.toChatting(this, "[랭킹 시스템]: 50위 이하 지원 버프 적용 (경험치 +500%)",
-						Lineage.CHATTING_MODE_MESSAGE);
-				// } else if (newRankClass == 1) {
-				// ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용
-				// (HP+%d)", rank, hpBonus), Lineage.CHATTING_MODE_MESSAGE);
-				// } else {
-				// ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용
-				// (HP+%d, 경험치 +%.0f%%)", rank, hpBonus, expBonus * 100),
-				// Lineage.CHATTING_MODE_MESSAGE);
+			// 🔴 [🔥 수정: 기존 HP 대신 리덕션/PVP리덕션 버프 해제]
+			if (lastRankClass == 1) {
+				setDynamicReduction(getDynamicReduction() - 2);
+				setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 2);
+			} else if (lastRankClass == 2) {
+				setDynamicReduction(getDynamicReduction() - 2);
+				setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 1);
+			} else if (lastRankClass == 3) {
+				setDynamicReduction(getDynamicReduction() - 1);
+				setDynamicAddPvpReduction(getDynamicAddPvpReduction() - 1);
+			} else if (lastRankClass == 4) {
+				setDynamicReduction(getDynamicReduction() - 1);
 			}
+
+			// 🔴 [기존 경험치 버프 해제 로직 (유지)]
+			if (lastRankClass == 2)
+				setDynamicExp(getDynamicExp() - 0.5); // 50% 제거
+			else if (lastRankClass == 3)
+				setDynamicExp(getDynamicExp() - 1.0); // 100% 제거
+			else if (lastRankClass == 4)
+				setDynamicExp(getDynamicExp() - 2.0); // 200% 제거
+			else if (lastRankClass == 5)
+				setDynamicExp(getDynamicExp() - 3.0); // 300% 제거 (1위는 0%라 생략)
+
+			ChattingController.toChatting(this, "[랭킹 시스템]: 기존 랭킹 버프가 변경되어 재설정됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+			lastRankClass = 0;
 			changed = true;
 		}
 
-		// 4. 스태틱 갱신 패킷 전송
-		if (changed) {
-			toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
-			toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
+		// 3. 새로운 등급 버프 및 아이콘 적용
+		if (newRankClass > 0 && newRankClass != lastRankClass) {
+			lastRankClass = newRankClass;
+			int iconId = 0;
+			int reducBonus = 0;    // 🔥 리덕션 보너스
+			int pvpReducBonus = 0; // 🔥 PVP 리덕션 보너스
+			double expBonus = 0.0; // 경험치 보너스 변수
+
+			// ✅ [수정] 기획하신 퍼센트 및 리덕션 수치 완벽 세팅
+			if (newRankClass == 1) {
+				iconId = ICON_RANK_CLASS_1;
+				reducBonus = 2;
+				pvpReducBonus = 2;
+				expBonus = 0.0;   // 1~5등: 0%
+			} else if (newRankClass == 2) {
+				iconId = ICON_RANK_CLASS_2;
+				reducBonus = 2;
+				pvpReducBonus = 1;
+				expBonus = 0.5;   // 6~15등: 50%
+			} else if (newRankClass == 3) {
+				iconId = ICON_RANK_CLASS_3;
+				reducBonus = 1;
+				pvpReducBonus = 1;
+				expBonus = 1.0;   // 16~30등: 100%
+			} else if (newRankClass == 4) {
+				iconId = ICON_RANK_CLASS_4;
+				reducBonus = 1;
+				pvpReducBonus = 0;
+				expBonus = 2.0;   // 31~50등: 200%
+			} else if (newRankClass == 5) {
+				iconId = ICON_RANK_CLASS_5;
+				reducBonus = 0;
+				pvpReducBonus = 0;
+				expBonus = 3.0;   // 50위 밖 (일반): 300%
+			}
+
+			// 🟢 [🔥 리덕션 버프 적용]
+			if (reducBonus > 0) {
+				setDynamicReduction(getDynamicReduction() + reducBonus);
+			}
+			if (pvpReducBonus > 0) {
+				setDynamicAddPvpReduction(getDynamicAddPvpReduction() + pvpReducBonus);
+			}
+			
+			// 🟢 [경험치 버프 적용 (유지)]
+			if (expBonus > 0) {
+				setDynamicExp(getDynamicExp() + expBonus);
+			}
+
+			// 🟢 [버프 아이콘 출력]
+			if (iconId > 0) {
+				SC_BUFFICON_NOTI.on(this, iconId, 86400, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+			}
+
+			// 안내 메시지 출력 (수치 표시 교정)
+			if (newRankClass == 5) {
+				ChattingController.toChatting(this, "[랭킹 시스템]: 50위 이하 지원 버프 적용 (경험치 +200%)", Lineage.CHATTING_MODE_MESSAGE);
+			} else if (newRankClass == 1) {
+				ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (리덕+%d, PVP리덕+%d)", rank, reducBonus, pvpReducBonus), Lineage.CHATTING_MODE_MESSAGE);
+			} else if (newRankClass == 4) {
+				ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (리덕+%d, 경험치 +%.0f%%)", rank, reducBonus, expBonus * 100), Lineage.CHATTING_MODE_MESSAGE);
+			} else {
+				ChattingController.toChatting(this, String.format("[랭킹 시스템]: %d등 랭커 버프 적용 (리덕+%d, PVP리덕+%d, 경험치 +%.0f%%)", rank, reducBonus, pvpReducBonus, expBonus * 100), Lineage.CHATTING_MODE_MESSAGE);
+			}
+			changed = true;
 		}
 	}
 
@@ -4490,7 +4337,7 @@ public class PcInstance extends Character {
 
 		if (this.getInventory() != null && !this.isWorldDelete()) {
 			// (1) 아이템 찾기 (대표 아이템 설정)
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("변신 조종 반지"));
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("랭킹 변신 카드"));
 			if (item == null)
 				item = this.getInventory().find(ItemDatabase.find("신화변신 지배 반지(각인)"));
 
@@ -4500,7 +4347,7 @@ public class PcInstance extends Character {
 				if (check_item != null && check_item.getItem() != null) {
 					String name = check_item.getItem().getName();
 					// 조건에 맞는 모든 지배 반지 이름을 체크
-					if (name.equalsIgnoreCase("변신 조종 반지") ||
+					if (name.equalsIgnoreCase("랭킹 변신 카드") ||
 							name.equalsIgnoreCase("변신 조종 지배 반지") ||
 							name.equalsIgnoreCase("신화변신 지배 반지(각인)")) {
 						check++;
@@ -4513,16 +4360,16 @@ public class PcInstance extends Character {
 				// ★ [아이콘 삭제] 99번 아이콘 제거
 				SC_BUFFICON_NOTI.on(this, 99, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
 
-				this.setDynamicSp(this.getDynamicSp() - 2);
+//				this.setDynamicSp(this.getDynamicSp() - 2);
 				this.setDynamicReduction(this.getDynamicReduction() - 2);
 				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 2);
-				this.setDynamicHp(this.getDynamicHp() - 200);
+				this.setDynamicHp(this.getDynamicHp() - 100);
 
 				isSealBuff110 = false;
 
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-				ChattingController.toChatting(this, "[알림] 변신 조종 반지 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(this, "[알림] 랭킹 변신카드 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
 			// (4) 효과 적용: 아이템이 존재하고 효과가 적용되지 않은 경우
@@ -4532,10 +4379,10 @@ public class PcInstance extends Character {
 				// ★ [아이콘 출력] 99번 아이콘 출력 (시간 숫자 표시 안함)
 				SC_BUFFICON_NOTI.on(this, 99, -1, 0);
 
-				this.setDynamicSp(this.getDynamicSp() + 2);
+//				this.setDynamicSp(this.getDynamicSp() + 2);
 				this.setDynamicReduction(this.getDynamicReduction() + 2);
 				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 2);
-				this.setDynamicHp(this.getDynamicHp() + 200);
+				this.setDynamicHp(this.getDynamicHp() + 100);
 
 				// ChattingController.toChatting(this,
 				// String.format("[알림] %s:리덕션+2,SP+2,PVP리덕션+2,HP+200",
@@ -4546,6 +4393,7 @@ public class PcInstance extends Character {
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 			}
 		}
+		
 		/*
 		 * if (this.getInventory() != null && !this.isWorldDelete()) {
 		 * ItemInstance item =
@@ -4734,6 +4582,53 @@ public class PcInstance extends Character {
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 			}
 		}
+		
+		if (this.getInventory() != null && !this.isWorldDelete()) {
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("VIP룬"));
+			int check = 0;
+
+			// 수량 체크
+			for (ItemInstance check_item : this.getInventory().getList()) {
+				if (check_item != null && check_item.getItem() != null &&
+						check_item.getItem().getName().equalsIgnoreCase("VIP룬")) {
+					check = check + 1;
+				}
+			}
+
+			// (1) 효과 해제: 아이템이 인벤토리에서 사라진 경우
+			if (check == 0 && isSealBuff140) {
+				// ★ [아이콘 삭제] 방어의 룬(102)과 안 겹치게 다른 번호(예: 103) 사용
+				SC_BUFFICON_NOTI.on(this, 116, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+
+				// 💡 [수정필요] 서버팩에 맞는 '경험치/아데나 보너스' 변수로 수정해주세요.
+				this.setDynamicExp(this.getDynamicExp() - 20);
+				this.setAddDropAdenRate(this.getAddDropAdenRate() - 20);
+				this.setDynamicHp(this.getDynamicHp() - 200);
+
+				isSealBuff140 = false;
+				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
+				ChattingController.toChatting(this, "[알림] VIP룬 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+			}
+
+			// (2) 효과 적용: 아이템이 존재하고 버프가 꺼져 있는 경우
+			if (item != null && check >= 1 && !isSealBuff140) {
+				isSealBuff140 = true;
+
+				// ★ [아이콘 출력] 103번 아이콘 출력 (시간 표시 제거 타입)
+				SC_BUFFICON_NOTI.on(this, 116, -1, 0);
+
+				// 💡 [수정필요] 서버팩에 맞는 '경험치/아데나 보너스' 변수로 수정해주세요.
+				this.setDynamicExp(this.getDynamicExp() + 20);
+				this.setAddDropAdenRate(this.getAddDropAdenRate() - 20);
+				this.setDynamicHp(this.getDynamicHp() + 200);
+
+				// ChattingController.toChatting(this,
+				// String.format("[알림] %s: 경험치 +20%%, 아데나 +20%%", item.getItem().getName()),
+				// Lineage.CHATTING_MODE_MESSAGE);
+
+				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
+			}
+		}
 
 		// 오만의탑 정상
 		if (getMap() == 200 && getGm() == 0
@@ -4851,7 +4746,7 @@ public class PcInstance extends Character {
 			toTeleport(loc[0], loc[1], loc[2], true);
 		}
 
-		if (!펭귄사냥컨트롤러.isOpen && getGm() == 0 && getMap() == 63) {
+		if (!펭귄사냥컨트롤러.isOpen && getGm() == 0 && getMap() == 999) {
 			if (isAutoHunt) {
 				endAutoHunt(false, false);
 			}
@@ -5021,8 +4916,44 @@ public class PcInstance extends Character {
 			int[] loc = Lineage.getHomeXY();
 			toTeleport(loc[0], loc[1], loc[2], true);
 		}
+		
+		if (!수렵이벤트컨트롤러.isOpen && getGm() == 0 && getMap() == 58) {
+			if (isAutoHunt) {
+				endAutoHunt(false, false);
+			}
 
-		if (!Lostilandcontroller.isOpen && getGm() == 0 && getMap() == 70) {
+			int[] loc = Lineage.getHomeXY();
+			toTeleport(loc[0], loc[1], loc[2], true);
+		}
+		
+		if (!티칼컨트롤러.isOpen && getGm() == 0 && (getMap() == 783 || getMap() == 784)) {
+			if (isAutoHunt) {
+				endAutoHunt(false, false);
+			}
+
+			int[] loc = Lineage.getHomeXY();
+			toTeleport(loc[0], loc[1], loc[2], true);
+		}
+		
+		if (!스팟타워컨트롤러.isOpen && getGm() == 0 && getMap() == 98) {
+			if (isAutoHunt) {
+				endAutoHunt(false, false);
+			}
+
+			int[] loc = Lineage.getHomeXY();
+			toTeleport(loc[0], loc[1], loc[2], true);
+		}
+
+		if (!뒤틀린잊혀진섬컨트롤러.isOpen && getGm() == 0 && getMap() == 707) {
+			if (isAutoHunt) {
+				endAutoHunt(false, false);
+			}
+
+			int[] loc = Lineage.getHomeXY();
+			toTeleport(loc[0], loc[1], loc[2], true);
+		}
+		
+		if (!AbandonedController.isOpen && getGm() == 0 && getMap() == 777) {
 			if (isAutoHunt) {
 				endAutoHunt(false, false);
 			}
@@ -5084,6 +5015,9 @@ public class PcInstance extends Character {
 
 		// 자동매입
 		autoHuntItemSell();
+		
+		// 출석체크
+		attendancecheck();
 
 		if (!Lineage.is_batpomet_system && isBaphomet) {
 			BaphometSystemController.removeBaphomet(this);
@@ -5161,8 +5095,8 @@ public class PcInstance extends Character {
 				premium_item_time = time + Lineage.world_premium_item_delay;
 			}
 		} //================================
-*/
-			// 접속 유지 보상 
+
+			// 접속 유지 보상 =====.무인잠수 시스템 전 사용 코드 2026.08.03
 			if (Lineage.world_premium_item_is && premium_item_time <= time) {
 				if (premium_item_time != 0) {
 					// 캐릭터 위치 확인
@@ -5176,6 +5110,7 @@ public class PcInstance extends Character {
 						// 💡 [추가] 고정 멤버 체크 로직
 						// 콘프에서 '고정 멤버 전용(true)'으로 설정되어 있는데, 캐릭터가 멤버가 아니라면 지급 대상에서 제외
 						boolean canReceive = true;
+						
 						if (Lineage.world_premium_item_member_only && !this.isMember()) {
 							canReceive = false;
 							
@@ -5196,6 +5131,42 @@ public class PcInstance extends Character {
 				}
 				premium_item_time = time + Lineage.world_premium_item_delay;
 			}
+*/			
+			// 접속 유지 보상 (기란 마을 대기)
+						if (Lineage.world_premium_item_is && premium_item_time <= time) {
+							if (premium_item_time != 0) {
+								// 캐릭터 위치 확인
+								int x = getX();
+								int y = getY();
+								int map = getMap();
+
+								// 기란 마을 특정 범위 내에 있을 때만 아이템 지급
+								if (map == 4 && x >= 33401 && x <= 33456 && y >= 32784 && y <= 32837) {
+									
+									// 고정 멤버 전용 설정 확인 (config 값이 true인데 멤버가 아니면 지급 제외)
+									boolean canReceive = true;
+									
+									if (Lineage.world_premium_item_member_only && !this.isMember()) {
+										canReceive = false;
+										
+										// 주기적으로 멤버 가입 유도 메시지를 띄우려면 아래 주석을 해제하세요.
+										// (주의: 보상 딜레이마다 계속 출력되므로 주석 처리를 권장합니다)
+										 ChattingController.toChatting(this, "고정 멤버만 대기 보상을 받을 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+									}
+
+									// 지급 조건을 모두 만족했을 경우 아이템 생성 및 지급
+									if (canReceive) {
+										ItemInstance ii = ItemDatabase.newInstance(ItemDatabase.find(Lineage.world_premium_item));
+										if (ii != null) {
+											ii.setCount(Util.random(Lineage.world_premium_item_min, Lineage.world_premium_item_max));
+											super.toGiveItem(null, ii, ii.getCount());
+										}
+									}
+								}
+							}
+							// 다음 보상 지급 시간 갱신
+							premium_item_time = time + Lineage.world_premium_item_delay;
+						}
 		}
 
 		// 팀대전 에러 처리.
@@ -5344,30 +5315,30 @@ public class PcInstance extends Character {
 	/**
 	 * 출석체크 (죽림) 2023-03-08 by 오픈카톡 https://open.kakao.com/o/sbONOzMd
 	 */
-	// public void attendancecheck() {
-	// // 출석체크 시간 카운팅
-	// try {
-	// if (!this.isWorldDelete()) {
-	// if (this.getDaycount() < Lineage.lastday) {
-	//
-	// if (this.getDaycheck() == 0) {
-	// if (++dayptime >= Lineage.dayc && this.getDaycheck() == 0) {
-	// if (++checkmenttime >= Lineage.checkment) {
-	// checkmenttime = 0;
-	// ChattingController.toChatting(this, String.format("\\fU 출석체크 시간을 채우셧습니다 보상을
-	// 받아주세요."),
-	// Lineage.CHATTING_MODE_MESSAGE);
-	// }
-	//
-	// }
+	public void attendancecheck() {
+		// 출석체크 시간 카운팅
+		try {
+			if (!this.isWorldDelete()) {
+				if (this.getDaycount() < Lineage.lastday) {
 
-	// AccountDatabase.updateptime(dayptime, this.accountUid);
-	// }
-	// }
-	// }
-	// } catch (Exception e) {
-	// }
-	// }
+					if (this.getDaycheck() == 0) {
+						if (++dayptime >= Lineage.dayc && this.getDaycheck() == 0) {
+							if (++checkmenttime >= Lineage.checkment) {
+								checkmenttime = 0;
+								ChattingController.toChatting(this, String.format("\\fU 출석체크 시간을 채우셧습니다 보상을 받아주세요."), Lineage.CHATTING_MODE_MESSAGE);
+							}
+
+						}
+
+						AccountDatabase.updateptime(dayptime, this.accountUid);
+
+					}
+				}
+			}
+		} catch (Exception e) {
+
+		}
+	}
 
 	/**
 	 * 51레벨 이상 스탯 보너스 계산 메서드.
@@ -7889,7 +7860,7 @@ public class PcInstance extends Character {
 		try {
 			if (getInventory() != null) {
 				if (is_auto_buff && auto_buff_time < time) {
-					ItemInstance i = getInventory().find("버프 물약30일");
+					ItemInstance i = getInventory().find("무한 버프 물약");
 					if (getLevel() < Lineage.buff_max_level) {
 						auto_buff_time = time + (Lineage.auto_buff_delay * 1000);
 						CommandController.toBuff(this);
@@ -8580,8 +8551,18 @@ public class PcInstance extends Character {
 			for (AutosellItem item : AutosellDatabase.getList(this.getObjectId())) {
 				if (item.getchaobjid() == this.getObjectId()) {
 
-					ItemInstance sellitem = this.getInventory().find(item.getName(), item.getEnLevel(),
-							item.getBless());
+					// 💡 [수정] 겹치는 장비 방어: 인벤토리를 뒤져서 '착용 중이 아닌(isEquipped == false)' 아이템만 골라냅니다.
+					ItemInstance sellitem = null;
+					for (ItemInstance invItem : this.getInventory().getList()) {
+						if (invItem != null 
+								&& invItem.getItem().getName().equals(item.getName())
+								&& invItem.getEnLevel() == item.getEnLevel()
+								&& invItem.getBless() == item.getBless()
+								&& !invItem.isEquipped()) { // ★ 핵심: 착용 안 한 것만 타겟으로 삼음
+							sellitem = invItem;
+							break;
+						}
+					}
 
 					// 1. 판매할 아이템이 없거나 판매 불가 아이템이면 패스
 					if (sellitem == null || !sellitem.getItem().isSell()) {

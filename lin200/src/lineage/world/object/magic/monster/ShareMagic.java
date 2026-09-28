@@ -62,8 +62,22 @@ public class ShareMagic {
 			if (skill.getChance() == 100 || Util.random(1, 100) < skill.getChance()) {
 				// 시전가능한 hp/mp 인지 확인. 거리안에있는지 확인.
 				if (SkillController.isHpMpCheck(mi, skill.getHpConsume(), skill.getMpConsume()) && Util.isDistance(mi, o, skill.getDistance())) {
-					// 스킬 딜레이
-					mi.lastSkillTime = System.currentTimeMillis() + (skill.getSkill() == null ? skill.getDelay() : skill.getSkill().getDelay());
+					// 스킬 딜레이 ======스킬을 사용하지 않는 버그 수정을 위해 주석처리 26.09.13
+//					mi.lastSkillTime = System.currentTimeMillis() + (skill.getSkill() == null ? skill.getDelay() : skill.getSkill().getDelay());
+					
+					// =========================================================
+					// 🚨 [버그 수정] 스킬 쿨타임(딜레이) 오염 및 MP 광속 고갈 방지
+					// =========================================================
+					long calcDelay = skill.getDelay();
+					if (calcDelay <= 0) { 
+						calcDelay = (skill.getSkill() == null ? 3000 : skill.getSkill().getDelay());
+					}
+					// 💡 [추가] 만약 플레이어 스킬 딜레이마저 0이라면, 강제로 3초(3000)를 먹여서 서버 과부하 방지
+					if (calcDelay <= 0) {
+						calcDelay = 3000;
+					}
+					mi.lastSkillTime = System.currentTimeMillis() + calcDelay;
+					// =========================================================
 					
 					int action = skill.getActionNumber();
 					// 액션 취하는 딜레이 주기.

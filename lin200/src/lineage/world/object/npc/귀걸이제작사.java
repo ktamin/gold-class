@@ -62,50 +62,50 @@ public class 귀걸이제작사 extends object {
 				createItem(pc, createList, createList2, itemList, "춤추는 귀걸이", 1, 0, 1);
 				
 			} else if (action.equalsIgnoreCase("쌍둥이 귀걸이")) {
-				createList.add(new CreateItem("춤추는 귀걸이", true, 0, false, 0, 1));	
+				createList.add(new CreateItem("춤추는 귀걸이", false, 0, false, 0, 1));	
 				createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 500));	
 				createList.add(new CreateItem("아데나", false, 1, false, 0, 1000000));
 				checkItem(pc, createList, itemList);			
 				createItem(pc, createList, createList2, itemList, "쌍둥이 귀걸이", 1, 0, 1);
 				
 			} else if (action.equalsIgnoreCase("축제의 귀걸이")) {
-				createList.add(new CreateItem("쌍둥이 귀걸이",  true, 0, false, 0, 1));	
+				createList.add(new CreateItem("쌍둥이 귀걸이",  false, 0, false, 0, 1));	
 				createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 1000));	
-				createList.add(new CreateItem("아데나", false, 1, false, 0, 1000000));
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 2000000));
 				checkItem(pc, createList, itemList);			
 				createItem(pc, createList, createList2, itemList, "축제의 귀걸이", 1, 0, 1);	
 			
 		    } else if (action.equalsIgnoreCase("절정의 귀걸이")) {		
-		       createList.add(new CreateItem("축제의 귀걸이",  true, 0, false, 0, 1));
-			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 1500));	
-			   createList.add(new CreateItem("아데나", false, 1, false, 0, 1000000));
+		       createList.add(new CreateItem("축제의 귀걸이",  false, 0, false, 0, 1));
+			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 2000));	
+			   createList.add(new CreateItem("아데나", false, 1, false, 0, 4000000));
 			   checkItem(pc, createList, itemList);			
 			   createItem(pc, createList, createList2, itemList, "절정의 귀걸이", 1, 0, 1);	
 			   
 		    } else if (action.equalsIgnoreCase("폭죽의 귀걸이")) {
-		       createList.add(new CreateItem("절정의 귀걸이",  true, 0, false, 0, 1));	
-			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 2000));	
-			   createList.add(new CreateItem("아데나", false, 1, false, 0, 1000000));
+		       createList.add(new CreateItem("절정의 귀걸이",  false, 0, false, 0, 1));	
+			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 3000));	
+			   createList.add(new CreateItem("아데나", false, 1, false, 0, 6000000));
 			   checkItem(pc, createList, itemList);			
 			   createItem(pc, createList, createList2, itemList, "폭죽의 귀걸이", 1, 0, 1);	 
 			   
 		    } else if (action.equalsIgnoreCase("환마의 귀걸이")) {	
-		       createList.add(new CreateItem("폭죽의 귀걸이",  true, 0, false, 0, 1));	
-			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 2500));	
-			   createList.add(new CreateItem("아데나", false, 1, false, 0, 1000000));
+		       createList.add(new CreateItem("폭죽의 귀걸이",  false, 0, false, 0, 1));	
+			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 4000));	
+			   createList.add(new CreateItem("아데나", false, 1, false, 0, 8000000));
 			   checkItem(pc, createList, itemList);			
 			   createItem(pc, createList, createList2, itemList, "환마의 귀걸이", 1, 0, 1);
 			   
 		    } else if (action.equalsIgnoreCase("일족의 귀걸이")) {
-		       createList.add(new CreateItem("환마의 귀걸이",  true, 0, false, 0, 1));		
-			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 3000));	
-			   createList.add(new CreateItem("아데나", false, 1, false, 0, 1000000));
+		       createList.add(new CreateItem("환마의 귀걸이",  false, 0, false, 0, 1));		
+			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 5000));	
+			   createList.add(new CreateItem("아데나", false, 1, false, 0, 10000000));
 			   checkItem(pc, createList, itemList);			
 			   createItem(pc, createList, createList2, itemList, "일족의 귀걸이", 1, 0, 1);	
 			   
 		    } else if (action.equalsIgnoreCase("노예의 귀걸이")) {
-		       createList.add(new CreateItem("일족의 귀걸이",  true, 0, false, 0, 1));		
-			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 3000));	
+		       createList.add(new CreateItem("일족의 귀걸이",  false, 0, false, 0, 1));		
+			   createList.add(new CreateItem("영혼석 파편", false, 1, false, 0, 5000));	
 			   createList.add(new CreateItem("아데나", false, 1, false, 0, 10000000));
 			   checkItem(pc, createList, itemList);			
 			   createItem(pc, createList, createList2, itemList, "노예의 귀걸이", 1, 0, 1);	   

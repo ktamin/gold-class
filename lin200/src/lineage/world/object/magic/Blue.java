@@ -78,6 +78,6 @@ public class Blue extends Magic {
 		BuffController.append(cha, Blue.clone(BuffController.getPool(Blue.class), skill, time));
 
 		// ✅ 안내 메시지 출력
-		ChattingController.toChatting(cha, "파란 물약: MP 회복량 증가", Lineage.CHATTING_MODE_MESSAGE);
+//		ChattingController.toChatting(cha, "파란 물약: MP 회복량 증가", Lineage.CHATTING_MODE_MESSAGE);
 	}
 }

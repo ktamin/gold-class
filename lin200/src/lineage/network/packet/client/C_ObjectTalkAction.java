@@ -48,46 +48,51 @@ public class C_ObjectTalkAction extends ClientBasePacket {
 		object o = pc.findInsideList(objId);
 
 		// 말하는 두루마리
-		if (action != null && action.startsWith("talkscroll")) {
-			try {
-				String[] temp = action.split(" ");
-				if (temp.length < 2)
-					return this;
+				if (action != null && action.startsWith("talkscroll")) {
+					try {
+						String[] temp = action.split(" ");
+						if (temp.length < 2) return this;
 
-				int slot = Integer.parseInt(temp[1]) - 1;
-				List<TalkScroll> slotList = TalkScrollDatabase.getDisplaySlotList();
+						int slot = Integer.parseInt(temp[1]) - 1;
+						List<TalkScroll> slotList = TalkScrollDatabase.getDisplaySlotList();
 
-				if (slot < 0 || slot >= slotList.size())
-					return this;
-				TalkScroll ts = slotList.get(slot);
+						if (slot < 0 || slot >= slotList.size()) return this;
+						TalkScroll ts = slotList.get(slot);
 
-				if (ts == null || TalkScrollDatabase.isTitleSlot(ts))
-					return this;
+						if (ts == null || TalkScrollDatabase.isTitleSlot(ts)) return this;
 
-				// 1. 레벨 부족 체크
-				if (pc.getLevel() < ts.getMinLevel()) {
-					ChattingController.toChatting(pc, "사냥터 입장 레벨이 부족하여 이동할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
-					return this;
-				}
+						// 1. 레벨 부족 체크
+						if (pc.getLevel() < ts.getMinLevel()) {
+							ChattingController.toChatting(pc, "사냥터 입장 레벨이 부족하여 이동할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+							return this;
+						}
 
-				// 2. 아데나 체크 및 차감 후 텔레포트
-				if (ts.getPrice() > 0) {
-					// 💡 운영자님 서버 팩의 아데나 검사/차감 메서드 사용
-					if (pc.getInventory().isAden("아데나", ts.getPrice(), true)) {
-						pc.toTeleport(ts.getX(), ts.getY(), ts.getMap(), true);
-					} else {
-						ChattingController.toChatting(pc, "이동에 필요한 아데나가 부족합니다.", Lineage.CHATTING_MODE_MESSAGE);
+						// =======================================================
+						// 💡 [핵심] 우리가 만든 '안전한 랜덤 좌표'를 여기서 뽑아옵니다!
+						// =======================================================
+						int[] safeLoc = ts.getSafeRandomLocation();
+						int targetX = safeLoc[0]; // 뽑힌 랜덤 X 좌표
+						int targetY = safeLoc[1]; // 뽑힌 랜덤 Y 좌표
+
+						// 2. 아데나 체크 및 차감 후 텔레포트
+						if (ts.getPrice() > 0) {
+							if (pc.getInventory().isAden("아데나", ts.getPrice(), true)) {
+								// 💡 옛날 방식인 ts.getX(), ts.getY() 대신 targetX, targetY를 넣습니다!
+								pc.toTeleport(targetX, targetY, ts.getMap(), true);
+							} else {
+								ChattingController.toChatting(pc, "이동에 필요한 아데나가 부족합니다.", Lineage.CHATTING_MODE_MESSAGE);
+							}
+						} else {
+							// 무료 사냥터는 바로 이동
+							// 💡 여기도 마찬가지로 targetX, targetY를 넣습니다!
+							pc.toTeleport(targetX, targetY, ts.getMap(), true);
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} else {
-					// 무료 사냥터는 바로 이동
-					pc.toTeleport(ts.getX(), ts.getY(), ts.getMap(), true);
+					return this;
 				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return this;
-		}
 
 		// f1상점
 		pc.setTempShop(null);
@@ -190,6 +195,15 @@ public class C_ObjectTalkAction extends ClientBasePacket {
 			NpcSpawnlistDatabase.bosstime.toTalk(pc, action, type, this);
 			return this;
 		}
+		
+		if (action.contains("playcheck-")) {
+			if(pc.getDaycount() >= Lineage.lastday ){
+				ChattingController.toChatting(pc, "출석체크를 전부 완료하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
+				return this;
+			}
+			NpcSpawnlistDatabase.playcheck.toTalk(pc, action, type, this);
+			return this;
+		}
 
 		if (action.contains("yadolantelboss-")) {
 			NpcSpawnlistDatabase.yadolantelboss.toTalk(pc, action, type, this);
@@ -208,12 +222,23 @@ public class C_ObjectTalkAction extends ClientBasePacket {
 			PcMarketController.marketPriceNPC.toTalk(pc, action, type, this);
 			return this;
 		}
+		
+		if (objId == NpcSpawnlistDatabase.marketNpc.getObjectId()) {
+			NpcSpawnlistDatabase.marketNpc.toTalk(pc, action, type, this);
+			return this;
+		}
 
 		// 장비 스왑
 		if (objId == NpcSpawnlistDatabase.itemSwap.getObjectId()) {
 			NpcSpawnlistDatabase.itemSwap.toTalk(pc, action, type, this);
 			return this;
 		}
+		
+		// 거래소 시스템 NPC 연결
+		if (objId == NpcSpawnlistDatabase.exchangeNpc.getObjectId()) {
+			NpcSpawnlistDatabase.exchangeNpc.toTalk(pc, action, type, this);
+			return this;
+				}
 
 		// 자동 물약
 		if (objId == NpcSpawnlistDatabase.autoPotion.getObjectId()) {

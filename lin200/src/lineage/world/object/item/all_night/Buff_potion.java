@@ -54,13 +54,13 @@ public class Buff_potion extends ItemInstance {
 			AdvanceSpirit.onBuff(pc, SkillDatabase.find(9, 2));
 			BlessWeapon.init(cha, SkillDatabase.find(6, 7), cha.getObjectId(), false, false);
 			GlowingWeapon.onBuff(pc, SkillDatabase.find(15, 1));
-			ShiningShield.onBuff(pc, SkillDatabase.find(15, 2));*/
-
+			ShiningShield.onBuff(pc, SkillDatabase.find(15, 2));
+*/
 			// 아이템 수량 갱신
-			if (!getItem().getName().contains("30일"))
+			if (!getItem().getName().contains("무한"))
 				cha.getInventory().count(this, getCount()-1, true);
 		
 			}
-	}
 
+	}
 }

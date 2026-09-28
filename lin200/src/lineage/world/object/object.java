@@ -317,10 +317,13 @@ public class object {
 	// 데미지 확인
 	public boolean isDmgCheck;
 	
+	// 장인 주문서 사용 횟수.
+//	public int scrollWeaponCount;
+	
 	// 추가 드랍률
 	private double addDropItemRate;
 	// 추가 아덴 획득률
-	private double addDropAdenRate;	
+	private double addDropAdenRate;
 	
 	public boolean isAddHp;
 	public boolean isAddMp;
@@ -456,6 +459,8 @@ public class object {
 		addDropItemRate = addDropAdenRate = 0;
 		
 		isAddHp = isAddMp = false;
+		
+//		scrollWeaponCount = 0;
 		
 		isShopMent = true;
 		

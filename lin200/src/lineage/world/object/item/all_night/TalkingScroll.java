@@ -15,8 +15,8 @@ import lineage.world.object.instance.ItemInstance;
 import lineage.world.object.instance.PcInstance;
 
 public class TalkingScroll extends ItemInstance {
-
-	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 809, 810, 811, 1400 };
+	
+	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 707, 809, 810, 811, 1400 };
 
 	static synchronized public ItemInstance clone(ItemInstance item) {
 		if (item == null)
@@ -32,11 +32,22 @@ public class TalkingScroll extends ItemInstance {
 		if (!(cha instanceof PcInstance))
 			return;
 		PcInstance pc = (PcInstance) cha;
+		
+		// =========================================================
+				// 🚨 [추가] 고정 멤버(VIP) 전용 아이템 제한 로직
+				// =========================================================
+				// 💡 팁: 서버팩마다 '고정 멤버'를 체크하는 함수명이 다를 수 있습니다.
+				// 주로 pc.isFixedMember(), pc.getVip() > 0, pc.isPremium() 등을 사용합니다.
+				// 만약 에러가 난다면 'isFixedMember()' 부분을 운영자님 팩에 맞는 함수명으로 수정해주세요.
+//				if (!pc.isMember()) {
+//					ChattingController.toChatting(pc, "고정 멤버만 사용할 수 있는 아이템입니다.", Lineage.CHATTING_MODE_MESSAGE);
+//					return;
+//				}
 
 		// =========================================================
 		// 🚨 [추가] 오픈대기, 일부행동, 일부지역 제한 방어 로직
 		// =========================================================
-
+		
 		// 1. 자동사냥 중일 경우 자동사냥 상태 초기화 및 해제
 		if (pc.isAutoHunt) {
 			pc.isAutoHunt = false;
@@ -58,8 +69,7 @@ public class TalkingScroll extends ItemInstance {
 
 		// 4. 이동 불가능 지역(맵 번호) 체크
 		// 💡 팁: 만약 컴파일 시 TeleportHomeImpossibilityMap 부분에 빨간 줄(에러)이 뜬다면,
-		// 해당 배열이 정의되어 있는 원본 클래스명(예: TeleportHomeDatabase.TeleportHomeImpossibilityMap)을
-		// 앞에 붙여주세요.
+		// 해당 배열이 정의되어 있는 원본 클래스명(예: TeleportHomeDatabase.TeleportHomeImpossibilityMap)을 앞에 붙여주세요.
 		for (int cantMap : TeleportHomeImpossibilityMap) {
 			if (pc.getMap() == cantMap) {
 				ChattingController.toChatting(pc, "이곳에서는 해당 아이템을 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
@@ -72,7 +82,7 @@ public class TalkingScroll extends ItemInstance {
 		List<String> list = new ArrayList<String>();
 		List<TalkScroll> slotList = TalkScrollDatabase.getDisplaySlotList();
 
-		for (int i = 0; i < slotList.size() && i < 80; i++) {
+		for (int i = 0; i < slotList.size() && i < 120; i++) {
 			TalkScroll ts = slotList.get(i);
 
 			if (ts == null) {
@@ -82,14 +92,15 @@ public class TalkingScroll extends ItemInstance {
 			}
 		}
 
-		while (list.size() < 80)
+		while (list.size() < 120)
 			list.add(" ");
 
 		cha.toSender(S_Html.clone(
-				BasePacketPooling.getPool(S_Html.class),
-				cha,
-				"victor1",
-				null,
-				list));
+			BasePacketPooling.getPool(S_Html.class),
+			cha,
+			"victor1",
+			null,
+			list
+		));
 	}
 }

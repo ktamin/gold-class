@@ -22,19 +22,19 @@ public class 마법주문서합성사 extends object {
     public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp) {
         if (pc.getInventory() != null) {
             if (action.equalsIgnoreCase("[축] 무기 마법 주문서")) {
-                createItem(pc, "무기 마법 주문서", "무기 마법 주문서", 0, 10, 100, "아데나", 500000, 1);
+                createItem(pc, "무기 마법 주문서", "무기 마법 주문서", 0, 10, 100, "아데나", 100000, 1);
 
             } else if (action.equalsIgnoreCase("[저주] 무기 마법 주문서")) {
-                createItem(pc, "무기 마법 주문서", "무기 마법 주문서", 2, 10, 100, "아데나", 500000, 1);
+                createItem(pc, "무기 마법 주문서", "무기 마법 주문서", 2, 10, 100, "아데나", 100000, 1);
 
             } else if (action.equalsIgnoreCase("[축] 갑옷 마법 주문서")) {
-                createItem(pc, "갑옷 마법 주문서", "갑옷 마법 주문서", 0, 10, 100, "아데나", 500000, 1);
+                createItem(pc, "갑옷 마법 주문서", "갑옷 마법 주문서", 0, 10, 100, "아데나", 100000, 1);
 
             } else if (action.equalsIgnoreCase("[저주] 갑옷 마법 주문서")) {
-                createItem(pc, "갑옷 마법 주문서", "갑옷 마법 주문서", 2, 10, 100, "아데나", 500000, 1);
+                createItem(pc, "갑옷 마법 주문서", "갑옷 마법 주문서", 2, 10, 100, "아데나", 100000, 1);
 
             } else if (action.equalsIgnoreCase("[축] 오림의 장신구 마법 주문서")) {
-                createItem(pc, "오림의 장신구 마법 주문서", "오림의 장신구 마법 주문서", 0, 5, 100, "아데나", 1000000, 1);
+                createItem(pc, "오림의 장신구 마법 주문서", "오림의 장신구 마법 주문서", 0, 10, 100, "아데나", 500000, 1);
 
             } else if (action.equalsIgnoreCase("[축] 오림의 장신구 마법 주문서(각인)")) {
                 createItem(pc, "오림의 장신구 마법 주문서(각인)", "오림의 장신구 마법 주문서(각인)", 0, 5, 100, "아데나", 1000000, 1);
@@ -43,19 +43,25 @@ public class 마법주문서합성사 extends object {
                 createItem(pc, "오림의 장신구 마법 주문서", "오림의 장신구 마법 주문서", 2, 5, 100, "아데나", 1000000, 1);
 
             } else if (action.equalsIgnoreCase("장인의 무기 마법 주문서")) {
-                createItem(pc, "장인의 무기 마법 주문서", "축복 부여 주문서", 1, 300, 100, "아데나", 1000000, 1);
+                createItem(pc, "장인의 무기 마법 주문서", "무기 마법 주문서", 1, 100, 100, "아데나", 1000000, 1);
 
             } else if (action.equalsIgnoreCase("[축] 장인의 무기 마법 주문서")) {
                 createItem(pc, "장인의 무기 마법 주문서", "장인의 무기 마법 주문서", 0, 10, 100, "아데나", 1000000, 1);
 
             } else if (action.equalsIgnoreCase("장인의 갑옷 마법 주문서")) {
-                createItem(pc, "장인의 갑옷 마법 주문서", "축복 부여 주문서", 1, 150, 100, "아데나", 1000000, 1);
+                createItem(pc, "장인의 갑옷 마법 주문서", "갑옷 마법 주문서", 1, 100, 100, "아데나", 1000000, 1);
 
             } else if (action.equalsIgnoreCase("[축] 장인의 갑옷 마법 주문서")) {
                 createItem(pc, "장인의 갑옷 마법 주문서", "장인의 갑옷 마법 주문서", 0, 10, 100, "아데나", 1000000, 1);
 
             } else if (action.equalsIgnoreCase("[축] 생명의 나뭇잎")) {
                 createItem(pc, "생명의 나뭇잎", "생명의 나뭇잎", 0, 5, 100, "아데나", 1000000, 1);
+               
+            } else if (action.equalsIgnoreCase("룸티스 보호 주문서")) {
+                createItem(pc, "룸티스 보호 주문서", "오림의 장신구 마법 주문서", 1, 10, 100, "아데나", 1000000, 1);
+                
+            } else if (action.equalsIgnoreCase("오림의 장신구 마법 주문서")) {
+                createItem(pc, "오림의 장신구 마법 주문서", "오림의 장신구 마법 주문서", 0, 10, 100, "아데나", 500000, 1);     
 
             }
         }

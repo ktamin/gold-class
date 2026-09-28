@@ -1,4 +1,4 @@
-package lineage.world.object.magic;
+ package lineage.world.object.magic;
 
 import Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI;
 import Fx.server.MJTemplate.MJProto.Models.SC_SKILL_DELAY_NOTI;
@@ -229,8 +229,6 @@ public class ShockStun extends Magic {
 	}
 // === 이 아래로는 기존의 [1] 스턴 시전 메인 로직 ~ 이 그대로 이어집니다 ===
 
-// === 이 아래로는 기존의 [1] 스턴 시전 메인 로직 ~ 이 그대로 이어집니다 ===
-
 	/**
 	 * [1] 스턴 시전 메인 로직 (데미지 포함)
 	 */
@@ -279,10 +277,32 @@ public class ShockStun extends Magic {
 		} else {
 			if (Lineage_Balance.is_stun_twohandsword) {
 				if (cha.getClassType() == Lineage.LINEAGE_CLASS_ROYAL) {
-					if (!cha.getInventory().getSlot(Lineage.SLOT_WEAPON).getItem().getType2().equalsIgnoreCase("spear")) {
-						ChattingController.toChatting(cha, "\\fY창을 착용해야 사용가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+					
+					// 1. 착용 중인 무기가 창(spear)인지 확인
+					ItemInstance weapon = cha.getInventory().getSlot(Lineage.SLOT_WEAPON);
+					boolean hasSpear = (weapon != null && weapon.getItem().getType2().equalsIgnoreCase("spear"));
+					
+					// 2. 💡 [수정] 가더 착용 여부 확인 (방패 슬롯 무시, 전체 착용 아이템 중 가더 찾기)
+					boolean hasGuarder = false;
+					for (ItemInstance item : cha.getInventory().getList()) {
+						if (item != null && item.isEquipped()) { // 착용 중인 아이템만 걸러냄
+							String itemName = item.getItem().getName();
+							String itemType = item.getItem().getType2();
+							
+							// 아이템 이름에 '가더'가 들어가거나, 타입이 'guarder'라면 합격!
+							if (itemName.contains("가더") || itemType.equalsIgnoreCase("guarder")) {
+								hasGuarder = true;
+								break;
+							}
+						}
+					}
+					
+					// 창이 아니거나, 가더를 차지 않았다면 스턴 불가
+					if (!hasSpear || !hasGuarder) {
+						ChattingController.toChatting(cha, "\\fY창과 가더를 착용해야만 사용 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
 						return;
 					}
+					
 				} else {
 					if (!cha.getInventory().getSlot(Lineage.SLOT_WEAPON).getItem().getType2().equalsIgnoreCase("tohandsword")) {
 						ChattingController.toChatting(cha, "\\fY양손검을 착용해야 사용가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
@@ -353,7 +373,7 @@ public class ShockStun extends Magic {
 								// 🟡 1. 포스스턴 (확률 발동)
 								// ==========================================
 							if (forceStunItem != null && cha.getClassType() == Lineage.LINEAGE_CLASS_KNIGHT && Util.random(1, 100) <= Lineage_Balance.force_stun_chance) {
-								time = time + Util.random(2, 3);
+								time = time + Util.random(1, 3);
 									
 									// 🚨 [삭제함] o.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), o, 25338), true); 
 									

@@ -77,6 +77,8 @@ public class MonsterInstance extends Character {
 	private int reSpawnTime; // 재스폰 하기위한 대기 시간값.
 	protected boolean boss; // 보스 몬스터인지 여부. monster_spawnlist_boss 를 거쳐서 스폰도니것만
 							// true가 됨.
+	
+	public long lastBossAlertTime = 0; // 보스 피격 알림 쿨타임 체크용
 	private final Set<PcInstance> bossAttackers = new CopyOnWriteArraySet<>();
 
 	// 경험치 2배 물약 아데나 드랍량
@@ -600,7 +602,7 @@ public class MonsterInstance extends Character {
 			setAiStatus(Lineage.AI_STATUS_DEAD);
 		}
 	}
-
+/* ===========보스 어택시 멘트 출력을 위해서 주서 처리후 새로운 코드로 변경 26.09.13
 	@Override
 	public void toDamage(Character cha, int dmg, int type, Object... opt) {
 		if (cha == null)
@@ -660,7 +662,91 @@ public class MonsterInstance extends Character {
 		// 길찾기 무시목록 제거도 aggro 기준으로
 		removeAstarList(aggro);
 	}
+*/
+	
+	@Override
+	public void toDamage(Character cha, int dmg, int type, Object... opt) {
+		if (cha == null)
+			return;
 
+		if (ai_status != Lineage.AI_STATUS_ATTACK && summon == null) {
+			if (getSpeed() == 0 && Util.random(0, 10) == 0) {
+				ItemInstance ii = getInventory().findDbNameId(234);
+				if (ii != null)
+					ii.toClick(this, null);
+			}
+		}
+
+		// 1) 누적딜/exp는 "실제 공격자(펫/소환 포함)" 기준 유지
+		if (dmg > 0)
+			appendExp(cha, dmg);
+
+		// 2) 어그로용 공격자는 "주인 PC"로 치환 (펫/소환이면)
+		Character aggro = cha;
+		PcInstance owner = getOwnerPcFromAttacker(cha);
+		if (owner != null)
+			aggro = owner;
+
+		// =========================================================
+		// 🚨 [추가] 보스 피격 전체 알림 (30초 쿨타임 적용)
+		// =========================================================
+		// 보스이고, 데미지가 들어갔으며, 공격자(또는 주인)가 유저(PcInstance)일 때만 작동
+		if (this.isBoss() && dmg > 0 && aggro instanceof PcInstance) {
+			long currentTime = System.currentTimeMillis();
+			
+			// 마지막 알림 시간으로부터 30초(30000ms)가 지났을 때만 알림 발송
+			if (currentTime - lastBossAlertTime >= 180000) { 
+				lastBossAlertTime = currentTime; // 현재 시간으로 갱신
+				
+				// 맵 번호를 한글 이름으로 변환 (예: 본토 던전 5층)
+				String mapName = Util.getMapName(this);
+				
+				// 출력할 메시지 조립
+				String msg = String.format("\\fV[알림] %s에서 [%s]가 공격받고 있습니다!", mapName, this.getMonster().getName());
+				
+				// 서버 전체 유저의 화면(채팅창 상단/일반 채팅창)에 메시지 발송
+				lineage.world.World.toSender(lineage.network.packet.server.S_ObjectChatting.clone(lineage.network.packet.BasePacketPooling.getPool(lineage.network.packet.server.S_ObjectChatting.class), msg));
+			}
+		}
+		// =========================================================
+
+		// 3) 공격목록/동족/그룹 모두 aggro 기준으로만 등록
+		addAttackList(aggro);
+
+		if (mon.getFamily().length() > 0 && group_master == null) {
+			for (object inside_o : getInsideList()) {
+				if (inside_o instanceof MonsterInstance && !(inside_o instanceof SummonInstance)) {
+					MonsterInstance inside_mon = (MonsterInstance) inside_o;
+					if (isFamily(inside_mon, mon.getFamily()) && inside_mon.getGroupMaster() == null)
+						inside_mon.addAttackList(aggro);
+				}
+			}
+		}
+
+		for (MonsterInstance mi : group_list)
+			mi.addAttackList(aggro);
+
+		if (group_master != null && group_master.getObjectId() != getObjectId())
+			group_master.toDamage(aggro, 0, type);
+
+		// 손상처리는 "실제 공격자" 기준이 자연스러움(무기 손상 등)
+		if (mon.isToughskin() && type == Lineage.ATTACK_TYPE_WEAPON && !cha.isBuffSoulOfFlame()) {
+			if (PluginController.init(MonsterInstance.class, "toDamage.손상처리", cha) == null) {
+				ItemInstance weapon = cha.getInventory().getSlot(Lineage.SLOT_WEAPON);
+				if (weapon != null && weapon.getItem().isCanbedmg() && Util.random(0, 100) < 10) {
+					weapon.setDurability(weapon.getDurability() + 1);
+					if (Lineage.server_version >= 160)
+						cha.toSender(
+								S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), weapon));
+					cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 268, weapon.toString()));
+				}
+			}
+		}
+
+		// 길찾기 무시목록 제거도 aggro 기준으로
+		removeAstarList(aggro);
+	}
+	
 	/**
 	 * 경험치 지급목록 처리 함수.
 	 * 
@@ -988,8 +1074,9 @@ public class MonsterInstance extends Character {
 				// 보스일경우 스폰위치에서 너무 벗어나면 스폰위치로 강제 텔레포트.
 				if (isBoss()
 						&& !Util.isDistance(x, y, map, homeX, homeY, homeMap, Lineage.SEARCH_MONSTER_TARGET_LOCATION)) {
-					// setNowHp(getTotalHp());
-					// setNowMp(getTotalMp());
+					// 보스 스폰 지역 멀어질시 hp/mp 초기화
+					setNowHp(getTotalHp());
+					setNowMp(getTotalMp());
 					// =============2026.06.08 보스 스폰 자리로 돌아올시 데미지/경험치 초기화
 					// 🚨 [추가] 보스 어그로 및 타겟 초기화
 					// =========================================================
@@ -1167,13 +1254,36 @@ public class MonsterInstance extends Character {
 		// 멘트
 		// toMent(time);
 		// 공격자 확인.
-		object o = findDangerousObject();
+				object o = findDangerousObject();
 
-		// 객체를 찾지못했다면 무시.
-		if (o == null)
-			return;
+				// =========================================================
+				// 🚨 [치명적 버그 수정] 무한 루프(while) 제거 및 안전한 타겟 전환
+				// =========================================================
+				if (o != null && o.isDead()) {
+					removeAttackList(o); // 머릿속에서 시체를 지웁니다.
+					o = null;            // 타겟을 일단 강제로 비워버립니다 (무한 루프 방지)
+
+					// 눈앞(insideList)을 뒤지지 말고, 내 머릿속(attackList)에 살아있는 다음 타겟이 있는지 직접 안전하게 찾습니다.
+					if (getAttackList() != null) {
+						for (object t : getAttackList()) {
+							if (t != null && !t.isDead()) {
+								o = t; // 살아있는 유저를 타겟으로 지정!
+								break;
+							}
+						}
+					}
+				}
+
+				// 타겟을 못 찾았거나 다 죽었다면 평화 모드로 전환
+				if (o == null) {
+					clearAttackList();
+					setAiStatus(Lineage.AI_STATUS_WALK);
+					return;
+				}
+				// =========================================================
 
 		boolean blind = isBuffCurseBlind() && !Util.isDistance(this, o, 2);
+		
 		// 객체 거리 확인
 		if (Util.isDistance(this, o, getAtkRange()) && Util.isAreaAttack(this, o) && Util.isAreaAttack(o, this)
 				&& !blind) {
@@ -1732,42 +1842,45 @@ public class MonsterInstance extends Character {
 			}
 		}
 
-		if (getMonster().getName().equalsIgnoreCase("월드보스")) {
-			for (PcInstance pc : World.getPcList()) {
-				if (pc.getMap() == 1400) {
-					ItemInstance ii = ItemDatabase.newInstance(ItemDatabase.find("월드보스 보상"));
-					ii.setCount(Lineage.world_result);
-					ii.setBless(1);
-					ii.setDefinite(true);
-					월드보스컨트롤러.isOpen = false;
-					월드보스컨트롤러.isWait = false;
-					pc.toGiveItem(null, ii, ii.getCount());
+		// 💡 [수정] equalsIgnoreCase -> contains 로 변경 (이름에 '월드보스'만 포함되면 통과)
+				if (getMonster().getName().contains("월드보스")) {
+					for (PcInstance pc : World.getPcList()) {
+						if (pc.getMap() == 1400) {
+							ItemInstance ii = ItemDatabase.newInstance(ItemDatabase.find("월드보스 보상"));
+							if (ii != null) { // 오류 방지용 안전장치 추가
+								ii.setCount(Lineage.world_result);
+								ii.setBless(1);
+								ii.setDefinite(true);
+								월드보스컨트롤러.isOpen = false;
+								월드보스컨트롤러.isWait = false;
+								pc.toGiveItem(null, ii, ii.getCount());
+							}
+						}
+					}
 				}
-			}
-		}
 
-		if (Lineage.monster_boss_dead_message && isBoss()) {
-			String msg = null;
-			if (getAttackList().size() > 0) {
-				if (o != null && o instanceof PcInstance) {
-					if (getAttackList().size() > 1)
-						msg = String.format("%s %s", Util.getMapName(this), getMonster().getName());
-					else
-						msg = String.format("%s %s", Util.getMapName(this), getMonster().getName());
+				if (Lineage.monster_boss_dead_message && isBoss()) {
+					String msg = null;
+					if (getAttackList().size() > 0) {
+						if (o != null && o instanceof PcInstance) {
+							if (getAttackList().size() > 1)
+								msg = String.format("%s %s", Util.getMapName(this), getMonster().getName());
+							else
+								msg = String.format("%s %s", Util.getMapName(this), getMonster().getName());
+						}
+					} else {
+						msg = Util.getMapName(this) + " " + getMonster().getName();
+					}
+					BossController.toWorldOut(this);
+					World.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 781, msg));
 				}
-			} else {
-				msg = Util.getMapName(this) + " " + getMonster().getName();
-			}
-			BossController.toWorldOut(this);
-			World.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 781, msg));
-		}
 
-		ai_time_temp_1 = 0;
-		clearExpList();
-		clearAttackList();
-		clearAstarList();
-		setAiStatus(Lineage.AI_STATUS_CORPSE);
-	}
+				ai_time_temp_1 = 0;
+				clearExpList();
+				clearAttackList();
+				clearAstarList();
+				setAiStatus(Lineage.AI_STATUS_CORPSE);
+			}
 
 	private void giveBossRewardToAttackers() {
 		// 보스가 아니라면 리턴
@@ -2351,7 +2464,7 @@ public class MonsterInstance extends Character {
 			if (p != null && p.isParty(pc, p)) {
 
 				boolean isAden = (ii.getItem().getNameIdNumber() == 4); // 아데나
-				boolean isWing = ii.getItem().getName().equalsIgnoreCase("포인트");
+				boolean isWing = ii.getItem().getName().equalsIgnoreCase("신비한 날개깃털");
 
 				if (isAden || isWing) {
 
@@ -2421,7 +2534,7 @@ public class MonsterInstance extends Character {
 
 									// 파티 요약 1줄
 									if (Lineage.party_autopickup_item_print) {
-										String n = isAden ? "아데나" : "포인트";
+										String n = isAden ? "아데나" : "신비한 날개깃털";
 										ChattingController.toChatting(pc,
 												String.format("%s %d 획득 (총 %d/%d명)", n, share, (share * memberCount),
 														memberCount),
@@ -2474,7 +2587,7 @@ public class MonsterInstance extends Character {
 
 									// 파티 요약 1줄
 									if (Lineage.party_autopickup_item_print) {
-										String n = isAden ? "아데나" : "포인트";
+										String n = isAden ? "아데나" : "신비한 날개깃털";
 										ChattingController.toChatting(pc,
 												String.format("%s %d 획득 (총 %d/%d명)", n, share, (share * memberCount),
 														memberCount),

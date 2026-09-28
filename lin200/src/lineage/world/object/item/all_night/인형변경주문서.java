@@ -6,7 +6,9 @@ import java.util.List;
 import lineage.bean.database.Item;
 import lineage.database.ItemDatabase;
 import lineage.database.ServerDatabase;
+import lineage.network.packet.BasePacketPooling;
 import lineage.network.packet.ClientBasePacket;
+import lineage.network.packet.server.S_InventoryStatus;
 import lineage.share.Lineage;
 import lineage.util.Util;
 import lineage.world.controller.ChattingController;
@@ -33,7 +35,7 @@ public class 인형변경주문서 extends ItemInstance {
 					
 					List<String> itemList_1 = new ArrayList<String>();
 					itemList_1.add("마법인형: 데몬");
-					itemList_1.add("마법인형: 데스나이트");
+//					itemList_1.add("마법인형: 데스나이트");
 					itemList_1.add("마법인형: 바란카");
 					itemList_1.add("마법인형: 타락");
 					itemList_1.add("마법인형: 바포메트");
@@ -51,6 +53,7 @@ public class 인형변경주문서 extends ItemInstance {
 					itemList_3.add("마법인형: 기사");
 					itemList_3.add("마법인형: 요정");
 					itemList_3.add("마법인형: 마법사");
+					itemList_3.add("마법인형: 다크엘프");
 					
 					List<String> itemList_4 = new ArrayList<String>();
 					itemList_4.add("마법인형: 리치");
@@ -66,6 +69,7 @@ public class 인형변경주문서 extends ItemInstance {
 					itemList_5.add("마법인형: 진 군주");
 					itemList_5.add("마법인형: 진 요정");
 					itemList_5.add("마법인형: 진 마법사");
+					itemList_5.add("마법인형: 진 다크엘프");
 
 					
 					if (tempList == null) {
@@ -126,12 +130,30 @@ public class 인형변경주문서 extends ItemInstance {
 							temp.setBless(item.getBless());
 							temp.setEnLevel(item.getEnLevel());
 							temp.setDefinite(true);
+							
+							// ✅ 1. 무조건 true로 해야 즉시 인벤에 들어옵니다. (S_InventoryStatus 패킷 불필요)
 							cha.getInventory().append(temp, true);
+							
+							// ✅ [로그용 변수 미리 저장]
+							long time = System.currentTimeMillis();
+							String timeString = lineage.util.Util.getLocaleString(time, true);
+							String charName = cha.getName();
+							String oldDollName = item.getItem().getName();
+							String newDollName = temp.getItem().getName();
 
+							// ✅ 2. 그 다음 기존 아이템과 주문서를 삭제합니다.
 							cha.getInventory().count(item, item.getCount() - 1, true);
 							cha.getInventory().count(this, getCount() - 1, true);
 
 							ChattingController.toChatting(cha, String.format("\\fY%s \\fR을(를) 획득하였습니다.", temp.getItem().getName()), Lineage.CHATTING_MODE_MESSAGE);
+							// ✅ [로그 출력] 변경 성공 (노란색)
+							final String logMessage = String.format("[%s] [변경 성공]\t [캐릭터: %s]\t [기존: %s]\t [결과: %s]", 
+									timeString, charName, oldDollName, newDollName);
+							lineage.gui.GuiMain.display.asyncExec(new Runnable() {
+								public void run() {
+									lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(logMessage);
+								}
+							});
 						}
 					} else {
 						ChattingController.toChatting(cha, "해당 인형에 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);

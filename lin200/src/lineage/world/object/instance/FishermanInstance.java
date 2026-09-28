@@ -30,10 +30,10 @@ public class FishermanInstance extends Character {
 		this.pc_name = pc.getName() != null ? pc.getName() : pc.getTempName() == null ? "" : pc.getTempName();
 
 		this.inventory = pc.getInventory();
-
+			
 		// ==========================2026.05.27
 		// 💡 [수정] 봇 생성 시 무기를 검사 (가방 안에 있기만 하면 2배속 통과!)
-		// ==========================================
+		// ==========================================		
 		boolean isFast = false;
 		for (ItemInstance item : this.inventory.getList()) {
 			// [핵심 변경] item.isEquipped() 조건을 아예 삭제합니다!
@@ -42,21 +42,20 @@ public class FishermanInstance extends Character {
 				break;
 			}
 		}
-
+		
 		if (isFast) {
 			this.fishTime = Lineage.fish_delay / 2; // 2배속!
 		} else {
 			this.fishTime = Lineage.fish_delay; // 일반 속도
 		}
-		// ==========고급성장의낚싯대 수정 수정코드 끝==================
-
+		//==========고급성장의낚싯대 수정 수정코드 끝==================
+		
 		this.coin = inventory.find(ItemDatabase.find(Lineage.auto_fish_coin));
-		// this.rice = inventory.find(ItemDatabase.find(Lineage.fish_rice)); //---무한미끼를
-		// 사용하기위해 주석 2026.05.27
-
+//		this.rice = inventory.find(ItemDatabase.find(Lineage.fish_rice)); //---무한미끼를 사용하기위해 주석 2026.05.27
+		
 		// ==========================================
-		// 💡 [수정 1] 기본 미끼가 없으면 '무한 미끼'를 찾아냅니다!
-		// ==========================================
+				// 💡 [수정 1] 기본 미끼가 없으면 '무한 미끼'를 찾아냅니다!
+				// ==========================================
 		this.rice = inventory.find(ItemDatabase.find(Lineage.fish_rice));
 		if (this.rice == null) {
 			for (ItemInstance it : this.inventory.getList()) {
@@ -64,10 +63,10 @@ public class FishermanInstance extends Character {
 					if (it.getItem().getName().contains("미끼") && it.getItem().getName().contains("무한")) {
 						this.rice = it;
 						break;
+							}
+						}
 					}
 				}
-			}
-		}
 
 		setObjectId(ServerDatabase.nextEtcObjId());
 		setName(pc_name + "의 자동낚시");
@@ -180,23 +179,22 @@ public class FishermanInstance extends Character {
 		FishingController.readInventory(con, this);
 
 		coin = inventory.find(ItemDatabase.find(Lineage.auto_fish_coin));
-		// rice = inventory.find(ItemDatabase.find(Lineage.fish_rice));----자동낚시 무한미끼를
-		// 사용하기 위해 주석 2026.05.27
+//		rice = inventory.find(ItemDatabase.find(Lineage.fish_rice));----자동낚시 무한미끼를 사용하기 위해 주석 2026.05.27
 		// ==========================================
 		// 💡 [수정 2] DB 로드 시 무한 미끼 탐색 추가!
 		// ==========================================
 		rice = inventory.find(ItemDatabase.find(Lineage.fish_rice));
-		if (rice == null) {
-			for (ItemInstance it : inventory.getList()) {
-				if (it != null && it.getItem() != null && it.getItem().getName() != null) {
-					if (it.getItem().getName().contains("미끼") && it.getItem().getName().contains("무한")) {
-						rice = it;
-						break;
+				if (rice == null) {
+					for (ItemInstance it : inventory.getList()) {
+						if (it != null && it.getItem() != null && it.getItem().getName() != null) {
+							if (it.getItem().getName().contains("미끼") && it.getItem().getName().contains("무한")) {
+								rice = it;
+								break;
+							}
+						}
 					}
 				}
-			}
-		}
-		// ==========================================
+				// ==========================================
 	}
 
 	public void toWorldOut(boolean isSave) {
@@ -240,7 +238,7 @@ public class FishermanInstance extends Character {
 						break;
 					}
 				}
-
+				
 				if (isFast) {
 					fishTime = Lineage.fish_delay / 2; // 2배속 리셋!
 				} else {
@@ -375,7 +373,7 @@ public class FishermanInstance extends Character {
 				}
 
 				// ==========================================
-				// ✅ [수정 포인트] 가중치 랜덤 아이템 지급 로직 적용
+				// ✅ [수정] 가중치 랜덤 아이템 지급 로직 적용
 				// ==========================================
 				List<FishList> fishPool = FishItemListDatabase.getFishList();
 				if (fishPool.size() > 0) {
@@ -439,8 +437,7 @@ public class FishermanInstance extends Character {
 							}
 
 							inventory.count(coin, coin.getCount() - Lineage.auto_fish_expense, false);
-							// inventory.count(rice, rice.getCount() - 1, false); ------무한 미끼 사용을 위해 주석
-							// 2026.05.27
+//							inventory.count(rice, rice.getCount() - 1, false); ------무한 미끼 사용을 위해 주석 2026.05.27
 							// ==========================================
 							// 💡 [수정 3] 이름에 '무한'이 없을 때만 미끼를 1개 깎습니다!
 							// ==========================================

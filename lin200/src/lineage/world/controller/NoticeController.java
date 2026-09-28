@@ -81,11 +81,11 @@ public class NoticeController {
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class),"\\fW"+ real_notice.get(real_notice_idx++)));
 
 			if (Lineage.open_wait){
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("안녕하세요 한양 서버 입니다.")));
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("서버를 찾아주셔서 감사합니다.")));
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("지금은 오픈대기 상태이며.")));
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("서버오픈 기준으로부터 10분마다")));
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("오픈대기 상자가 지급됩니다")));
+				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("안녕하세요 황금 서버 입니다.")));
+				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("오픈대기 중 10분당 1개씩 오픈대기상자가 지급됩니다.")));
+				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("고정멤버만 접속유지보상을 받습니다.")));
+//				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("낚시는 고정멤버만 가능합니다.")));
+				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), String.format("고정멤버신청은 홈페이지 및 게시판 확인")));
 			}
 				
 		}

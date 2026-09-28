@@ -34,9 +34,9 @@ public class 룬조각 extends ItemInstance {
 		} else if (myName.equalsIgnoreCase("전투의 룬 조각")) {
 			targetName = "전투의 룬";
 			needCount = 5; // 3군: 15개 필요 (예시)
-		} else if (myName.equalsIgnoreCase("한양 코인 조각")) {
-			targetName = "한양 코인";
-			needCount = 5;  // 5개 필요
+		} else if (myName.equalsIgnoreCase("코인 조각")) {
+			targetName = "코인";
+			needCount = 3;  // 5개 필요
 		} else if (myName.equalsIgnoreCase("기운을 잃은 나이트발드의 양손검")) {
 			targetName = "나이트발드의 양손검";
 			needCount = 5;  // 5개 필요	

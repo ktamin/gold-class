@@ -95,7 +95,7 @@ public class BuffFight extends Magic {
 		o.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), o, skill.getCastGfx()), true);
 		// 버프 등록
 		BuffController.append(o, BuffFight.clone(BuffController.getPool(BuffFight.class), skill, skill.getBuffDuration()));
-		ChattingController.toChatting(o, "전투 강화 주문서: 추가 타격+2, SP+2, HP+50", Lineage.CHATTING_MODE_MESSAGE);
+//		ChattingController.toChatting(o, "전투 강화 주문서: 추가 타격+2, SP+2, HP+50", Lineage.CHATTING_MODE_MESSAGE);
 	}
 
 }

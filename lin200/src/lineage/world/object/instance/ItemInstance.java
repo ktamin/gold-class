@@ -122,7 +122,7 @@ public class ItemInstance extends object implements BuffInterface {
 		DolloptionA = DolloptionB = DolloptionC = DolloptionD = DolloptionE = 0;
 		dynamicSp = dynamicReduction = dynamicIgnoreReduction = dynamicSwordCritical = dynamicBowCritical = dynamicMagicCritical = 0;
 		tollTipMp = tollTipSp = tollTipHealingPotion = tollTipStunDefens = tollTipHp = tollTipReduction = tollTipHit = tollTipDmg = tollTipMr = tollTipPvPReduction = tollTipPvPDmg = 0;
-		deleteTime = 0;
+		itemnowTime = 0;
 
 	}
 
@@ -162,9 +162,12 @@ public class ItemInstance extends object implements BuffInterface {
 	public boolean isClick(PcInstance pc) {
 		if (pc != null) {
 
-			// ====================2026.06.10 아이템:맵 사용금지 추가
+			// ====================2026.06.10 맵 아이템 사용금지
 			String itemName = item.getName();
 			int currentMap = pc.getMap();
+			
+			// 💡 디버그 출력을 지우거나 주석 처리하여 콘솔 스팸을 방지합니다.
+			// java.lang.System.out.println("▶ [디버그] 클릭한 아이템 이름: [" + itemName + "] / 현재 맵: " + currentMap);
 
 			// 💡 이제 Lineage.RESTRICTED_MAP_ITEMS는 텍스트 파일에 적은 만큼 자동으로 늘어납니다.
 			for (String[] rule : lineage.share.Lineage.RESTRICTED_MAP_ITEMS) {
@@ -232,22 +235,39 @@ public class ItemInstance extends object implements BuffInterface {
 		}
 
 		// 딜레이 확인.
-		long time = System.currentTimeMillis();
-		// 물약은 따로 딜레이 체크
-		if (this instanceof HealingPotion) {
-			if (time - pc.getClickHealingPotionTime() >= item.getDelay()) {
-				pc.setClickHealingPotionTime(time);
-				return true;
-			}
-		} else {
-			if (time - click_delay >= item.getDelay()) {
-				click_delay = time;
-				return true;
-			}
-		}
+				long time = System.currentTimeMillis();
+				// 물약은 따로 딜레이 체크
+				if (this instanceof HealingPotion) {
+					if (time - pc.getClickHealingPotionTime() >= item.getDelay()) {
+						pc.setClickHealingPotionTime(time);
+						return true;
+					}
+				} else {
+					if (time - click_delay >= item.getDelay()) {
+						click_delay = time;
+						return true;
+					} else {
+						// 💡 [추가된 부분] 쿨타임이 아직 안 지났을 때 메시지 출력!
+						// 딜레이가 60000(1분) 이상인 아이템일 경우에만 메시지를 띄웁니다 (스팸 방지)
+						if (item.getDelay() >= 60000) {
+							long remainTotalSeconds = ((click_delay + item.getDelay()) - time) / 1000;
+							long hours = remainTotalSeconds / 3600;
+							long minutes = (remainTotalSeconds % 3600) / 60;
+							long seconds = remainTotalSeconds % 60;
+							
+							String timeMsg = item.getName() + " 사용까지 ";
+							if (hours > 0) timeMsg += hours + "시간 ";
+							if (minutes > 0) timeMsg += minutes + "분 ";
+							timeMsg += seconds + "초 남았습니다.";
+							
+							// 순수 텍스트만 깔끔하게 시스템 메시지로 출력
+							lineage.world.controller.ChattingController.toChatting(pc, timeMsg, lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+						}
+					}
+				}
 
-		return false;
-	}
+				return false;
+			}
 
 	public int getInvDolloptionA() {
 		return DolloptionA;
@@ -735,6 +755,14 @@ public class ItemInstance extends object implements BuffInterface {
 
 	public void setExpireTime(long time) {
 		this.deleteTime = time;
+	}
+	
+	public long getClickDelay() {
+		return click_delay;
+	}
+
+	public void setClickDelay(long delay) {
+		this.click_delay = delay;
 	}
 
 	/**
@@ -1474,32 +1502,33 @@ public class ItemInstance extends object implements BuffInterface {
 
 			switch (getEnLevel()) {
 				case 1:
-					hp += 10;
+					hp += 5;
 					break;
 				case 2:
-					hp += 20;
+					hp += 10;
 					break;
 				case 3:
-					hp += 30;
+					hp += 15;
 					break;
 				case 4:
-					hp += 40;
+					hp += 20;
 					break;
 				case 5:
-					hp += 50;
+					hp += 25;
 					hpPotion += 1;
 					break;
 				case 6:
-					hp += 60;
+					hp += 30;
 					hpPotion += 2;
+					stunResist += 0.03;
 					break;
 				case 7:
-					hp += 70;
+					hp += 35;
 					hpPotion += 3;
-					stunResist += 0.05;
+					stunResist += 0.06;
 					break;
 				case 8:
-					hp += 80;
+					hp += 40;
 					hpPotion += 4;
 					stunResist += 0.10;
 					break;
@@ -1535,38 +1564,40 @@ public class ItemInstance extends object implements BuffInterface {
 
 			switch (getEnLevel()) {
 				case 1:
-					hp += 10;
+					hp += 5;
 					break;
 				case 2:
-					hp += 20;
+					hp += 10;
 					break;
 				case 3:
-					hp += 30;
+					hp += 15;
 					break;
 				case 4:
-					hp += 40;
+					hp += 20;
 					break;
 				case 5:
-					hp += 50;
+					hp += 25;
 					addDmg += 1;
+					addPvpDmg += 1;
 					sp += 1;
 					break;
 				case 6:
-					hp += 60;
+					hp += 30;
 					addDmg += 2;
+					addPvpDmg += 2;
 					sp += 2;
 					break;
 				case 7:
-					hp += 70;
+					hp += 35;
 					addDmg += 3;
-					addPvpDmg += 10;
+					addPvpDmg += 3;
 					mr += 3;
 					sp += 3;
 					break;
 				case 8:
-					hp += 80;
+					hp += 40;
 					addDmg += 4;
-					addPvpDmg += 30;
+					addPvpDmg += 4;
 					mr += 5;
 					sp += 4;
 					break;
@@ -1601,6 +1632,65 @@ public class ItemInstance extends object implements BuffInterface {
 			}
 		}
 
+		/*
+		 * if (getItem().getType2().equalsIgnoreCase("ring") && getEnLevel() > 0) {
+		 * String name = getItem().getName();
+		 * int hp = 0;
+		 * int addDmg = 0;
+		 * int addDmgBow = 0;
+		 * int addPvpDmg = 0;
+		 * int addPvpReduction = 0; // PvP 리덕션
+		 * int mr = 0;
+		 * int sp = 0;
+		 * 
+		 * // 1. [공통 옵션] 강화 수치별 HP와 MR 계산
+		 * switch (getEnLevel()) {
+		 * case 1: hp = 5; break;
+		 * case 2: hp = 10; break;
+		 * case 3: hp = 15; break;
+		 * case 4: hp = 20; break;
+		 * case 5: hp = 25; break;
+		 * case 6: hp = 30; break;
+		 * case 7: hp = 35; mr = 2; break;
+		 * case 8: hp = 40; mr = 4; break;
+		 * case 9: hp = 90; mr = 7; break;
+		 * case 10: hp = 100; mr = 8; break;
+		 * }
+		 * 
+		 * // 2. [PvP 옵션] 6강 이상부터 수치 설정
+		 * int pvpValue = 0;
+		 * if (getEnLevel() == 6) pvpValue = 3;
+		 * else if (getEnLevel() == 7) pvpValue = 6;
+		 * else if (getEnLevel() == 8) pvpValue = 10;
+		 * else if (getEnLevel() == 9) pvpValue = 30;
+		 * else if (getEnLevel() == 10) pvpValue = 40;
+		 * 
+		 * // 3. [개별 옵션 분기] 이름에 따라 대미지 vs 리덕션 결정
+		 * if (name.contains("완력") || name.contains("암행어사")) {
+		 * if (getEnLevel() >= 5) addDmg = getEnLevel() - 4;
+		 * addPvpDmg = pvpValue;
+		 * } else if (name.contains("민첩") || name.contains("암행어사")) {
+		 * if (getEnLevel() >= 5) addDmgBow = getEnLevel() - 4;
+		 * addPvpDmg = pvpValue;
+		 * } else if (name.contains("지식") || name.contains("암행어사")) {
+		 * if (getEnLevel() >= 5) sp = getEnLevel() - 4;
+		 * addPvpReduction = pvpValue;
+		 * }
+		 * 
+		 * if (hp != 0) cha.setDynamicHp(cha.getDynamicHp() + (hp * sign));
+		 * if (addDmg != 0) cha.setDynamicAddDmg(cha.getDynamicAddDmg() + (addDmg *
+		 * sign));
+		 * if (addDmgBow != 0) cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() +
+		 * (addDmgBow * sign));
+		 * if (addPvpDmg != 0) cha.setDynamicAddPvpDmg(cha.getDynamicAddPvpDmg() +
+		 * (addPvpDmg * sign));
+		 * if (addPvpReduction != 0)
+		 * cha.setDynamicAddPvpReduction(cha.getDynamicAddPvpReduction() +
+		 * (addPvpReduction * sign));
+		 * if (mr != 0) cha.setDynamicMr(cha.getDynamicMr() + (mr * sign));
+		 * if (sp != 0) cha.setDynamicSp(cha.getDynamicSp() + (sp * sign));
+		 * }
+		 */
 		if (getItem().getType2().equalsIgnoreCase("belt")) {
 			int mp = 0;
 			int reduction = 0;
@@ -1628,29 +1718,31 @@ public class ItemInstance extends object implements BuffInterface {
 					mp += 25;
 					hp += 25;
 					reduction += 1;
+					pvpReduction += 1;
 					break;
 				case 6:
 					mp += 30;
 					hp += 30;
 					reduction += 2;
+					pvpReduction += 2;
 					break;
 				case 7:
 					mp += 35;
 					hp += 35;
 					reduction += 3;
-					pvpReduction = 10;
+					pvpReduction += 3;
 					break;
 				case 8:
 					mp += 40;
 					hp += 40;
 					reduction += 4;
-					pvpReduction = 30;
+					pvpReduction += 4;
 					break;
 				case 9:
 					mp += 30;
 					reduction += 5;
 					hp += 30;
-					pvpReduction += 4;
+					pvpReduction += 5;
 					break;
 				case 10:
 					mp += 40;
@@ -1715,7 +1807,7 @@ public class ItemInstance extends object implements BuffInterface {
 			// [공식 적용] 5인첸 이상일 때, (인첸트 - 4) 만큼 부여
 			// 예: 5강 -> 1, 6강 -> 2 ... 10강 -> 6, 11강 -> 7 (자동 적용)
 			if (currentEnchant >= 5) {
-				addPvpDmg = (currentEnchant - 4) * 5;
+				addPvpDmg = (currentEnchant - 4) * 1;
 			}
 
 			// 적용할 수치가 있을 때만 실행
@@ -1726,7 +1818,7 @@ public class ItemInstance extends object implements BuffInterface {
 					// 착용 시 +
 					pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + addPvpDmg);
 					// 확인용 멘트 (테스트 후 주석 처리하세요)
-					ChattingController.toChatting(pc, "마물셋 효과: PVP추타+" + addPvpDmg, Lineage.CHATTING_MODE_MESSAGE);
+					ChattingController.toChatting(pc, "마물방어구 효과: PVP추타+" + addPvpDmg, Lineage.CHATTING_MODE_MESSAGE);
 				} else {
 					// 해제 시 -
 					pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - addPvpDmg);
@@ -1745,7 +1837,7 @@ public class ItemInstance extends object implements BuffInterface {
 			// [공식 적용] 5인첸 이상일 때, (인첸트 - 4) 만큼 부여
 			// 예: 5강 -> 1, 6강 -> 2 ... 10강 -> 6, 11강 -> 7 (자동 적용)
 			if (currentEnchant >= 5) {
-				pvpReduction = (currentEnchant - 4) * 5;
+				pvpReduction = (currentEnchant - 4) * 1;
 			}
 
 			// 적용할 수치가 있을 때만 실행
@@ -1756,7 +1848,8 @@ public class ItemInstance extends object implements BuffInterface {
 					// 착용 시 +
 					pc.setDynamicAddPvpReduction(pc.getDynamicAddPvpReduction() + pvpReduction);
 					// 확인용 멘트 (테스트 후 주석 처리하세요)
-					ChattingController.toChatting(pc, "암석셋 효과: PVP리덕션+" + pvpReduction, Lineage.CHATTING_MODE_MESSAGE);
+					ChattingController.toChatting(pc, "암석방어구 효과: PVP리덕션+" + pvpReduction,
+							Lineage.CHATTING_MODE_MESSAGE);
 				} else {
 					// 해제 시 -
 					pc.setDynamicAddPvpReduction(pc.getDynamicAddPvpReduction() - pvpReduction);
@@ -2021,21 +2114,7 @@ public class ItemInstance extends object implements BuffInterface {
 				cha.setDynamicCritical(cha.getDynamicCritical() - critical);
 			}
 		}
-		/*
-		 * if (getItem().getName().equalsIgnoreCase("포르세의 검")) {
-		 * int 근거리명중 = 10;
-		 * 
-		 * if (equipped) {
-		 * cha.setDynamicAddHit(cha.getDynamicAddHit() + 근거리명중);
-		 * 
-		 * if (근거리명중 > 0)
-		 * ChattingController.toChatting(cha, String.format("%s: 근거리 명중+%d",
-		 * getItem().getName(), 근거리명중), Lineage.CHATTING_MODE_MESSAGE);
-		 * } else {
-		 * cha.setDynamicAddHit(cha.getDynamicAddHit() - 근거리명중);
-		 * }
-		 * }
-		 */
+
 		if (getItem().getName().equalsIgnoreCase("바람칼날의 단검")) {
 			int addDmg = 0;
 			int critical = 0;
@@ -2205,13 +2284,13 @@ public class ItemInstance extends object implements BuffInterface {
 
 			switch (getEnLevel()) {
 				case 5:
-					// 마법적중 = 1;
-					// sp = 1;
+					마법적중 = 1;
+					sp = 1;
 					HP = 10;
 					break;
 				case 6:
-					// 마법적중 = 2;
-					// sp = 2;
+					마법적중 = 2;
+					sp = 2;
 					HP = 20;
 					break;
 				case 7:
@@ -2275,8 +2354,63 @@ public class ItemInstance extends object implements BuffInterface {
 				cha.setDynamicSp(cha.getDynamicSp() - sp);
 			}
 		}
+		
+		// 💡 [수정] 무기 이름을 나열하는 대신, 타입이 "weapon"이면 모두 통과하도록 변경
+				if (getItem().getType1().equalsIgnoreCase("weapon")) {
 
+					int 근거리명중 = 0;
+					int 추가대미지 = 0;
+
+					// 💡 [수정] 1~7은 어차피 0이므로 생략하고, 필요한 8, 9, 10 구간만 설정하여 코드 다이어트
+					switch (getEnLevel()) {
+//						case 8:
+//							근거리명중 = 1;
+//							추가대미지 = 1;
+//							break;
+//						case 9:
+//							근거리명중 = 2;
+//							추가대미지 = 2;
+//							break;
+						case 10:
+							근거리명중 = 2;
+							추가대미지 = 2;
+							break;
+						default:
+							// 11검 이상일 때도 10검과 동일한 혜택을 주려면 방어코드로 아래를 사용
+							if (getEnLevel() > 10) {
+								근거리명중 = 4;
+								추가대미지 = 4;
+							}
+							break;
+					}
+
+					// 💡 [추가] 보너스 수치가 있을 때(8검 이상)만 스탯 연산을 하도록 최적화
+					if (근거리명중 > 0 || 추가대미지 > 0) {
+						if (equipped) {
+							cha.setDynamicAddHit(cha.getDynamicAddHit() + 근거리명중);
+							cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() + 근거리명중);
+							cha.setDynamicAddDmg(cha.getDynamicAddDmg() + 추가대미지);
+							cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() + 추가대미지);
+
+							// 무기 착용 시 안내 멘트에 추타 정보도 함께 표시하도록 보강
+							ChattingController.toChatting(cha, 
+									String.format("%s: 명중+%d, 추타+%d", getItem().getName(), 근거리명중, 추가대미지),
+									Lineage.CHATTING_MODE_MESSAGE);
+						} else {
+							cha.setDynamicAddHit(cha.getDynamicAddHit() - 근거리명중);
+							cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() - 근거리명중);
+							cha.setDynamicAddDmg(cha.getDynamicAddDmg() - 추가대미지);
+							cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() - 추가대미지);
+						}
+					}
+				}
+/*
 		if (getItem().getName().equalsIgnoreCase("살천의 활") ||
+				getItem().getName().equalsIgnoreCase("진명황의 집행검") ||
+				getItem().getName().equalsIgnoreCase("고대 신의 창") ||
+				getItem().getName().equalsIgnoreCase("붉은 그림자의 이도류") ||
+				getItem().getName().equalsIgnoreCase("가이아의 격노") ||
+				getItem().getName().equalsIgnoreCase("수정 결정체 지팡이") ||
 				getItem().getName().equalsIgnoreCase("강철 마나의 지팡이") ||
 				getItem().getName().equalsIgnoreCase("제로스의 지팡이") ||
 				getItem().getName().equalsIgnoreCase("악몽의 장궁") ||
@@ -2284,9 +2418,10 @@ public class ItemInstance extends object implements BuffInterface {
 				getItem().getName().equalsIgnoreCase("나이트발드의 양손검") ||
 				getItem().getName().equalsIgnoreCase("제로스의 지팡이") ||
 				getItem().getName().equalsIgnoreCase("포르세의 검") ||
-				getItem().getName().equalsIgnoreCase("진 레이피어") ||
+				getItem().getName().equalsIgnoreCase("혹한의 창") ||
+				getItem().getName().equalsIgnoreCase("해신의 삼지창") ||
 				getItem().getName().equalsIgnoreCase("파멸의 대검") ||
-				getItem().getName().equalsIgnoreCase("흑왕도") ||
+				getItem().getName().equalsIgnoreCase("포효의 이도류") ||
 				getItem().getName().equalsIgnoreCase("테베 오시리스의 양손검") ||
 				getItem().getName().equalsIgnoreCase("테베 오시리스의 이도류") ||
 				getItem().getName().equalsIgnoreCase("테베 오시리스의 지팡이") ||
@@ -2297,50 +2432,64 @@ public class ItemInstance extends object implements BuffInterface {
 				getItem().getName().equalsIgnoreCase("악마왕의 활") ||
 				getItem().getName().equalsIgnoreCase("악마왕의 지팡이") ||
 				getItem().getName().equalsIgnoreCase("악마왕의 한손검") ||
-				getItem().getName().equalsIgnoreCase("흑왕궁") ||
+				getItem().getName().equalsIgnoreCase("흑왕도") ||
 				getItem().getName().equalsIgnoreCase("론드의 이도류") ||
 				getItem().getName().equalsIgnoreCase("바포메트의 지팡이") ||
 				getItem().getName().equalsIgnoreCase("얼음 여왕의 지팡이") ||
+				getItem().getName().equalsIgnoreCase("무관의 양손검") ||
 				getItem().getName().equalsIgnoreCase("커츠의 검")) {
 
 			int 근거리명중 = 0;
+			int 추가대미지 = 0;
 
 			switch (getEnLevel()) {
 				case 1:
-					근거리명중 = 1;
+					근거리명중 = 0;
+					추가대미지 = 0;
 					break;
 				case 2:
-					근거리명중 = 2;
+					근거리명중 = 0;
+					추가대미지 = 0;
 					break;
 				case 3:
-					근거리명중 = 3;
+					근거리명중 = 0;
+					추가대미지 = 0;
 					break;
 				case 4:
-					근거리명중 = 4;
+					근거리명중 = 0;
+					추가대미지 = 0;
 					break;
 				case 5:
-					근거리명중 = 5;
+					근거리명중 = 0;
+					추가대미지 = 0;
 					break;
 				case 6:
-					근거리명중 = 6;
+					근거리명중 = 0;
+					추가대미지 = 0;
 					break;
 				case 7:
-					근거리명중 = 7;
+					근거리명중 = 0;
+					추가대미지 = 0;
 					break;
 				case 8:
-					근거리명중 = 8;
+					근거리명중 = 1;
+					추가대미지 = 1;
 					break;
 				case 9:
-					근거리명중 = 9;
+					근거리명중 = 2;
+					추가대미지 = 2;
 					break;
 				case 10:
-					근거리명중 = 10;
+					근거리명중 = 4;
+					추가대미지 = 4;
 					break;
 			}
 
 			if (equipped) {
 				cha.setDynamicAddHit(cha.getDynamicAddHit() + 근거리명중);
 				cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() + 근거리명중);
+				cha.setDynamicAddDmg(cha.getDynamicAddDmg() + 추가대미지);
+				cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() + 추가대미지);
 
 				if (근거리명중 > 0)
 					ChattingController.toChatting(cha, String.format("%s: 명중+%d", getItem().getName(), 근거리명중),
@@ -2348,10 +2497,12 @@ public class ItemInstance extends object implements BuffInterface {
 			} else {
 				cha.setDynamicAddHit(cha.getDynamicAddHit() - 근거리명중);
 				cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() - 근거리명중);
+				cha.setDynamicAddDmg(cha.getDynamicAddDmg() - 추가대미지);
+				cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() - 추가대미지);
 			}
 		}
 
-		/*
+
 		 * if (getItem().getName().equalsIgnoreCase("악마왕의 양손검")) {
 		 * int 근거리대미지 = 0;
 		 * int 근거리명중 = 0;
@@ -3463,61 +3614,582 @@ public class ItemInstance extends object implements BuffInterface {
 				}
 			}
 		}
+		/*
+		 * if (getItem().getName().equalsIgnoreCase("룸티스의검은빛귀걸이")) {
+		 * int 추타 = getEnLevel() - 2;
+		 * if (getEnLevel() >= 3) {
+		 * if (equipped) {
+		 * cha.setDynamicAddDmg(cha.getDynamicAddDmg() + 추타);
+		 * // cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() + 추타);
+		 * 
+		 * if (추타 > 0)
+		 * ChattingController.toChatting(cha, String.format("%s: 추타+%d",
+		 * getItem().getName(), 추타),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * } else {
+		 * cha.setDynamicAddDmg(cha.getDynamicAddDmg() - 추타);
+		 * // cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() - 추타);
+		 * }
+		 * }
+		 * }
+		 * 
+		 * if (getItem().getName().equalsIgnoreCase("룸티스의붉은빛귀걸이")) {
+		 * int 체력 = (getEnLevel() - 2) * 10;
+		 * int 리덕 = getEnLevel() - 2;
+		 * if (getEnLevel() >= 3) {
+		 * if (equipped) {
+		 * cha.setDynamicHp(cha.getDynamicHp() + 체력);
+		 * cha.setDynamicReduction(cha.getDynamicReduction() + 리덕);
+		 * 
+		 * if (체력 > 0 || 리덕 > 0)
+		 * ChattingController.toChatting(cha,
+		 * String.format("%s: 체력+%d, 리덕+%d", getItem().getName(), 체력, 리덕),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * } else {
+		 * cha.setDynamicHp(cha.getDynamicHp() - 체력);
+		 * cha.setDynamicReduction(cha.getDynamicReduction() - 리덕);
+		 * }
+		 * }
+		 * }
+		 * 
+		 * if (getItem().getName().equalsIgnoreCase("룸티스의보라빛귀걸이")) {
+		 * int 마나 = (getEnLevel() - 2) * 10;
+		 * int sp = getEnLevel() - 2;
+		 * if (getEnLevel() >= 3) {
+		 * if (equipped) {
+		 * cha.setDynamicMp(cha.getDynamicMp() + 마나);
+		 * cha.setDynamicSp(cha.getDynamicSp() + sp);
+		 * 
+		 * if (마나 > 0 || sp > 0)
+		 * ChattingController.toChatting(cha,
+		 * String.format("%s: 마나+%d, SP+%d", getItem().getName(), 마나, sp),
+		 * Lineage.CHATTING_MODE_MESSAGE);
+		 * } else {
+		 * cha.setDynamicHp(cha.getDynamicHp() - 마나);
+		 * cha.setDynamicSp(cha.getDynamicSp() - sp);
+		 * }
+		 * }
+		 * }
+		 * 
+		 * if (getItem().getName().equalsIgnoreCase("룸티스의 검은빛 귀걸이")) {
+		 * int en = getEnLevel(); // 인챈트 수치
+		 * int dmg = 0; // 근거리/원거리 데미지
+		 * int pvpDmg = 0; // PVP 추가 데미지
+		 * 
+		 * // 인챈트별 능력치 설정
+		 * switch (en) {
+		 * case 4: dmg = 1; break;
+		 * case 5: dmg = 2; break;
+		 * case 6: dmg = 3; pvpDmg = 5; break;
+		 * case 7: dmg = 4; pvpDmg = 10; break;
+		 * case 8: dmg = 5; pvpDmg = 15; break;
+		 * }
+		 * 
+		 * if (dmg > 0 || pvpDmg > 0) {
+		 * if (equipped) { // 착용 시
+		 * // 근거리 데미지 추가
+		 * cha.setDynamicAddDmg(cha.getDynamicAddDmg() + dmg);
+		 * // 원거리 데미지 추가 (활 대미지 변수명 확인 필요)
+		 * cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() + dmg);
+		 * // PVP 데미지 추가 (서버에 해당 메서드가 있는지 확인 필요)
+		 * cha.setDynamicAddPvpDmg(cha.getDynamicAddPvpDmg() + pvpDmg);
+		 * 
+		 * // 채팅창 출력
+		 * String msg = String.format("%s(+%d): 근뎀+%d, 원뎀+%d", getItem().getName(), en,
+		 * dmg, dmg);
+		 * if (pvpDmg > 0) msg += ", PVP데미지+" + pvpDmg;
+		 * 
+		 * ChattingController.toChatting(cha, msg, Lineage.CHATTING_MODE_MESSAGE);
+		 * 
+		 * } else { // 해제 시 (더했던 만큼 그대로 뺌)
+		 * cha.setDynamicAddDmg(cha.getDynamicAddDmg() - dmg);
+		 * cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() - dmg);
+		 * cha.setDynamicAddPvpDmg(cha.getDynamicAddPvpDmg() - pvpDmg);
+		 * }
+		 * }
+		 * }
+		 */
 
-		if (getItem().getName().equalsIgnoreCase("룸티스의검은빛귀걸이")) {
-			int 추타 = getEnLevel() - 2;
-			if (getEnLevel() >= 3) {
-				if (equipped) {
-					cha.setDynamicAddDmg(cha.getDynamicAddDmg() + 추타);
-					// cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() + 추타);
+		// [검은빛 귀걸이 로직 시작]
+		if (getItem().getName().contains("검은빛 귀걸이")) {
+			int en = getEnLevel();
+			int dmg = 0; // 근거리/원거리 데미지
+			int pvpDmg = 0; // PVP 추가 데미지 (표의 추가대미지 확률 수치 적용)
+			boolean isBless = getItem().getName().contains("(축)");
 
-					if (추타 > 0)
-						ChattingController.toChatting(cha, String.format("%s: 추타+%d", getItem().getName(), 추타),
-								Lineage.CHATTING_MODE_MESSAGE);
-				} else {
-					cha.setDynamicAddDmg(cha.getDynamicAddDmg() - 추타);
-					// cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() - 추타);
+			if (isBless) {
+				// ■ 축복받은 룸티스의 검은빛 귀걸이 옵션
+				switch (en) {
+					case 3:
+						dmg = 1;
+						break;
+					case 4:
+						dmg = 2;
+						pvpDmg = 2;
+						break;
+					case 5:
+						dmg = 3;
+						pvpDmg = 3;
+						break;
+					case 6:
+						dmg = 4;
+						pvpDmg = 4;
+						break;
+					case 7:
+						dmg = 5;
+						pvpDmg = 5;
+						break;
+					case 8:
+						dmg = 10;
+						pvpDmg = 10;
+						break;
+					case 9:
+						dmg = 15;
+						pvpDmg = 10;
+						break;
+				}
+			} else {
+				// ■ 일반 룸티스의 검은빛 귀걸이 옵션
+				switch (en) {
+					case 3:
+						dmg = 1;
+						break;
+					case 4:
+						dmg = 1;
+						break;
+					case 5:
+						dmg = 2;
+						pvpDmg = 2;
+						break;
+					case 6:
+						dmg = 3;
+						pvpDmg = 3;
+						break;
+					case 7:
+						dmg = 4;
+						pvpDmg = 4;
+						break;
+					case 8:
+						dmg = 5;
+						pvpDmg = 5;
+						break;
+					case 9:
+						dmg = 11;
+						pvpDmg = 7;
+						break;
+				}
+			}
+
+			// 능력치 적용 및 해제 로직
+			if (dmg > 0 || pvpDmg > 0) {
+				if (equipped) { // 착용 시
+					cha.setDynamicAddDmg(cha.getDynamicAddDmg() + dmg);
+					cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() + dmg);
+					cha.setDynamicAddPvpDmg(cha.getDynamicAddPvpDmg() + pvpDmg);
+
+					// 채팅창 출력
+					String msg = String.format("%s(+%d): 근/원뎀+%d", getItem().getName(), en, dmg);
+					if (pvpDmg > 0)
+						msg += ", PVP뎀+" + pvpDmg;
+					ChattingController.toChatting(cha, msg, Lineage.CHATTING_MODE_MESSAGE);
+
+				} else { // 해제 시
+					cha.setDynamicAddDmg(cha.getDynamicAddDmg() - dmg);
+					cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() - dmg);
+					cha.setDynamicAddPvpDmg(cha.getDynamicAddPvpDmg() - pvpDmg);
+				}
+			}
+		}
+		/*
+		 * if (getItem().getName().equalsIgnoreCase("룸티스의 붉은빛 귀걸이")) {
+		 * int en = getEnLevel(); // 인챈트 수치
+		 * int reduction = 0; // 대미지 리덕션
+		 * int pvpReduction = 0; // PVP 대미지 감소
+		 * int addHp = en * 10; // [추가] 인챈트당 HP +10 계산
+		 * 
+		 * // [붉은빛 귀걸이] 인챈트별 능력치 설정
+		 * switch (en) {
+		 * case 4: reduction = 1; break;
+		 * case 5: reduction = 2; break;
+		 * case 6: reduction = 3; pvpReduction = 5; break;
+		 * case 7: reduction = 4; pvpReduction = 10; break;
+		 * case 8: reduction = 5; pvpReduction = 15; break;
+		 * }
+		 * 
+		 * if (reduction > 0 || pvpReduction > 0 || addHp > 0) {
+		 * if (equipped) { // 착용 시
+		 * // 리덕션 및 HP 추가
+		 * cha.setDynamicReduction(cha.getDynamicReduction() + reduction);
+		 * cha.setDynamicAddPvpReduction(cha.getDynamicAddPvpReduction() +
+		 * pvpReduction);
+		 * cha.setDynamicHp(cha.getDynamicHp() + addHp);
+		 * 
+		 * // 채팅창 출력
+		 * String msg = String.format("%s(+%d): 리덕션+%d, HP+%d", getItem().getName(), en,
+		 * reduction, addHp);
+		 * if (pvpReduction > 0) msg += ", PVP리덕션+" + pvpReduction;
+		 * 
+		 * ChattingController.toChatting(cha, msg, Lineage.CHATTING_MODE_MESSAGE);
+		 * 
+		 * } else { // 해제 시 (차감)
+		 * cha.setDynamicReduction(cha.getDynamicReduction() - reduction);
+		 * cha.setDynamicAddPvpReduction(cha.getDynamicAddPvpReduction() -
+		 * pvpReduction);
+		 * cha.setDynamicHp(cha.getDynamicHp() - addHp);
+		 * }
+		 * 
+		 * // HP 수치 변경을 클라이언트에 즉시 갱신 (패킷 전송)
+		 * // pc.sendPackets(new S_OwnCharStatus(pc)); // PcInstance일 경우 호출 필요할 수 있음
+		 * }
+		 * }
+		 * 
+		 * if (getItem().getName().equalsIgnoreCase("룸티스의 보랏빛 귀걸이")) {
+		 * int en = getEnLevel(); // 인챈트 수치
+		 * int addMp = en * 15; // 기본 MP 공식 (인챈트당 15)
+		 * int addSp = 0; // SP (주문력)
+		 * int magicHit = 0; // 마법 적중
+		 * 
+		 * // [보랏빛 귀걸이] 인챈트별 개별 옵션 설정
+		 * switch (en) {
+		 * case 0: case 1: case 2:
+		 * addSp = 0; magicHit = 0; break;
+		 * case 3:
+		 * addSp = 0; magicHit = 1; break;
+		 * case 4:
+		 * addSp = 1; magicHit = 2; break;
+		 * case 5:
+		 * addSp = 2; magicHit = 3; break;
+		 * case 6:
+		 * addSp = 3; magicHit = 4; break;
+		 * case 7:
+		 * addSp = 4; magicHit = 5; break;
+		 * case 8:
+		 * addSp = 5; magicHit = 6; break;
+		 * case 9:
+		 * addSp = 7; magicHit = 7; break;
+		 * default: // +10 이상일 경우를 대비한 예외 처리 (공식 적용)
+		 * if (en > 9) {
+		 * addSp = en - 2;
+		 * magicHit = en - 2;
+		 * }
+		 * break;
+		 * }
+		 * 
+		 * if (addMp > 0 || addSp > 0 || magicHit > 0) {
+		 * if (equipped) { // 착용 시
+		 * cha.setDynamicMp(cha.getDynamicMp() + addMp);
+		 * cha.setDynamicSp(cha.getDynamicSp() + addSp);
+		 * cha.setDynamicMagicHit(cha.getDynamicMagicHit() + magicHit);
+		 * 
+		 * // 채팅창 출력 (옵션 확인용)
+		 * String msg = String.format("%s(+%d): MP+%d, SP+%d, 마법적중+%d",
+		 * getItem().getName(), en, addMp, addSp, magicHit);
+		 * ChattingController.toChatting(cha, msg, Lineage.CHATTING_MODE_MESSAGE);
+		 * 
+		 * } else { // 해제 시
+		 * cha.setDynamicMp(cha.getDynamicMp() - addMp);
+		 * cha.setDynamicSp(cha.getDynamicSp() - addSp);
+		 * cha.setDynamicMagicHit(cha.getDynamicMagicHit() - magicHit);
+		 * }
+		 * }
+		 * }
+		 */
+
+		// [붉은빛 귀걸이 로직 시작]
+		if (getItem().getName().contains("붉은빛 귀걸이")) {
+			int en = getEnLevel();
+			int addHp = 0; // 최대 HP
+			int reduction = 0; // 대미지 감소 (리덕션)
+			int pvpReduction = 0; // PVP 대미지 감소 (표의 대미지 감소 확률 수치 적용)
+			int addHit = 0; // 근거리/원거리 명중
+
+			boolean isBless = getItem().getName().contains("(축)");
+
+			if (isBless) {
+				// ■ 축복받은 룸티스의 붉은빛 귀걸이 옵션
+				switch (en) {
+					case 0:
+						addHp = 10;
+						break; // 표 기준 +0 수치 미기재이나 로직상 유지
+					case 1:
+						addHp = 30;
+						break;
+					case 2:
+						addHp = 40;
+						break;
+					case 3:
+						addHp = 60;
+						reduction = 1;
+						break;
+					case 4:
+						addHp = 70;
+						reduction = 2;
+						pvpReduction = 2;
+						break;
+					case 5:
+						addHp = 80;
+						reduction = 3;
+						pvpReduction = 3;
+						break;
+					case 6:
+						addHp = 90;
+						reduction = 4;
+						pvpReduction = 4;
+						addHit = 1;
+						break;
+					case 7:
+						addHp = 100;
+						reduction = 5;
+						pvpReduction = 5;
+						addHit = 3;
+						break;
+					case 8:
+						addHp = 150;
+						reduction = 10;
+						pvpReduction = 10;
+						addHit = 5;
+						break;
+					case 9:
+						addHp = 160;
+						reduction = 12;
+						pvpReduction = 10;
+						addHit = 7;
+						break;
+				}
+			} else {
+				// ■ 일반 룸티스의 붉은빛 귀걸이 옵션
+				switch (en) {
+					case 0:
+						addHp = 10;
+						break;
+					case 1:
+						addHp = 30;
+						break;
+					case 2:
+						addHp = 40;
+						break;
+					case 3:
+						addHp = 50;
+						reduction = 1;
+						break;
+					case 4:
+						addHp = 60;
+						reduction = 1;
+						break;
+					case 5:
+						addHp = 70;
+						reduction = 2;
+						pvpReduction = 2;
+						break;
+					case 6:
+						addHp = 80;
+						reduction = 3;
+						pvpReduction = 3;
+						break;
+					case 7:
+						addHp = 90;
+						reduction = 4;
+						pvpReduction = 4;
+						addHit = 1;
+						break;
+					case 8:
+						addHp = 100;
+						reduction = 5;
+						pvpReduction = 5;
+						addHit = 3;
+						break;
+					case 9:
+						addHp = 110;
+						reduction = 7;
+						pvpReduction = 7;
+						addHit = 5;
+						break;
+				}
+			}
+
+			// 능력치 적용 및 해제 로직
+			if (addHp > 0 || reduction > 0 || pvpReduction > 0 || addHit > 0) {
+				if (equipped) { // 착용 시
+					cha.setDynamicHp(cha.getDynamicHp() + addHp);
+					cha.setDynamicReduction(cha.getDynamicReduction() + reduction);
+					cha.setDynamicAddPvpReduction(cha.getDynamicAddPvpReduction() + pvpReduction);
+					// 명중 추가 (근거리/원거리 통합 적용)
+					cha.setDynamicAddHit(cha.getDynamicAddHit() + addHit);
+					cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() + addHit);
+
+					// 채팅창 출력
+					String msg = String.format("%s(+%d):HP+%d,리덕+%d", getItem().getName(), en, addHp, reduction);
+					if (pvpReduction > 0)
+						msg += ",PVP리덕+" + pvpReduction;
+					if (addHit > 0)
+						msg += ",명중+" + addHit;
+					ChattingController.toChatting(cha, msg, Lineage.CHATTING_MODE_MESSAGE);
+
+				} else { // 해제 시
+					cha.setDynamicHp(cha.getDynamicHp() - addHp);
+					cha.setDynamicReduction(cha.getDynamicReduction() - reduction);
+					cha.setDynamicAddPvpReduction(cha.getDynamicAddPvpReduction() - pvpReduction);
+					cha.setDynamicAddHit(cha.getDynamicAddHit() - addHit);
+					cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() - addHit);
 				}
 			}
 		}
 
-		if (getItem().getName().equalsIgnoreCase("룸티스의붉은빛귀걸이")) {
-			int 체력 = (getEnLevel() - 2) * 10;
-			int 리덕 = getEnLevel() - 2;
-			if (getEnLevel() >= 3) {
-				if (equipped) {
-					cha.setDynamicHp(cha.getDynamicHp() + 체력);
-					cha.setDynamicReduction(cha.getDynamicReduction() + 리덕);
+		// [보랏빛 귀걸이 로직 시작]
+		if (getItem().getName().contains("보랏빛 귀걸이")) {
+			int en = getEnLevel();
+			int addMp = 0; // 최대 MP
+			int addSp = 0; // SP (주문력)
+			int magicHit = 0; // 마법 적중
+			int addMr = 0; // 마법 방어 (MR)
+			int addHp = 0; // 최대 HP (8강 이상 옵션)
 
-					if (체력 > 0 || 리덕 > 0)
-						ChattingController.toChatting(cha,
-								String.format("%s: 체력+%d, 리덕+%d", getItem().getName(), 체력, 리덕),
-								Lineage.CHATTING_MODE_MESSAGE);
-				} else {
-					cha.setDynamicHp(cha.getDynamicHp() - 체력);
-					cha.setDynamicReduction(cha.getDynamicReduction() - 리덕);
+			boolean isBless = getItem().getName().contains("(축)");
+
+			if (isBless) {
+				// ■ 축복받은 룸티스의 보랏빛 귀걸이 옵션
+				switch (en) {
+					case 0:
+						addMp = 5;
+						addMr = 2;
+						break;
+					case 1:
+						addMp = 15;
+						addMr = 5;
+						break;
+					case 2:
+						addMp = 20;
+						addMr = 6;
+						break;
+					case 3:
+						addMp = 40;
+						addMr = 8;
+						addSp = 1;
+						break;
+					case 4:
+						addMp = 55;
+						addMr = 9;
+						addSp = 2;
+						break;
+					case 5:
+						addMp = 60;
+						addMr = 10;
+						addSp = 2;
+						break;
+					case 6:
+						addMp = 75;
+						addMr = 12;
+						addSp = 3;
+						magicHit = 3;
+						break;
+					case 7:
+						addMp = 100;
+						addMr = 15;
+						addSp = 4;
+						magicHit = 4;
+						break;
+					case 8:
+						addMp = 130;
+						addMr = 20;
+						addSp = 7;
+						magicHit = 7;
+						addHp = 100;
+						break;
+					case 9:
+						addMp = 160;
+						addMr = 23;
+						addSp = 12;
+						magicHit = 12;
+						addHp = 150;
+						break;
+				}
+			} else {
+				// ■ 일반 룸티스의 보랏빛 귀걸이 옵션
+				switch (en) {
+					case 0:
+						addMp = 5;
+						addMr = 2;
+						break;
+					case 1:
+						addMp = 15;
+						addMr = 5;
+						break;
+					case 2:
+						addMp = 20;
+						addMr = 6;
+						break;
+					case 3:
+						addMp = 35;
+						addMr = 7;
+						addSp = 1;
+						break;
+					case 4:
+						addMp = 40;
+						addMr = 8;
+						addSp = 1;
+						break;
+					case 5:
+						addMp = 55;
+						addMr = 9;
+						addSp = 2;
+						break;
+					case 6:
+						addMp = 60;
+						addMr = 10;
+						addSp = 2;
+						magicHit = 2;
+						break;
+					case 7:
+						addMp = 75;
+						addMr = 12;
+						addSp = 3;
+						magicHit = 3;
+						break;
+					case 8:
+						addMp = 100;
+						addMr = 17;
+						addSp = 5;
+						magicHit = 5;
+						addHp = 50;
+						break;
+					case 9:
+						addMp = 130;
+						addMr = 20;
+						addSp = 9;
+						magicHit = 9;
+						addHp = 100;
+						break;
+				}
+			}
+
+			// 능력치 적용 및 해제 로직
+			if (addMp > 0 || addSp > 0 || magicHit > 0 || addMr > 0 || addHp > 0) {
+				if (equipped) { // 착용 시
+					cha.setDynamicMp(cha.getDynamicMp() + addMp);
+					cha.setDynamicSp(cha.getDynamicSp() + addSp);
+					cha.setDynamicMagicHit(cha.getDynamicMagicHit() + magicHit);
+					cha.setDynamicMr(cha.getDynamicMr() + addMr); // 마법 방어 추가
+					cha.setDynamicHp(cha.getDynamicHp() + addHp); // 8강 이상 HP 추가
+
+					// 채팅창 출력
+					String msg = String.format("%s(+%d):MP+%d,SP+%d,적중+%d", getItem().getName(), en, addMp, addSp,
+							magicHit);
+					if (addMr > 0)
+						msg += ",MR+" + addMr;
+					if (addHp > 0)
+						msg += ",HP+" + addHp;
+					ChattingController.toChatting(cha, msg, Lineage.CHATTING_MODE_MESSAGE);
+
+				} else { // 해제 시
+					cha.setDynamicMp(cha.getDynamicMp() - addMp);
+					cha.setDynamicSp(cha.getDynamicSp() - addSp);
+					cha.setDynamicMagicHit(cha.getDynamicMagicHit() - magicHit);
+					cha.setDynamicMr(cha.getDynamicMr() - addMr);
+					cha.setDynamicHp(cha.getDynamicHp() - addHp);
 				}
 			}
 		}
 
-		if (getItem().getName().equalsIgnoreCase("룸티스의보라빛귀걸이")) {
-			int 마나 = (getEnLevel() - 2) * 10;
-			int sp = getEnLevel() - 2;
-			if (getEnLevel() >= 3) {
-				if (equipped) {
-					cha.setDynamicMp(cha.getDynamicMp() + 마나);
-					cha.setDynamicSp(cha.getDynamicSp() + sp);
-
-					if (마나 > 0 || sp > 0)
-						ChattingController.toChatting(cha,
-								String.format("%s: 마나+%d, SP+%d", getItem().getName(), 마나, sp),
-								Lineage.CHATTING_MODE_MESSAGE);
-				} else {
-					cha.setDynamicHp(cha.getDynamicHp() - 마나);
-					cha.setDynamicSp(cha.getDynamicSp() - sp);
-				}
-			}
-		}
 		// 야도란 아이템추가
 		if (getItem().getName().equalsIgnoreCase("머미로드의 왕관")) {
 			int addDmg = 0;
@@ -3782,128 +4454,166 @@ public class ItemInstance extends object implements BuffInterface {
 		if (getItem().getName().equalsIgnoreCase("격분의 장갑")) {
 			int 대미지감소 = 0;
 			int 근거리데미지 = 0;
+			int 근거리명중 = 0; // 💡 근거리 명중 변수 추가
 
 			switch (getEnLevel()) {
 				case 5:
 					// 근거리데미지 = 1;
 					// 대미지감소 = 1;
+					근거리명중 = 1;
 					break;
 				case 6:
 					// 근거리데미지 = 2;
 					// 대미지감소 = 2;
+					근거리명중 = 2;
 					break;
 				case 7:
 					근거리데미지 = 1;
 					대미지감소 = 1;
+					근거리명중 = 3;
 					break;
 				case 8:
 					근거리데미지 = 2;
 					대미지감소 = 2;
+					근거리명중 = 4;
 					break;
 				case 9:
 					근거리데미지 = 3;
 					대미지감소 = 3;
+					근거리명중 = 5;
 					break;
 				case 10:
 					근거리데미지 = 6;
 					대미지감소 = 6;
+					근거리명중 = 6;
 					break;
 			}
 
 			if (equipped) {
 				cha.setDynamicAddDmg(cha.getDynamicAddDmg() + 근거리데미지);
 				cha.setDynamicReduction(cha.getDynamicReduction() + 대미지감소);
-				if (대미지감소 > 0 || 근거리데미지 > 0)
+				// 💡 근거리 명중 증가 적용
+				cha.setDynamicAddHit(cha.getDynamicAddHit() + 근거리명중); 
+				
+				if (대미지감소 > 0 || 근거리데미지 > 0 || 근거리명중 > 0)
 					ChattingController.toChatting(cha,
-							String.format("%s:  근거리데미지+%d, 대미지감소+%d", getItem().getName(), 근거리데미지, 대미지감소),
+							String.format("%s:  근거리데미지+%d, 대미지감소+%d, 근거리명중+%d", getItem().getName(), 근거리데미지, 대미지감소, 근거리명중),
 							Lineage.CHATTING_MODE_MESSAGE);
 			} else {
 				cha.setDynamicAddDmg(cha.getDynamicAddDmg() - 근거리데미지);
 				cha.setDynamicReduction(cha.getDynamicReduction() - 대미지감소);
+				// 💡 근거리 명중 감소(해제) 적용
+				cha.setDynamicAddHit(cha.getDynamicAddHit() - 근거리명중); 
 			}
 		}
 		if (getItem().getName().equalsIgnoreCase("아이리스의 장갑")) {
 			int 대미지감소 = 0;
 			int 원거리데미지 = 0;
+			int 원거리명중 = 0; // 💡 원거리 명중 변수 추가
 
 			switch (getEnLevel()) {
 				case 5:
 					// 원거리데미지 = 1;
 					// 대미지감소 = 1;
+					원거리명중 = 1;
 					break;
 				case 6:
 					// 원거리데미지 = 2;
 					// 대미지감소 = 2;
+					원거리명중 = 2;
 					break;
 				case 7:
 					원거리데미지 = 1;
 					대미지감소 = 1;
+					원거리명중 = 3;
 					break;
 				case 8:
 					원거리데미지 = 2;
 					대미지감소 = 2;
+					원거리명중 = 4;
 					break;
 				case 9:
 					원거리데미지 = 3;
 					대미지감소 = 3;
+					원거리명중 = 5;
 					break;
 				case 10:
 					원거리데미지 = 6;
 					대미지감소 = 6;
+					원거리명중 = 6;
 					break;
 			}
+			
 			if (equipped) {
 				cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() + 원거리데미지);
 				cha.setDynamicReduction(cha.getDynamicReduction() + 대미지감소);
-				if (대미지감소 > 0 || 원거리데미지 > 0)
+				// 💡 원거리 명중 증가 적용
+				cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() + 원거리명중);
+				
+				if (대미지감소 > 0 || 원거리데미지 > 0 || 원거리명중 > 0)
 					ChattingController.toChatting(cha,
-							String.format("%s:  원거리데미지+%d, 대미지감소+%d", getItem().getName(), 원거리데미지, 대미지감소),
+							String.format("%s:  원거리데미지+%d, 대미지감소+%d, 원거리명중+%d", getItem().getName(), 원거리데미지, 대미지감소, 원거리명중),
 							Lineage.CHATTING_MODE_MESSAGE);
 			} else {
 				cha.setDynamicAddDmgBow(cha.getDynamicAddDmgBow() - 원거리데미지);
 				cha.setDynamicReduction(cha.getDynamicReduction() - 대미지감소);
+				// 💡 원거리 명중 감소(해제) 적용
+				cha.setDynamicAddHitBow(cha.getDynamicAddHitBow() - 원거리명중);
 			}
 		}
 		if (getItem().getName().equalsIgnoreCase("대마법사의 장갑")) {
 			int 대미지감소 = 0;
 			int sp = 0;
+			int 마법명중 = 0; // 💡 마법 명중 변수 추가
 
 			switch (getEnLevel()) {
 				case 5:
 					// sp = 1;
 					// 대미지감소 = 1;
+					마법명중 = 1;
 					break;
 				case 6:
 					// sp = 2;
 					// 대미지감소 = 2;
+					마법명중 = 2;
 					break;
 				case 7:
 					sp = 1;
 					대미지감소 = 1;
+					마법명중 = 3;
 					break;
 				case 8:
 					sp = 2;
 					대미지감소 = 2;
+					마법명중 = 4;
 					break;
 				case 9:
 					sp = 3;
 					대미지감소 = 3;
+					마법명중 = 5;
 					break;
 				case 10:
 					sp = 7;
 					대미지감소 = 7;
+					마법명중 = 6;
 					break;
 			}
+			
 			if (equipped) {
 				cha.setDynamicSp(cha.getDynamicSp() + sp);
 				cha.setDynamicReduction(cha.getDynamicReduction() + 대미지감소);
-				if (대미지감소 > 0 || sp > 0)
+				// 💡 마법 명중 증가 적용
+				cha.setDynamicMagicHit(cha.getDynamicMagicHit() + 마법명중);
+				
+				if (대미지감소 > 0 || sp > 0 || 마법명중 > 0)
 					ChattingController.toChatting(cha,
-							String.format("%s:  sp+%d, 대미지감소+%d", getItem().getName(), sp, 대미지감소),
+							String.format("%s:  SP+%d, 대미지감소+%d, 마법명중+%d", getItem().getName(), sp, 대미지감소, 마법명중),
 							Lineage.CHATTING_MODE_MESSAGE);
 			} else {
 				cha.setDynamicSp(cha.getDynamicSp() - sp);
 				cha.setDynamicReduction(cha.getDynamicReduction() - 대미지감소);
+				// 💡 마법 명중 감소(해제) 적용
+				cha.setDynamicMagicHit(cha.getDynamicMagicHit() - 마법명중);
 			}
 		}
 		if (getItem().getName().equalsIgnoreCase("가디언의 망토")) {

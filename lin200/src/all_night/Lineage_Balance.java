@@ -19,7 +19,7 @@ public final class Lineage_Balance {
 	static public double level_up_mp_elf;
 	static public double level_up_mp_darkelf;
 	static public double level_up_mp_wizard;
-	
+
 	// 근거리 피격시 군주의 ac 가용률
 	static public double pc_hit_ac_royal_percent;
 	// 근거리 피격시 기사의 ac 가용률
@@ -30,7 +30,7 @@ public final class Lineage_Balance {
 	static public double pc_hit_ac_darkelf_percent;
 	// 근거리 피격시 요정의 ac 가용률
 	static public double pc_hit_ac_wizard_percent;
-	
+
 	// 원거리 피격시 군주의 ac 가용률
 	static public double pc_bow_hit_ac_royal_percent;
 	// 원거리 피격시 기사의 ac 가용률
@@ -41,27 +41,27 @@ public final class Lineage_Balance {
 	static public double pc_bow_hit_ac_darkelf_percent;
 	// 원거리 피격시 요정의 ac 가용률
 	static public double pc_bow_hit_ac_wizard_percent;
-	
-	//클래스별 대미지 감소
-	static public double ROYAL_dmg ;
-	static public double KNIGHT_dmg ;
-	static public double ELF_dmg ;
-	static public double WIZARD_dmg ;
-	static public double DARKELF_dmg ;
-	
+
+	// 클래스별 대미지 감소
+	static public double ROYAL_dmg;
+	static public double KNIGHT_dmg;
+	static public double ELF_dmg;
+	static public double WIZARD_dmg;
+	static public double DARKELF_dmg;
+
 	// [스팟 타워 출현 몬스터 그룹 티어 (1=1군, 2=2군, 3=3군)]
-		static public int spot_tower_monster_tier = 1;
-	
-	//다크엘프 pvp 데미지
+	static public int spot_tower_monster_tier = 1;
+
+	// 다크엘프 pvp데미지
 	static public double darkelf_pvp_damage_bonus = 1.0;
-	
+
 	// 트리플 애로우 최종 대미지의 몇% 적용 여부
 	static public double triple_arrow_damage;
 	// 트리플 동시 공격시 중첩 체크할 시간(초)
 	static public double triple_damage_reduction_time;
 	// 트리플을 두명이상에게 동시에 공격받을 경우 데미지 감소(%)
 	static public double triple_damage_reduction;
-	
+
 	// 쇼크스턴 양손검 착용여부
 	static public boolean is_stun_twohandsword;
 
@@ -71,12 +71,12 @@ public final class Lineage_Balance {
 	static public double heal_time;
 	// 힐올, 네이쳐스 블레싱 중첩 허용 안할 경우 힐량 감소
 	static public double heal_reduction;
-	
+
 	// 힐올 차는양 조절
 	static public double heal_all_rate;
 	// 블레싱 차는양 조절
 	static public double blessing_rate;
-	
+
 	// 마법 기본 확률(%)
 	static public int magic_probability;
 	// 사일런스의 확률 감소
@@ -100,64 +100,64 @@ public final class Lineage_Balance {
 	static public double pollute_watar;
 	static public double entangle;
 	static public double area_of_silence;
-    static public double erase_magic;
-    static public double armor_break;
-    
- // all_night.Lineage_Balance
+	static public double erase_magic;
+	static public double armor_break;
 
- // ── 화령 ──
-    static public final double[] elem_fire_proc = {0, 0, 0, 0, 0, 0}; // 5%, 8%, 12%, 16%, 20%
-    static public final int[]    elem_fire_add  = {0, 100, 200, 300, 16, 20};
-    static public final int[]    elem_fire_fx   = {0, 0, 0, 0, 0, 0}; // 이펙트ID 예시
+	// all_night.Lineage_Balance
 
- // ── 풍령 ──
-    static public final double[] elem_wind_proc = {0, 0, 0, 0, 0, 0};
-    static public final int[]    elem_wind_add  = {0, 100, 200, 300, 16, 20};
-    static public final int[]    elem_wind_fx   = {0, 0, 0, 0, 0, 0};
+	// ── 화령 ──
+	static public final double[] elem_fire_proc = { 0, 0, 0, 0, 0, 0 }; // 5%, 8%, 12%, 16%, 20%
+	static public final int[] elem_fire_add = { 0, 100, 200, 300, 16, 20 };
+	static public final int[] elem_fire_fx = { 0, 0, 0, 0, 0, 0 }; // 이펙트ID 예시
 
- // ── 수령 ──
-    static public final double[] elem_water_proc = {0, 0, 0, 0, 0, 0};
-    static public final int[]    elem_water_add  = {0, 100, 200, 300, 16, 20};
-    static public final int[]    elem_water_fx   = {0, 0, 0, 0, 0, 0};
+	// ── 풍령 ──
+	static public final double[] elem_wind_proc = { 0, 0, 0, 0, 0, 0 };
+	static public final int[] elem_wind_add = { 0, 100, 200, 300, 16, 20 };
+	static public final int[] elem_wind_fx = { 0, 0, 0, 0, 0, 0 };
 
- // ── 지령 ──
-    static public final double[] elem_earth_proc = {0, 0, 0, 0, 0, 0};
-    static public final int[]    elem_earth_add  = {0, 100, 200, 300, 16, 20};
-    static public final int[]    elem_earth_fx   = {0, 0, 0, 0, 0, 0};
+	// ── 수령 ──
+	static public final double[] elem_water_proc = { 0, 0, 0, 0, 0, 0 };
+	static public final int[] elem_water_add = { 0, 100, 200, 300, 16, 20 };
+	static public final int[] elem_water_fx = { 0, 0, 0, 0, 0, 0 };
 
- 
-	
+	// ── 지령 ──
+	static public final double[] elem_earth_proc = { 0, 0, 0, 0, 0, 0 };
+	static public final int[] elem_earth_add = { 0, 100, 200, 300, 16, 20 };
+	static public final int[] elem_earth_fx = { 0, 0, 0, 0, 0, 0 };
+
 	// 미티어 스트라이크 대미지 중첩 여부
 	static public boolean is_meteor_strike_damage;
 	// 미티어 스트라이크 대미지 중첩 시간(초)
 	static public double meteor_strike_time;
 	// 미티어 스트라이크 중첩 허용 안할 경우 대미지 감소율
 	static public double meteor_strike_reduction;
-	
+
 	// 디스인티그레이트 대미지 중첩 여부
 	static public boolean is_this_inti_greate_damage;
 	// 디스인티그레이트 대미지 중첩 시간(초)
 	static public double this_inti_greate_time;
 	// 디스인티그레이트 중첩 허용 안할 경우 대미지 감소율
 	static public double this_inti_greate_reduction;
-	
+
 	// 좌표에 객체가 2명 이상일 경우(겹치기) PC에게 대미지 적용 여부
 	static public boolean is_fusion_attack;
 	// 이뮨 투 함 대미지 감소율
 	static public double immuneToHarmReduction;
 	// 세인트 이뮨 투 함 대미지 감소율
 	static public double immuneToHarmReduction2;
+	// 동일 IP(투컴) 이뮨 투 함 차단 스위치
+	static public boolean immune_same_ip_block = true;
 	// 임페리얼아머 대미지 감소율
 	static public double ipReduction;
-	
+
 	// 단검 대미지 감소율
 	static public double drReduction;
-	
+
 	// mr 100 이하의 마법 대미지 감소
 	static public double mr_low_damage_reduce;
 	// mr 101 이상의 마법 대미지 감소
 	static public double mr_high_damage_reduce;
-	
+
 	// 군주 HP틱 밸런스
 	static public double royal_hp_tic_figure;
 	// 기사 HP틱 밸런스
@@ -168,7 +168,7 @@ public final class Lineage_Balance {
 	static public double darkelf_hp_tic_figure;
 	// 마법사 HP틱 밸런스
 	static public double wizard_hp_tic_figure;
-	
+
 	// 군주 MP틱 밸런스
 	static public double royal_mp_tic_figure;
 	// 기사 MP틱 밸런스
@@ -179,20 +179,20 @@ public final class Lineage_Balance {
 	static public double darkelf_mp_tic_figure;
 	// 마법사 MP틱 밸런스
 	static public double wizard_mp_tic_figure;
-	
+
 	// PC AC에 따른 근거리 명중
 	static public double pc_hit_rate;
-	
+
 	static public double pc_hit_rate2;
-	
+
 	static public double pc_hit_rate3;
-	
+
 	static public double pc_hit_rate4;
-	
+
 	static public double pc_hit_rate5;
 	// PC AC에 따른 원거리 명중
 	static public double pc_bow_hit_rate;
-	
+
 	// 군주 마법 대미지 최종 밸런스
 	static public double royal_magic_final_damage_figure;
 	// 기사 마법 대미지 최종 밸런스
@@ -203,7 +203,7 @@ public final class Lineage_Balance {
 	static public double darkelf_magic_final_damage_figure;
 	// 마법사 마법 대미지 최종 밸런스
 	static public double wizard_magic_final_damage_figure;
-	
+
 	// 군주 마법 명중 최종 밸런스
 	static public double royal_magic_final_hit_figure;
 	// 기사 마법 명중 최종 밸런스
@@ -214,7 +214,7 @@ public final class Lineage_Balance {
 	static public double wizard_magic_final_hit_figure;
 	// 다크엘프 마법 명중 최종 밸런스
 	static public double darkelf_magic_final_hit_figure;
-		
+
 	// 군주 근거리 대미지 밸런스
 	static public double royal_damage_figure;
 	// 기사 근거리 대미지 밸런스
@@ -225,7 +225,7 @@ public final class Lineage_Balance {
 	static public double darkelf_damage_figure;
 	// 마법사 근거리 대미지 밸런스
 	static public double wizard_damage_figure;
-	
+
 	// 군주 근거리 명중 밸런스
 	static public double royal_hit_figure;
 	// 기사 근거리 명중 밸런스
@@ -236,7 +236,7 @@ public final class Lineage_Balance {
 	static public double darkelf_hit_figure;
 	// 마법사 근거리 명중 밸런스
 	static public double wizard_hit_figure;
-	
+
 	// 군주 근거리 치명타 밸런스
 	static public double royal_critical_figure;
 	// 기사 근거리 치명타 밸런스
@@ -247,7 +247,7 @@ public final class Lineage_Balance {
 	static public double darkelf_critical_figure;
 	// 마법사 근거리 치명타 밸런스
 	static public double wizard_critical_figure;
-	
+
 	// 군주 원거리 대미지 밸런스
 	static public double royal_bow_damage_figure;
 	// 기사 원거리 대미지 밸런스
@@ -258,7 +258,7 @@ public final class Lineage_Balance {
 	static public double darkelf_bow_damage_figure;
 	// 마법사 원거리 대미지 밸런스
 	static public double wizard_bow_damage_figure;
-	
+
 	// 군주 원거리 명중 밸런스
 	static public double royal_bow_hit_figure;
 	// 기사 원거리 명중 밸런스
@@ -269,7 +269,7 @@ public final class Lineage_Balance {
 	static public double darkelf_bow_hit_figure;
 	// 마법사 원거리 명중 밸런스
 	static public double wizard_bow_hit_figure;
-	
+
 	// 군주 원거리 치명타 밸런스
 	static public double royal_bow_critical_figure;
 	// 기사 원거리 치명타 밸런스
@@ -280,7 +280,7 @@ public final class Lineage_Balance {
 	static public double darkelf_bow_critical_figure;
 	// 마법사 원거리 치명타 밸런스
 	static public double wizard_bow_critical_figure;
-	
+
 	// 군주 마법 대미지 밸런스
 	static public double royal_magic_damage_figure;
 	// 기사 마법 대미지 밸런스
@@ -291,7 +291,7 @@ public final class Lineage_Balance {
 	static public double darkelf_magic_damage_figure;
 	// 마법사 마법 대미지 밸런스
 	static public double wizard_magic_damage_figure;
-	
+
 	// 군주 마법 명중 밸런스
 	static public double royal_magic_hit_figure;
 	// 기사 마법 명중 밸런스
@@ -302,7 +302,7 @@ public final class Lineage_Balance {
 	static public double darkelf_magic_hit_figure;
 	// 마법사 마법 명중 밸런스
 	static public double wizard_magic_hit_figure;
-	
+
 	// 군주 마법 치명타 밸런스
 	static public double royal_magic_critical_figure;
 	// 기사 마법 치명타 밸런스
@@ -313,7 +313,7 @@ public final class Lineage_Balance {
 	static public double darkelf_magic_critical_figure;
 	// 마법사 마법 치명타 밸런스
 	static public double wizard_magic_critical_figure;
-	
+
 	// 군주 마법 치명타 밸런스
 	static public double royal_magic_bonus_figure;
 	// 기사 마법 치명타 밸런스
@@ -324,40 +324,40 @@ public final class Lineage_Balance {
 	static public double darkelf_magic_bonus_figure;
 	// 마법사 마법 치명타 밸런스
 	static public double wizard_magic_bonus_figure;
-	
+
 	// 나비켓의 하급, 중급, 상급, 최상급 보스들은 대상의 마방 무시하고 monster_skill 테이블의 고정뎀지로 줄지 여부.
 	static public boolean is_boss_monster_mr_dmg;
 	// 몬스터 HP/MP 배율
 	static public double monster_hp_rate;
 	static public double monster_mp_rate;
-	
+
 	// 몬스터 레벨에 따른 대미지
 	static public double monster_level_min_damage_rate;
 	static public double monster_level_max_damage_rate;
-	
+
 	// 몬스터 명중 배율
 	static public double monster_hit_rate;
 	static public double monster_bow_hit_rate;
-	
+
 	// 서먼몬스터 레벨에 따른 대미지
 	static public double summon_level_min_damage_rate;
 	static public double summon_level_max_damage_rate;
-	
+
 	// 서먼몬스터 명중 배율
 	static public double summon_hit_rate;
 	static public double summon_bow_hit_rate;
-	
+
 	// 펫 레벨에 따른 대미지
 	static public double pet_level_min_damage_rate;
 	static public double pet_level_max_damage_rate;
-	
+
 	// 파우스트 등장시 스폰 알림 여부
 	static public boolean faust_spawn_msg;
 	// 파우스트 출현 맵별 ON/OFF 스위치
 	static public boolean faust_map_53_active = true;
 	static public boolean faust_map_54_active = false;
 	static public boolean faust_map_55_active = false;
-	
+
 	// 드래곤 스폰 확률
 	static public double event_b_spawn_probability;
 	// 드래곤 스폰 확률
@@ -384,7 +384,7 @@ public final class Lineage_Balance {
 	public static boolean event_map_809_active = true;
 	public static boolean event_map_810_active = false;
 	public static boolean event_map_811_active = false;
-	
+
 	// 돌발성 보스몬스터의 스폰 확률
 	static public double faust_spawn_probability;
 	// 감시자 리퍼 등장시 스폰 알림 여부
@@ -398,10 +398,10 @@ public final class Lineage_Balance {
 	// 감시자 리퍼의 현재 체력이 최대 체력의 %이하 일때 확률 체크할 여부
 	static public double oman_spawn_hp_min;
 	static public double oman_spawn_hp_max;
-	
+
 	// 🛡️ 장인의 갑옷 마법 주문서 (단일 천장 시스템)
 	// [+7 -> +8 구간]
-	public static int armor_enchant_7_pity_count = 100;   
+	public static int armor_enchant_7_pity_count = 100;
 	// [+8 -> +9 구간]
 	public static int armor_enchant_8_pity_count = 100;
 	// [+9 -> +10 구간]
@@ -424,22 +424,22 @@ public final class Lineage_Balance {
 	static public int maan_pity_count_birth = 10;
 	static public int maan_pity_count_shape = 10;
 	static public int maan_pity_count_life = 10;
-	
+
 	// 🔮 마안 합성 실패 시 상승할 '확률 보너스' 고정값
 	public static double maan_birth_bonus_val = 5.0; // 탄생 실패 시 +5%
 	public static double maan_shape_bonus_val = 3.0; // 형상 실패 시 +3%
-	public static double maan_life_bonus_val  = 1.0; // 생명 실패 시 +1%
-	
+	public static double maan_life_bonus_val = 1.0; // 생명 실패 시 +1%
+
 	// 🧸 마법인형 합성 천장 시스템 (목표 등급 기준)
-	static public int doll_pity_count_4 = 10;      // 4단계 인형 천장 횟수
-	static public int doll_pity_count_5 = 10;      // 5단계 인형 천장 횟수
+	static public int doll_pity_count_4 = 10; // 4단계 인형 천장 횟수
+	static public int doll_pity_count_5 = 10; // 5단계 인형 천장 횟수
 	static public int doll_pity_count_dragon = 10; // 용인형 천장 횟수
-	
+
 	// 🧸 인형 합성 실패 시 상승할 '확률 보너스' (1.0 = 1%)
-	public static double doll_bonus_val_4 = 1.0; 
-	public static double doll_bonus_val_5 = 1.0; 
+	public static double doll_bonus_val_4 = 1.0;
+	public static double doll_bonus_val_5 = 1.0;
 	public static double doll_bonus_val_dragon = 0.5;
-	
+
 	// 1단계 마법인형 합성 확률
 	static public double magicDoll_class_1_probability;
 	// 1단계 마법인형 합성 대성공 확률
@@ -454,12 +454,12 @@ public final class Lineage_Balance {
 	static public double magicDoll_class_3_perfect_probability;
 	// 4단계 마법인형 합성 확률
 	static public double magicDoll_class_4_probability;
-	
+
 	// 용 마법인형 합성 확률
 	static public double magicDoll_class_6_probability;
 	// 특수합성 성공 확률
 	static public double magicDoll_class_5_probability;
-	
+
 	// 흑장로 마법인형 최소 대미지
 	static public int magicDoll_black_elder_min_damage;
 	// 흑장로 마법인형 최대 대미지
@@ -468,7 +468,7 @@ public final class Lineage_Balance {
 	static public int magicDoll_death_knight_min_damage;
 	// 데스 나이트 마법인형 최대 대미지
 	static public int magicDoll_death_knight_max_damage;
-	
+
 	// 축복 부여 주문서 확률(%)
 	static public double bless_change_probability1;
 	static public double bless_change_probability2;
@@ -476,10 +476,21 @@ public final class Lineage_Balance {
 	static public double bless_change_probability4;
 	static public double bless_change_probability5;
 	static public double bless_change_probability6;
-	
+
 	static public double[] valakas_success_rates = new double[10];
 	public static int valakas_min_en = 5;
 	
+	// 속성 강화 실패 시 페널티 옵션 (0: 유지, 1: 초기화, 2: 1단계 하락)
+	public static int elemental_fail_penalty = 1;
+	// 속성 최대 강화 단수
+	public static int danlevel; // 속성강화제한 (최대 단수)
+	// 속성 단계별 확률
+	public static int dan1;     // 1단 확률
+	public static int dan2;     // 2단 확률
+	public static int dan3;     // 3단 확률
+	public static int dan4;     // 4단 확률
+	public static int dan5;     // 5단 확률
+
 	// 안전인챈트 0 무기 0 -> 1 확률(%)
 	static public double weapon_safe_enchant0_0_probability;
 	// 안전인챈트 0 무기 1 -> 2 확률(%)
@@ -500,7 +511,7 @@ public final class Lineage_Balance {
 	static public double weapon_safe_enchant0_8_probability;
 	// 안전인챈트 0 무기 9 이상 확률(%)
 	static public double weapon_safe_enchant0_9_probability;
-	
+
 	// 안전인챈트 6 무기 6 -> 7 확률(%)
 	static public double weapon_safe_enchant6_6_probability;
 	// 안전인챈트 6 무기 7 -> 8 확률(%)
@@ -509,7 +520,7 @@ public final class Lineage_Balance {
 	static public double weapon_safe_enchant6_8_probability;
 	// 안전인챈트 6 무기 9 이상 확률(%)
 	static public double weapon_safe_enchant6_9_probability;
-	
+
 	// 안전인챈트 0 방어구 0 -> 1 확률(%)
 	static public double armor_safe_enchant0_0_probability;
 	// 안전인챈트 0 방어구 1 -> 2 확률(%)
@@ -530,7 +541,7 @@ public final class Lineage_Balance {
 	static public double armor_safe_enchant0_8_probability;
 	// 안전인챈트 0 방어구 9 이상 확률(%)
 	static public double armor_safe_enchant0_9_probability;
-	
+
 	// 안전인챈트 4 방어구 4 -> 5 확률(%)
 	static public double armor_safe_enchant4_4_probability;
 	// 안전인챈트 4 방어구 5 -> 6 확률(%)
@@ -543,7 +554,7 @@ public final class Lineage_Balance {
 	static public double armor_safe_enchant4_8_probability;
 	// 안전인챈트 4 방어구 9 이상 확률(%)
 	static public double armor_safe_enchant4_9_probability;
-	
+
 	// 안전인챈트 6 방어구 6 -> 7 확률(%)
 	static public double armor_safe_enchant6_6_probability;
 	// 안전인챈트 6 방어구 7 -> 8 확률(%)
@@ -552,7 +563,7 @@ public final class Lineage_Balance {
 	static public double armor_safe_enchant6_8_probability;
 	// 안전인챈트 6 방어구 9 이상 확률(%)
 	static public double armor_safe_enchant6_9_probability;
-	
+
 	// 장신구 0 -> 1 확률(%)
 	static public double accessories_0_probability;
 	// 장신구 1 -> 2 확률(%)
@@ -575,7 +586,7 @@ public final class Lineage_Balance {
 	static public double accessories_9_probability;
 	// 실패시 인챈트 -1될 확률(%)
 	static public double accessories_nothing_probability;
-	
+
 	// 축오림 장신구 마법 주문서 최소 인첸
 	static public int bless_orim_acc_min_en;
 	// 장신구 축오림 주문서 0 -> 1 확률(%)
@@ -598,17 +609,16 @@ public final class Lineage_Balance {
 	static public double accessories_bless_8_probability;
 	// 장신구 축오림 주문서 9 이상 확률(%)
 	static public double accessories_bless_9_probability;
-	
-	//축오림 천장 시스템
+	// 축오림 천장 시스템
 	public static int accessories_pity_count_5 = 30; // 기본값
 	public static int accessories_pity_count_6 = 50;
 	public static int accessories_pity_count_7 = 100;
-	
+
 	// 룸티스 천장 시스템
-	public static int roomtis_pity_count_5 = 5; 
+	public static int roomtis_pity_count_5 = 5;
 	public static int roomtis_pity_count_6 = 10;
 	public static int roomtis_pity_count_7 = 15;
-	
+
 	// 룸티스 강화 주문서
 	static public double roomtis_enchant_prob0 = 0.50; // 0->1 확률 (50%)
 	static public double roomtis_enchant_prob1 = 0.40; // 1->2 확률
@@ -620,6 +630,20 @@ public final class Lineage_Balance {
 	static public double roomtis_enchant_prob7 = 0.05; // 7->8 확률
 	static public double roomtis_enchant_prob8 = 0.03; // 8->9 확률
 	static public double roomtis_enchant_prob9 = 0.01; // 9->10 확률
+
+	// 스냅퍼 반지 강화 확률 (0.0 ~ 1.0 사이의 값)
+	// 1.0 = 100%, 0.5 = 50%, 0.01 = 1%
+	// ▼ 스냅퍼 반지 강화 확률 변수 추가 (기본값 0.1 등으로 설정 가능)
+	public static double snapper_enchant_prob0 = 0.5;
+	public static double snapper_enchant_prob1 = 0.4;
+	public static double snapper_enchant_prob2 = 0.3;
+	public static double snapper_enchant_prob3 = 0.2;
+	public static double snapper_enchant_prob4 = 0.15;
+	public static double snapper_enchant_prob5 = 0.1;
+	public static double snapper_enchant_prob6 = 0.07;
+	public static double snapper_enchant_prob7 = 0.05;
+	public static double snapper_enchant_prob8 = 0.03;
+	public static double snapper_enchant_prob9 = 0.01;
 
 	// 오림의 무기 마법 주문서 최소 인첸
 	static public int orim_weapon_min_en;
@@ -643,7 +667,7 @@ public final class Lineage_Balance {
 	static public double orim_weapon_0_8_probability;
 	// 안전 인첸 0 오림의 무기 마법 주문서 9 이상 확률(%)
 	static public double orim_weapon_0_9_probability;
-	
+
 	// 축 안전 인첸 0 오림의 무기 마법 주문서 0 -> 1 확률(%)
 	static public double orim_bless_weapon_0_0_probability;
 	// 축 안전 인첸 0 오림의 무기 마법 주문서 1 -> 2 확률(%)
@@ -664,7 +688,7 @@ public final class Lineage_Balance {
 	static public double orim_bless_weapon_0_8_probability;
 	// 축 안전 인첸 0 오림의 무기 마법 주문서 9 이상 확률(%)
 	static public double orim_bless_weapon_0_9_probability;
-	
+
 	// 오림의 무기 마법 주문서 6 -> 7 확률(%)
 	static public double orim_weapon_6_probability;
 	// 오림의 무기 마법 주문서 7 -> 8 확률(%)
@@ -687,7 +711,7 @@ public final class Lineage_Balance {
 	static public double orim_weapon_15_probability;
 	// 오림 무기 마법 주문서 실패시 -0될 확률(%)
 	static public double orim_scroll_weapon_nothing_probability;
-	
+
 	// 축 오림의 무기 마법 주문서 6 -> 7 확률(%)
 	static public double orim_bless_weapon_6_probability;
 	// 축 오림의 무기 마법 주문서 7 -> 8 확률(%)
@@ -708,7 +732,7 @@ public final class Lineage_Balance {
 	static public double orim_bless_weapon_14_probability;
 	// 축 오림의 무기 마법 주문서 15 이상 확률(%)
 	static public double orim_bless_weapon_15_probability;
-	
+
 	// 오림의 갑옷 마법 주문서 최소 인첸
 	static public int orim_armor_min_en;
 	// 안전 인첸 0 오림의 방어구 마법 주문서 0 -> 1 확률(%)
@@ -731,7 +755,7 @@ public final class Lineage_Balance {
 	static public double orim_armor_0_8_probability;
 	// 안전 인첸 0 오림의 방어구 마법 주문서 9 이상 확률(%)
 	static public double orim_armor_0_9_probability;
-	
+
 	// 축 안전 인첸 0 오림의 방어구 마법 주문서 0 -> 1 확률(%)
 	static public double orim_bless_armor_0_0_probability;
 	// 축 안전 인첸 0 오림의 방어구 마법 주문서 1 -> 2 확률(%)
@@ -752,7 +776,7 @@ public final class Lineage_Balance {
 	static public double orim_bless_armor_0_8_probability;
 	// 축 안전 인첸 0 오림의 방어구 마법 주문서 9 이상 확률(%)
 	static public double orim_bless_armor_0_9_probability;
-	
+
 	// 안전 인첸 4 오림의 갑옷 마법 주문서 4 -> 5 확률(%)
 	static public double orim_armor_4_4_probability;
 	// 안전 인첸 4 오림의 갑옷 마법 주문서 5 -> 6 확률(%)
@@ -794,7 +818,7 @@ public final class Lineage_Balance {
 	static public double orim_bless_armor_4_12_probability;
 	// 안전 인첸 4 축 오림의 갑옷 마법 주문서 13 이상 확률(%)
 	static public double orim_bless_armor_4_13_probability;
-	
+
 	// 오림의 갑옷 마법 주문서 6 -> 7 확률(%)
 	static public double orim_armor_6_probability;
 	// 오림의 갑옷 마법 주문서 7 -> 8 확률(%)
@@ -817,7 +841,7 @@ public final class Lineage_Balance {
 	static public double orim_armor_15_probability;
 	// 오림 갑옷 마법 주문서 실패시 -0될 확률(%)
 	static public double orim_scroll_armor_nothing_probability;
-	
+
 	// 축 오림의 갑옷 마법 주문서 6 -> 7 확률(%)
 	static public double orim_bless_armor_6_probability;
 	// 축 오림의 갑옷 마법 주문서 7 -> 8 확률(%)
@@ -838,7 +862,7 @@ public final class Lineage_Balance {
 	static public double orim_bless_armor_14_probability;
 	// 축 오림의 갑옷 마법 주문서 15 이상 확률(%)
 	static public double orim_bless_armor_15_probability;
-	
+
 	// +9 이상 무기 인챈트시 성공할 확률(%)
 	static public double weapon_enchant_9_success_probability;
 	// +9 이상 무기 인챈트시 아무일도 일어나지 않을 확률(%)
@@ -857,14 +881,13 @@ public final class Lineage_Balance {
 	static public double weapon_enchant_9_use_count_3_probability;
 	// 장인의 무기 마법 주문서 누적 사용횟수가 설정값 이상일 경우 확률(%)
 	static public double weapon_enchant_9_scroll_probability;
-	
-	//장인의 무기 마법 주문서 천장 +10, +11
+	// 장인의 무기 마법 주문서 천장 +10, +11
 	public static int weapon_enchant_10_pity_count = 100; // 예시 횟수
 	public static int weapon_enchant_11_pity_count = 100; // 예시 횟수
 
 	// 양손무기 추가 대미지
 	static public double two_handsword_damage;
-	
+
 	// +7 인챈트 무기 추가 대미지 증가 배율
 	static public double weapon_en_7_damage;
 	// +8 인챈트 무기 추가 대미지 증가 배율
@@ -883,26 +906,25 @@ public final class Lineage_Balance {
 	static public double weapon_en_14_damage;
 	// +15 인챈트 무기 추가 대미지 증가 배율
 	static public double weapon_en_15_damage;
-	
+
 	// 몬스터 대미지 조절
 	static public double monster_damage_rate;
 	// 서먼 몬스터 대미지 조절
 	static public double summon_damage_rate;
 	// 펫 대미지 조절
 	static public double pet_damage_rate;
-	
+
 	// 스턴 확률 조절
 	static public double stun_percent_rate;
-	
 	// 포스 스턴 발동 확률
 	public static int force_stun_chance = 35; // 기본값 35%
-	
 	// ✅ 다크엘프 쉐도우 스턴 발동 확률
 	static public double shadow_stun_prob;
-	
+	// 언캐니 닷지 회피율 기본값
+	public static int uncanny_dodge_dg = 30; // 기본값 30
 	// 네메시스 스턴 확률
 	public static int nemesis_stun_chance = 10; // 기본값 10%
-	
+
 	// 안전인챈트 0 무기 0 -> 2 확률(%)
 	static public double weapon_safe_enchant0_0_2_probability;
 	// 안전인챈트 0 무기 0 -> 3 확률(%)
@@ -931,7 +953,7 @@ public final class Lineage_Balance {
 	static public double weapon_safe_enchant0_6_enchant2_probability;
 	// 안전인챈트 0 무기 6이상 3 확률(%)
 	static public double weapon_safe_enchant0_6_enchant3_probability;
-	
+
 	// 안전인챈트 6 무기 0 -> 2 확률(%)
 	static public double weapon_safe_enchant6_0_2_probability;
 	// 안전인챈트 6 무기 0 -> 3 확률(%)
@@ -960,7 +982,7 @@ public final class Lineage_Balance {
 	static public double weapon_safe_enchant6_6_enchant2_probability;
 	// 안전인챈트 6 무기 6이상 3 확률(%)
 	static public double weapon_safe_enchant6_6_enchant3_probability;
-	
+
 	// 안전인챈트 0 방어구 0 -> 2 확률(%)
 	static public double armor_safe_enchant0_0_2_probability;
 	// 안전인챈트 0 방어구 0 -> 3 확률(%)
@@ -989,7 +1011,7 @@ public final class Lineage_Balance {
 	static public double armor_safe_enchant0_6_enchant2_probability;
 	// 안전인챈트 0 방어구 6이상 3 확률(%)
 	static public double armor_safe_enchant0_6_enchant3_probability;
-	
+
 	// 안전인챈트 4 방어구 0 -> 2 확률(%)
 	static public double armor_safe_enchant4_0_2_probability;
 	// 안전인챈트 4 방어구 0 -> 3 확률(%)
@@ -1018,7 +1040,7 @@ public final class Lineage_Balance {
 	static public double armor_safe_enchant4_6_enchant2_probability;
 	// 안전인챈트 4 방어구 6이상 3 확률(%)
 	static public double armor_safe_enchant4_6_enchant3_probability;
-	
+
 	// 안전인챈트 6 방어구 0 -> 2 확률(%)
 	static public double armor_safe_enchant6_0_2_probability;
 	// 안전인챈트 6 방어구 0 -> 3 확률(%)
@@ -1047,12 +1069,11 @@ public final class Lineage_Balance {
 	static public double armor_safe_enchant6_6_enchant2_probability;
 	// 안전인챈트 6 방어구 6이상 3 확률(%)
 	static public double armor_safe_enchant6_6_enchant3_probability;
-	
+
 	// 인형 진화 주문서 확률
 	static public double doll_upgrade_percent;
-	// 인형 진화 천장
 	static public int doll_pity_count = 20;
-	
+
 	/**
 	 * 리니지 밸런스에 사용되는 변수 초기화.
 	 * 2017-10-05
@@ -1061,7 +1082,7 @@ public final class Lineage_Balance {
 	static public void init() {
 		TimeLine.start("Lineage_Balance..");
 		String line = null;
-		
+
 		try {
 			BufferedReader lnrr = new BufferedReader(new FileReader("lineage_balance.conf"));
 			while ((line = lnrr.readLine()) != null) {
@@ -1072,7 +1093,7 @@ public final class Lineage_Balance {
 				if (pos > 0) {
 					String key = line.substring(0, pos).trim();
 					String value = line.substring(pos + 1, line.length()).trim();
-					
+
 					if (value.contains("%"))
 						value = value.replace("%", "");
 
@@ -1089,7 +1110,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("monster_hp_rate"))
 						monster_hp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("monster_mp_rate"))
-						monster_mp_rate = Double.valueOf(value);		
+						monster_mp_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("summon_level_min_damage_rate"))
 						summon_level_min_damage_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("summon_level_max_damage_rate"))
@@ -1102,12 +1123,12 @@ public final class Lineage_Balance {
 						summon_hit_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("summon_bow_hit_rate"))
 						summon_bow_hit_rate = Double.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("faust_spawn_msg"))
-						faust_spawn_msg = value.equalsIgnoreCase("true");		
+						faust_spawn_msg = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("faust_spawn_probability"))
-						faust_spawn_probability = Double.valueOf(value) * 0.01;	
-					
+						faust_spawn_probability = Double.valueOf(value) * 0.01;
+
 					//파우스트 맵 스위치로드
 					else if (key.equalsIgnoreCase("faust_map_53_active"))
 						faust_map_53_active = Boolean.parseBoolean(value);
@@ -1115,7 +1136,7 @@ public final class Lineage_Balance {
 						faust_map_54_active = Boolean.parseBoolean(value);
 					else if (key.equalsIgnoreCase("faust_map_55_active"))
 						faust_map_55_active = Boolean.parseBoolean(value);
-					
+
 					else if (key.equalsIgnoreCase("event_b_spawn_probability"))
 						event_b_spawn_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("event_b2_spawn_probability"))
@@ -1151,27 +1172,12 @@ public final class Lineage_Balance {
 						event_map_810_active = Boolean.parseBoolean(value);
 					else if (key.equalsIgnoreCase("event_map_811_active"))
 						event_map_811_active = Boolean.parseBoolean(value);
-					
-					else if (key.equalsIgnoreCase("event_b_spawn_probability"))
-						event_b_spawn_probability = Double.valueOf(value) * 0.01;	
-					else if (key.equalsIgnoreCase("event_b2_spawn_probability"))
-						event_b2_spawn_probability = Double.valueOf(value) * 0.01;	
-					else if (key.equalsIgnoreCase("event_a_spawn_probability"))
-						event_a_spawn_probability = Double.valueOf(value) * 0.01;	
-					else if (key.equalsIgnoreCase("event_a2_spawn_probability"))
-						event_a2_spawn_probability = Double.valueOf(value) * 0.01;	
-					else if (key.equalsIgnoreCase("event_s_spawn_probability"))
-						event_s_spawn_probability = Double.valueOf(value) * 0.01;	
-					else if (key.equalsIgnoreCase("event_s2_spawn_probability"))
-						event_s2_spawn_probability = Double.valueOf(value) * 0.01;
 
-					
-					
 					else if (key.equalsIgnoreCase("grimreaper_spawn_msg"))
 						grimreaper_spawn_msg = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("grimreaper_spawn_probability"))
 						grimreaper_spawn_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("oman_spawn_msg"))
 						oman_spawn_msg = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("oman_spawn_probability"))
@@ -1180,20 +1186,20 @@ public final class Lineage_Balance {
 						oman_spawn_hp_min = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("oman_spawn_hp_max"))
 						oman_spawn_hp_max = Double.valueOf(value) * 0.01;
-					
+
 					// 장인의 갑옷 마법 주문서 천장
 					else if (key.equalsIgnoreCase("armor_enchant_7_pity_count"))
-					    armor_enchant_7_pity_count = Integer.valueOf(value);
+						armor_enchant_7_pity_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("armor_enchant_8_pity_count"))
-					    armor_enchant_8_pity_count = Integer.valueOf(value);
+						armor_enchant_8_pity_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("armor_enchant_9_pity_count"))
-					    armor_enchant_9_pity_count = Integer.valueOf(value);					
-					
+						armor_enchant_9_pity_count = Integer.valueOf(value);
+
 					// 1. 탄생의 마안
 					else if (key.equalsIgnoreCase("maan_birth_percent"))
 						maan_birth_percent = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_birth_aden_name"))
-						maan_birth_aden_name = value; 
+						maan_birth_aden_name = value;
 					else if (key.equalsIgnoreCase("maan_birth_aden_count"))
 						maan_birth_aden_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_pity_count_birth"))
@@ -1203,7 +1209,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("maan_shape_percent"))
 						maan_shape_percent = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_shape_aden_name"))
-						maan_shape_aden_name = value; 
+						maan_shape_aden_name = value;
 					else if (key.equalsIgnoreCase("maan_shape_aden_count"))
 						maan_shape_aden_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_pity_count_shape"))
@@ -1213,19 +1219,19 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("maan_life_percent"))
 						maan_life_percent = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_life_aden_name"))
-						maan_life_aden_name = value; 
+						maan_life_aden_name = value;
 					else if (key.equalsIgnoreCase("maan_life_aden_count"))
 						maan_life_aden_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_pity_count_life"))
 						maan_pity_count_life = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("maan_birth_bonus_val"))
 						maan_birth_bonus_val = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_shape_bonus_val"))
 						maan_shape_bonus_val = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("maan_life_bonus_val"))
 						maan_life_bonus_val = Double.valueOf(value);
-					
+
 					// 🧸 인형 천장 시스템 로드
 					else if (key.equalsIgnoreCase("doll_pity_count_4"))
 						doll_pity_count_4 = Integer.valueOf(value);
@@ -1233,15 +1239,15 @@ public final class Lineage_Balance {
 						doll_pity_count_5 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("doll_pity_count_dragon"))
 						doll_pity_count_dragon = Integer.valueOf(value);
-					
+
 					// [인형 합성 실패시 보너스 확률]
 					else if (key.equalsIgnoreCase("doll_bonus_val_4"))
 						doll_bonus_val_4 = Double.valueOf(value);
-					else if (key.equalsIgnoreCase("doll_bonus_val_5")) 
+					else if (key.equalsIgnoreCase("doll_bonus_val_5"))
 						doll_bonus_val_5 = Double.valueOf(value);
-					else if (key.equalsIgnoreCase("doll_bonus_val_dragon")) 
+					else if (key.equalsIgnoreCase("doll_bonus_val_dragon"))
 						doll_bonus_val_dragon = Double.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("magicDoll_class_1_probability"))
 						magicDoll_class_1_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("magicDoll_class_1_perfect_probability"))
@@ -1259,8 +1265,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("magicDoll_class_5_probability"))
 						magicDoll_class_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("magicDoll_class_6_probability"))
-						magicDoll_class_6_probability = Double.valueOf(value) * 0.01;		
-					
+						magicDoll_class_6_probability = Double.valueOf(value) * 0.01;
+
 					else if (key.equalsIgnoreCase("royal_damage_figure"))
 						royal_damage_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_damage_figure"))
@@ -1270,8 +1276,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("darkelf_damage_figure"))
 						darkelf_damage_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_damage_figure"))
-						wizard_damage_figure = Double.valueOf(value);	
-										
+						wizard_damage_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_hit_figure"))
 						royal_hit_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_hit_figure"))
@@ -1281,8 +1287,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("darkelf_hit_figure"))
 						darkelf_hit_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_hit_figure"))
-						wizard_hit_figure = Double.valueOf(value);		
-					
+						wizard_hit_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_critical_figure"))
 						royal_critical_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_critical_figure"))
@@ -1291,9 +1297,9 @@ public final class Lineage_Balance {
 						elf_critical_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("darkelf_critical_figure"))
 						darkelf_critical_figure = Double.valueOf(value);
-					else if (key.equalsIgnoreCase("wizard_critical_figure"))						
-						wizard_critical_figure = Double.valueOf(value);	
-					
+					else if (key.equalsIgnoreCase("wizard_critical_figure"))
+						wizard_critical_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_bow_damage_figure"))
 						royal_bow_damage_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_bow_damage_figure"))
@@ -1303,8 +1309,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("darkelf_bow_damage_figure"))
 						darkelf_bow_damage_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_bow_damage_figure"))
-						wizard_bow_damage_figure = Double.valueOf(value);	
-					
+						wizard_bow_damage_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_bow_hit_figure"))
 						royal_bow_hit_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_bow_hit_figure"))
@@ -1314,8 +1320,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("darkelf_bow_hit_figure"))
 						darkelf_bow_hit_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_bow_hit_figure"))
-						wizard_bow_hit_figure = Double.valueOf(value);	
-					
+						wizard_bow_hit_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_bow_critical_figure"))
 						royal_bow_critical_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_bow_critical_figure"))
@@ -1324,9 +1330,9 @@ public final class Lineage_Balance {
 						elf_bow_critical_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("darkelf_bow_critical_figure"))
 						darkelf_bow_critical_figure = Double.valueOf(value);
-					else if (key.equalsIgnoreCase("wizard_bow_critical_figure"))						
-						wizard_bow_critical_figure = Double.valueOf(value);	
-					
+					else if (key.equalsIgnoreCase("wizard_bow_critical_figure"))
+						wizard_bow_critical_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_magic_damage_figure"))
 						royal_magic_damage_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_magic_damage_figure"))
@@ -1336,8 +1342,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("darkelf_magic_damage_figure"))
 						darkelf_magic_damage_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_magic_damage_figure"))
-						wizard_magic_damage_figure = Double.valueOf(value);	
-					
+						wizard_magic_damage_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_magic_hit_figure"))
 						royal_magic_hit_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_magic_hit_figure"))
@@ -1348,7 +1354,7 @@ public final class Lineage_Balance {
 						darkelf_magic_hit_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_magic_hit_figure"))
 						wizard_magic_hit_figure = Double.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("royal_magic_critical_figure"))
 						royal_magic_critical_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_magic_critical_figure"))
@@ -1359,7 +1365,7 @@ public final class Lineage_Balance {
 						darkelf_magic_critical_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_magic_critical_figure"))
 						wizard_magic_critical_figure = Double.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("royal_magic_bonus_figure"))
 						royal_magic_bonus_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_magic_bonus_figure"))
@@ -1370,12 +1376,12 @@ public final class Lineage_Balance {
 						darkelf_magic_bonus_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_magic_bonus_figure"))
 						wizard_magic_bonus_figure = Double.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("mr_low_damage_reduce"))
 						mr_low_damage_reduce = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("mr_high_damage_reduce"))
 						mr_high_damage_reduce = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("royal_magic_final_damage_figure"))
 						royal_magic_final_damage_figure = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("knight_magic_final_damage_figure"))
@@ -1386,7 +1392,7 @@ public final class Lineage_Balance {
 						darkelf_magic_final_damage_figure = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("wizard_magic_final_damage_figure"))
 						wizard_magic_final_damage_figure = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("royal_magic_final_hit_figure"))
 						royal_magic_final_hit_figure = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("knight_magic_final_hit_figure"))
@@ -1397,7 +1403,7 @@ public final class Lineage_Balance {
 						darkelf_magic_final_hit_figure = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("wizard_magic_final_hit_figure"))
 						wizard_magic_final_hit_figure = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("royal_hp_tic_figure"))
 						royal_hp_tic_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_hp_tic_figure"))
@@ -1407,8 +1413,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("darkelf_hp_tic_figure"))
 						darkelf_hp_tic_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_hp_tic_figure"))
-						wizard_hp_tic_figure = Double.valueOf(value);	
-					
+						wizard_hp_tic_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("royal_mp_tic_figure"))
 						royal_mp_tic_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("knight_mp_tic_figure"))
@@ -1418,8 +1424,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("darkelf_mp_tic_figure"))
 						darkelf_mp_tic_figure = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("wizard_mp_tic_figure"))
-						wizard_mp_tic_figure = Double.valueOf(value);		
-					
+						wizard_mp_tic_figure = Double.valueOf(value);
+
 					else if (key.equalsIgnoreCase("pc_hit_rate"))
 						pc_hit_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("pc_hit_rate2"))
@@ -1430,9 +1436,9 @@ public final class Lineage_Balance {
 						pc_hit_rate4 = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("pc_hit_rate5"))
 						pc_hit_rate5 = Double.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("pc_bow_hit_rate"))
-						pc_bow_hit_rate = Double.valueOf(value);	
+						pc_bow_hit_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("magicDoll_black_elder_min_damage"))
 						magicDoll_black_elder_min_damage = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("magicDoll_black_elder_max_damage"))
@@ -1441,20 +1447,23 @@ public final class Lineage_Balance {
 						magicDoll_death_knight_min_damage = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("magicDoll_death_knight_max_damage"))
 						magicDoll_death_knight_max_damage = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("immuneToHarmReduction"))
 						immuneToHarmReduction = Double.valueOf(value) * 0.01;
-					
 					else if (key.equalsIgnoreCase("immuneToHarmReduction2"))
 						immuneToHarmReduction2 = Double.valueOf(value) * 0.01;
+					// 이뮨투함 동일 IP차단
+					else if (key.equalsIgnoreCase("immune_same_ip_block")) {
+						immune_same_ip_block = Boolean.parseBoolean(value.trim());
+					}
 					else if (key.equalsIgnoreCase("ipReduction"))
 						ipReduction = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("drReduction"))
 						drReduction = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("is_fusion_attack"))
-						is_fusion_attack = value.equalsIgnoreCase("true");	
-					
+						is_fusion_attack = value.equalsIgnoreCase("true");
+
 					else if (key.equalsIgnoreCase("bless_change_probability1"))
 						bless_change_probability1 = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("bless_change_probability2"))
@@ -1468,6 +1477,22 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("bless_change_probability6"))
 						bless_change_probability6 = Double.valueOf(value) * 0.01;
 					
+					// 💡 무기 속성 강화 로더 추가
+					else if (key.equalsIgnoreCase("elemental_fail_penalty"))
+						elemental_fail_penalty = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("danlevel"))
+						danlevel = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("dan1"))
+						dan1 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("dan2"))
+						dan2 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("dan3"))
+						dan3 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("dan4"))
+						dan4 = Integer.valueOf(value);
+					else if (key.equalsIgnoreCase("dan5"))
+						dan5 = Integer.valueOf(value);
+
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_0_probability"))
 						weapon_safe_enchant0_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_1_probability"))
@@ -1487,7 +1512,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_8_probability"))
 						weapon_safe_enchant0_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_9_probability"))
-						weapon_safe_enchant0_9_probability = Double.valueOf(value) * 0.01;			
+						weapon_safe_enchant0_9_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_6_probability"))
 						weapon_safe_enchant6_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_7_probability"))
@@ -1495,20 +1520,20 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_8_probability"))
 						weapon_safe_enchant6_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_9_probability"))
-						weapon_safe_enchant6_9_probability = Double.valueOf(value) * 0.01;					
+						weapon_safe_enchant6_9_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_enchant_9_success_probability"))
 						weapon_enchant_9_success_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_enchant_9_nothing_probability"))
 						weapon_enchant_9_nothing_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_enchant_9_scroll_probability"))
 						weapon_enchant_9_scroll_probability = Double.valueOf(value) * 0.01;
-					
+
 					// 무기 천장 (+10, +11 구간)
 					else if (key.equalsIgnoreCase("weapon_enchant_10_pity_count"))
 						weapon_enchant_10_pity_count = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("weapon_enchant_11_pity_count"))
 						weapon_enchant_11_pity_count = Integer.valueOf(value);
-					
+
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_0_probability"))
 						armor_safe_enchant0_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_1_probability"))
@@ -1528,7 +1553,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_8_probability"))
 						armor_safe_enchant0_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_9_probability"))
-						armor_safe_enchant0_9_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant0_9_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_4_probability"))
 						armor_safe_enchant4_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_5_probability"))
@@ -1540,7 +1565,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_8_probability"))
 						armor_safe_enchant4_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_9_probability"))
-						armor_safe_enchant4_9_probability = Double.valueOf(value) * 0.01;		
+						armor_safe_enchant4_9_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_6_probability"))
 						armor_safe_enchant6_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_7_probability"))
@@ -1548,7 +1573,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_8_probability"))
 						armor_safe_enchant6_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_9_probability"))
-						armor_safe_enchant6_9_probability = Double.valueOf(value) * 0.01;					
+						armor_safe_enchant6_9_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_0_probability"))
 						accessories_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_1_probability"))
@@ -1560,7 +1585,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("accessories_4_probability"))
 						accessories_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_5_probability"))
-						accessories_5_probability = Double.valueOf(value) * 0.01;		
+						accessories_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_6_probability"))
 						accessories_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_7_probability"))
@@ -1570,7 +1595,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("accessories_9_probability"))
 						accessories_9_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_nothing_probability"))
-						accessories_nothing_probability	 = Double.valueOf(value) * 0.01;
+						accessories_nothing_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("is_this_inti_greate_damage"))
 						is_this_inti_greate_damage = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("this_inti_greate_time"))
@@ -1582,7 +1607,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("meteor_strike_time"))
 						meteor_strike_time = Double.valueOf(value) * 1000;
 					else if (key.equalsIgnoreCase("meteor_strike_reduction"))
-						meteor_strike_reduction = Double.valueOf(value) * 0.01;			
+						meteor_strike_reduction = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("is_stun_twohandsword"))
 						is_stun_twohandsword = value.equalsIgnoreCase("true");
 					else if (key.equalsIgnoreCase("is_heal_damage"))
@@ -1598,9 +1623,9 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("triple_arrow_damage"))
 						triple_arrow_damage = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("triple_damage_reduction_time"))
-						triple_damage_reduction_time = Double.valueOf(value) * 1000;					
+						triple_damage_reduction_time = Double.valueOf(value) * 1000;
 					else if (key.equalsIgnoreCase("triple_damage_reduction"))
-						triple_damage_reduction = Double.valueOf(value) * 0.01;					
+						triple_damage_reduction = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("two_handsword_damage"))
 						two_handsword_damage = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("weapon_en_7_damage"))
@@ -1620,7 +1645,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("weapon_en_14_damage"))
 						weapon_en_14_damage = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("weapon_en_15_damage"))
-						weapon_en_15_damage = Double.valueOf(value);			
+						weapon_en_15_damage = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("magic_probability"))
 						magic_probability = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("silence_probability"))
@@ -1645,10 +1670,10 @@ public final class Lineage_Balance {
 						count_barrier_elf = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("striker_gale"))
 						striker_gale = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("armor_break"))
 						armor_break = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("earth_bind"))
 						earth_bind = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("pollute_watar"))
@@ -1657,7 +1682,7 @@ public final class Lineage_Balance {
 						entangle = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("area_of_silence"))
 						area_of_silence = Double.valueOf(value) * 0.01;
-                    else if (key.equalsIgnoreCase("erase_magic"))
+					else if (key.equalsIgnoreCase("erase_magic"))
 						erase_magic = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("level_up_hp_royal"))
 						level_up_hp_royal = Double.valueOf(value);
@@ -1668,7 +1693,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("level_up_hp_darkelf"))
 						level_up_hp_darkelf = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("level_up_hp_wizard"))
-						level_up_hp_wizard = Double.valueOf(value);			
+						level_up_hp_wizard = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("level_up_mp_royal"))
 						level_up_mp_royal = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("level_up_mp_knight"))
@@ -1678,7 +1703,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("level_up_mp_darkelf"))
 						level_up_mp_darkelf = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("level_up_mp_wizard"))
-						level_up_mp_wizard = Double.valueOf(value);		
+						level_up_mp_wizard = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("monster_damage_rate"))
 						monster_damage_rate = Double.valueOf(value);
 					else if (key.equalsIgnoreCase("summon_damage_rate"))
@@ -1707,14 +1732,19 @@ public final class Lineage_Balance {
 						pc_bow_hit_ac_wizard_percent = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("stun_percent_rate"))
 						stun_percent_rate = Double.valueOf(value) * 0.01;
-					// 포스스턴, 네메시스, 쉐도우 스턴
+					//포스 스턴
 					else if (key.equalsIgnoreCase("force_stun_chance"))
 						force_stun_chance = Integer.parseInt(value);
+					//쉐도우 스턴
 					else if (key.equalsIgnoreCase("shadow_stun_prob"))
 						shadow_stun_prob = Double.valueOf(value) * 0.01;
+					//네메시스
 					else if (key.equalsIgnoreCase("nemesis_stun_chance"))
 						nemesis_stun_chance = Integer.parseInt(value);
-					
+					//언캐니 닷지 회피율
+					else if (key.equalsIgnoreCase("uncanny_dodge_dg"))
+						uncanny_dodge_dg = Integer.parseInt(value);
+
 					else if (key.equalsIgnoreCase("ROYAL_dmg"))
 						ROYAL_dmg = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("KNIGHT_dmg"))
@@ -1727,12 +1757,12 @@ public final class Lineage_Balance {
 						WIZARD_dmg = Double.valueOf(value) * 0.01;
 					// 다크엘프 pvp 데미지
 					else if (key.equalsIgnoreCase("darkelf_pvp_damage_bonus"))
-					    darkelf_pvp_damage_bonus = Double.valueOf(value);
-					
+						darkelf_pvp_damage_bonus = Double.valueOf(value);
+
 					// 스팟 타워 몬스터 그룹 티어 로드
 					else if (key.equalsIgnoreCase("spot_tower_monster_tier"))
 						spot_tower_monster_tier = Integer.parseInt(value);
-					
+
 					else if (key.equalsIgnoreCase("bless_orim_acc_min_en"))
 						bless_orim_acc_min_en = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("accessories_bless_0_probability"))
@@ -1746,7 +1776,7 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("accessories_bless_4_probability"))
 						accessories_bless_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_bless_5_probability"))
-						accessories_bless_5_probability = Double.valueOf(value) * 0.01;		
+						accessories_bless_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_bless_6_probability"))
 						accessories_bless_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_bless_7_probability"))
@@ -1755,7 +1785,7 @@ public final class Lineage_Balance {
 						accessories_bless_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("accessories_bless_9_probability"))
 						accessories_bless_9_probability = Double.valueOf(value) * 0.01;
-					
+
 					// 장신구 천장 시스템
 					else if (key.equalsIgnoreCase("accessories_pity_count_5"))
 						accessories_pity_count_5 = Integer.valueOf(value);
@@ -1763,7 +1793,7 @@ public final class Lineage_Balance {
 						accessories_pity_count_6 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("accessories_pity_count_7"))
 						accessories_pity_count_7 = Integer.valueOf(value);
-					
+
 					// 룸티스 천장 시스템
 					else if (key.equalsIgnoreCase("roomtis_pity_count_5"))
 						roomtis_pity_count_5 = Integer.valueOf(value);
@@ -1771,7 +1801,7 @@ public final class Lineage_Balance {
 						roomtis_pity_count_6 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("roomtis_pity_count_7"))
 						roomtis_pity_count_7 = Integer.valueOf(value);
-					
+
 					// 룸티스 강화 확률 로드 부분
 					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob0"))
 						Lineage_Balance.roomtis_enchant_prob0 = Double.parseDouble(value);
@@ -1793,20 +1823,42 @@ public final class Lineage_Balance {
 						Lineage_Balance.roomtis_enchant_prob8 = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("Roomtis_Enchant_Prob9"))
 						Lineage_Balance.roomtis_enchant_prob9 = Double.parseDouble(value);
-					
+
+					// 스냅퍼 강화 확률 로드 부분
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob0"))
+						Lineage_Balance.snapper_enchant_prob0 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob1"))
+						Lineage_Balance.snapper_enchant_prob1 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob2"))
+						Lineage_Balance.snapper_enchant_prob2 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob3"))
+						Lineage_Balance.snapper_enchant_prob3 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob4"))
+						Lineage_Balance.snapper_enchant_prob4 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob5"))
+						Lineage_Balance.snapper_enchant_prob5 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob6"))
+						Lineage_Balance.snapper_enchant_prob6 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob7"))
+						Lineage_Balance.snapper_enchant_prob7 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob8"))
+						Lineage_Balance.snapper_enchant_prob8 = Double.parseDouble(value);
+					else if (key.equalsIgnoreCase("Snapper_Enchant_Prob9"))
+						Lineage_Balance.snapper_enchant_prob9 = Double.parseDouble(value);
+
 					else if (key.equalsIgnoreCase("weapon_enchant_9_use_count_1"))
 						weapon_enchant_9_use_count_1 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("weapon_enchant_9_use_count_2"))
 						weapon_enchant_9_use_count_2 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("weapon_enchant_9_use_count_3"))
-						weapon_enchant_9_use_count_3 = Integer.valueOf(value);					
+						weapon_enchant_9_use_count_3 = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("weapon_enchant_9_use_count_1_probability"))
 						weapon_enchant_9_use_count_1_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_enchant_9_use_count_2_probability"))
 						weapon_enchant_9_use_count_2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_enchant_9_use_count_3_probability"))
 						weapon_enchant_9_use_count_3_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_0_2_probability"))
 						weapon_safe_enchant0_0_2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_0_3_probability"))
@@ -1814,28 +1866,28 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_1_3_probability"))
 						weapon_safe_enchant0_1_3_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_1_4_probability"))
-						weapon_safe_enchant0_1_4_probability = Double.valueOf(value) * 0.01;			
+						weapon_safe_enchant0_1_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_2_4_probability"))
 						weapon_safe_enchant0_2_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_2_5_probability"))
-						weapon_safe_enchant0_2_5_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant0_2_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_3_5_probability"))
 						weapon_safe_enchant0_3_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_3_6_probability"))
-						weapon_safe_enchant0_3_6_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant0_3_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_4_6_probability"))
 						weapon_safe_enchant0_4_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_4_7_probability"))
-						weapon_safe_enchant0_4_7_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant0_4_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_5_7_probability"))
 						weapon_safe_enchant0_5_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_5_8_probability"))
-						weapon_safe_enchant0_5_8_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant0_5_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_6_enchant2_probability"))
 						weapon_safe_enchant0_6_enchant2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_6_enchant3_probability"))
 						weapon_safe_enchant0_6_enchant3_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_0_2_probability"))
 						weapon_safe_enchant6_0_2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_0_3_probability"))
@@ -1843,28 +1895,28 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_1_3_probability"))
 						weapon_safe_enchant6_1_3_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_1_4_probability"))
-						weapon_safe_enchant6_1_4_probability = Double.valueOf(value) * 0.01;			
+						weapon_safe_enchant6_1_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_2_4_probability"))
 						weapon_safe_enchant6_2_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_2_5_probability"))
-						weapon_safe_enchant6_2_5_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant6_2_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_3_5_probability"))
 						weapon_safe_enchant6_3_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_3_6_probability"))
-						weapon_safe_enchant6_3_6_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant6_3_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_4_6_probability"))
 						weapon_safe_enchant6_4_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_4_7_probability"))
-						weapon_safe_enchant6_4_7_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant6_4_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_5_7_probability"))
 						weapon_safe_enchant6_5_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_5_8_probability"))
-						weapon_safe_enchant6_5_8_probability = Double.valueOf(value) * 0.01;				
+						weapon_safe_enchant6_5_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_6_enchant2_probability"))
 						weapon_safe_enchant6_6_enchant2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("weapon_safe_enchant6_6_enchant3_probability"))
 						weapon_safe_enchant6_6_enchant3_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_0_2_probability"))
 						armor_safe_enchant0_0_2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_0_3_probability"))
@@ -1872,28 +1924,28 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_1_3_probability"))
 						armor_safe_enchant0_1_3_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_1_4_probability"))
-						armor_safe_enchant0_1_4_probability = Double.valueOf(value) * 0.01;			
+						armor_safe_enchant0_1_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_2_4_probability"))
 						armor_safe_enchant0_2_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_2_5_probability"))
-						armor_safe_enchant0_2_5_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant0_2_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_3_5_probability"))
 						armor_safe_enchant0_3_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_3_6_probability"))
-						armor_safe_enchant0_3_6_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant0_3_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_4_6_probability"))
 						armor_safe_enchant0_4_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_4_7_probability"))
-						armor_safe_enchant0_4_7_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant0_4_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_5_7_probability"))
 						armor_safe_enchant0_5_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_5_8_probability"))
-						armor_safe_enchant0_5_8_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant0_5_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_6_enchant2_probability"))
 						armor_safe_enchant0_6_enchant2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant0_6_enchant3_probability"))
 						armor_safe_enchant0_6_enchant3_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_0_2_probability"))
 						armor_safe_enchant4_0_2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_0_3_probability"))
@@ -1901,28 +1953,28 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_1_3_probability"))
 						armor_safe_enchant4_1_3_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_1_4_probability"))
-						armor_safe_enchant4_1_4_probability = Double.valueOf(value) * 0.01;			
+						armor_safe_enchant4_1_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_2_4_probability"))
 						armor_safe_enchant4_2_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_2_5_probability"))
-						armor_safe_enchant4_2_5_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant4_2_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_3_5_probability"))
 						armor_safe_enchant4_3_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_3_6_probability"))
-						armor_safe_enchant4_3_6_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant4_3_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_4_6_probability"))
 						armor_safe_enchant4_4_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_4_7_probability"))
-						armor_safe_enchant4_4_7_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant4_4_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_5_7_probability"))
 						armor_safe_enchant4_5_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_5_8_probability"))
-						armor_safe_enchant4_5_8_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant4_5_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_6_enchant2_probability"))
 						armor_safe_enchant4_6_enchant2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant4_6_enchant3_probability"))
 						armor_safe_enchant4_6_enchant3_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_0_2_probability"))
 						armor_safe_enchant6_0_2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_0_3_probability"))
@@ -1930,30 +1982,30 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_1_3_probability"))
 						armor_safe_enchant6_1_3_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_1_4_probability"))
-						armor_safe_enchant6_1_4_probability = Double.valueOf(value) * 0.01;			
+						armor_safe_enchant6_1_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_2_4_probability"))
 						armor_safe_enchant6_2_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_2_5_probability"))
-						armor_safe_enchant6_2_5_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant6_2_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_3_5_probability"))
 						armor_safe_enchant6_3_5_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_3_6_probability"))
-						armor_safe_enchant6_3_6_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant6_3_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_4_6_probability"))
 						armor_safe_enchant6_4_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_4_7_probability"))
-						armor_safe_enchant6_4_7_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant6_4_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_5_7_probability"))
 						armor_safe_enchant6_5_7_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_5_8_probability"))
-						armor_safe_enchant6_5_8_probability = Double.valueOf(value) * 0.01;				
+						armor_safe_enchant6_5_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_6_enchant2_probability"))
 						armor_safe_enchant6_6_enchant2_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("armor_safe_enchant6_6_enchant3_probability"))
 						armor_safe_enchant6_6_enchant3_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_weapon_min_en"))
-						orim_weapon_min_en = Integer.valueOf(value);				
+						orim_weapon_min_en = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("orim_weapon_0_0_probability"))
 						orim_weapon_0_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_weapon_0_1_probability"))
@@ -1974,7 +2026,7 @@ public final class Lineage_Balance {
 						orim_weapon_0_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_weapon_0_9_probability"))
 						orim_weapon_0_9_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_bless_weapon_0_0_probability"))
 						orim_bless_weapon_0_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_weapon_0_1_probability"))
@@ -1995,7 +2047,7 @@ public final class Lineage_Balance {
 						orim_bless_weapon_0_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_weapon_0_9_probability"))
 						orim_bless_weapon_0_9_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_weapon_6_probability"))
 						orim_weapon_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_weapon_7_probability"))
@@ -2017,8 +2069,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("orim_weapon_15_probability"))
 						orim_weapon_15_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_scroll_weapon_nothing_probability"))
-						orim_scroll_weapon_nothing_probability = Double.valueOf(value) * 0.01;	
-					
+						orim_scroll_weapon_nothing_probability = Double.valueOf(value) * 0.01;
+
 					else if (key.equalsIgnoreCase("orim_bless_weapon_6_probability"))
 						orim_bless_weapon_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_weapon_7_probability"))
@@ -2039,9 +2091,9 @@ public final class Lineage_Balance {
 						orim_bless_weapon_14_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_weapon_15_probability"))
 						orim_bless_weapon_15_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_armor_min_en"))
-						orim_armor_min_en = Integer.valueOf(value);		
+						orim_armor_min_en = Integer.valueOf(value);
 					else if (key.equalsIgnoreCase("orim_armor_0_0_probability"))
 						orim_armor_0_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_armor_0_1_probability"))
@@ -2062,7 +2114,7 @@ public final class Lineage_Balance {
 						orim_armor_0_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_armor_0_9_probability"))
 						orim_armor_0_9_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_bless_armor_0_0_probability"))
 						orim_bless_armor_0_0_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_armor_0_1_probability"))
@@ -2083,7 +2135,7 @@ public final class Lineage_Balance {
 						orim_bless_armor_0_8_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_armor_0_9_probability"))
 						orim_bless_armor_0_9_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_armor_4_4_probability"))
 						orim_armor_4_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_armor_4_5_probability"))
@@ -2103,8 +2155,8 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("orim_armor_4_12_probability"))
 						orim_armor_4_12_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_armor_4_13_probability"))
-						orim_armor_4_13_probability = Double.valueOf(value) * 0.01;	
-					
+						orim_armor_4_13_probability = Double.valueOf(value) * 0.01;
+
 					else if (key.equalsIgnoreCase("orim_bless_armor_4_4_probability"))
 						orim_bless_armor_4_4_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_armor_4_5_probability"))
@@ -2125,7 +2177,7 @@ public final class Lineage_Balance {
 						orim_bless_armor_4_12_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_armor_4_13_probability"))
 						orim_bless_armor_4_13_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_armor_6_probability"))
 						orim_armor_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_armor_7_probability"))
@@ -2145,10 +2197,10 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("orim_armor_14_probability"))
 						orim_armor_14_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_armor_15_probability"))
-						orim_armor_15_probability = Double.valueOf(value) * 0.01;	
+						orim_armor_15_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_scroll_armor_nothing_probability"))
 						orim_scroll_armor_nothing_probability = Double.valueOf(value) * 0.01;
-					
+
 					else if (key.equalsIgnoreCase("orim_bless_armor_6_probability"))
 						orim_bless_armor_6_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_armor_7_probability"))
@@ -2168,26 +2220,26 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("orim_bless_armor_14_probability"))
 						orim_bless_armor_14_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("orim_bless_armor_15_probability"))
-						orim_bless_armor_15_probability = Double.valueOf(value) * 0.01;				
+						orim_bless_armor_15_probability = Double.valueOf(value) * 0.01;
 					else if (key.equalsIgnoreCase("doll_upgrade_percent"))
-						doll_upgrade_percent = Double.valueOf(value) * 0.01;	
+						doll_upgrade_percent = Double.valueOf(value) * 0.01;
 					// ✅ [추가] 인형 진화 천장 횟수 읽어오기
 					else if (key.equalsIgnoreCase("doll_pity_count"))
 						doll_pity_count = Integer.valueOf(value);
-					
+
 					// ... (기존 else-if 들 사이 아무 데나) ...
 					else if (key.equalsIgnoreCase("valakas_min_en")) {
-					    valakas_min_en = Integer.valueOf(value);   // 최소 사용 강화치
-					}
-					else if (key.startsWith("valakas_rate_")) {
-					    try {
-					        int idx = Integer.parseInt(key.substring("valakas_rate_".length()));
-					        if (idx >= 0 && idx < 10) {
-					            // %는 위에서 이미 제거됨. 0~1 또는 0~100 아무거나 입력해도 됨.
-					            // 정규화는 아이템 클래스(발라카스의숨결)에서 처리하므로 여기선 그대로 저장.
-					            valakas_success_rates[idx] = Double.valueOf(value);
-					        }
-					    } catch (Exception ignore) {}
+						valakas_min_en = Integer.valueOf(value); // 최소 사용 강화치
+					} else if (key.startsWith("valakas_rate_")) {
+						try {
+							int idx = Integer.parseInt(key.substring("valakas_rate_".length()));
+							if (idx >= 0 && idx < 10) {
+								// %는 위에서 이미 제거됨. 0~1 또는 0~100 아무거나 입력해도 됨.
+								// 정규화는 아이템 클래스(발라카스의숨결)에서 처리하므로 여기선 그대로 저장.
+								valakas_success_rates[idx] = Double.valueOf(value);
+							}
+						} catch (Exception ignore) {
+						}
 					}
 
 					MagicdollCompose.loadConfig(key, value);
@@ -2200,7 +2252,7 @@ public final class Lineage_Balance {
 			lineage.share.System.println(String.format("에러 라인 -> [%s]", line == null ? "라인 없음" : line));
 			lineage.share.System.println(e);
 		}
-		
+
 		TimeLine.end();
 	}
 }

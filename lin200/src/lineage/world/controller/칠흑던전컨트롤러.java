@@ -45,12 +45,12 @@ public class 칠흑던전컨트롤러 {
         lastRemainSecSent = -1;
         nextTimerBroadcastAt = 0L;
         TimeLine.end();
-         }
+    }
     
     @SuppressWarnings("deprecation")
     public static void toTimer(long nowMs) {
-    	
-    	/*상시개방*/
+        
+        /*상시개방*/
         if (ALWAYS_OPEN) {
             // 상시 모드: 스케줄 체크/타이머 브로드캐스트 전부 비활성
             if (!isOpen) {
@@ -60,7 +60,7 @@ public class 칠흑던전컨트롤러 {
             // 타이머 UI는 항상 숨김 유지
             return;
         }
-	    
+        
         // 현재 시/분
         calendar.setTimeInMillis(nowMs);
         Date date = calendar.getTime();
@@ -69,28 +69,35 @@ public class 칠흑던전컨트롤러 {
 
         // 요일(1=일, 7=토)
         int day = getDayOfWeek();
+        
+        // 💡 외부 Config(0=일 ~ 6=토) 기준과 맞추기 위해 자바 요일에서 1을 뺌
+        int configDay = day - 1;
 
         // 스케줄 체크 (열릴 때만 트리거)
         if (!isOpen) {
-            if (day == 1 || day == 7) {
-                // 주말 스케줄
-                for (TeamBattleTime t : Lineage.dark_dungeon_time_list2) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+            // 1. 오늘 요일이 Config(gomu_open_day_list)에 등록된 요일인지 확인
+            if (Lineage.dark_open_day_list.contains(configDay)) {
+                
+                // 2. 포함되어 있다면, 오늘이 주말(토, 일)인지 평일인지 구분하여 시간 체크
+                if (configDay == 0 || configDay == 6) {
+                    // [주말 스케줄] (일요일=0, 토요일=6) -> time_list2 사용
+                    for (TeamBattleTime t : Lineage.dark_dungeon_time_list2) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
                     }
-                }
-            } else {
-                // 평일 스케줄
-                for (TeamBattleTime t : Lineage.dark_dungeon_time_list) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+                } else {
+                    // [평일 스케줄] (월~금) -> time_list 사용
+                    for (TeamBattleTime t : Lineage.dark_dungeon_time_list) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
                     }
                 }
             }
         }
-
+       }
         // 열려 있으면 주기 갱신/종료 처리
         if (isOpen) {
             long diffMs   = darkEndTime - nowMs;
@@ -133,64 +140,64 @@ public class 칠흑던전컨트롤러 {
         sendMessage(); // 종료 안내
     }
     
-    /**
-     * [입장] 잊혀진 섬으로 보낼 때 NPC에서 호출
-     */
-    public static void enterAnonymous(PcInstance pc, int locX, int locY, int mapId) {
-        // 이미 명단에 있는 유저라면 중복 실행 방지
-        if (anonymousList.contains(pc)) return;
-
-        // 1. 원본 데이터 백업
-        pc.setTempName(pc.getName());
-        pc.setTempTitle(pc.getTitle());
-        pc.setTempClanName(pc.getClanName());
-        pc.setTempClanId(pc.getClanId());
-        pc.setTempClanGrade(pc.getClanGrade());
-
-        // 2. 익명화 변조
-        pc.setName("미지인");
-        pc.setTitle("");
-        pc.setClanName("");
-        pc.setClanId(0);
-        pc.setClanGrade(0);
-
-        // 3. 잊섬 입장자 명단에 추가
-        anonymousList.add(pc);
-
-        // 4. 본인에게 정보 갱신 패킷 전송 (이름, 타이틀 지우기)
-        pc.toSender(S_ObjectName.clone(BasePacketPooling.getPool(S_ObjectName.class), pc));
-        pc.toSender(S_ObjectTitle.clone(BasePacketPooling.getPool(S_ObjectTitle.class), pc), true);
-
-        // 5. 익명화 세팅이 끝난 후, 텔레포트 실행
-        pc.toPotal(locX, locY, mapId);
-    }
-
-    /**
-     * [퇴장] 귀환, 사망, 리스타트 시 PcInstance에서 호출
-     */
-    public static void exitAnonymous(PcInstance pc) {
-        // 명단에 없는 유저라면 무시
-        if (!anonymousList.contains(pc)) return;
-
-        // 1. 원본 데이터 복구
-        if (pc.getTempName() != null) pc.setName(pc.getTempName());
-        if (pc.getTempTitle() != null) pc.setTitle(pc.getTempTitle());
-        if (pc.getTempClanName() != null) pc.setClanName(pc.getTempClanName());
-        pc.setClanId(pc.getTempClanId());
-        pc.setClanGrade(pc.getTempClanGrade());
-
-        // 2. 백업 데이터 초기화 (다음을 위해 비워둠)
-        pc.setTempName(null);
-        pc.setTempTitle(null);
-        pc.setTempClanName(null);
-
-        // 3. 잊섬 명단에서 제거
-        anonymousList.remove(pc);
-
-        // 4. 이름과 타이틀 갱신 패킷 전송
-        pc.toSender(S_ObjectName.clone(BasePacketPooling.getPool(S_ObjectName.class), pc));
-        pc.toSender(S_ObjectTitle.clone(BasePacketPooling.getPool(S_ObjectTitle.class), pc), true);
-    }
+// =========================================================================
+// [비활성화 됨] 미지인(익명) 시스템 및 텔레포트 검사 로직 (주석 처리 완료)
+// =========================================================================
+//  // [입장] 잊혀진 섬으로 보낼 때 NPC에서 호출
+//  public static void enterAnonymous(PcInstance pc, int locX, int locY, int mapId) {
+//      // 이미 명단에 있는 유저라면 중복 실행 방지
+//      if (anonymousList.contains(pc)) return;
+//
+//      // 1. 원본 데이터 백업
+//      pc.setTempName(pc.getName());
+//      pc.setTempTitle(pc.getTitle());
+//      pc.setTempClanName(pc.getClanName());
+//      pc.setTempClanId(pc.getClanId());
+//      pc.setTempClanGrade(pc.getClanGrade());
+//
+//      // 2. 익명화 변조
+//      pc.setName("미지인");
+//      pc.setTitle("");
+//      pc.setClanName("");
+//      pc.setClanId(0);
+//      pc.setClanGrade(0);
+//
+//      // 3. 잊섬 입장자 명단에 추가
+//      anonymousList.add(pc);
+//
+//      // 4. 본인에게 정보 갱신 패킷 전송 (이름, 타이틀 지우기)
+//      pc.toSender(S_ObjectName.clone(BasePacketPooling.getPool(S_ObjectName.class), pc));
+//      pc.toSender(S_ObjectTitle.clone(BasePacketPooling.getPool(S_ObjectTitle.class), pc), true);
+//
+//      // 5. 익명화 세팅이 끝난 후, 텔레포트 실행
+//      pc.toPotal(locX, locY, mapId);
+//  }
+//
+//
+//   // [퇴장] 귀환, 사망, 리스타트 시 PcInstance에서 호출
+//  public static void exitAnonymous(PcInstance pc) {
+//      // 명단에 없는 유저라면 무시
+//      if (!anonymousList.contains(pc)) return;
+//
+//      // 1. 원본 데이터 복구
+//      if (pc.getTempName() != null) pc.setName(pc.getTempName());
+//      if (pc.getTempTitle() != null) pc.setTitle(pc.getTempTitle());
+//      if (pc.getTempClanName() != null) pc.setClanName(pc.getTempClanName());
+//      pc.setClanId(pc.getTempClanId());
+//      pc.setClanGrade(pc.getTempClanGrade());
+//
+//      // 2. 백업 데이터 초기화 (다음을 위해 비워둠)
+//      pc.setTempName(null);
+//      pc.setTempTitle(null);
+//      pc.setTempClanName(null);
+//
+//      // 3. 잊섬 명단에서 제거
+//      anonymousList.remove(pc);
+//
+//      // 4. 이름과 타이틀 갱신 패킷 전송
+//      pc.toSender(S_ObjectName.clone(BasePacketPooling.getPool(S_ObjectName.class), pc));
+//      pc.toSender(S_ObjectTitle.clone(BasePacketPooling.getPool(S_ObjectTitle.class), pc), true);
+//  }
 
     // 공지/토스트
     public static void sendMessage() {
@@ -198,11 +205,11 @@ public class 칠흑던전컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 칠흑 던전으로 가는길이 열렸습니다. *****";
+            chatMsg    = "\\fY      ***** 칠흑 던전으로 가는길이 열렸습니다. *****";
             toastTitle = "★ 칠흑 던전 입장 가능 ★";
             toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 칠흑 던전으로 가는길이 닫혔습니다. *****";
+            chatMsg    = "\\fY      ***** 칠흑 던전으로 가는길이 닫혔습니다. *****";
             toastTitle = "■ 칠흑 던전 닫힘 안내";
             toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }
@@ -274,55 +281,54 @@ public class 칠흑던전컨트롤러 {
         return rightNow.get(Calendar.DAY_OF_WEEK);
     }
 
-    // ==========================================
-   	// ✅ [추가] 텔레포트 및 귀환 가능 여부 확인 함수
-   	// ==========================================
+// ==========================================
+// ✅ [추가] 텔레포트 및 귀환 가능 여부 확인 함수 (주석 처리 완료)
+// ==========================================
+//  /**
+//   * 귀환 가능한 맵인지 확인해주는 함수.
+//   * 축순 및 이반도 확인함.
+//   * @param o
+//   * @param packet
+//   * @return
+//   */
+//  static public boolean isTeleportVerrYedHoraeZone(object o, boolean packet){
+//      //
+//      if(PluginController.init(LocationController.class, "isTeleportVerrYedHoraeZone", o, packet) != null)
+//          return false;
+//      //
+//      for(int i=0 ; i<Lineage.TeleportHomeImpossibilityMapLength ; ++i){
+//          if(Lineage.TeleportHomeImpossibilityMap[i] == o.getMap()){
+//              // 주변의 에너지가 순간 이동을 방해하고 있습니다. 여기에서 순간 이동은 사용할 수 없습니다.
+//              if(packet){
+//                  o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 647));
+//                  o.toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class), 0x09));
+//              }
+//              return false;
+//          }
+//      }
+//      return true;
+//  }
+//  
+//  /**
+//   * 텔레포트 가능한 맵인지 확인해주는 함수.
+//   * @param o
+//   * @param packet
+//   * @param ment
+//   * @return
+//   */
+//  static public boolean isTeleportZone(object o, boolean packet, boolean ment){
+//      for(int i=0 ; i<Lineage.TeleportPossibleMapLength ; ++i){
+//          if(Lineage.TeleportPossibleMap[i] == o.getMap())
+//              return true;
+//      }
+//      
+//      // [추가] 잘려있던 나머지 닫기 및 텔레포트 불가 멘트 처리
+//      if(packet && ment){
+//          // 지정된 위치에서만 사용할 수 있습니다. (276번 메시지)
+//          o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 276));
+//          o.toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class), 0x09));
+//      }
+//      return false;
+//  }
 
-   	/**
-   	 * 귀환 가능한 맵인지 확인해주는 함수.
-   	 * 축순 및 이반도 확인함.
-   	 * @param o
-   	 * @param packet
-   	 * @return
-   	 */
-   	static public boolean isTeleportVerrYedHoraeZone(object o, boolean packet){
-   		//
-   		if(PluginController.init(LocationController.class, "isTeleportVerrYedHoraeZone", o, packet) != null)
-   			return false;
-   		//
-   		for(int i=0 ; i<Lineage.TeleportHomeImpossibilityMapLength ; ++i){
-   			if(Lineage.TeleportHomeImpossibilityMap[i] == o.getMap()){
-   				// 주변의 에너지가 순간 이동을 방해하고 있습니다. 여기에서 순간 이동은 사용할 수 없습니다.
-   				if(packet){
-   					o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 647));
-   					o.toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class), 0x09));
-   				}
-   				return false;
-   			}
-   		}
-   		return true;
-   	}
-   	
-   	/**
-   	 * 텔레포트 가능한 맵인지 확인해주는 함수.
-   	 * @param o
-   	 * @param packet
-   	 * @param ment
-   	 * @return
-   	 */
-   	static public boolean isTeleportZone(object o, boolean packet, boolean ment){
-   		for(int i=0 ; i<Lineage.TeleportPossibleMapLength ; ++i){
-   			if(Lineage.TeleportPossibleMap[i] == o.getMap())
-   				return true;
-   		}
-   		
-   		// [추가] 잘려있던 나머지 닫기 및 텔레포트 불가 멘트 처리
-   		if(packet && ment){
-   			// 지정된 위치에서만 사용할 수 있습니다. (276번 메시지)
-   			o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 276));
-   			o.toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class), 0x09));
-   		}
-   		return false;
-   	}
-
-   } // <--- 칠흑던전3층컨트롤러 클래스가 끝나는 마지막 중괄호
+} // <--- 칠흑던전컨트롤러 클래스가 끝나는 마지막 중괄호

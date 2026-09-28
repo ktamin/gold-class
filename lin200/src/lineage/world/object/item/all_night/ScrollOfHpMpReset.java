@@ -19,6 +19,21 @@ public class ScrollOfHpMpReset extends ItemInstance {
 	
 	@Override
 	public void toClick(Character cha, ClientBasePacket cbp) {
+		
+		// 💡 1. 사용하려는 아이템의 이름을 먼저 확인합니다.
+				String itemName = getItem().getName();
+
+				// 💡 2. 아이템 이름에 "다크엘프"가 들어가 있는데, 사용자가 다크엘프가 아니면 튕겨냅니다.
+		if (itemName.contains("다크엘프") && cha.getClassType() != Lineage.LINEAGE_CLASS_DARKELF) {
+				ChattingController.toChatting(cha, "다크엘프 클래스만 사용할 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+				return;
+				}
+		
+		if (cha.getLevel() < 45) {
+			ChattingController.toChatting(cha, "해당 아이템은 45레벨 이상부터 사용할 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+			return; // 조건을 만족하지 못하면 여기서 로직을 종료하고 아이템 소모를 막습니다.
+		}
+				
 		if (cha.getInventory() != null) {
 			if (cha.getNowHp() < cha.getTotalHp() || cha.getNowMp() < cha.getTotalMp()) {
 				ChattingController.toChatting(cha, "HP 또는 MP가 최대치가 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);

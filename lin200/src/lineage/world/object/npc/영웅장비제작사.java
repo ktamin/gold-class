@@ -63,7 +63,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("나이트발드의 양손검1")) {
                 createList.add(new CreateItem("파멸의 대검", true, 0, true, 10, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -89,7 +89,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("포르세의 검1")) {
                 createList.add(new CreateItem("진 레이피어", true, 0, true, 10, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -115,7 +115,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("악몽의 장궁1")) {
                 createList.add(new CreateItem("달의 장궁", true, 0, true, 10, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -124,7 +124,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("악몽의 장궁2")) {
                 createList.add(new CreateItem("달의 장궁", true, 0, true, 9, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 200000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -141,7 +141,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("포효의 이도류1")) {
                 createList.add(new CreateItem("흑왕도", true, 0, true, 10, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -167,7 +167,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("제로스의 지팡이1")) {
                 createList.add(new CreateItem("흑왕도", true, 0, true, 10, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -211,7 +211,7 @@ public class 영웅장비제작사 extends object {
                         } else if (action.equalsIgnoreCase("멸마의 판금 갑옷")) {
             	createList.add(new CreateItem("고대의 판금 갑옷", false, 1, true, 0, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 200000));
                 if (!checkItem(pc, createList, itemList)) return;
 
                 createItem(pc, createList, itemList, "멸마의 판금 갑옷", 1, 0, 1, 100);
@@ -219,7 +219,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("멸마의 비늘 갑옷")) {
             	createList.add(new CreateItem("고대의 비늘 갑옷", false, 1, true, 0, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 200000));
                 if (!checkItem(pc, createList, itemList)) return;
                 
                 createItem(pc, createList, itemList, "멸마의 비늘 갑옷", 1, 0, 1, 100);
@@ -227,7 +227,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("멸마의 가죽 갑옷")) {
             	createList.add(new CreateItem("고대의 가죽 갑옷", false, 1, true, 0, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 200000));
                 if (!checkItem(pc, createList, itemList)) return;
                 
                 createItem(pc, createList, itemList, "멸마의 가죽 갑옷", 1, 0, 1, 100);
@@ -235,7 +235,7 @@ public class 영웅장비제작사 extends object {
             } else if (action.equalsIgnoreCase("멸마의 로브")) {
             	createList.add(new CreateItem("고대의 로브", false, 1, true, 0, 1));
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 200000));
                 if (!checkItem(pc, createList, itemList)) return;
                 
                 createItem(pc, createList, itemList, "멸마의 로브", 1, 0, 1, 100);
@@ -340,6 +340,46 @@ public class 영웅장비제작사 extends object {
 
                 createItem(pc, createList, itemList, "수령의 귀걸이", 1, 0, 1, 100);
                 // --------------------------------------------------------------------------------
+                
+            } else if (action.equalsIgnoreCase("마법서 (미티어 스트라이크)")) {
+                createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 200000));
+                if (!checkItem(pc, createList, itemList))
+                    return;
+
+                createItem(pc, createList, itemList, "마법서 (미티어 스트라이크)", 1, 0, 1, 100);   
+                
+            } else if (action.equalsIgnoreCase("정령의 수정 (스트라이커 게일)")) {
+                createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 1));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
+                if (!checkItem(pc, createList, itemList))
+                    return;
+
+                createItem(pc, createList, itemList, "정령의 수정 (스트라이커 게일)", 1, 0, 1, 100);
+
+            } else if (action.equalsIgnoreCase("정령의 수정 (폴루트 워터)")) {
+                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
+                if (!checkItem(pc, createList, itemList))
+                    return;
+
+                createItem(pc, createList, itemList, "정령의 수정 (폴루트 워터)", 1, 0, 1, 100);
+
+            } else if (action.equalsIgnoreCase("정령의 수정 (소울 오브 프레임)")) {
+                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
+                if (!checkItem(pc, createList, itemList))
+                    return;
+
+                createItem(pc, createList, itemList, "정령의 수정 (소울 오브 프레임)", 1, 0, 1, 100);
+
+            } else if (action.equalsIgnoreCase("정령의 수정 (어스 바인드)")) {
+                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
+                if (!checkItem(pc, createList, itemList))
+                    return;
+
+                createItem(pc, createList, itemList, "정령의 수정 (어스 바인드)", 1, 0, 1, 100);    
 
             } else if (action.equalsIgnoreCase("노예의 귀걸이")) {
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));

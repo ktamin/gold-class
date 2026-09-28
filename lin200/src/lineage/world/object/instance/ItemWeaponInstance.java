@@ -358,7 +358,7 @@ public class ItemWeaponInstance extends ItemIllusionInstance {
 		}
 		
 		// 마나 스틸하기
-		if (o.getNowMp() > 0 && item.getStealMp() > 0 && (o instanceof MonsterInstance || o instanceof PcInstance)) {
+		if (o.getNowMp() > 0 && item.getStealMp() > 0 && (o instanceof MonsterInstance)) {
 			// 랜덤 추출
 			int steal_mp = Util.random(1, getEnLevel()) + item.getStealMp();
 

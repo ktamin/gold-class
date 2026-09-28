@@ -309,8 +309,10 @@ public class ShapeChange extends Magic {
 					
 					pc.setTempPoly(false);
 					pc.setTempPolyScroll(null);
-					if (!p.getName().contains("랭커") && !p.getName().contains("질리언(80)") && !p.getName().contains("헬바인(80)") && !p.getName().contains("군터(80)") && !p.getName().contains("켄라우헬(80)"))
-						pc.setQuickPolymorph(p.getName());
+					// 빠른 변신 목록 제한
+//					if (!p.getName().contains("랭커") && !p.getName().contains("질리언(80)") && !p.getName().contains("헬바인(80)") && !p.getName().contains("군터(80)") && !p.getName().contains("켄라우헬(80)"))
+					if (!p.getName().contains("랭커"))	
+					pc.setQuickPolymorph(p.getName());
 				}
 			} else {
 				if (packet)

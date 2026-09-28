@@ -84,7 +84,7 @@ public class 마안제작사 extends object {
 				
 			} else if (action.equalsIgnoreCase("생명의 마안 완제")) {
 				createList.add(new CreateItem("생명의 마안 조각", false, 0, false, 0, 10));	
-				createList.add(new CreateItem("아데나", false, 1, false, 0, 100000000));
+				createList.add(new CreateItem("아데나", false, 1, false, 0, 10000000));
 				checkItem(pc, createList, itemList);			
 				createItem(pc, createList, createList2, itemList, "생명의 마안", 1, 0, 1);
 				

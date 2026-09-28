@@ -23,6 +23,22 @@ public final class AccountDatabase {
 		}
 	}
 	
+	static public void updateDaycheck2() {
+		PreparedStatement st = null;
+		Connection con = null;
+
+		try {
+			con = DatabaseConnection.getLineage();
+			st = con.prepareStatement("UPDATE accounts SET daytime=0");
+			st.executeUpdate();
+		} catch (Exception e) {
+			lineage.share.System.printf("%s : updateDaycheck()\r\n", CharactersDatabase.class.toString());
+			lineage.share.System.println(e);
+		} finally {
+			DatabaseConnection.close(con, st);
+		}
+	}
+	
 	/**
 	 * 공지사항 확인된 칼럼값 추출.
 	 * @param con
@@ -427,6 +443,94 @@ public final class AccountDatabase {
 			st.executeUpdate();
 		} catch (Exception e) {
 			lineage.share.System.printf("%s : updateauto(int uid, levelcheck )\r\n", AccountDatabase.class.toString());
+			lineage.share.System.println(e);
+		} finally {
+			DatabaseConnection.close(con, st);
+		}
+	}
+	
+	static public void updateDaycheck(int uid) {
+		PreparedStatement st = null;
+		Connection con = null;
+
+		try {
+			con = DatabaseConnection.getLineage();
+			st = con.prepareStatement("UPDATE accounts SET daytime=0 WHERE uid=?");
+			st.setInt(1, uid);
+			st.executeUpdate();
+		} catch (Exception e) {
+			lineage.share.System.printf("%s : updateDaycheck()\r\n", CharactersDatabase.class.toString());
+			lineage.share.System.println(e);
+		} finally {
+			DatabaseConnection.close(con, st);
+		}
+	}
+	
+	static public void updateDaycp(int daycheck, int uid){
+		PreparedStatement st = null;
+		Connection con = null;
+		
+		try {
+			con = DatabaseConnection.getLineage();
+			st = con.prepareStatement("UPDATE accounts SET daycheck=? WHERE uid=?");
+			st.setInt(1, daycheck);
+			st.setInt(2, uid);
+			st.executeUpdate();
+		} catch (Exception e) {
+			lineage.share.System.printf("%s : updateDaycheck()\r\n", CharactersDatabase.class.toString());
+			lineage.share.System.println(e);
+		} finally {
+			DatabaseConnection.close(con, st);
+		}
+	}
+	
+	static public void updateDayc(){
+		PreparedStatement st = null;
+		Connection con = null;
+		
+		try {
+			con = DatabaseConnection.getLineage();
+			st = con.prepareStatement("UPDATE accounts SET daycheck=0");
+
+			st.executeUpdate();
+		} catch (Exception e) {
+			lineage.share.System.printf("%s : updateDaycheck()\r\n", CharactersDatabase.class.toString());
+			lineage.share.System.println(e);
+		} finally {
+			DatabaseConnection.close(con, st);
+		}
+	}
+	
+	static public void updateptime(int dayptime,int uid){
+		PreparedStatement st = null;
+		Connection con = null;
+		
+		try {
+			con = DatabaseConnection.getLineage();
+			st = con.prepareStatement("UPDATE accounts SET daytime=? WHERE uid=?");
+			st.setInt(1, dayptime);
+			st.setInt(2, uid);
+			st.executeUpdate();
+		} catch (Exception e) {
+			lineage.share.System.printf("%s : updateDaycount()\r\n", CharactersDatabase.class.toString());
+			lineage.share.System.println(e);
+		} finally {
+			DatabaseConnection.close(con, st);
+		}
+	}
+	
+	static public void updateDaycount(int daycount,int uid){
+		PreparedStatement st = null;
+		Connection con = null;
+		
+		try {
+			con = DatabaseConnection.getLineage();
+			st = con.prepareStatement("UPDATE accounts SET daycount=? WHERE uid=?");
+			st.setInt(1, daycount);
+			st.setInt(2, uid);
+			st.executeUpdate();
+		} catch (Exception e) {
+			lineage.share.System.printf("%s : updateDaycount()\r\n", CharactersDatabase.class.toString());
 			lineage.share.System.println(e);
 		} finally {
 			DatabaseConnection.close(con, st);

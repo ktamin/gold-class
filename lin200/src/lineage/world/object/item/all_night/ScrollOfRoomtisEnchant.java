@@ -125,68 +125,67 @@ public class ScrollOfRoomtisEnchant extends ItemInstance {
 					int newEnLevel = targetItem.getEnLevel() + 1;
 					targetItem.setEnLevel(newEnLevel);
 			
-			// ✨ 성공 시 해당 구간의 스택을 0으로 초기화
-			if (currentEnLevel == 5) pc.roomtisCount5 = 0;
-			else if (currentEnLevel == 6) pc.roomtisCount6 = 0;
-			else if (currentEnLevel == 7) pc.roomtisCount7 = 0;
+					// ✨ 성공 시 해당 구간의 스택을 0으로 초기화
+					if (currentEnLevel == 5) pc.roomtisCount5 = 0;
+					else if (currentEnLevel == 6) pc.roomtisCount6 = 0;
+					else if (currentEnLevel == 7) pc.roomtisCount7 = 0;
 			
-//			if (isPityTriggered) {
-//				ChattingController.toChatting(pc, "\\fV[시스템] 천장 달성! 보호 주문서의 힘으로 100% 강화에 성공하였습니다. (+" + newEnLevel + ")", Lineage.CHATTING_MODE_MESSAGE);
-//			} else {
-//				ChattingController.toChatting(pc, "\\fV" + name + " 강화에 성공하였습니다. (+" + newEnLevel + ")", Lineage.CHATTING_MODE_MESSAGE);
-//			}
-			
-			// 천장이 발동했든 안 했든, 유저에게는 티 내지 않고 일반 성공 메시지만 출력합니다.
-			ChattingController.toChatting(pc, "\\fV" + name + " 강화에 성공하였습니다. (+" + newEnLevel + ")", Lineage.CHATTING_MODE_MESSAGE);
+					// 천장이 발동했든 안 했든, 유저에게는 티 내지 않고 일반 성공 메시지만 출력합니다.
+					ChattingController.toChatting(pc, "\\fV" + name + " 강화에 성공하였습니다. (+" + newEnLevel + ")", Lineage.CHATTING_MODE_MESSAGE);
+								
+					pc.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), targetItem));
+
+					// ✅ [수정] 성공 로그 (천장 성공과 일반 성공 양식 통일)
+					final String logMessage;
+					if (isPityTriggered) {
+						logMessage = String.format("[%s] [룸티스 천장성공]\t [캐릭터: %s]\t [+%d -> +%d] (확정 천장)", timeString, charName, currentEnLevel, newEnLevel);
+					} else {
+						logMessage = String.format("[%s] [룸티스 성공]\t [캐릭터: %s]\t [+%d -> +%d] (스택 리셋)", timeString, charName, currentEnLevel, newEnLevel);
+					}
+					
+					lineage.gui.GuiMain.display.asyncExec(new Runnable() {
+						public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(logMessage); }
+					});
+
+				} else {
+					// [강화 실패]
+					if (isProtectScroll) {
 						
-			pc.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), targetItem));
+						// ✨ 보호 주문서로 실패 시 천장 스택 1 증가
+						if (currentEnLevel == 5) pc.roomtisCount5 += 1;
+						else if (currentEnLevel == 6) pc.roomtisCount6 += 1;
+						else if (currentEnLevel == 7) pc.roomtisCount7 += 1;
+						
+						// 방금 올린 스택을 변수에 다시 담아 출력 준비
+						int updatedPity = (currentEnLevel == 5) ? pc.roomtisCount5 : (currentEnLevel == 6) ? pc.roomtisCount6 : (currentEnLevel == 7) ? pc.roomtisCount7 : 0;
+						
+						ChattingController.toChatting(pc, "\\fT" + name + "가 보호되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
+						
+						// ✅ [수정] 실패 및 천장 누적 로그 양식 통일
+						final String logMessage = String.format("[%s] [룸티스 보호]\t [캐릭터: %s]\t [+%d 구간]\t [스택: %d / %d]", timeString, charName, currentEnLevel, updatedPity, maxPityCount);
+						
+						lineage.gui.GuiMain.display.asyncExec(new Runnable() {
+							public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(logMessage); }
+						});
+						
+					} else {
+						// 💀 일반 주문서로 실패하여 증발 (스택은 함께 소멸되도록 초기화)
+						if (currentEnLevel == 5) pc.roomtisCount5 = 0;
+						else if (currentEnLevel == 6) pc.roomtisCount6 = 0;
+						else if (currentEnLevel == 7) pc.roomtisCount7 = 0;
 
-			final String logMessage = String.format("[%s] [룸티스 성공]\t [캐릭터: %s]\t [결과: +%d %s]\t [주문서: %s]", 
-					timeString, charName, newEnLevel, name, scrollName);
-			lineage.gui.GuiMain.display.asyncExec(new Runnable() {
-				public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(logMessage); }
-			});
+						ChattingController.toChatting(pc, "\\fR" + name + " 강화 실패로 증발되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
+						pc.getInventory().count(targetItem, 0, true); 
 
-		} else {
-			// [강화 실패]
-			if (isProtectScroll) {
+						// ✅ [수정] 일반 실패(증발) 로그 양식 통일
+						final String logMessage = String.format("[%s] [룸티스 증발]\t [캐릭터: %s]\t [소멸: %s]\t [스택 초기화]", timeString, charName, oldItemName);
+						
+						lineage.gui.GuiMain.display.asyncExec(new Runnable() {
+							public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(logMessage); }
+						});
+					}
+				}
 				
-				// ✨ 보호 주문서로 실패 시 천장 스택 1 증가
-				if (currentEnLevel == 5) pc.roomtisCount5 += 1;
-				else if (currentEnLevel == 6) pc.roomtisCount6 += 1;
-				else if (currentEnLevel == 7) pc.roomtisCount7 += 1;
-				
-				// 방금 올린 스택을 변수에 다시 담아 출력 준비
-				int updatedPity = (currentEnLevel == 5) ? pc.roomtisCount5 : (currentEnLevel == 6) ? pc.roomtisCount6 : (currentEnLevel == 7) ? pc.roomtisCount7 : 0;
-				
-				String pityStatus = "";
-//				if (maxPityCount > 0) pityStatus = " (천장 누적: " + updatedPity + " / " + maxPityCount + ")";
-
-				ChattingController.toChatting(pc, "\\fT" + name + "가 보호되었습니다." + pityStatus, Lineage.CHATTING_MODE_MESSAGE);
-				
-				final String logMessage = String.format("[%s] [룸티스 보호]\t [캐릭터: %s]\t [아이템: %s]\t [누적:%d/%d]", 
-						timeString, charName, oldItemName, updatedPity, maxPityCount);
-				lineage.gui.GuiMain.display.asyncExec(new Runnable() {
-					public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(logMessage); }
-				});
-				
-			} else {
-				// 💀 일반 주문서로 실패하여 증발 (스택은 함께 소멸되도록 초기화)
-				if (currentEnLevel == 5) pc.roomtisCount5 = 0;
-				else if (currentEnLevel == 6) pc.roomtisCount6 = 0;
-				else if (currentEnLevel == 7) pc.roomtisCount7 = 0;
-
-				ChattingController.toChatting(pc, "\\fR" + name + " 강화 실패로 증발되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
-				pc.getInventory().count(targetItem, 0, true); 
-
-				final String logMessage = String.format("[%s] [룸티스 증발]\t [캐릭터: %s]\t [소멸: %s]\t [주문서: %s]", 
-						timeString, charName, oldItemName, scrollName);
-				lineage.gui.GuiMain.display.asyncExec(new Runnable() {
-					public void run() { lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(logMessage); }
-				});
-			}
-		}
-		
-		pc.toCharacterSave2(); // DB 저장 유도
+				pc.toCharacterSave2(); // DB 저장 유도
 	}
 }

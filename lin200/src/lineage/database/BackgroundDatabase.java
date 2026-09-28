@@ -469,9 +469,9 @@ public final class BackgroundDatabase {
 	static public void spawnBattleZone() {
 		int count = ((Lineage.battle_zone_x2 - Lineage.battle_zone_x1) + 1) * ((Lineage.battle_zone_y2 - Lineage.battle_zone_y1) + 1);
 
-		// 타일 생성
-		for (int i = 0; i < count; i++)
-			list_battle_zone_tile.add(new lineage.world.object.npc.background.BackgroundTile());
+		// 타일 생성-------------타일을 없애기기 위해 주석처리 2026.07.02
+//		for (int i = 0; i < count; i++)
+//			list_battle_zone_tile.add(new lineage.world.object.npc.background.BackgroundTile());
 		
 		// 울타리 생성
 		for (int i = 0; i < 12; i++)
@@ -480,7 +480,8 @@ public final class BackgroundDatabase {
 		int x = Lineage.battle_zone_x1;
 		int y = Lineage.battle_zone_y1;
 		
-		// 타일 스폰
+		// 타일 스폰-------------타일을 없애기기 위해 주석처리 2026.07.02
+/*		
 		for (BackgroundInstance tile : list_battle_zone_tile) {	
 			if (x > Lineage.battle_zone_x2) {
 				x = Lineage.battle_zone_x1;
@@ -492,7 +493,7 @@ public final class BackgroundDatabase {
 			tile.toTeleport(x, y, Lineage.battle_zone_map, false);
 			x++;
 		}
-		
+*/
 		// 울타리 스폰
 		int idx = 0;
 		int x1 = Lineage.battle_zone_x1;
@@ -586,9 +587,9 @@ public final class BackgroundDatabase {
 			
 			int count = ((Lineage.battle_zone_x2 - Lineage.battle_zone_x1) + 1) * ((Lineage.battle_zone_y2 - Lineage.battle_zone_y1) + 1);
 			
-			// 타일 생성
-			for (int i = 0; i < count; i++)
-				list_battle_zone_tile.add(new lineage.world.object.npc.background.BackgroundTile());
+			// 타일 생성-----------------2026.07.02 결투장 타일 삭제
+//			for (int i = 0; i < count; i++)
+//				list_battle_zone_tile.add(new lineage.world.object.npc.background.BackgroundTile());
 			
 			// 울타리 생성
 			for (int i = 0; i < 12; i++)
@@ -597,7 +598,8 @@ public final class BackgroundDatabase {
 			int x = Lineage.battle_zone_x1;
 			int y = Lineage.battle_zone_y1;
 			
-			// 타일 스폰
+			// 타일 스폰--------------
+/*			-----------------2026.07.02 결투장 타일 삭제
 			for (BackgroundInstance tile : list_battle_zone_tile) {	
 				if (x > Lineage.battle_zone_x2) {
 					x = Lineage.battle_zone_x1;
@@ -609,7 +611,7 @@ public final class BackgroundDatabase {
 				tile.toTeleport(x, y, Lineage.battle_zone_map, false);
 				x++;
 			}
-			
+*/		
 			// 울타리 스폰
 			int idx = 0;
 			int x1 = Lineage.battle_zone_x1;

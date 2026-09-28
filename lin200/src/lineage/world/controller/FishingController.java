@@ -752,146 +752,146 @@ public final class FishingController {
 			for (FishermanInstance fi : getFishRobotList().values())
 				saveInventory(con, fi);
 		} catch (Exception e) {
-
+			lineage.share.System.println(e);
 		} finally {
 			DatabaseConnection.close(con);
 		}
 	}
 
 	static public void saveInventory(Connection con, FishermanInstance fi) {
-	    if (fi != null && fi.getInventory() != null) {
-	        // [수정] 29개 컬럼을 모두 명시하여 컬럼 밀림 방지
-	        String insertQuery = "INSERT INTO characters_inventory (objId, cha_objId, cha_name, name, count, quantity, en, equipped, definite, bress, durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, 구분1, 구분2, options, enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, dolloption_c, dolloption_d, dolloption_e, expire_time) " +
-	                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		if (fi != null && fi.getInventory() != null) {
+			// 💡 [최적화] 30개 컬럼을 모두 명시하여 컬럼 밀림 방지
+			String insertQuery = "INSERT INTO characters_inventory (objId, cha_objId, cha_name, name, count, quantity, en, equipped, definite, bress, durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, 구분1, 구분2, options, enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, dolloption_c, dolloption_d, dolloption_e, expire_time, click_delay) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	        PreparedStatement deleteSt = null;
-	        PreparedStatement insertSt = null;
+			PreparedStatement deleteSt = null;
+			PreparedStatement insertSt = null;
 
-	        try {
-	            Inventory inv = fi.getInventory();
-	            
-	            // 1. 기존 데이터 삭제
-	            deleteSt = con.prepareStatement("DELETE FROM characters_inventory WHERE cha_objId=?");
-	            deleteSt.setLong(1, fi.getPc_objectId());
-	            deleteSt.executeUpdate();
+			try {
+				Inventory inv = fi.getInventory();
+				
+				// 1. 기존 데이터 삭제
+				deleteSt = con.prepareStatement("DELETE FROM characters_inventory WHERE cha_objId=?");
+				deleteSt.setLong(1, fi.getPc_objectId());
+				deleteSt.executeUpdate();
 
-	            // 2. 새 데이터 삽입
-	            insertSt = con.prepareStatement(insertQuery);
-	            con.setAutoCommit(false); // 트랜잭션 시작
+				// 2. 새 데이터 삽입 (트랜잭션 시작)
+				insertSt = con.prepareStatement(insertQuery);
+				con.setAutoCommit(false); 
 
-	            for (ItemInstance item : inv.getList()) {
-	                if (item.getItem() == null || !item.getItem().isInventorySave())
-	                    continue;
+				for (ItemInstance item : inv.getList()) {
+					if (item.getItem() == null || !item.getItem().isInventorySave())
+						continue;
 
-	                insertSt.setLong(1, item.getObjectId());
-	                insertSt.setLong(2, fi.getPc_objectId());
-	                insertSt.setString(3, fi.getPc_name());
-	                insertSt.setString(4, item.getItem().getName());
-	                insertSt.setLong(5, item.getCount());
-	                insertSt.setInt(6, item.getQuantity());
-	                insertSt.setInt(7, item.getEnLevel());
-	                insertSt.setInt(8, item.isEquipped() ? 1 : 0);
-	                insertSt.setInt(9, item.isDefinite() ? 1 : 0);
-	                insertSt.setInt(10, item.getBless());
-	                insertSt.setInt(11, item.getDurability());
-	                insertSt.setInt(12, item.getNowTime());
-	                insertSt.setLong(13, item.getPetObjectId());
-	                insertSt.setLong(14, item.getInnRoomKey());
-	                insertSt.setInt(15, item.getLetterUid());
-	                insertSt.setString(16, item.getRaceTicket());
-	                insertSt.setString(17, item.getItem().getType1());
-	                insertSt.setString(18, item.getItem().getType2());
-	                
-	                // ★ 중요: CharactersDatabase와 동일하게 options 컬럼을 빈 값으로 삽입
-	                insertSt.setString(19, ""); 
+					insertSt.setLong(1, item.getObjectId());
+					insertSt.setLong(2, fi.getPc_objectId());
+					insertSt.setString(3, fi.getPc_name());
+					insertSt.setString(4, item.getItem().getName());
+					insertSt.setLong(5, item.getCount());
+					insertSt.setInt(6, item.getQuantity());
+					insertSt.setInt(7, item.getEnLevel());
+					insertSt.setInt(8, item.isEquipped() ? 1 : 0);
+					insertSt.setInt(9, item.isDefinite() ? 1 : 0);
+					insertSt.setInt(10, item.getBless());
+					insertSt.setInt(11, item.getDurability());
+					insertSt.setInt(12, item.getNowTime());
+					insertSt.setLong(13, item.getPetObjectId());
+					insertSt.setLong(14, item.getInnRoomKey());
+					insertSt.setInt(15, item.getLetterUid());
+					insertSt.setString(16, item.getRaceTicket());
+					insertSt.setString(17, item.getItem().getType1());
+					insertSt.setString(18, item.getItem().getType2());
+					
+					insertSt.setString(19, ""); 
 
-	                insertSt.setInt(20, item.getEnFire());
-	                insertSt.setInt(21, item.getEnWater());
-	                insertSt.setInt(22, item.getEnWind());
-	                insertSt.setInt(23, item.getEnEarth());
-	                insertSt.setInt(24, item.getInvDolloptionA());
-	                insertSt.setInt(25, item.getInvDolloptionB());
-	                insertSt.setInt(26, item.getInvDolloptionC());
-	                insertSt.setInt(27, item.getInvDolloptionD());
-	                insertSt.setInt(28, item.getInvDolloptionE());
-	                insertSt.setLong(29, item.getExpireTime()); // 만료 시간
+					insertSt.setInt(20, item.getEnFire());
+					insertSt.setInt(21, item.getEnWater());
+					insertSt.setInt(22, item.getEnWind());
+					insertSt.setInt(23, item.getEnEarth());
+					insertSt.setInt(24, item.getInvDolloptionA());
+					insertSt.setInt(25, item.getInvDolloptionB());
+					insertSt.setInt(26, item.getInvDolloptionC());
+					insertSt.setInt(27, item.getInvDolloptionD());
+					insertSt.setInt(28, item.getInvDolloptionE());
+					insertSt.setLong(29, item.getExpireTime()); 
+					insertSt.setLong(30, item.getClickDelay()); // 💡 완벽하게 추가됨
 
-	                insertSt.addBatch();
-	            }
-	            insertSt.executeBatch();
-	            con.commit();
-	            con.setAutoCommit(true);
-	        } catch (Exception e) {
-	            try { if (con != null) con.rollback(); } catch (SQLException e1) {}
-	            lineage.share.System.printf("%s : saveInventory(FishermanInstance fi) 에러. 캐릭명: %s\r\n", FishingController.class.toString(), fi.getPc_name());
-	            lineage.share.System.println(e);
-	        } finally {
-	            DatabaseConnection.close(deleteSt);
-	            DatabaseConnection.close(insertSt);
-	        }
-	    }
+					// 💡 [최적화] 모아서 한 번에 쏘기 위해 장바구니에 담기
+					insertSt.addBatch();
+				}
+				// 💡 [최적화] 장바구니에 담긴 아이템 일괄 저장
+				insertSt.executeBatch();
+				con.commit(); // 에러 없이 끝났으므로 최종 승인
+				con.setAutoCommit(true);
+			} catch (Exception e) {
+				// 💡 [최적화] 에러 발생 시 변경 사항 취소(롤백)
+				try { if (con != null) con.rollback(); } catch (Exception e1) {}
+				lineage.share.System.printf("%s : saveInventory(FishermanInstance fi) 에러. 캐릭명: %s\r\n", FishingController.class.toString(), fi.getPc_name());
+				lineage.share.System.println(e);
+			} finally {
+				DatabaseConnection.close(deleteSt);
+				DatabaseConnection.close(insertSt);
+			}
+		}
 	}
 
 	static public void readInventory(Connection con, FishermanInstance fi) {
-	    if (fi != null && fi.getInventory() != null) {
-	        Inventory inv = fi.getInventory();
-	        PreparedStatement st = null;
-	        ResultSet rs = null;
-	        try {
-	            // [수정] SELECT * 대신 명시적 컬럼 지정 (saveInventory와 순서 일치)
-	            st = con.prepareStatement("SELECT objId, name, count, quantity, en, equipped, definite, bress, "
-	                    + "durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, "
-	                    + "enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, "
-	                    + "dolloption_c, dolloption_d, dolloption_e, expire_time "
-	                    + "FROM characters_inventory WHERE cha_objId=?");
-	            st.setLong(1, fi.getPc_objectId());
-	            rs = st.executeQuery();
+		if (fi != null && fi.getInventory() != null) {
+			Inventory inv = fi.getInventory();
+			PreparedStatement st = null;
+			ResultSet rs = null;
+			
+			try {
+				// 💡 [최적화] SELECT * 대신 가져올 컬럼을 직접 지정하여 데이터 밀림 원천 차단
+				st = con.prepareStatement("SELECT objId, name, count, quantity, en, equipped, definite, bress, "
+						+ "durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, "
+						+ "enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, "
+						+ "dolloption_c, dolloption_d, dolloption_e, expire_time, click_delay "
+						+ "FROM characters_inventory WHERE cha_objId=?");
+				st.setLong(1, fi.getPc_objectId());
+				rs = st.executeQuery();
 
-	            while (rs.next()) {
-	                if (fi.getInventory().find(rs.getInt("objId")) != null)
-	                    continue;
+				while (rs.next()) {
+					if (fi.getInventory().find(rs.getInt("objId")) != null)
+						continue;
 
-	                ItemInstance item = ItemDatabase.newInstance(ItemDatabase.find(rs.getString("name")));
-	                if (item != null && item.getItem() != null) {
-	                    item.setObjectId(rs.getInt("objId"));
-	                    item.setCount(rs.getLong("count"));
-	                    item.setQuantity(rs.getInt("quantity"));
-	                    item.setEnLevel(rs.getInt("en"));
-	                    item.setEquipped(rs.getInt("equipped") == 1);
-	                    item.setDefinite(rs.getInt("definite") == 1);
-	                    item.setBless(rs.getInt("bress"));
-	                    item.setDurability(rs.getInt("durability"));
-	                    item.setNowTime(rs.getInt("nowtime"));
-	                    item.setPetObjectId(rs.getInt("pet_objid"));
-	                    item.setInnRoomKey(rs.getInt("inn_key"));
-	                    item.setLetterUid(rs.getInt("letter_uid"));
-	                    item.setRaceTicket(rs.getString("slimerace"));
-	                    
-	                    // 속성 정보 매핑
-	                    item.setEnFire(rs.getInt("enfire"));
-	                    item.setEnWater(rs.getInt("enwater"));
-	                    item.setEnWind(rs.getInt("enwind"));
-	                    item.setEnEarth(rs.getInt("enearth"));
-	                    
-	                    // 인형 옵션 매핑
-	                    item.setInvDolloptionA(rs.getInt("dolloption_a"));
-	                    item.setInvDolloptionB(rs.getInt("dolloption_b"));
-	                    item.setInvDolloptionC(rs.getInt("dolloption_c"));
-	                    item.setInvDolloptionD(rs.getInt("dolloption_d"));
-	                    item.setInvDolloptionE(rs.getInt("dolloption_e"));
-	                    
-	                    // 만료 시간 매핑
-	                    item.setExpireTime(rs.getLong("expire_time")); 
-	                    
-	                    inv.appendList(item);
-	                }
-	            }
-	        } catch (Exception e) {
-	            lineage.share.System.printf("%s : readInventory(FishermanInstance fi)\r\n", FishingController.class.toString());
-	            lineage.share.System.println(e + "   캐릭터: " + fi.getPc_name());
-	        } finally {
-	            DatabaseConnection.close(st, rs);
-	        }
-	    }
+					ItemInstance item = ItemDatabase.newInstance(ItemDatabase.find(rs.getString("name")));
+					if (item != null && item.getItem() != null) {
+						item.setObjectId(rs.getInt("objId"));
+						item.setCount(rs.getLong("count"));
+						item.setQuantity(rs.getInt("quantity"));
+						item.setEnLevel(rs.getInt("en"));
+						item.setEquipped(rs.getInt("equipped") == 1);
+						item.setDefinite(rs.getInt("definite") == 1);
+						item.setBless(rs.getInt("bress"));
+						item.setDurability(rs.getInt("durability"));
+						item.setNowTime(rs.getInt("nowtime"));
+						item.setPetObjectId(rs.getInt("pet_objid"));
+						item.setInnRoomKey(rs.getInt("inn_key"));
+						item.setLetterUid(rs.getInt("letter_uid"));
+						item.setRaceTicket(rs.getString("slimerace"));
+						
+						item.setEnFire(rs.getInt("enfire"));
+						item.setEnWater(rs.getInt("enwater"));
+						item.setEnWind(rs.getInt("enwind"));
+						item.setEnEarth(rs.getInt("enearth"));
+						item.setInvDolloptionA(rs.getInt("dolloption_a"));
+						item.setInvDolloptionB(rs.getInt("dolloption_b"));
+						item.setInvDolloptionC(rs.getInt("dolloption_c"));
+						item.setInvDolloptionD(rs.getInt("dolloption_d"));
+						item.setInvDolloptionE(rs.getInt("dolloption_e"));
+						item.setExpireTime(rs.getLong("expire_time"));
+						item.setClickDelay(rs.getLong("click_delay")); // 💡 완벽하게 복구됨
+						
+						inv.appendList(item);
+					}
+				}
+			} catch (Exception e) {
+				lineage.share.System.printf("%s : readInventory(FishermanInstance fi)\r\n", FishingController.class.toString());
+				lineage.share.System.println(e + "   캐릭터: " + fi.getPc_name());
+			} finally {
+				DatabaseConnection.close(st, rs);
+			}
+		}
 	}
 }	

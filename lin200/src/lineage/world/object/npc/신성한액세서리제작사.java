@@ -62,20 +62,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 100;
-					aden = 3000000;
+					count = 400;
+					aden = 10000000;
 					break;
 				case 6:
-					count = 200;
-					aden = 6000000;
+					count = 300;
+					aden = 15000000;
 					break;
 				case 7:
-					count = 300;
-					aden = 9000000;
+					count = 200;
+					aden = 20000000;
 					break;
 				case 8:
-					count = 400;
-					aden = 12000000;
+					count = 100;
+					aden = 25000000;
 					break;
 				case 9:
 					count = 500;
@@ -99,20 +99,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 100;
-					aden = 3000000;
+					count = 400;
+					aden = 10000000;
 					break;
 				case 6:
-					count = 200;
-					aden = 6000000;
+					count = 300;
+					aden = 15000000;
 					break;
 				case 7:
-					count = 300;
-					aden = 9000000;
+					count = 200;
+					aden = 20000000;
 					break;
 				case 8:
-					count = 400;
-					aden = 12000000;
+					count = 100;
+					aden = 25000000;
 					break;
 				case 9:
 					count = 500;
@@ -136,20 +136,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 100;
-					aden = 3000000;
+					count = 400;
+					aden = 10000000;
 					break;
 				case 6:
-					count = 200;
-					aden = 6000000;
+					count = 300;
+					aden = 15000000;
 					break;
 				case 7:
-					count = 300;
-					aden = 9000000;
+					count = 200;
+					aden = 20000000;
 					break;
 				case 8:
-					count = 400;
-					aden = 12000000;
+					count = 100;
+					aden = 25000000;
 					break;
 				case 9:
 					count = 500;
@@ -173,20 +173,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 100;
-					aden = 3000000;
+					count = 400;
+					aden = 10000000;
 					break;
 				case 6:
-					count = 200;
-					aden = 6000000;
+					count = 300;
+					aden = 15000000;
 					break;
 				case 7:
-					count = 300;
-					aden = 9000000;
+					count = 200;
+					aden = 20000000;
 					break;
 				case 8:
-					count = 400;
-					aden = 12000000;
+					count = 100;
+					aden = 25000000;
 					break;
 				case 9:
 					count = 500;
@@ -218,24 +218,24 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 180;
-					aden = 5000000;
-					break;
-				case 6:
-					count = 310;
+					count = 400;
 					aden = 10000000;
 					break;
-				case 7:
-					count = 440;
+				case 6:
+					count = 300;
 					aden = 15000000;
 					break;
-				case 8:
-					count = 570;
+				case 7:
+					count = 200;
 					aden = 20000000;
 					break;
-				case 9:
-					count = 700;
+				case 8:
+					count = 100;
 					aden = 25000000;
+					break;
+				case 9:
+					count = 500;
+					aden = 15000000;
 					break;
 				}
 				
@@ -255,24 +255,24 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 180;
-					aden = 5000000;
-					break;
-				case 6:
-					count = 310;
+					count = 400;
 					aden = 10000000;
 					break;
-				case 7:
-					count = 440;
+				case 6:
+					count = 300;
 					aden = 15000000;
 					break;
-				case 8:
-					count = 570;
+				case 7:
+					count = 200;
 					aden = 20000000;
 					break;
-				case 9:
-					count = 700;
+				case 8:
+					count = 100;
 					aden = 25000000;
+					break;
+				case 9:
+					count = 500;
+					aden = 15000000;
 					break;
 				}
 				
@@ -292,24 +292,24 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 180;
-					aden = 5000000;
-					break;
-				case 6:
-					count = 310;
+					count = 400;
 					aden = 10000000;
 					break;
-				case 7:
-					count = 440;
+				case 6:
+					count = 300;
 					aden = 15000000;
 					break;
-				case 8:
-					count = 570;
+				case 7:
+					count = 200;
 					aden = 20000000;
 					break;
-				case 9:
-					count = 700;
+				case 8:
+					count = 100;
 					aden = 25000000;
+					break;
+				case 9:
+					count = 500;
+					aden = 15000000;
 					break;
 				}
 				
@@ -329,20 +329,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 180;
-					aden = 5000000;
+					count = 600;
+					aden = 50000000;
 					break;
 				case 6:
-					count = 310;
-					aden = 10000000;
+					count = 450;
+					aden = 100000000;
 					break;
 				case 7:
-					count = 440;
-					aden = 15000000;
+					count = 300;
+					aden = 200000000;
 					break;
 				case 8:
-					count = 570;
-					aden = 20000000;
+					count = 150;
+					aden = 300000000;
 					break;
 				case 9:
 					count = 700;
@@ -366,20 +366,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 70;
-					aden = 1500000;
+					count = 350;
+					aden = 10000000;
 					break;
 				case 6:
-					count = 140;
-					aden = 3000000;
+					count = 280;
+					aden = 15000000;
 					break;
 				case 7:
 					count = 210;
-					aden = 4500000;
+					aden = 20000000;
 					break;
 				case 8:
-					count = 280;
-					aden = 6000000;
+					count = 140;
+					aden = 25000000;
 					break;
 				case 9:
 					count = 350;
@@ -403,20 +403,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 70;
-					aden = 1500000;
+					count = 350;
+					aden = 10000000;
 					break;
 				case 6:
-					count = 140;
-					aden = 3000000;
+					count = 280;
+					aden = 15000000;
 					break;
 				case 7:
 					count = 210;
-					aden = 4500000;
+					aden = 20000000;
 					break;
 				case 8:
-					count = 280;
-					aden = 6000000;
+					count = 140;
+					aden = 25000000;
 					break;
 				case 9:
 					count = 350;
@@ -440,20 +440,20 @@ public class 신성한액세서리제작사 extends object {
 				
 				switch (en) {
 				case 5:
-					count = 70;
-					aden = 1500000;
+					count = 350;
+					aden = 10000000;
 					break;
 				case 6:
-					count = 140;
-					aden = 3000000;
+					count = 280;
+					aden = 15000000;
 					break;
 				case 7:
 					count = 210;
-					aden = 4500000;
+					aden = 20000000;
 					break;
 				case 8:
-					count = 280;
-					aden = 6000000;
+					count = 140;
+					aden = 25000000;
 					break;
 				case 9:
 					count = 350;

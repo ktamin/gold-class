@@ -53,8 +53,8 @@ public class 마물암석제작사 extends object {
 
             if (action.equalsIgnoreCase("고대 마물의 장갑")) {
                 createList.add(new CreateItem("마물 조각", false, 1, true, 0, 100));
-                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+//                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -62,8 +62,8 @@ public class 마물암석제작사 extends object {
 
             } else if (action.equalsIgnoreCase("고대 마물의 부츠")) {
                 createList.add(new CreateItem("마물 조각", false, 1, false, 0, 100));
-                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+//                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -71,8 +71,8 @@ public class 마물암석제작사 extends object {
 
             } else if (action.equalsIgnoreCase("고대 마물의 망토")) {
                 createList.add(new CreateItem("마물 조각", false, 1, false, 0, 100));
-                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+//                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -80,8 +80,8 @@ public class 마물암석제작사 extends object {
 
             } else if (action.equalsIgnoreCase("고대 암석의 장갑")) {
                 createList.add(new CreateItem("암석 조각", false, 1, false, 0, 100));
-                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+ //               createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -89,8 +89,8 @@ public class 마물암석제작사 extends object {
 
             } else if (action.equalsIgnoreCase("고대 암석의 부츠")) {
                 createList.add(new CreateItem("암석 조각", false, 1, false, 0, 100));
-                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+//                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -98,8 +98,8 @@ public class 마물암석제작사 extends object {
 
             } else if (action.equalsIgnoreCase("고대 암석의 망토")) {
                 createList.add(new CreateItem("암석 조각", false, 1, false, 0, 100));
-                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+//                createList.add(new CreateItem("영웅 제작 비법서", false, 1, true, 0, 1));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 

@@ -19,7 +19,7 @@ import lineage.world.object.instance.PcInstance;
 public class 야도란보스텔1 extends object {
 	
 	// [추가됨] 이동 불가능한 맵 ID 목록 설정
-	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 1400 };
+	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 707, 809, 810, 811, 1400 };
 
 	@Override
 	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
@@ -65,7 +65,7 @@ public class 야도란보스텔1 extends object {
 		
 			//흑장로
 			if (action.contains("yadolantelbs1-yadon0")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33433,32814, 4);
                     int rnd = (int)(Math.random() * 3);
 					
@@ -90,7 +90,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//드레이크
 			if (action.contains("yadolantelbs1-yadon1")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33439,32804, 4);
                     int rnd = (int)(Math.random() * 3);
 					
@@ -115,7 +115,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//네크로맨서
 			if (action.contains("yadolantelbs1-yadon3")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33437,32819, 4);
                     int rnd = (int)(Math.random() * 3);
 					
@@ -140,7 +140,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//카스파
 			if (action.contains("yadolantelbs1-yadon2")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33431,32797, 4);
                     int rnd = (int)(Math.random() * 3);
 					
@@ -165,7 +165,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//피닉스
 			if (action.contains("yadolantelbs1-yadon4")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33447,32794, 4);
                     int rnd = (int)(Math.random() * 3);
 					
@@ -190,7 +190,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//바포메트
 			if (action.contains("yadolantelbs1-yadon5")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33412,32801, 4);
                     int rnd = (int)(Math.random() * 3);
 					
@@ -215,7 +215,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//얼음여왕
 			if (action.contains("yadolantelbs1-yadon6")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33443,32822, 4);
                     int rnd = (int)(Math.random() * 3);
 					
@@ -241,7 +241,7 @@ public class 야도란보스텔1 extends object {
 			
 			//데스나이트
 			if (action.contains("yadolantelbs1-yadon7")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33428,32821, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -267,7 +267,7 @@ public class 야도란보스텔1 extends object {
 			
 			//거대 여왕개미
 			if (action.contains("yadolantelbs1-yadon8")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33445,32815, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -292,7 +292,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//커츠
 			if (action.contains("yadolantelbs1-yadon9")) {
-				if(pc.getInventory().isAden(50000, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -317,7 +317,7 @@ public class 야도란보스텔1 extends object {
 			}	
 			//거인모닝스타
 			if (action.contains("yadolantelbs1-yadon11")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -342,7 +342,7 @@ public class 야도란보스텔1 extends object {
 			}	
 			//데몬
 			if (action.contains("yadolantelbs1-yadon12")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -367,7 +367,7 @@ public class 야도란보스텔1 extends object {
 			}
 			//그미노
 			if (action.contains("yadolantelbs1-yadon13")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -389,10 +389,12 @@ public class 야도란보스텔1 extends object {
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
 				}
-			}	
+			}
+			
+/*			
 			//테베제단
 			if (action.contains("yadolantelbs1-yadon14")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -415,9 +417,10 @@ public class 야도란보스텔1 extends object {
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
 				}
 			}
+			
 			//심연의 주인
 			if (action.contains("yadolantelbs1-yadon15")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -442,7 +445,7 @@ public class 야도란보스텔1 extends object {
 			}	
 			//설벽의 드레이크
 			if (action.contains("yadolantelbs1-yadon16")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -467,7 +470,7 @@ public class 야도란보스텔1 extends object {
 			}	
 			//분노한 발록
 			if (action.contains("yadolantelbs1-yadon17")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -490,9 +493,10 @@ public class 야도란보스텔1 extends object {
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
 				}
 			}	
+			
 			//안타라스
 			if (action.contains("yadolantelbs1-yadon18")) {
-				if(pc.getInventory().isAden(0, true)){
+				if(pc.getInventory().isAden(300000, true)){
 //					pc.toPotal(33421,32797, 4);
 	                   int rnd = (int)(Math.random() * 3);
 						
@@ -516,6 +520,32 @@ public class 야도란보스텔1 extends object {
 				}
 			}	
 			
+			//오만 보스
+			if (action.contains("yadolantelbs1-yadon19")) {
+				if(pc.getInventory().isAden(300000, true)){
+//					pc.toPotal(33421,32797, 4);
+	                   int rnd = (int)(Math.random() * 3);
+						
+						switch (rnd) {
+						case 0:
+							// 첫 번째 좌표 (기존 좌표)
+							pc.toPotal(32804, 32830, 110);
+							break;
+						case 1:
+							// 두 번째 좌표 (여기에 원하시는 좌표를 적으세요)
+							pc.toPotal(32849, 32861, 110); 
+							break;
+						case 2:
+							// 세 번째 좌표 (여기에 원하시는 좌표를 적으세요)
+							pc.toPotal(32858, 32814, 110); 
+							break;
+						}
+				}else{
+					// \f1아데나가 충분치 않습니다.
+					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
+				}
+			}	
+*/			
 		showHtml(pc);
 	}
 	public static ItemArmorInstance clone(ItemInstance pool) {

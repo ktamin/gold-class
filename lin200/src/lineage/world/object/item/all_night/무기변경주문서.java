@@ -17,22 +17,43 @@ import lineage.world.object.instance.ItemWeaponInstance;
 
 public class 무기변경주문서 extends ItemInstance {
 
-    // 1급 / 2급 그룹 정의 (표기명은 서버 아이템 이름과 정확히 맞추세요)
+    // 1급 그룹 정의
     private static final List<String> GRADE1 = Arrays.asList(
         "진명황의 집행검",
-        "사신의 검",
+        "고대 신의 창",
         "가이아의 격노",
         "붉은 그림자의 이도류",
         "수정 결정체 지팡이",
         "바람칼날의 단검"
     );
 
+    // 2급 그룹 정의
     private static final List<String> GRADE2 = Arrays.asList(
         "나이트발드의 양손검",
-        "포르세의 검",
+        "해신의 삼지창",
         "제로스의 지팡이",
+        "오리하루콘 단검",
         "악몽의 장궁",
         "포효의 이도류"
+    );
+
+    // ✅ 3급 그룹 정의 (추가된 부분)
+    private static final List<String> GRADE3 = Arrays.asList(
+        "무관의 양손검",
+        "혹한의 창",
+        "흑왕도",
+        "강철 마나의 지팡이",
+        "수정 단검",
+        "살천의 활"
+    );
+    
+    // ✅ 4급 그룹 정의 (추가된 부분)
+    private static final List<String> GRADE4 = Arrays.asList(
+        "대검",
+        "벡드코빈",
+        "흑빛의 이도류",
+        "마나의 지팡이",
+        "크로스 보우"
     );
 
     static synchronized public ItemInstance clone(ItemInstance item) {
@@ -62,6 +83,10 @@ public class 무기변경주문서 extends ItemInstance {
             pool = new ArrayList<>(GRADE1);
         } else if (containsIgnoreCase(GRADE2, srcName)) {
             pool = new ArrayList<>(GRADE2);
+        } else if (containsIgnoreCase(GRADE3, srcName)) { // ✅ 3급 판별 로직 추가
+            pool = new ArrayList<>(GRADE4);
+        } else if (containsIgnoreCase(GRADE4, srcName)) { // ✅ 4급 판별 로직 추가
+            pool = new ArrayList<>(GRADE4);
         } else {
             ChattingController.toChatting(cha, "해당 무기에 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
             return;
@@ -88,7 +113,7 @@ public class 무기변경주문서 extends ItemInstance {
         dst.setBless(src.getBless());
         dst.setEnLevel(src.getEnLevel());
         dst.setDefinite(true);
-     // ★ 속성 복사 추가
+        // ★ 속성 복사 추가
         dst.setEnFire(src.getEnFire());
         dst.setEnWater(src.getEnWater());
         dst.setEnEarth(src.getEnEarth());
@@ -117,7 +142,7 @@ public class 무기변경주문서 extends ItemInstance {
             if (s != null && s.equalsIgnoreCase(name)) return true;
         }
         return false;
-        }
+    }
 
     private void removeIgnoreCase(List<String> list, String name) {
         if (name == null) return;

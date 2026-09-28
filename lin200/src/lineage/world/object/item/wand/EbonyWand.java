@@ -41,7 +41,7 @@ public class EbonyWand extends ItemInstance {
 		int y = cbp.readH();
 
 		// 방향 전환.
-		// 흑단 렉 제거 하기 위해 주석 처리 2026.06.09
+		// 흑단 막대 렉을 제거하기 위해 주석 2026.06.09
 //		cha.setHeading(Util.calcheading(cha, x, y));
 
 		// 객체 찾기.

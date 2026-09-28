@@ -27,7 +27,7 @@ public class 오만정상컨트롤러 {
     private static long nextTimerBroadcastAt = 0L; // 다음 갱신 전송 시각(ms)
     
     // 항상 열려있는 사냥터로 운용할 때 true
-    private static final boolean ALWAYS_OPEN = true;
+    private static final boolean ALWAYS_OPEN = false;
 
     public static void init() {
         TimeLine.start("오만정상 컨트롤러..");
@@ -132,12 +132,12 @@ public class 오만정상컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 오만 정상층으로 가는길이 열렸습니다. *****";
-            toastTitle = "★오만 정상층 입장 가능 ★";
+            chatMsg   = "\\fY      *** 오만 정상으로 가는길이 열렸습니다. ***";
+            toastTitle = "★오만 정상 입장 가능 ★";
             toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 오만정상층으로 가는길이 닫혔습니다. *****";
-            toastTitle = "■ 오만 정상층 닫힘 안내";
+            chatMsg   = "\\fY      *** 오만 정상으로 가는길이 닫혔습니다. ***";
+            toastTitle = "■ 오만 정상 닫힘 안내";
             toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }
 

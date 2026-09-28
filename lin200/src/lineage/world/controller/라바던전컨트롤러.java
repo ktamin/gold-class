@@ -27,7 +27,7 @@ public class 라바던전컨트롤러 {
     private static long nextTimerBroadcastAt = 0L; // 다음 갱신 전송 시각(ms)
     
     // 항상 열려있는 사냥터로 운용할 때 true
-    private static final boolean ALWAYS_OPEN = true;
+    private static final boolean ALWAYS_OPEN = false;
 
     public static void init() {
         TimeLine.start("라바던전 컨트롤러..");
@@ -42,7 +42,7 @@ public class 라바던전컨트롤러 {
             // 상시 오픈: 열림 상태로 전환하고 타이머는 숨김(0초)
             isOpen = true;
             lastaEndTime = Long.MAX_VALUE; // 의미 없음이지만 닫히지 않도록 매우 크게
-            sendMessage();                              // “열렸습니다” 1회 안내
+            sendMessage();                                      // “열렸습니다” 1회 안내
             sendTimerUI(false, System.currentTimeMillis()); // 타이머 UI 끄기
             TimeLine.end();
             return; // 스케줄 기반 로직 건너뜀
@@ -53,8 +53,8 @@ public class 라바던전컨트롤러 {
 
     @SuppressWarnings("deprecation")
     public static void toTimer(long nowMs) {
-    	
-    	/*상시개방*/
+        
+        /*상시개방*/
         if (ALWAYS_OPEN) {
             // 상시 모드: 스케줄 체크/타이머 브로드캐스트 전부 비활성
             if (!isOpen) {
@@ -73,49 +73,58 @@ public class 라바던전컨트롤러 {
 
         // 요일(1=일, 7=토)
         int day = getDayOfWeek();
+        
+        // 💡 외부 Config(0=일 ~ 6=토) 기준과 맞추기 위해 자바 요일에서 1을 뺌
+        int configDay = day - 1;
 
-        // 스케줄 체크 (열릴 때만 트리거)
-        if (!isOpen) {
-            if (day == 1 || day == 7) {
-                // 주말 스케줄
-                for (TeamBattleTime t : Lineage.lasta_dungeon_time_list2) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
-                    }
-                }
-            } else {
-                // 평일 스케줄
-                for (TeamBattleTime t : Lineage.lasta_dungeon_time_list) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
-                    }
-                }
-            }
-        }
+     // 스케줄 체크 (열릴 때만 트리거)
+     		if (!isOpen) {
+     			// 1. 외부 설정(lasta_open_day_list)에 오늘 요일이 포함되어 있는지 확인
+     			if (Lineage.lasta_open_day_list.contains(configDay)) {
+     				
+     				// 2. 주말(일=0, 토=6)과 평일(월~금) 구분하여 스케줄 검사
+     				if (configDay == 0 || configDay == 6) {
+     					// [주말 스케줄] -> time_list2 사용
+     					for (TeamBattleTime t : Lineage.lasta_dungeon_time_list2) {
+     						if (t.getHour() == hour && t.getMin() == min) {
+     							open(nowMs);
+     							break;
+     						}
+     					}
+     				} else {
+     					// [평일 스케줄] -> time_list 사용
+     					for (TeamBattleTime t : Lineage.lasta_dungeon_time_list) {
+     						if (t.getHour() == hour && t.getMin() == min) {
+     							open(nowMs);
+     							break;
+     						}
+     					}
+     				}
+     			}
+     		}
 
-        // 열려 있으면 주기 갱신/종료 처리
-        if (isOpen) {
-            long diffMs   = lastaEndTime - nowMs;
-            int  remainSec = (int)Math.max(0, diffMs / 1000L);
+     		// 2. 열려 있으면 주기 갱신/종료 처리
+     		// =======================================================
+     		if (isOpen) {
+     			long diffMs   = lastaEndTime - nowMs;
+     			int  remainSec = (int)Math.max(0, diffMs / 1000L);
 
-            // 종료 시점
-            if (diffMs <= 0) {
-                close();               // 상태/메시지
-                sendTimerUI(false, nowMs); // 0초 내려서 타이머 끄기
-                return;
-            }
+     			// 종료 시점
+     			if (diffMs <= 0) {
+     				close();               // 상태/메시지
+     				sendTimerUI(false, nowMs); // 0초 내려서 타이머 끄기
+     				return;
+     			}
 
-            // 1초 간격으로만 브로드캐스트 (원하면 5000L로 줄여 부하 감소)
-            if (nowMs >= nextTimerBroadcastAt && remainSec != lastRemainSecSent) {
-                sendTimerUI(true, nowMs);         // 남은 시간(초) 전송
-                lastRemainSecSent = remainSec;
-                nextTimerBroadcastAt = nowMs + 1000L;
-            }
-        }
+     			// 1초 간격으로만 브로드캐스트
+     			if (nowMs >= nextTimerBroadcastAt && remainSec != lastRemainSecSent) {
+     				sendTimerUI(true, nowMs);         // 남은 시간(초) 전송
+     				lastRemainSecSent = remainSec;
+     				nextTimerBroadcastAt = nowMs + 1000L;
+     			}
+     		}
     }
-
+    
     // 열기
     private static void open(long nowMs) {
         isOpen = true;
@@ -143,11 +152,11 @@ public class 라바던전컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 라스타바드 던전으로 가는길이 열렸습니다. *****";
+            chatMsg    = "\\fY      ***** 라스타바드 던전으로 가는길이 열렸습니다. *****";
             toastTitle = "★ 라스타바드 던전 입장 가능 ★";
             toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 라스타바드 던전으로 가는길이 닫혔습니다. *****";
+            chatMsg    = "\\fY      ***** 라스타바드 던전으로 가는길이 닫혔습니다. *****";
             toastTitle = "■ 라스타바드 던전 닫힘 안내";
             toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }
@@ -195,7 +204,7 @@ public class 라바던전컨트롤러 {
         
         /*상시개방*/
         if (ALWAYS_OPEN) {
-            // 상시 오픈: 타이머 숨김1
+            // 상시 오픈: 타이머 숨김
             SC_TIMER_UI_NOTI.newInstance()
                 .setTimerType(TimerType.Normal)
                 .setRemainTime(0)

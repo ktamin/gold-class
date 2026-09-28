@@ -13,110 +13,18 @@ import lineage.share.Lineage;
 import lineage.share.TimeLine;
 import lineage.thread.AiThread;
 import lineage.world.World;
+import lineage.world.controller.AbandonedController;
 import lineage.world.controller.CharacterController;
 import lineage.world.controller.ClanController;
 import lineage.world.controller.RankController;
+import lineage.world.controller.뒤틀린잊혀진섬컨트롤러;
 import lineage.world.object.object;
 import lineage.world.object.instance.NpcInstance;
 import lineage.world.object.instance.RankBoardInstance;
 import lineage.world.object.instance.ShopInstance;
-import lineage.world.object.npc.BuffNpc;
-import lineage.world.object.npc.Cash_Market_telepoter;
-import lineage.world.object.npc.ClanMaker;
-import lineage.world.object.npc.Clan_lord;
-import lineage.world.object.npc.Doett;
-import lineage.world.object.npc.Ellyonne;
-import lineage.world.object.npc.Giran_dungeon_Telepoter;
-import lineage.world.object.npc.Girtastelepoter;
-import lineage.world.object.npc.GoddessAgata;
-import lineage.world.object.npc.Horun;
-import lineage.world.object.npc.Hurin;
-import lineage.world.object.npc.LostIslandTeleporter;
-import lineage.world.object.npc.MagicdollCompose;
-import lineage.world.object.npc.Maid;
-import lineage.world.object.npc.Market_telepoter;
-import lineage.world.object.npc.Morien;
-import lineage.world.object.npc.OmanShop;
-import lineage.world.object.npc.Promot_npc;
-import lineage.world.object.npc.PvP_Rank_bronze;
-import lineage.world.object.npc.Rank_bronze;
-import lineage.world.object.npc.Rmflawk_dungeon_Telepoter;
-import lineage.world.object.npc.Sedia;
-import lineage.world.object.npc.Siris;
-import lineage.world.object.npc.TalkMovingNpc;
-import lineage.world.object.npc.TalkNpc;
-import lineage.world.object.npc.Theodor;
-import lineage.world.object.npc.가더제작사;
-import lineage.world.object.npc.고무상시텔레포터;
-import lineage.world.object.npc.고무텔레포터;
-import lineage.world.object.npc.귀걸이제작사;
-import lineage.world.object.npc.드래곤텔레포터;
-import lineage.world.object.npc.라바던전텔레포터;
-import lineage.world.object.npc.라바상시텔레포터;
-import lineage.world.object.npc.레어인형합성사;
-import lineage.world.object.npc.룸티스제작사;
-import lineage.world.object.npc.마물암석제작사;
-import lineage.world.object.npc.마법주문서제작사;
-import lineage.world.object.npc.마법주문서합성사;
-import lineage.world.object.npc.마안제작사;
-import lineage.world.object.npc.마안합성사;
-import lineage.world.object.npc.마족상시텔레포터;
-import lineage.world.object.npc.마족신전텔레포터;
-import lineage.world.object.npc.마족제작사;
-import lineage.world.object.npc.멸마의갑옷제작사;
-import lineage.world.object.npc.무기교환;
-import lineage.world.object.npc.무기제작사;
-import lineage.world.object.npc.방어구교환;
-import lineage.world.object.npc.방어구제작사;
-import lineage.world.object.npc.변신카드제작사;
-import lineage.world.object.npc.보물찾기텔레포터;
-import lineage.world.object.npc.보석세공사;
-import lineage.world.object.npc.악세세공사;
-import lineage.world.object.npc.보스타임;
-import lineage.world.object.npc.수룡텔레포터;
-import lineage.world.object.npc.신화장비제작사;
-import lineage.world.object.npc.악영텔레포터;
-import lineage.world.object.npc.액세서리제작사;
-import lineage.world.object.npc.야도란보스텔;
-import lineage.world.object.npc.야도란보스텔1;
 //야도란 사냥터이동
 //ses950317@nate.com
-import lineage.world.object.npc.야도란텔;
-import lineage.world.object.npc.야도란텔1;
-import lineage.world.object.npc.야도란텔2;
-import lineage.world.object.npc.야도란텔3;
-import lineage.world.object.npc.야도란텔5;
-import lineage.world.object.npc.얼던상시텔레포터;
-import lineage.world.object.npc.얼던텔레포터;
-import lineage.world.object.npc.영웅장비제작사;
-import lineage.world.object.npc.영혼석제작사;
-import lineage.world.object.npc.오만부적제작사;
-import lineage.world.object.npc.오만의탑10층텔레포터;
-import lineage.world.object.npc.용갑옷제작사;
-import lineage.world.object.npc.월드보스텔레포터;
-import lineage.world.object.npc.자동물약;
-import lineage.world.object.npc.장비스왑;
-import lineage.world.object.npc.전설무기제작사;
-import lineage.world.object.npc.전설의무기;
-import lineage.world.object.npc.전설의제작사;
-import lineage.world.object.npc.전설장비제작사;
-import lineage.world.object.npc.정무상시텔레포터;
-import lineage.world.object.npc.정무텔레포터;
-import lineage.world.object.npc.지배반지제작사;
-import lineage.world.object.npc.지배부적제작사;
-import lineage.world.object.npc.지배악세제작사;
-import lineage.world.object.npc.지옥텔레포터;
-import lineage.world.object.npc.지하수로텔레포터;
-import lineage.world.object.npc.칠흑던전3층텔레포터;
-import lineage.world.object.npc.칠흑던전4층텔레포터;
-import lineage.world.object.npc.칠흑던전텔레포터;
-import lineage.world.object.npc.칠흑상시텔레포터;
-import lineage.world.object.npc.테베사막텔레포터;
-import lineage.world.object.npc.테베상시텔레포터;
-import lineage.world.object.npc.테베텔레포터;
-import lineage.world.object.npc.테베합성사;
-import lineage.world.object.npc.펭귄서식지텔레포터;
-import lineage.world.object.npc.희귀장비제작사;
+import lineage.world.object.npc.*;
 import lineage.world.object.npc.buff.ArmorEnchanter;
 import lineage.world.object.npc.buff.Curer;
 import lineage.world.object.npc.buff.Hadesty;
@@ -423,6 +331,10 @@ public final class NpcSpawnlistDatabase {
 	static public object bossList4;
 	static public object bossList5;
 	static public object bossList6;
+	static public object marketNpc;
+	static public object 오만통합텔레포터;
+	// 💡 거래소 NPC 변수 선언 추가
+	static public object exchangeNpc;
 
 	static public void init(Connection con) {
 		TimeLine.start("NpcSpawnlistDatabase..");
@@ -460,6 +372,11 @@ public final class NpcSpawnlistDatabase {
 		yadolantelboss = new 야도란보스텔();
 		bosstime = new 보스타임();
 		rankcheck = new RankBoardInstance();
+		marketNpc = new ShopManagement();
+		playcheck= new AttendanceCheck();
+		// 💡 거래소 NPC 객체 생성 추가
+		exchangeNpc = new exchangeNpc();
+		
 		yadolantel5.setObjectId(ServerDatabase.nextEtcObjId());
 		yadolantel3.setObjectId(ServerDatabase.nextEtcObjId());
 		yadolantel2.setObjectId(ServerDatabase.nextEtcObjId());
@@ -473,6 +390,9 @@ public final class NpcSpawnlistDatabase {
 		autoPotion.setObjectId(ServerDatabase.nextEtcObjId());
 		rankcheck.setObjectId(ServerDatabase.nextEtcObjId());
 		bosstime.setObjectId(ServerDatabase.nextEtcObjId());
+		playcheck.setObjectId(ServerDatabase.nextEtcObjId());
+		// 💡 거래소 NPC 고유 오브젝트 ID 부여 추가
+		exchangeNpc.setObjectId(ServerDatabase.nextEtcObjId());
 		TimeLine.end();
 	}
 
@@ -1007,7 +927,7 @@ public final class NpcSpawnlistDatabase {
 			case 1609: // 콜롯세움 관리인
 			case 1902: // 콜롯세움 부관리인
 				if (Lineage.colosseum_talkingisland || Lineage.colosseum_silverknighttown || Lineage.colosseum_gludin
-						|| Lineage.colosseum_windawood || Lineage.colosseum_kent)
+						|| Lineage.colosseum_windawood || Lineage.colosseum_kent || Lineage.colosseum_giran)
 					return new ColiseumManager(n);
 			case 1611: // 크리옴
 				return new Kriom(n);
@@ -1472,10 +1392,10 @@ public final class NpcSpawnlistDatabase {
 						return new BuySellShop(n);
 					} else if (n.getType().equalsIgnoreCase("잊혀진 섬")) {
 						return new LostIslandTeleporter();
-
+					} else if (n.getType().equalsIgnoreCase("뒤틀린 잊혀진 섬")) {
+						return new twistislandtelepoter();	
 					} else if (n.getType().equalsIgnoreCase("기르타스 성지")) {
 						return new Girtastelepoter();
-
 					} else if (n.getType().equalsIgnoreCase("정령의 무덤")) {
 						return new 정무텔레포터();
 					} else if (n.getType().equalsIgnoreCase("정령의 무덤 상시")) {
@@ -1490,14 +1410,16 @@ public final class NpcSpawnlistDatabase {
 						return new 오만의탑10층텔레포터();
 					} else if (n.getType().equalsIgnoreCase("얼던 상시")) {
 						return new 얼던상시텔레포터();
-					} else if (n.getType().equalsIgnoreCase("테베 상시")) {
-						return new 테베상시텔레포터();
 					} else if (n.getType().equalsIgnoreCase("칠흑 상시")) {
 						return new 칠흑상시텔레포터();
-
 					} else if (n.getType().equalsIgnoreCase("테베 사막")) {
 						return new 테베사막텔레포터();
-
+					} else if (n.getType().equalsIgnoreCase("수렵 이벤트")) {
+						return new 수렵이벤트텔레포터();
+					} else if (n.getType().equalsIgnoreCase("티칼 신전")) {
+						return new 티칼텔레포터();
+					} else if (n.getType().equalsIgnoreCase("타워 공성전")) {
+						return new 타워공성전텔레포터();
 					} else if (n.getType().equalsIgnoreCase("영혼석 제작사")) {
 						return new 영혼석제작사();
 					} else if (n.getType().equalsIgnoreCase("보석 세공사")) {
@@ -1547,7 +1469,7 @@ public final class NpcSpawnlistDatabase {
 					} else if (n.getType().equalsIgnoreCase("귀걸이 제작사")) {
 						return new 귀걸이제작사();
 					} else if (n.getType().equalsIgnoreCase("룸티스 합성사")) {
-						return new 룸티스제작사();
+						return new 룸티스제작사();		
 					} else if (n.getType().equalsIgnoreCase("희귀 제작사")) {
 						return new 희귀장비제작사();
 					} else if (n.getType().equalsIgnoreCase("영웅 제작사")) {
@@ -1560,6 +1482,10 @@ public final class NpcSpawnlistDatabase {
 						return new 마안제작사();
 					} else if (n.getType().equalsIgnoreCase("클래스 인형 합성사")) {
 						return new 레어인형합성사();
+					} else if (n.getType().equalsIgnoreCase("고무 제작사")) {
+						return new 고대거인의무덤제작사();	
+					} else if (n.getType().equalsIgnoreCase("신성 악세 제작사")) {
+						return new 신성한액세서리제작사();		
 					} else if (n.getType().equalsIgnoreCase("tebe_teleporter")) {
 						return new 테베텔레포터();
 					} else if (n.getType().equalsIgnoreCase("hell_teleporter")) {
@@ -1591,21 +1517,27 @@ public final class NpcSpawnlistDatabase {
 					} else if (n.getType().equalsIgnoreCase("dragon_teleporter")) {
 						return new 드래곤텔레포터();
 					} else if (n.getType().equalsIgnoreCase("wh_teleporter")) {
-						return new 수룡텔레포터();
+						return new 수룡텔레포터();	
+					} else if (n.getType().equalsIgnoreCase("abandon_teleporter")) {
+						return new AbandonTelepoter();	
 					} else if (n.getType().equalsIgnoreCase("무기교환")) {
 						return new 무기교환();
 					} else if (n.getType().equalsIgnoreCase("방어구교환")) {
 						return new 방어구교환();
 					} else if (n.getType().equalsIgnoreCase("dollgo")) {
 						return new MagicdollCompose();
-					} else if (n.getType().equalsIgnoreCase("그림자")) {
-						return new Rmflawk_dungeon_Telepoter();
+					} else if (n.getType().equalsIgnoreCase("shadow_teleporter")) {
+						return new 그림자신전텔레포터();
 					} else if (n.getType().equalsIgnoreCase("yadolan_teleport")) {
 						return new 야도란텔5();
 					} else if (n.getType().equalsIgnoreCase("yadolanboss_teleport")) {
 						return new 야도란보스텔();
 					} else if (n.getType().equalsIgnoreCase("yadolan6_teleport")) {
 						return new 야도란텔();
+					} else if (n.getType().equalsIgnoreCase("omantotal_teleport")) {
+						return new 오만통합텔레포터();	
+					} else if (n.getType().equalsIgnoreCase("exchange_npc")) {
+						return new exchangeNpc();	
 
 					} else {
 						switch (n.getGfx()) {

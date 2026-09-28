@@ -31,6 +31,7 @@ import lineage.world.controller.BuffController;
 import lineage.world.controller.ChattingController;
 import lineage.world.controller.SkillController;
 import lineage.world.object.object;
+import lineage.world.object.instance.AfkInstance;
 import lineage.world.object.instance.ItemInstance;
 import lineage.world.object.instance.PcInstance;
 import lineage.world.object.item.Letter;
@@ -592,7 +593,7 @@ public final class CharactersDatabase {
 	 */
 	static public boolean isInvalidName(Connection con, String name) {
 		// 이름 검수.
-		String cho = "ㅂㅈㄷㄱㅅㅁㄴㅇㄹㅎㅋㅌㅊㅍㅛㅕㅑㅐㅔㅗㅓㅏㅣㅠㅜㅡㅄㄳㄻㄿㄼㄺㄽㅀ!@#$%^&*()~_-+=|\\<>,.?/[]{};:'\"`";
+		String cho = "1234567890ㅂㅈㄷㄱㅅㅁㄴㅇㄹㅎㅋㅌㅊㅍㅛㅕㅑㅐㅔㅗㅓㅏㅣㅠㅜㅡㅄㄳㄻㄿㄼㄺㄽㅀ!@#$%^&*()~_-+=|\\<>,.?/[]{};:'\"`";
 		for (int i = 0; i < cho.length(); ++i) {
 			char comVal = cho.charAt(i);
 			for (int j = 0; j < name.length(); ++j) {
@@ -1046,6 +1047,7 @@ public final class CharactersDatabase {
 				pc.accCount6 = rs.getInt("장신구천장_6");
 				pc.accCount7 = rs.getInt("장신구천장_7");
 				pc.dollEvoCount = rs.getInt("인형진화_사용횟수");
+				
 				// 👇 [추가] 룸티스 천장 시스템 카운트 불러오기
 				pc.roomtisCount5 = rs.getInt("룸티스천장_5");
 				pc.roomtisCount6 = rs.getInt("룸티스천장_6");
@@ -1066,17 +1068,14 @@ public final class CharactersDatabase {
 				pc.dollBonus5 = rs.getDouble("인형보너스_5단계"); // 👈 추가				
 				pc.dollCountDragon = rs.getInt("인형천장_용인형");
 				pc.dollBonusDragon = rs.getDouble("인형보너스_용인형"); // 👈 추가
-				
 				// 장인 갑옷 천장
 				pc.scrollArmorCount7 = rs.getInt("갑옷천장_7");
 				pc.scrollArmorCount8 = rs.getInt("갑옷천장_8");
 				pc.scrollArmorCount9 = rs.getInt("갑옷천장_9");
-				
 				// 장인 무기 +10, +11
 				pc.scrollWeaponCount10 = rs.getInt("무기천장_10");
 				pc.scrollWeaponCount11 = rs.getInt("무기천장_11");
 				//========================================================
-
 				pc.setExp_marble_save_count(rs.getInt("경험치저장구슬_사용횟수"));
 				pc.setExp_marble_use_count(rs.getInt("경험치구슬_사용횟수"));
 				pc.auto_hunt_time = rs.getInt("자동사냥_남은시간");
@@ -1113,6 +1112,9 @@ public final class CharactersDatabase {
 					//야도란 레벨 달성체크 보상
 					pc.setPclevel_gift_check(rs.getInt("레벨달성체크"));
 					pc.setAuto_count(rs.getInt("auto_count"));
+					pc.setDaycount(rs.getInt("daycount"));
+					pc.setDaycheck(rs.getInt("daycheck"));
+					pc.setDayptime(rs.getInt("daytime"));
 				}			
 			}
 		} catch (Exception e) {
@@ -1218,6 +1220,7 @@ public final class CharactersDatabase {
 			                    item.setInvDolloptionD(rs.getInt(27));
 			                    item.setInvDolloptionE(rs.getInt(28));
 			                    item.setExpireTime(rs.getLong(29)); // ★ 29번에서 만료시간 로드
+			                    item.setClickDelay(rs.getLong("click_delay"));
 			                    if (item.isEquipped() && "fishing_rod".equalsIgnoreCase(item.getItem().getType2())) {
 			                        item.setEquipped(false);
 			                        pc.setGfxMode(0);
@@ -1251,6 +1254,66 @@ public final class CharactersDatabase {
 			    lineage.share.System.println(e + "   캐릭터: " + pc.getName());
 			}
 	}
+	
+	/**
+	 * 💡 [추가] 무인잠수 로봇(AfkInstance) 전용 인벤토리 로딩 메서드
+	 * 일반 유저의 코드와 달리 패킷을 보내거나 장착을 해제하는 과정이 생략되어 안전합니다.
+	 */
+	static public void readInventory(AfkInstance ai) {
+		Inventory inv = ai.getInventory();
+		if (inv == null)
+			return;
+
+		try (Connection con = DatabaseConnection.getLineage();
+			PreparedStatement st = con.prepareStatement("SELECT * FROM characters_inventory WHERE cha_objId=?")) {
+			
+			st.setLong(1, ai.getObjectId()); // 로봇의 고유번호로 DB 조회
+			
+			try (ResultSet rs = st.executeQuery()) {
+				while (rs.next()) {
+					try {
+						ItemInstance item = ItemDatabase.newInstance(ItemDatabase.find(rs.getString("name")));
+						if (item != null) {
+							item.setObjectId(rs.getInt(1));    // objId
+							item.setCount(rs.getLong(5));      // count
+							item.setQuantity(rs.getInt(6));    // quantity
+							item.setEnLevel(rs.getInt(7));     // en
+							item.setEquipped(false);           // 로봇은 장비를 장착하지 않음
+							item.setDefinite(rs.getInt(9) == 1); // definite
+							item.setBless(rs.getInt(10));      // bless
+							item.setDurability(rs.getInt(11));  // durability
+							item.setNowTime(rs.getInt(12));    // nowtime
+							item.setPetObjectId(rs.getInt(13)); // pet_objid
+							item.setInnRoomKey(rs.getInt(14));  // inn_key
+							item.setLetterUid(rs.getInt(15));   // letter_uid
+							item.setRaceTicket(rs.getString(16)); // slimerace
+							item.setEnFire(rs.getInt(20));  
+							item.setEnWater(rs.getInt(21));
+							item.setEnWind(rs.getInt(22));
+							item.setEnEarth(rs.getInt(23));
+							item.setInvDolloptionA(rs.getInt(24));
+							item.setInvDolloptionB(rs.getInt(25));
+							item.setInvDolloptionC(rs.getInt(26));
+							item.setInvDolloptionD(rs.getInt(27));
+							item.setInvDolloptionE(rs.getInt(28));
+							item.setExpireTime(rs.getLong(29)); 
+							item.setClickDelay(rs.getLong("click_delay"));
+
+							// 클라이언트가 없으므로 화면 갱신(패킷) 없이 조용히 가방에만 담습니다 (false)
+							inv.append(item, false);
+						}
+					} catch (Exception e) {
+						lineage.share.System.printf("%s : 무인잠수 인벤 로드 에러.\r\n", CharactersDatabase.class.toString());
+						lineage.share.System.println(e + "   캐릭터: " + ai.getPc_name());
+					}
+				}
+			}
+		} catch (Exception e) {
+			lineage.share.System.printf("%s : readInventory(AfkInstance ai)\r\n", CharactersDatabase.class.toString());
+			lineage.share.System.println(e + "   캐릭터: " + ai.getPc_name());
+		}
+	}
+	
 	/**
 	 * 스킬 정보 추출.
 	 * 
@@ -1641,7 +1704,7 @@ public final class CharactersDatabase {
 			st.executeUpdate();
 			st.close();
 			
-			st = con.prepareStatement("UPDATE accounts SET giran_dungeon_time=?, info_name=?, info_phone_num=?, info_bank_name=?, info_bank_num=?, giran_dungeon_count=?, 자동사냥_이용시간=?, 레벨달성체크=?, auto_count=? WHERE uid=?");
+			st = con.prepareStatement("UPDATE accounts SET giran_dungeon_time=?, info_name=?, info_phone_num=?, info_bank_name=?, info_bank_num=?, giran_dungeon_count=?, 자동사냥_이용시간=?, 레벨달성체크=?, auto_count=?, daycount=?, daycheck=? , daytime=? WHERE uid=?");
 			st.setInt(1, pc.getGiran_dungeon_time());
 			st.setString(2, pc.getInfoName() == null ? "" : pc.getInfoName());
 			st.setString(3, pc.getInfoPhoneNum() == null ? "" : pc.getInfoPhoneNum());
@@ -1652,7 +1715,10 @@ public final class CharactersDatabase {
 			//야도란 레벨달성 보상 추가
 			st.setInt(8, pc.getPclevel_gift_check());
 			st.setInt(9, pc.getAuto_count());
-			st.setLong(10, pc.getAccountUid());
+			st.setInt(10, pc.getDaycount());
+			st.setInt(11, pc.getDaycheck());
+			st.setInt(12, pc.getDayptime());
+			st.setLong(13, pc.getAccountUid());
 			st.executeUpdate();
 
 		} catch (Exception e) {
@@ -1757,8 +1823,8 @@ public final class CharactersDatabase {
 		 * @param con
 		 * @param pc
 		 */
-		String insertQuery = "INSERT INTO characters_inventory (objId, cha_objId, cha_name, name, count, quantity, en, equipped, definite, bress, durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, 구분1, 구분2, options, enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, dolloption_c, dolloption_d, dolloption_e, expire_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String insertQuery = "INSERT INTO characters_inventory (objId, cha_objId, cha_name, name, count, quantity, en, equipped, definite, bress, durability, nowtime, pet_objid, inn_key, letter_uid, slimerace, 구분1, 구분2, options, enfire, enwater, enwind, enearth, dolloption_a, dolloption_b, dolloption_c, dolloption_d, dolloption_e, expire_time, click_delay) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement deleteStatement = null;
 		PreparedStatement insertStatement = null;
@@ -1816,6 +1882,7 @@ public final class CharactersDatabase {
 		            insertStatement.setInt(27, item.getInvDolloptionD());
 		            insertStatement.setInt(28, item.getInvDolloptionE());
 		            insertStatement.setLong(29, item.getExpireTime()); // ★ 드디어 29번에 시간이 박힙니다!
+		            insertStatement.setLong(30, item.getClickDelay());
 		     
 
 		            insertStatement.addBatch(); // 배치에 INSERT 문 추가

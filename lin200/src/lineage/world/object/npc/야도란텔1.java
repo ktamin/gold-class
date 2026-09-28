@@ -8,6 +8,7 @@ import lineage.network.packet.ClientBasePacket;
 import lineage.network.packet.server.S_Html;
 import lineage.network.packet.server.S_Message;
 import lineage.share.Lineage;
+import lineage.util.Util;
 import lineage.world.controller.ChattingController;
 import lineage.world.object.object;
 import lineage.world.object.instance.ItemArmorInstance;
@@ -17,7 +18,7 @@ import lineage.world.object.instance.PcInstance;
 public class 야도란텔1 extends object {
 	
 	// [추가됨] 이동 불가능한 맵 ID 목록 설정
-	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 1400 };
+	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 707, 809, 810, 811, 1400 };
 
 	@Override
 	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
@@ -34,10 +35,10 @@ public class 야도란텔1 extends object {
 	public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp){
 	//	if (action.equalsIgnoreCase("yadolan3_teleport"))		
 
-		if (Lineage.open_wait) {
-			ChattingController.toChatting(pc, "[오픈대기] 오픈대기에는 이동 하실수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			return;
-		}		
+//		if (Lineage.open_wait) {
+//			ChattingController.toChatting(pc, "[오픈대기] 오픈대기에는 이동 하실수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+//			return;
+//		}		
 		if (pc.isDead() || pc.isLock() || pc.isFishing()){
 			ChattingController.toChatting(pc, "현재 상태에선 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
 		
@@ -55,7 +56,7 @@ public class 야도란텔1 extends object {
 			//기란 창고
 			if (action.contains("yadolantel1-yadon1")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33433,32814, 4);
+					pc.toPotal(33428,32816, 4);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
@@ -64,16 +65,16 @@ public class 야도란텔1 extends object {
 			//잡화상점
 			if (action.contains("yadolantel1-yadon2")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33439,32804, 4);
+					pc.toPotal(33446,32810, 4);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
 				}
 			}
-			//잊혀진 섬
+			//제작 마을
 			if (action.contains("yadolantel1-yadon3")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33437,32819, 4);
+					pc.toPotal(32699,32837, 350);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
@@ -82,16 +83,16 @@ public class 야도란텔1 extends object {
 			//기란 여관
 			if (action.contains("yadolantel1-yadon4")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33431,32797, 4);
+					pc.toPotal(33425,32800, 4);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
 				}
 			}
-			//마을 12시
+			//결투장
 			if (action.contains("yadolantel1-yadon5")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33447,32794, 4);
+					pc.toPotal(32799,32789, 5001);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
@@ -100,12 +101,13 @@ public class 야도란텔1 extends object {
 			//낚싯터
 			if (action.contains("yadolantel1-yadon6")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33412,32801, 4);
+					pc.toPotal(Util.random(33420, 33410), Util.random(32804, 32824), 4);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
 				}
 			}
+
 			//펫 창고
 			if (action.contains("yadolantel1-yadon7")) {
 				if(pc.getInventory().isAden(0, true)){
@@ -127,7 +129,7 @@ public class 야도란텔1 extends object {
 			//사냥터 상점
 			if (action.contains("yadolantel1-yadon9")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33445,32815, 4);
+					pc.toPotal(33446,32792, 4);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));
@@ -136,7 +138,7 @@ public class 야도란텔1 extends object {
 			//게시판
 			if (action.contains("yadolantel1-yadon0")) {
 				if(pc.getInventory().isAden(0, true)){
-					pc.toPotal(33421,32797, 4);
+					pc.toPotal(33436,32810, 4);
 				}else{
 					// \f1아데나가 충분치 않습니다.
 					pc.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 189));

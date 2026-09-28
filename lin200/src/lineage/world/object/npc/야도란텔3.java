@@ -17,7 +17,7 @@ import lineage.world.object.instance.PcInstance;
 public class 야도란텔3 extends object {
 	
 	// [추가됨] 이동 불가능한 맵 ID 목록 설정
-	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 1400 };
+	static public final int TeleportHomeImpossibilityMap[] = { 70, 89, 509, 707, 809, 810, 811, 1400 };
 
 	@Override
 	public void toTalk(PcInstance pc, ClientBasePacket cbp) {

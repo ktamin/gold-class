@@ -6,13 +6,17 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import lineage.bean.database.PcShop;
+import lineage.bean.database.marketPrice;
 import lineage.bean.lineage.Clan;
 import lineage.bean.lineage.Party;
 import lineage.database.ServerReloadDatabase;
 import lineage.gui.GuiMain;
 import lineage.network.packet.BasePacketPooling;
+import lineage.network.packet.server.S_Html;
 import lineage.network.packet.server.S_Message;
 import lineage.network.packet.server.S_ObjectChatting;
 import lineage.network.packet.server.S_SoundEffect;
@@ -28,6 +32,7 @@ import lineage.world.object.object;
 import lineage.world.object.instance.MonsterInstance;
 import lineage.world.object.instance.NpcInstance;
 import lineage.world.object.instance.PcInstance;
+import lineage.world.object.instance.PcRobotInstance;
 import lineage.world.object.instance.PcShopInstance;
 import lineage.world.object.instance.QuestInstance;
 import lineage.world.object.instance.RobotInstance;
@@ -293,6 +298,132 @@ public final class ChattingController {
 			return;
 		}
 		
+		if (o instanceof PcInstance && !(o instanceof PcRobotInstance) && ((PcInstance) o).PcMarket_Step > 0) {
+			PcShopInstance pc_shop = PcMarketController.shop_list.get(((PcInstance) o).getObjectId());
+			if (pc_shop == null) {
+				pc_shop = new PcShopInstance(((PcInstance) o).getObjectId(), ((PcInstance) o).getName(), ((PcInstance) o).getClassType(), ((PcInstance) o).getClassSex());
+				PcMarketController.shop_list.put(((PcInstance) o).getObjectId(), pc_shop);
+			}
+			switch(((PcInstance) o).PcMarket_Step){
+			case 1:
+				try {
+
+					
+					StringTokenizer st = new StringTokenizer(msg, " ");
+					while (st.hasMoreTokens()) {
+						int price = Integer.valueOf(st.nextToken());
+						int count = Integer.valueOf(st.nextToken());
+						
+						if (pc_shop.list.get(0L) == null) {
+							String aden = "아데나";
+
+							
+							if (price > 2000000000 || price < 0) {
+								ChattingController.toChatting(o, "\\fR가격이 잘못되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
+							} else {
+								pc_shop.list.put(0L, new PcShop(pc_shop, price, aden, count));
+								ChattingController.toChatting(o, "\\fR판매할 물품을 더블 클릭 해주세요.", Lineage.CHATTING_MODE_MESSAGE);
+								((PcInstance) o).PcMarket_Step = 2;
+								((PcInstance) o).PcMarket_Count = count;
+								
+							}
+						} else {
+							ChattingController.toChatting(o, "\\fR판매할 물품을 더블 클릭 해주세요.", Lineage.CHATTING_MODE_MESSAGE);
+							((PcInstance) o).PcMarket_Step = 2;
+							((PcInstance) o).PcMarket_Count = count;
+						}
+						
+					}
+				} catch (Exception e) {
+					((PcInstance) o).PcMarket_Step = 0;
+					((PcInstance) o).PcMarket_Count = 0;
+					ChattingController.toChatting(o, "[알림] 입력이 잘못되었습니다. 다시 진행해주세요.", 20);
+				}
+				return;
+			case 3:
+				pc_shop.shop_comment = msg;
+				PcMarketController.updateShopRobot(pc_shop);
+				ChattingController.toChatting(o, "\\fR\"" + msg + "\" 홍보멘트 설정",
+						Lineage.CHATTING_MODE_MESSAGE);
+				((PcInstance) o).PcMarket_Step = 0;
+				return;
+			case 4:
+				((PcInstance) o).marketPrice.clear();
+				String itemName = msg;
+				int index = 1;
+				List<String> list = new ArrayList<String>();
+				List<String> tempMsg = new ArrayList<String>();
+				int en = 0;
+				int bless = 1;
+				boolean isEn = false;
+				boolean isBless = false;
+	
+				
+				tempMsg.add(msg);
+				list.add((bless == 0 ? "(축) " : bless == 2 ? "(저주) " : "") + (en > 0 ? "+" + en + " " : en < 0 ? en + " " : "") + itemName);
+
+				for(PcShopInstance psi : PcMarketController.shop_list.values()){
+					if (psi.getX() > 0 && psi.getY() > 0 && psi.getPc_objectId() != psi.getObjectId()) {
+						for(PcShop s : psi.list.values()){
+							if (s.getItem() == null)
+								continue;
+							 if (index > 60) { // 보낼 아이템 개수가 10개를 초과하면 더 이상 추가하지 않음
+						            break;
+						        }
+						        
+							if (s.getItem().getName().contains(itemName)) {
+								marketPrice mp = new marketPrice();
+								StringBuffer sb = new StringBuffer();
+
+								sb.append(String.format("%d. %s", index++, s.getInvItemBress() == 0 ? "(축) " : s.getInvItemBress() == 1 ? "" : "(저주) "));
+
+								if (s.getInvItemEn() > 0)
+									sb.append(String.format("+%d ", s.getInvItemEn()));
+
+								sb.append(String.format("%s", s.getItem().getName()));
+
+								if (s.getInvItemCount() > 1)
+									sb.append(String.format("(%d)", s.getInvItemCount()));
+								
+				
+								sb.append(String.format(" [판매 금액]: %s 아데나", Util.changePrice(s.getPrice())));
+						
+						
+								list.add(sb.toString());
+
+								mp.setShopNpc(psi);
+								mp.setX(psi.getX());
+								mp.setY(psi.getY());
+								mp.setMap(psi.getMap());
+								mp.setObjId(psi.getObjectId());
+								((PcInstance) o).marketPrice.add(mp);
+							}
+						}
+					} else {
+						continue;
+					}
+				}
+				
+		
+				((PcInstance) o).PcMarket_Step = 0;
+				if (list.size() < 2 || ((PcInstance) o).marketPrice.size() < 1) {
+	
+					((PcInstance) o).toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), PcMarketController.marketPriceNPC, "marketprice1", null, list));
+					((PcInstance) o).PcMarket_Step = 0;
+					return;
+				} else {
+					int count = 60 - (list.size() - 1);
+					for (int i = 0; i < count; i++)
+						list.add(" ");				
+					// 시세 검색 결과 html 패킷 보냄.
+					((PcInstance) o).PcMarket_Step = 0;
+					((PcInstance) o).toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), PcMarketController.marketPriceNPC, "marketprice", null, list));
+				}
+		
+				return;
+			}
+		}
+		
 		// 인벤확인주문서 처리.
 		if (o.getInventory() != null && o.getInventory().characterInventory != null) {
 			o.getInventory().characterInventory.toClickFinal((Character) o, msg);
@@ -335,6 +466,20 @@ public final class ChattingController {
 						oo.toChatting(o, msg);
 				}
 			}
+			
+						// ✅ [수정] 잊섬 채팅 차단 및 운영자 모니터링
+						// ==========================================
+						if ((o.getMap() == 707 || o.getMap() == 999) && o.getGm() == 0 && !lineage.share.Lineage.is_twistisland_chatting) {
+							// 유저들에게는 안 보이지만, 접속 중인 운영자들에게만 메시지를 전달합니다.
+							for (PcInstance gm : World.getPcList()) {
+								if (gm != null && gm.getGm() > 0) {
+									gm.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), o, Lineage.CHATTING_MODE_NORMAL, "[잊섬감시] " + msg));
+								}
+							}
+							return; // 일반 유저(루프)에게는 전달되지 않도록 종료
+						}
+			// ==========================================
+						
 			// 주변사용자에게 표현.
 			for(object oo : o.getInsideList()){
 				if(oo instanceof PcInstance){

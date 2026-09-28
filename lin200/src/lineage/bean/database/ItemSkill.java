@@ -6,7 +6,8 @@ public class ItemSkill {
 	private int skillUid;
 	private int enLevel;
 	private int defaultProbability;
-	private int addEnchantProbability;
+//	private int addEnchantProbability;
+	private double addEnchantProbability;
 	private boolean setInt;
 	private boolean effectTarget; // true: target, false: me
 	private double rateDmg;
@@ -50,12 +51,22 @@ public class ItemSkill {
 	public void setDefaultProbability(int defaultProbability) {
 		this.defaultProbability = defaultProbability;
 	}
-
+/*
 	public int getAddEnchantProbability() {
 		return addEnchantProbability;
 	}
-
+	
 	public void setAddEnchantProbability(int addEnchantProbability) {
+		this.addEnchantProbability = addEnchantProbability;
+	}
+*/
+	// 💡 [수정] 반환 타입을 double로 변경
+	public double getAddEnchantProbability() {
+		return addEnchantProbability;
+		}
+
+	// 💡 [수정] 매개변수 타입을 double로 변경
+	public void setAddEnchantProbability(double addEnchantProbability) {
 		this.addEnchantProbability = addEnchantProbability;
 	}
 

@@ -26,7 +26,7 @@ public class 테베사막컨트롤러 {
     private static int  lastRemainSecSent    = -1; // 마지막 전송한 remainSec (중복 방지)
     private static long nextTimerBroadcastAt = 0L; // 다음 갱신 전송 시각(ms)
     // 항상 열려있는 사냥터로 운용할 때 true
-    private static final boolean ALWAYS_OPEN = false;
+    private static final boolean ALWAYS_OPEN = true;
 
     public static void init() {
         TimeLine.start("테베사막 컨트롤러..");
@@ -142,13 +142,13 @@ public class 테베사막컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 수렵 이벤트 던전으로 가는길이 열렸습니다. *****";
-            toastTitle = "★수렵 이벤트 던전 입장 가능 ★";
-            toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
+            chatMsg   = "\\fY      ***** 테베 사막으로 가는길이 열렸습니다. *****";
+            toastTitle = "★테베 사막 입장 가능 ★";
+            toastDesc  = "테베 사막 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 수렵 이벤트 던전으로 가는길이 닫혔습니다. *****";
-            toastTitle = "■ 수렵 이벤트 던전 닫힘 안내";
-            toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
+            chatMsg   = "\\fY      ***** 테베 사막으로 가는길이 닫혔습니다. *****";
+            toastTitle = "■ 테베 사막 던전 닫힘 안내";
+            toastDesc  = "테베 사막이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }
 
         // 채팅

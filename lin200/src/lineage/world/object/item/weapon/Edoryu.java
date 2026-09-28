@@ -1,10 +1,15 @@
 package lineage.world.object.item.weapon;
 
+import all_night.Lineage_Balance;
+import lineage.bean.database.Skill;
+import lineage.database.SkillDatabase;
+import lineage.share.Lineage;
 import lineage.util.Util;
 import lineage.world.object.Character;
 import lineage.world.object.object;
 import lineage.world.object.instance.ItemInstance;
 import lineage.world.object.instance.ItemWeaponInstance;
+import lineage.world.object.instance.PcInstance;
 
 public class Edoryu extends ItemWeaponInstance {
 
@@ -13,7 +18,55 @@ public class Edoryu extends ItemWeaponInstance {
 			item = new Edoryu();
 		return item;
 	}
+	
+	@Override
+	public boolean toDamage(Character cha, object o){
+		
+		// 1) 부모 로직 먼저 실행 → DB 기반 아이템 스킬 발동 시도
+		boolean triggeredByParent = super.toDamage(cha, o);
+		
+		// 2) 이도류 고유의 더블 데미지 발동 확률 (20%)
+		boolean triggeredByEdoryu = Util.random(0, 100) < 10;
+		
+		// ==========================================
+				// ✅ 쉐도우 스턴 패시브 발동 (디버그 제거 완료)
+				// ==========================================
+				if (cha instanceof PcInstance && cha.getClassType() == Lineage.LINEAGE_CLASS_DARKELF) {
+					
+					// 1. '쉐도우 스턴' 아이템 소지 확인
+					if (cha.getInventory().find("쉐도우 스턴", 0, 1) != null) {
+						
+						// 2. 발동 확률 계산 (Lineage_Balance.shadow_stun_prob 연동)
+						if (Math.random() < Lineage_Balance.shadow_stun_prob) {
+							
+							// 3. 스킬 DB 번호 확인 (16번)
+							Skill stunSkill = lineage.database.SkillDatabase.find(16); 
+							
+							// 4. 스턴 마법 정상 호출
+							if (stunSkill != null) {
+								lineage.world.object.magic.ShockStun.init(cha, stunSkill, o);
+							}
+						}
+					}
+				}
+				
+				return triggeredByParent || triggeredByEdoryu;
+			}
 
+	@Override
+	public int toDamage(int dmg){
+		int parent = super.toDamage(dmg);
+		int extra = 0;
+		return parent + extra;
+	}
+	
+	@Override
+	public int toDamageEffect(){
+		int parentFx = super.toDamageEffect();
+		return (parentFx != 0) ? parentFx : 3398;
+	}
+}
+/*
 	@Override
 	public boolean toDamage(Character cha, object o){
 		
@@ -55,5 +108,5 @@ public class Edoryu extends ItemWeaponInstance {
 	    
 //		return 3398;
 	}
-
 }
+*/

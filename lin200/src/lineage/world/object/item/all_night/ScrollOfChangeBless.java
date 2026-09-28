@@ -24,157 +24,194 @@ public class ScrollOfChangeBless extends ItemInstance {
 		if (cha.getInventory() != null) {
 			ItemInstance item = cha.getInventory().value(cbp.readD());
 
-			if ((item.getItem().getType1().equals("weapon") || item.getItem().getType1().equals("armor")) && !item.getItem().getType2().equalsIgnoreCase("arrow") &&
+			// 1. 아이템 존재 여부 확인 (방어 코드)
+			if (item == null)
+				return;
+
+			// ▼▼▼ [수정 포인트] 스냅퍼, 룸티스 체크 로직 추가 ▼▼▼
+			String itemName = item.getItem().getName();
+			if (itemName.contains("스냅퍼") || itemName.contains("룸티스") || itemName.contains("변신 조종 반지")) {
+				ChattingController.toChatting(cha, "해당 아이템에는 축복을 부여할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+				return;
+			}
+			// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+			if ((item.getItem().getType1().equals("weapon") || item.getItem().getType1().equals("armor"))
+					&& !item.getItem().getType2().equalsIgnoreCase("arrow") &&
 					item.getItem().getNameIdNumber() != 1206 && item.getItem().getNameIdNumber() != 1207) {
 				if (item.getBless() != 0 && item.getBless() != -128) {
-					
-					if(getItem().getSmallDmg() == 1){
-						
+
+					if (getItem().getSmallDmg() == 1) {
+
 						if (Math.random() < Lineage_Balance.bless_change_probability1) {
 							if (item.isEquipped()) {
 								item.setEquipped(false);
 								item.toOption(cha, false);
-								
+
 								item.setBless(0);
-								
+
 								item.setEquipped(true);
 								item.toOption(cha, true);
 							} else {
 								item.setBless(0);
 							}
-							
-							cha.toSender(S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
-							cha.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-							cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009), true);
+
+							cha.toSender(
+									S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
+							cha.toSender(
+									S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
+							cha.toSender(
+									S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009),
+									true);
 							ChattingController.toChatting(cha, "축복 부여에 성공하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						} else {
 							ChattingController.toChatting(cha, "축복 부여에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
-						
+
 					}
-					if(getItem().getSmallDmg() == 2){
-						
+					if (getItem().getSmallDmg() == 2) {
+
 						if (Math.random() < Lineage_Balance.bless_change_probability2) {
 							if (item.isEquipped()) {
 								item.setEquipped(false);
 								item.toOption(cha, false);
-								
+
 								item.setBless(0);
-								
+
 								item.setEquipped(true);
 								item.toOption(cha, true);
 							} else {
 								item.setBless(0);
 							}
-							
-							cha.toSender(S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
-							cha.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-							cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009), true);
+
+							cha.toSender(
+									S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
+							cha.toSender(
+									S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
+							cha.toSender(
+									S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009),
+									true);
 							ChattingController.toChatting(cha, "축복 부여에 성공하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						} else {
 							ChattingController.toChatting(cha, "축복 부여에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
-						
+
 					}
-					if(getItem().getSmallDmg() == 3){
-						
+					if (getItem().getSmallDmg() == 3) {
+
 						if (Math.random() < Lineage_Balance.bless_change_probability3) {
 							if (item.isEquipped()) {
 								item.setEquipped(false);
 								item.toOption(cha, false);
-								
+
 								item.setBless(0);
-								
+
 								item.setEquipped(true);
 								item.toOption(cha, true);
 							} else {
 								item.setBless(0);
 							}
-							
-							cha.toSender(S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
-							cha.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-							cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009), true);
+
+							cha.toSender(
+									S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
+							cha.toSender(
+									S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
+							cha.toSender(
+									S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009),
+									true);
 							ChattingController.toChatting(cha, "축복 부여에 성공하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						} else {
 							ChattingController.toChatting(cha, "축복 부여에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
-						
+
 					}
-					if(getItem().getSmallDmg() == 4){
-						
+					if (getItem().getSmallDmg() == 4) {
+
 						if (Math.random() < Lineage_Balance.bless_change_probability4) {
 							if (item.isEquipped()) {
 								item.setEquipped(false);
 								item.toOption(cha, false);
-								
+
 								item.setBless(0);
-								
+
 								item.setEquipped(true);
 								item.toOption(cha, true);
 							} else {
 								item.setBless(0);
 							}
-							
-							cha.toSender(S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
-							cha.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-							cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009), true);
+
+							cha.toSender(
+									S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
+							cha.toSender(
+									S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
+							cha.toSender(
+									S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009),
+									true);
 							ChattingController.toChatting(cha, "축복 부여에 성공하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						} else {
 							ChattingController.toChatting(cha, "축복 부여에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
-						
+
 					}
-					if(getItem().getSmallDmg() == 5){
-						
+					if (getItem().getSmallDmg() == 5) {
+
 						if (Math.random() < Lineage_Balance.bless_change_probability5) {
 							if (item.isEquipped()) {
 								item.setEquipped(false);
 								item.toOption(cha, false);
-								
+
 								item.setBless(0);
-								
+
 								item.setEquipped(true);
 								item.toOption(cha, true);
 							} else {
 								item.setBless(0);
 							}
-							
-							cha.toSender(S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
-							cha.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-							cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009), true);
+
+							cha.toSender(
+									S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
+							cha.toSender(
+									S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
+							cha.toSender(
+									S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009),
+									true);
 							ChattingController.toChatting(cha, "축복 부여에 성공하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						} else {
 							ChattingController.toChatting(cha, "축복 부여에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
-						
+
 					}
-					if(getItem().getSmallDmg() == 6){
-						
+					if (getItem().getSmallDmg() == 6) {
+
 						if (Math.random() < Lineage_Balance.bless_change_probability6) {
 							if (item.isEquipped()) {
 								item.setEquipped(false);
 								item.toOption(cha, false);
-								
+
 								item.setBless(0);
-								
+
 								item.setEquipped(true);
 								item.toOption(cha, true);
 							} else {
 								item.setBless(0);
 							}
-							
-							cha.toSender(S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
-							cha.toSender(S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
-							cha.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009), true);
+
+							cha.toSender(
+									S_InventoryBress.clone(BasePacketPooling.getPool(S_InventoryBress.class), item));
+							cha.toSender(
+									S_InventoryStatus.clone(BasePacketPooling.getPool(S_InventoryStatus.class), item));
+							cha.toSender(
+									S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), cha, 9009),
+									true);
 							ChattingController.toChatting(cha, "축복 부여에 성공하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						} else {
 							ChattingController.toChatting(cha, "축복 부여에 실패하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						}
-						
+
 					}
-					
+
 					cha.getInventory().count(this, getCount() - 1, true);
-					
+
 				} else {
 					ChattingController.toChatting(cha, "이미 축복이 부여된 아이템입니다.", Lineage.CHATTING_MODE_MESSAGE);
 				}

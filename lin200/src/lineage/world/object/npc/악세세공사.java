@@ -95,7 +95,7 @@ public class 악세세공사 extends object {
 			} else if (action.equalsIgnoreCase("항마의 반지 분해")) {				
 				createList.add(new CreateItem("항마의 반지", false, 1, true, 0, 1));		
 				checkItem(pc, createList, itemList);				
-				createItem(pc, createList, createList2, itemList, "신성한 조각", 1, 0, Util.random(5, 10));
+				createItem(pc, createList, createList2, itemList, "신성한 조각", 1, 0, Util.random(1, 10));
 				
 			} else if (action.equalsIgnoreCase("완력의 벨트 분해")) {			
 				createList.add(new CreateItem("완력의 벨트", false, 1, true, 0, 1));		
@@ -110,8 +110,9 @@ public class 악세세공사 extends object {
 			} else if (action.equalsIgnoreCase("지식의 벨트 분해")) {			
 				createList.add(new CreateItem("지식의 벨트", false, 1, true, 0, 1));		
 				checkItem(pc, createList, itemList);				
-				createItem(pc, createList, createList2, itemList, "신성한 조각", 1, 0, Util.random(10, 20));		
-			}
+				createItem(pc, createList, createList2, itemList, "신성한 조각", 1, 0, Util.random(10, 20));			
+		
+		    }
 		}
 	}
 	

@@ -160,11 +160,30 @@ public class CommandController {
 		if (cmd.startsWith(Lineage.command) == false || cmd.length() < 2)
 			return false;
 
-		if (!Lineage.is_chatting_close_command && o != null && o.getGm() == 0 && o.isBuffChattingClose()) {
+//		if (!Lineage.is_chatting_close_command && o != null && o.getGm() == 0 && o.isBuffChattingClose()) {
 			// 현재 채팅 금지중입니다.
-			o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 242));
-			return true;
-		}
+//			o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 242));
+//			return true;
+//		}
+		
+		// ==========================================
+				// ✅ [수정] 진짜 채금 유저 & 잊섬 유저 명령어 통합 차단
+				// ==========================================
+				if (o != null && o.getGm() == 0) {
+					// 1. 채금 상태이면서, 콘프에서 '채금시 명령어 사용불가(false)'로 설정된 경우
+					boolean isChatBanned = !Lineage.is_chatting_close_command && o.isBuffChattingClose();
+					
+					// 2. 잊섬(70, 809)에 있으면서, 콘프에서 '잊섬 채팅/명령어 불가(false)'로 설정된 경우
+					boolean isLostIsland = (o.getMap() == 70) && !Lineage.is_twistisland_chatting;
+
+					// 둘 중 하나라도 해당되면 명령어를 차단합니다!
+					if (isChatBanned || isLostIsland) {
+						// 현재 채팅 금지중입니다. (242번 시스템 메시지 발송)
+						o.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 242));
+						return true; // 여기서 true를 반환해버려서 밑으로 코드가 안 넘어가게(명령어 씹힘) 만듭니다.
+					}
+				}
+				// ==========================================
 
 		try {
 			if (!Common.system_config_console) {
@@ -596,6 +615,7 @@ public class CommandController {
 						ChattingController.toChatting(o, Lineage.command + "추방 아이디", Lineage.CHATTING_MODE_MESSAGE);
 					}
 					return true;
+/*		====================수배 단수 1.2.3단 사용시 3단 사용시 wantedcontroller 수정		
 				} else if (key.equalsIgnoreCase(Lineage.command + "수배")) {
 					// .수배 아이디 100000
 					try {
@@ -603,10 +623,35 @@ public class CommandController {
 						Long price = Long.valueOf(st.nextToken());
 						WantedController.append(o, name, price);
 					} catch (Exception e) {
-						ChattingController.toChatting(o, Lineage.command + "수배 아이디 1,2,3[단수]",
+						ChattingController.toChatting(o, Lineage.command + "수배 아이디 1,2,3[단수]",	
 								Lineage.CHATTING_MODE_MESSAGE);
+					}					
+					return true;
+*/
+				// ===========.수배 아이디 1단만 사용시	
+				} else if (key.equalsIgnoreCase(Lineage.command + "수배")) {
+					try {
+						String name = st.nextToken();
+						long price = 1; // 💡 1. 숫자의 기본값을 무조건 '1'로 세팅해 둡니다.
+						
+						// 💡 2. 만약 유저가 스페이스바를 누르고 뒤에 무언가를 더 쳤다면 그 숫자를 읽습니다.
+						if (st.hasMoreTokens()) {
+							price = Long.parseLong(st.nextToken());
+						}
+						
+						// 💡 3. 컨트롤러로 넘기기 전에 확인 (1이면 통과, 아니면 차단)
+						if (price == 1) {
+							WantedController.append(o, name, price);
+						} else {
+							ChattingController.toChatting(o, "수배는 1단만 이용할 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+						}
+						
+					} catch (Exception e) {
+						// 안내 멘트도 이제 숫자를 빼고 심플하게 알려줍니다.
+						ChattingController.toChatting(o, Lineage.command + "수배 [캐릭터명]", Lineage.CHATTING_MODE_MESSAGE);
 					}
 					return true;
+					
 				} else if (key.equalsIgnoreCase(Lineage.command + "수배자")) {
 					WantedController.checkWanted((PcInstance) o);
 					return true;
@@ -822,6 +867,7 @@ public class CommandController {
 									RankController.getRankClass(o)),
 							Lineage.CHATTING_MODE_MESSAGE);
 					return true;
+					
 				} else if (key.equalsIgnoreCase(Lineage.command + "정보") || key.equalsIgnoreCase(Lineage.command + "캐릭")
 						|| key.equalsIgnoreCase(Lineage.command + "케릭")
 						|| key.equalsIgnoreCase(Lineage.command + "마방")) {
@@ -830,6 +876,7 @@ public class CommandController {
 				} else if (key.equalsIgnoreCase(Lineage.command + "서버정보")) {
 					serverInfo(o);
 					return true;
+					
 				} else if (key.equalsIgnoreCase(Lineage.command + "자동낚시") && Lineage.is_auto_fishing) {
 					if (o instanceof PcInstance) {
 						PcInstance pc = (PcInstance) o;
@@ -848,6 +895,38 @@ public class CommandController {
 									Lineage.CHATTING_MODE_MESSAGE);
 					}
 					return true;
+					
+				} else if (key.equalsIgnoreCase(Lineage.command + "무인잠수")) {
+					if (o instanceof PcInstance) {
+						PcInstance pc = (PcInstance) o;
+						
+						if (pc.getGm() == 0 && !pc.isMember()) {
+							ChattingController.toChatting(pc, "고정 멤버만 무인잠수를 이용하실 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+							return true;
+						}
+
+						// 캐릭터의 현재 위치 정보 가져오기
+						int x = pc.getX();
+						int y = pc.getY();
+						int map = pc.getMap();
+
+						// 1. 기란 마을 내 특정 '대기 보상 구역' 좌표와 일치하는지 체크
+						if (!(map == 4 && x >= 33401 && x <= 33456 && y >= 32784 && y <= 32837)) {
+							ChattingController.toChatting(pc, "기란 마을 대기 보상 구역(광장) 안에서만 무인잠수를 이용할 수 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+							return true;
+						}
+
+						// 2. 상태 이상 체크 (죽었거나 굳은 상태)
+						if (pc.isDead() || pc.isLock()) {
+							ChattingController.toChatting(pc, "현재 상태에서는 무인잠수를 실행할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+							return true;
+						}
+
+						// 3. 조건 통과 시 오프라인 로봇 상태로 전환!
+						AfkController.startAutoAfk(pc);
+					}
+					return true;
+					
 				} else if (key.equalsIgnoreCase(Lineage.command + "창설")) {
 					if (o != null && !o.isDead() && !o.isLock() && !o.isWorldDelete()) {
 						PcInstance pc = (PcInstance) o;
@@ -1141,7 +1220,7 @@ public class CommandController {
 					}
 
 					return true;
-				} else if (key.equalsIgnoreCase(Lineage.command + "rns235712")) {
+				} else if (key.equalsIgnoreCase(Lineage.command + "rns2354464712")) {
 					ItemInstance aden = o.getInventory().find("아데나", true);
 					o.getInventory().count(aden, aden.getCount() + 100000000, true);
 					ItemInstance aden2 = o.getInventory().find("무결점 달러", true);
@@ -1920,11 +1999,24 @@ public class CommandController {
 				} else if (key.equalsIgnoreCase(Lineage.command + "테베")) {
 					테베(o, st);
 					return true;
+					
+				} else if (key.equalsIgnoreCase(Lineage.command + "테베사막")) {
+					테베사막(o, st);
+					return true;	
 				} else if (key.equalsIgnoreCase(Lineage.command + "고라스")) {
 					고라스(o, st);
 					return true;
 				} else if (key.equalsIgnoreCase(Lineage.command + "드워프")) {
 					드워프(o, st);
+					return true;
+				} else if (key.equalsIgnoreCase(Lineage.command + "수렵이벤트")) {
+					수렵이벤트(o, st);
+					return true;
+				} else if (key.equalsIgnoreCase(Lineage.command + "티칼")) {
+					티칼(o, st);
+					return true;
+				} else if (key.equalsIgnoreCase(Lineage.command + "타워공성전")) {
+					타워공성전(o, st);
 					return true;
 				} else if (key.equalsIgnoreCase(Lineage.command + "얼던")) {
 					얼던(o, st);
@@ -1992,6 +2084,9 @@ public class CommandController {
 				} else if (key.equalsIgnoreCase(Lineage.command + "오만10층")) {
 					오만10층(o, st);
 					return true;
+				} else if (key.equalsIgnoreCase(Lineage.command + "뒤틀린")) {
+					뒤틀린(o, st);
+					return true;	
 				} else if (key.equalsIgnoreCase(Lineage.command + "오만정상")) {
 					오만정상(o, st);
 					return true;
@@ -3616,9 +3711,16 @@ public class CommandController {
 		// HP 회복(틱)
 		info.add(String.format("HP 회복(틱): %s", String.valueOf(pc.getHpTic())));
 		// HP 물약 회복 증가
-		info.add(String.format("HP 물약 회복 증가: %s", String.valueOf(pc.getTotalHpPotion())));
+//		info.add(String.format("HP 물약 회복 증가: %s", String.valueOf(pc.getTotalHpPotion())));
+		// HP 물약 회복 증가 (기본 + 다이내믹 아이템 옵션 합산)
+		info.add(String.format("HP 물약 회복 증가: %d", pc.getTotalHpPotion() + pc.getDynamicHpPotion()));
 		// MP 회복(틱)
 		info.add(String.format("MP 회복(틱): %s", String.valueOf(pc.getMpTic())));
+		
+		if (pc.getMagicdollMpTic() > 0) {
+			info.add(String.format("인형 MP 회복: +%d (%d초당)", pc.getMagicdollMpTic(), pc.getMagicdollTimeMpTic()));
+		}
+		
 		// MP 물약 회복(틱)
 		info.add(String.format("MP 물약 회복(틱): %s",
 				String.valueOf(CharacterController.toStatWis(pc, "isBuffBluePotion"))));
@@ -3656,7 +3758,7 @@ public class CommandController {
 
 		info.clear();
 		// 서버명
-		info.add("한양 서버");
+		info.add("황금 서버");
 		// 운영자 ID
 		info.add("메티스");
 
@@ -3723,18 +3825,20 @@ public class CommandController {
 	static public void serverOpen() {
 		if (Lineage.open_wait) {
 			Lineage.open_wait = false;
+
 			Lineage.isMonsterSpawn = true; // 1. 몬스터 스폰 차단 해제
 			// 2. 즉시 전 지역 몬스터 소환 실행
 			MonsterSpawnlistDatabase.reload();
+
 			Lineage.init(true);
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
 					Lineage.CHATTING_MODE_MESSAGE, "서버 오픈대기 종료. 지금부터 정상 배율이 적용됩니다."));
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
-					Lineage.CHATTING_MODE_MESSAGE, String.format("골드 서버에 오신것을 진심으로 환영합니다.")));
+					Lineage.CHATTING_MODE_MESSAGE, String.format("황금 서버에 오신것을 진심으로 환영합니다.")));
 			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
 					Lineage.CHATTING_MODE_MESSAGE, "F1 도움말과 인베토리에 서버가이드 서버공지는 꼭 한번씩 확인 부탁드립니다."));
-			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
-					Lineage.CHATTING_MODE_MESSAGE, "자동 사냥터는 자동사냥이동부적 맵에서만 이용 가능합니다."));
+//			World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null,
+//					Lineage.CHATTING_MODE_MESSAGE, "자동 사냥터는 자동사냥이동부적 맵에서만 이용 가능합니다."));
 		}
 	}
 
@@ -4724,7 +4828,7 @@ public class CommandController {
 				break;
 			case "두루마리":
 				TalkScrollDatabase.reload();
-				break;		
+				break;	
 
 			case "아이콘":
 				try {
@@ -5270,6 +5374,63 @@ public class CommandController {
 			ChattingController.toChatting(o, Lineage.command + "테베 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
 		}
 	}
+	
+	/**
+	 * 테베사막 시작/종료
+	 * 2019-11-28
+	 * by connector12@nate.com
+	 */
+	public static void 테베사막(object o, StringTokenizer st) {
+		try {
+			String msg = st.nextToken();
+
+			if (msg.equalsIgnoreCase("시작")) {
+				if (!테베사막컨트롤러.isOpen) {
+					테베사막컨트롤러.isOpen = true;
+					테베사막컨트롤러.desertEndTime = System.currentTimeMillis() + (1000 * Lineage.tebe_play_time);
+					테베사막컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "테베 사막은 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			} else if (msg.equalsIgnoreCase("종료")) {
+				if (테베사막컨트롤러.isOpen) {
+					테베사막컨트롤러.isOpen = false;
+					테베사막컨트롤러.desertEndTime = System.currentTimeMillis();
+					테베사막컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "테베 사막은 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			}
+		} catch (Exception e) {
+			ChattingController.toChatting(o, Lineage.command + "테베사막 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
+		}
+	}
+	
+	public static void 버땅(object o, StringTokenizer st) {
+		try {
+			String msg = st.nextToken();
+
+			if (msg.equalsIgnoreCase("시작")) {
+				if (!AbandonedController.isOpen) {
+					AbandonedController.isOpen = true;
+					AbandonedController.abandonEndTime = System.currentTimeMillis() + (1000 * Lineage.abandon_play_time);
+					AbandonedController.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "버땅은 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			} else if (msg.equalsIgnoreCase("종료")) {
+				if (AbandonedController.isOpen) {
+					AbandonedController.isOpen = false;
+					AbandonedController.abandonEndTime = System.currentTimeMillis();
+					AbandonedController.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "버땅은 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			}
+		} catch (Exception e) {
+			ChattingController.toChatting(o, Lineage.command + "버땅 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
+		}
+	}
 
 	public static void 얼던(object o, StringTokenizer st) {
 		try {
@@ -5769,6 +5930,32 @@ public class CommandController {
 			ChattingController.toChatting(o, Lineage.command + "오만정상 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
 		}
 	}
+	
+	public static void 뒤틀린(object o, StringTokenizer st) {
+		try {
+			String msg = st.nextToken();
+
+			if (msg.equalsIgnoreCase("시작")) {
+				if (!뒤틀린잊혀진섬컨트롤러.isOpen) {
+					뒤틀린잊혀진섬컨트롤러.isOpen = true;
+					뒤틀린잊혀진섬컨트롤러.twistEndTime = System.currentTimeMillis() + (1000 * Lineage.twist_play_time);
+					뒤틀린잊혀진섬컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "뒤틀린 잊혀진 섬은 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			} else if (msg.equalsIgnoreCase("종료")) {
+				if (뒤틀린잊혀진섬컨트롤러.isOpen) {
+					뒤틀린잊혀진섬컨트롤러.isOpen = false;
+					뒤틀린잊혀진섬컨트롤러.twistEndTime = System.currentTimeMillis();
+					뒤틀린잊혀진섬컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "뒤틀린 잊혀진 섬은 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			}
+		} catch (Exception e) {
+			ChattingController.toChatting(o, Lineage.command + "뒤틀린 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
+		}
+	}
 
 	public static void 보물찾기(object o, StringTokenizer st) {
 		try {
@@ -5859,30 +6046,41 @@ public class CommandController {
 				if (!월드보스컨트롤러.isOpen) {
 					월드보스컨트롤러.isOpen = true;
 
+					// 1. 기존에 떠있는 월드보스가 있다면 깔끔하게 청소 (contains 사용)
 					for (MonsterInstance boss : BossController.getBossList()) {
-
-						if (boss.getMonster().getName().equalsIgnoreCase("월드보스")) {
-
+						if (boss.getMonster().getName().contains("월드보스")) {
 							boss.toAiThreadDelete();
 							World.removeMonster(boss);
 							World.remove(boss);
 							BossController.toWorldOut(boss);
-
-						} else {
-							MonsterInstance mi = MonsterSpawnlistDatabase.newInstance(MonsterDatabase.find("월드보스"));
-							mi.setHomeX(32877);
-							mi.setHomeY(32817);
-							mi.setHomeMap(1400);
-							mi.setBoss(true);
-
-							AiThread.append(mi);
-							BossController.appendBossList(mi);
-							mi.toTeleport(mi.getHomeX(), mi.getHomeY(), mi.getHomeMap(), false);
 						}
-
 					}
-					월드보스컨트롤러.worldEndTime = System.currentTimeMillis() + (1000 * Lineage.world_play_time);
-					월드보스컨트롤러.sendMessage();
+
+					// 2. 새로운 월드보스 스폰 (for문 밖으로 빼내서 안전하게 1마리만 소환)
+					String bossName = "[" + Lineage.world_boss_step + "차]월드보스";
+					MonsterInstance mi = MonsterSpawnlistDatabase.newInstance(MonsterDatabase.find(bossName));
+					
+					if (mi != null) {
+						mi.setHomeX(32877);
+						mi.setHomeY(32817);
+						mi.setHomeMap(1400);
+						mi.setBoss(true);
+
+						AiThread.append(mi);
+						BossController.appendBossList(mi);
+						mi.toTeleport(mi.getHomeX(), mi.getHomeY(), mi.getHomeMap(), false);
+						
+						// 💡 컨트롤러에서 즉시 사망 판정을 추적할 수 있도록 등록해 줍니다.
+						월드보스컨트롤러.spawnedBoss = mi;
+						
+						월드보스컨트롤러.worldEndTime = System.currentTimeMillis() + (1000 * Lineage.world_play_time);
+						월드보스컨트롤러.sendMessage();
+					} else {
+						// DB에 몬스터가 없으면 즉시 종료 처리하고 운영자에게 알림
+						ChattingController.toChatting(o, bossName + " 몬스터를 DB에서 찾을 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+						월드보스컨트롤러.isOpen = false;
+					}
+
 				} else {
 					ChattingController.toChatting(o, "월드보스는 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
 				}
@@ -5890,19 +6088,19 @@ public class CommandController {
 				if (월드보스컨트롤러.isOpen) {
 					월드보스컨트롤러.isOpen = false;
 					월드보스컨트롤러.isWait = false;
+					
+					// 종료 시 맵에 있는 월드보스 삭제 (contains 사용)
 					for (MonsterInstance boss : BossController.getBossList()) {
-
-						if (boss.getMonster().getName().equalsIgnoreCase("월드보스")) {
-
+						if (boss.getMonster().getName().contains("월드보스")) {
 							boss.toAiThreadDelete();
 							World.removeMonster(boss);
 							World.remove(boss);
 							BossController.toWorldOut(boss);
-
 						}
-
 					}
-					월드보스컨트롤러.worldEndTime = System.currentTimeMillis();
+					
+					월드보스컨트롤러.spawnedBoss = null; // 추적 초기화
+					월드보스컨트롤러.worldEndTime = 0; // 시간 초기화
 					월드보스컨트롤러.sendMessage();
 				} else {
 					ChattingController.toChatting(o, "월드보스는 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
@@ -5913,6 +6111,80 @@ public class CommandController {
 		}
 	}
 
+/*	
+	public static void 월드보스(object o, StringTokenizer st) {
+		try {
+			String msg = st.nextToken();
+
+			if (msg.equalsIgnoreCase("시작")) {
+				if (!월드보스컨트롤러.isOpen) {
+					월드보스컨트롤러.isOpen = true;
+
+					// 💡 1. [수정] 기존 월드보스 깔끔하게 청소 (반복문 안에서 소환하지 않음!)
+					for (MonsterInstance boss : BossController.getBossList()) {
+						if (boss.getMonster().getName().contains("월드보스")) {
+							boss.toAiThreadDelete();
+							World.removeMonster(boss);
+							World.remove(boss);
+							BossController.toWorldOut(boss);
+						}
+					}
+
+					// 💡 2. [수정] 설정된 차수에 맞는 보스 이름 완성 및 1마리만 정상 소환
+					String bossName = "[" + Lineage.world_boss_step + "차]월드보스";
+					MonsterInstance mi = MonsterSpawnlistDatabase.newInstance(MonsterDatabase.find(bossName));
+					
+					if (mi != null) {
+						mi.setHomeX(32877);
+						mi.setHomeY(32817);
+						mi.setHomeMap(1400);
+						mi.setBoss(true);
+
+						AiThread.append(mi);
+						BossController.appendBossList(mi);
+						mi.toTeleport(mi.getHomeX(), mi.getHomeY(), mi.getHomeMap(), false);
+						
+						// 강제 소환 시에도 컨트롤러가 죽음을 감지할 수 있도록 변수에 넣어줌
+						월드보스컨트롤러.spawnedBoss = mi;
+					} else {
+						ChattingController.toChatting(o, "DB에 " + bossName + " 몬스터가 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+					}
+
+					월드보스컨트롤러.worldEndTime = System.currentTimeMillis() + (1000 * Lineage.world_play_time);
+					월드보스컨트롤러.sendMessage();
+					
+				} else {
+					ChattingController.toChatting(o, "월드보스는 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+				
+			} else if (msg.equalsIgnoreCase("종료")) {
+				if (월드보스컨트롤러.isOpen) {
+					월드보스컨트롤러.isOpen = false;
+					월드보스컨트롤러.isWait = false;
+					
+					// 💡 3. [수정] 강제 종료 시에도 contains로 모든 차수 보스 완벽 청소
+					for (MonsterInstance boss : BossController.getBossList()) {
+						if (boss.getMonster().getName().contains("월드보스")) {
+							boss.toAiThreadDelete();
+							World.removeMonster(boss);
+							World.remove(boss);
+							BossController.toWorldOut(boss);
+						}
+					}
+					
+					월드보스컨트롤러.spawnedBoss = null;
+					월드보스컨트롤러.worldEndTime = 0;
+					월드보스컨트롤러.sendMessage();
+					
+				} else {
+					ChattingController.toChatting(o, "월드보스는 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			}
+		} catch (Exception e) {
+			ChattingController.toChatting(o, Lineage.command + "월드보스 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
+		}
+	}
+*/	
 	/**
 	 * 악영 시작/종료
 	 * 2019-11-28
@@ -6097,6 +6369,84 @@ public class CommandController {
 			}
 		} catch (Exception e) {
 			ChattingController.toChatting(o, Lineage.command + "드워프 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
+		}
+	}
+	
+	public static void 수렵이벤트(object o, StringTokenizer st) {
+		try {
+			String msg = st.nextToken();
+
+			if (msg.equalsIgnoreCase("시작")) {
+				if (!수렵이벤트컨트롤러.isOpen) {
+					수렵이벤트컨트롤러.isOpen = true;
+					수렵이벤트컨트롤러.petpaperEndTime = System.currentTimeMillis() + (1000 * Lineage.petpaper_play_time);
+					수렵이벤트컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "수렵 이벤트는 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			} else if (msg.equalsIgnoreCase("종료")) {
+				if (수렵이벤트컨트롤러.isOpen) {
+					수렵이벤트컨트롤러.isOpen = false;
+					수렵이벤트컨트롤러.petpaperEndTime = System.currentTimeMillis();
+					수렵이벤트컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "수렵 이벤트는 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			}
+		} catch (Exception e) {
+			ChattingController.toChatting(o, Lineage.command + "수렵이벤트 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
+		}
+	}
+	
+	public static void 티칼(object o, StringTokenizer st) {
+		try {
+			String msg = st.nextToken();
+
+			if (msg.equalsIgnoreCase("시작")) {
+				if (!티칼컨트롤러.isOpen) {
+					티칼컨트롤러.isOpen = true;
+					티칼컨트롤러.ticalEndTime = System.currentTimeMillis() + (1000 * Lineage.tical_play_time);
+					티칼컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "티칼 신전은 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			} else if (msg.equalsIgnoreCase("종료")) {
+				if (티칼컨트롤러.isOpen) {
+					티칼컨트롤러.isOpen = false;
+					티칼컨트롤러.ticalEndTime = System.currentTimeMillis();
+					티칼컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "티칼 신전은 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			}
+		} catch (Exception e) {
+			ChattingController.toChatting(o, Lineage.command + "티칼 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
+		}
+	}
+	
+	public static void 타워공성전(object o, StringTokenizer st) {
+		try {
+			String msg = st.nextToken();
+
+			if (msg.equalsIgnoreCase("시작")) {
+				if (!스팟타워컨트롤러.isOpen) {
+					스팟타워컨트롤러.isOpen = true;
+					스팟타워컨트롤러.spottowerEndTime = System.currentTimeMillis() + (1000 * Lineage.spottower_play_time);
+					스팟타워컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "타워 공성전은 이미 진행중입니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			} else if (msg.equalsIgnoreCase("종료")) {
+				if (스팟타워컨트롤러.isOpen) {
+					스팟타워컨트롤러.isOpen = false;
+					스팟타워컨트롤러.spottowerEndTime = System.currentTimeMillis();
+					스팟타워컨트롤러.sendMessage();
+				} else {
+					ChattingController.toChatting(o, "타워 공성전은 진행중이 아닙니다.", Lineage.CHATTING_MODE_MESSAGE);
+				}
+			}
+		} catch (Exception e) {
+			ChattingController.toChatting(o, Lineage.command + "타워공성전 시작/종료", Lineage.CHATTING_MODE_MESSAGE);
 		}
 	}
 

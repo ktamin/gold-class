@@ -1,5 +1,6 @@
 package lineage.world.object.item.scroll;
 
+import all_night.Lineage_Balance; // 💡 밸런스 콘피그 연동을 위해 추가
 import lineage.network.packet.BasePacketPooling;
 import lineage.network.packet.ClientBasePacket;
 import lineage.network.packet.server.S_InventoryCount;
@@ -46,11 +47,11 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
             return;
         }
 
-        // 이미 최종 단수(최대 단) 체크
-        if (weapon.getEnEarth() >= Lineage.danlevel ||
-                weapon.getEnWater() >= Lineage.danlevel ||
-                weapon.getEnFire() >= Lineage.danlevel ||
-                weapon.getEnWind() >= Lineage.danlevel) {
+     // 이미 최종 단수(최대 단) 체크
+        if (weapon.getEnEarth() >= Lineage_Balance.danlevel ||
+                weapon.getEnWater() >= Lineage_Balance.danlevel ||
+                weapon.getEnFire() >= Lineage_Balance.danlevel ||
+                weapon.getEnWind() >= Lineage_Balance.danlevel) {
             ChattingController.toChatting(cha, "더 이상 속성 강화가 불가능합니다.", 20);
             return;
         }
@@ -103,20 +104,37 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
             }
 
             int chance = chanceByStep(curStep);
-            int roll = Util.random(1, 10000);
+            int roll = Util.random(1, 100);
             boolean success = (chance >= roll);
 
+            String afterElem = beforeElem;
+            int afterStep = curStep;
+
             if (success) {
-                weapon.setEnWind(curStep + 1);
+                afterStep = curStep + 1;
+                weapon.setEnWind(afterStep);
+                afterElem = "풍령";
                 ChattingController.toChatting(cha, "무기에 속성 부여 성공.", 20);
             } else {
-                ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                // 💡 실패 시 페널티 적용 로직
+                if (Lineage_Balance.elemental_fail_penalty == 1) { // 초기화
+                    afterStep = 0;
+                    weapon.setEnWind(0);
+                    afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성이 초기화되었습니다.", 20);
+                } else if (Lineage_Balance.elemental_fail_penalty == 2 && curStep > 0) { // 하락
+                    afterStep = curStep - 1;
+                    weapon.setEnWind(afterStep);
+                    if (afterStep == 0) afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성 단계가 하락했습니다.", 20);
+                } else { // 0: 유지
+                    ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                }
             }
 
             appendElementLog(cha, scrollName, itemName, itemEnchant,
                     beforeElem, beforeStep,
-                    success ? "풍령" : beforeElem,
-                    success ? beforeStep + 1 : beforeStep,
+                    afterElem, afterStep,
                     success, chance, roll);
         }
 
@@ -143,17 +161,34 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
             int roll = Util.random(1, 100);
             boolean success = (chance >= roll);
 
+            String afterElem = beforeElem;
+            int afterStep = curStep;
+
             if (success) {
-                weapon.setEnEarth(curStep + 1);
+                afterStep = curStep + 1;
+                weapon.setEnEarth(afterStep);
+                afterElem = "지령";
                 ChattingController.toChatting(cha, "무기에 속성 부여 성공.", 20);
             } else {
-                ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                // 💡 실패 시 페널티 적용 로직
+                if (Lineage_Balance.elemental_fail_penalty == 1) { // 초기화
+                    afterStep = 0;
+                    weapon.setEnEarth(0);
+                    afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성이 초기화되었습니다.", 20);
+                } else if (Lineage_Balance.elemental_fail_penalty == 2 && curStep > 0) { // 하락
+                    afterStep = curStep - 1;
+                    weapon.setEnEarth(afterStep);
+                    if (afterStep == 0) afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성 단계가 하락했습니다.", 20);
+                } else { // 0: 유지
+                    ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                }
             }
 
             appendElementLog(cha, scrollName, itemName, itemEnchant,
                     beforeElem, beforeStep,
-                    success ? "지령" : beforeElem,
-                    success ? beforeStep + 1 : beforeStep,
+                    afterElem, afterStep,
                     success, chance, roll);
         }
 
@@ -180,17 +215,34 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
             int roll = Util.random(1, 100);
             boolean success = (chance >= roll);
 
+            String afterElem = beforeElem;
+            int afterStep = curStep;
+
             if (success) {
-                weapon.setEnWater(curStep + 1);
+                afterStep = curStep + 1;
+                weapon.setEnWater(afterStep);
+                afterElem = "수령";
                 ChattingController.toChatting(cha, "무기에 속성 부여 성공.", 20);
             } else {
-                ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                // 💡 실패 시 페널티 적용 로직
+                if (Lineage_Balance.elemental_fail_penalty == 1) { // 초기화
+                    afterStep = 0;
+                    weapon.setEnWater(0);
+                    afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성이 초기화되었습니다.", 20);
+                } else if (Lineage_Balance.elemental_fail_penalty == 2 && curStep > 0) { // 하락
+                    afterStep = curStep - 1;
+                    weapon.setEnWater(afterStep);
+                    if (afterStep == 0) afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성 단계가 하락했습니다.", 20);
+                } else { // 0: 유지
+                    ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                }
             }
 
             appendElementLog(cha, scrollName, itemName, itemEnchant,
                     beforeElem, beforeStep,
-                    success ? "수령" : beforeElem,
-                    success ? beforeStep + 1 : beforeStep,
+                    afterElem, afterStep,
                     success, chance, roll);
         }
 
@@ -217,17 +269,34 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
             int roll = Util.random(1, 100);
             boolean success = (chance >= roll);
 
+            String afterElem = beforeElem;
+            int afterStep = curStep;
+
             if (success) {
-                weapon.setEnFire(curStep + 1);
+                afterStep = curStep + 1;
+                weapon.setEnFire(afterStep);
+                afterElem = "화령";
                 ChattingController.toChatting(cha, "무기에 속성 부여 성공.", 20);
             } else {
-                ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                // 💡 실패 시 페널티 적용 로직
+                if (Lineage_Balance.elemental_fail_penalty == 1) { // 초기화
+                    afterStep = 0;
+                    weapon.setEnFire(0);
+                    afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성이 초기화되었습니다.", 20);
+                } else if (Lineage_Balance.elemental_fail_penalty == 2 && curStep > 0) { // 하락
+                    afterStep = curStep - 1;
+                    weapon.setEnFire(afterStep);
+                    if (afterStep == 0) afterElem = "-";
+                    ChattingController.toChatting(cha, "속성 부여에 실패하여 속성 단계가 하락했습니다.", 20);
+                } else { // 0: 유지
+                    ChattingController.toChatting(cha, "무기에 속성 부여 실패.", 20);
+                }
             }
 
             appendElementLog(cha, scrollName, itemName, itemEnchant,
                     beforeElem, beforeStep,
-                    success ? "화령" : beforeElem,
-                    success ? beforeStep + 1 : beforeStep,
+                    afterElem, afterStep,
                     success, chance, roll);
         }
 
@@ -254,15 +323,15 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
     private int chanceByStep(int step) {
         switch (step) {
             case 0:
-                return Lineage.dan1;
+                return Lineage_Balance.dan1;
             case 1:
-                return Lineage.dan2;
+                return Lineage_Balance.dan2;
             case 2:
-                return Lineage.dan3;
+                return Lineage_Balance.dan3;
             case 3:
-                return Lineage.dan4;
+                return Lineage_Balance.dan4;
             case 4:
-                return Lineage.dan5;
+                return Lineage_Balance.dan5;
             default:
                 return 0;
         }
@@ -353,5 +422,31 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
                 "success|" + success,
                 "chance|" + chance,
                 "roll|" + roll);
+        
+     // =========================================================
+     		// 💡 GUI 창 (인첸트 탭) 로그 기록 로직 시작
+     		// =========================================================
+     		try {
+     			final String timeString = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+     			final String charName = cha.getName();
+     			final String resultStr = success ? "성공" : "실패";
+     			
+     			// GUI 화면에 출력될 깔끔한 메시지 구성
+     			final String guiLogMsg = String.format("[%s] [속성 %s]\t [캐릭터: %s]\t 대상: [+%d %s]\t [%s %d단 -> %s %d단] (확률:%d%% / 주사위:%d)", 
+     					timeString, resultStr, charName, itemEnchant, itemName, beforeElem, beforeStep, afterElem, afterStep, chance, roll);
+
+     			// GUI 스레드에 안전하게 로그 전송
+     			if (lineage.gui.GuiMain.display != null && !lineage.gui.GuiMain.display.isDisposed()) {
+     				lineage.gui.GuiMain.display.asyncExec(new Runnable() {
+     					public void run() { 
+     						if (lineage.gui.GuiMain.getViewComposite() != null && lineage.gui.GuiMain.getViewComposite().getEnchantComposite() != null) {
+     							lineage.gui.GuiMain.getViewComposite().getEnchantComposite().toLog(guiLogMsg); 
+     						}
+     					}
+     				});
+     			}
+     		} catch (Exception e) {
+     			// GUI 로깅 중 에러 발생 시 무시 (안전 장치)
     }
+}
 }

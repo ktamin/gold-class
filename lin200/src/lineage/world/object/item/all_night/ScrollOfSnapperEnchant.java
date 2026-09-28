@@ -44,7 +44,7 @@ public class ScrollOfSnapperEnchant extends ItemInstance {
             // 3. 단계별 확률 가져오기 (룸티스와 별개의 밸런스값이 있다면 수정 가능)
             double chance = 0;
             int currentEnLevel = targetItem.getEnLevel();
- /*           
+            
             switch (currentEnLevel) {
                 case 0: chance = Lineage_Balance.snapper_enchant_prob0; break;
                 case 1: chance = Lineage_Balance.snapper_enchant_prob1; break;
@@ -58,7 +58,7 @@ public class ScrollOfSnapperEnchant extends ItemInstance {
                 case 9: chance = Lineage_Balance.snapper_enchant_prob9; break;
                 default: chance = 0; break;
             }
-*/
+
             // 4. 주문서 먼저 1개 소모
             cha.getInventory().count(this, getCount() - 1, true);
 

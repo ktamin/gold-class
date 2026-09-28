@@ -32,7 +32,7 @@ import lineage.world.object.npc.시세검색;
 
 public class PcMarketController {
 
-	static private Map<Long, PcShopInstance> shop_list;
+	public static Map<Long, PcShopInstance> shop_list;
 	static public object marketPriceNPC;
 
 	static public void init(Connection con) {
@@ -76,6 +76,15 @@ public class PcMarketController {
 				s.setItem(ItemDatabase.find(rs.getString("item_name")));
 				s.setInvItemEn(rs.getInt("en_level"));
 				s.setInvItemBress(rs.getInt("bless"));
+				s.setInvItemEnFire(rs.getInt("enfire")); 
+				s.setInvItemEnWater(rs.getInt("enwater")); 
+				s.setInvItemEnWind(rs.getInt("enwind")); 
+				s.setInvItemEnEarth(rs.getInt("enearth")); 
+				s.setInvDolloptionA(rs.getInt("dolloption_a"));
+				s.setInvDolloptionB(rs.getInt("dolloption_b"));
+				s.setInvDolloptionC(rs.getInt("dolloption_c"));
+				s.setInvDolloptionD(rs.getInt("dolloption_d"));
+				s.setInvDolloptionE(rs.getInt("dolloption_e"));
 				s.setInvItemDefinite(rs.getString("definite").equalsIgnoreCase("true"));
 				pc_shop.appendItem(s.getInvItemObjectId(), s);
 			}
@@ -159,7 +168,8 @@ public class PcMarketController {
 			if (Lineage.is_market_only_aden)
 				ChattingController.toChatting(pc, "\\fRex) .상점 추가 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
 			else
-				ChattingController.toChatting(pc, "\\fRex) .상점 추가 ['아덴' or '달러'] 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
+//			ChattingController.toChatting(pc, "\\fRex) .상점 추가 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
+			ChattingController.toChatting(pc, "\\fRex) .상점 추가 ['아덴' or '코인'] 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);	
 			ChattingController.toChatting(pc, "\\fRex) .상점 목록", Lineage.CHATTING_MODE_MESSAGE);
 			ChattingController.toChatting(pc, "\\fRex) .상점 홍보 홍보멘트", Lineage.CHATTING_MODE_MESSAGE);
 			ChattingController.toChatting(pc, "\\fRex) .상점 종료", Lineage.CHATTING_MODE_MESSAGE);
@@ -204,6 +214,9 @@ public class PcMarketController {
 					return;
 				}
 				
+				// [수정 핵심] 재화 타입을 묻지 않고 무조건 "아데나"로 고정
+//				String aden = "아데나";
+				
 				String aden = null;
 				
 				if (Lineage.is_market_only_aden) {
@@ -212,20 +225,22 @@ public class PcMarketController {
 					String adenType = st.nextToken();
 					if (adenType.equalsIgnoreCase("아덴"))
 						aden = "아데나";
-					else if (adenType.equalsIgnoreCase("달러"))
-						aden = "달러";
+					else if (adenType.equalsIgnoreCase("코인"))
+						aden = "코인";
 					else {
-						ChattingController.toChatting(pc, "\\fRex) .상점 추가 ['아덴' or '달러'] 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
+						ChattingController.toChatting(pc, "\\fRex) .상점 추가 ['아덴' or '코인'] 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
 						return;
 					}
 				}
 					
+				// 첫 번째 입력값을 가격(price)으로 읽음
 				long price = Long.valueOf(st.nextToken());
 				if (price < 1 || price > 2000000000) {
 					ChattingController.toChatting(pc, "\\fR가격이 잘못되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
 					return;
 				}
 				
+				// 두 번째 입력값을 수량(count)으로 읽음
 				long count = Long.valueOf(st.nextToken());
 				if (count < 1 || count > 2000000000) {
 					ChattingController.toChatting(pc, "\\fR수량이 잘못되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
@@ -239,9 +254,9 @@ public class PcMarketController {
 			}
 		} catch (Exception e) {
 			if (Lineage.is_market_only_aden)
-				ChattingController.toChatting(pc, "\\fRex) .상점 추가 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
+			    ChattingController.toChatting(pc, "\\fRex) .상점 추가 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
 			else
-				ChattingController.toChatting(pc, "\\fRex) .상점 추가 ['아덴' or '달러'] 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(pc, "\\fRex) .상점 추가 ['아덴' or '코인'] 판매가격 아이템수량", Lineage.CHATTING_MODE_MESSAGE);
 			return;
 		}
 	}
@@ -251,6 +266,7 @@ public class PcMarketController {
 	 * 2019-08-19
 	 * by connector12@nate.com
 	 */
+
 	static private void ment(PcInstance pc, StringTokenizer st, PcShopInstance pc_shop) {
 		StringBuffer sb = new StringBuffer();
 		while (st.hasMoreTokens()) {
@@ -262,7 +278,7 @@ public class PcMarketController {
 		updateShopRobot(pc_shop);
 		ChattingController.toChatting(pc, "\\fR\"" + sb.toString() + "\" 홍보멘트 설정", Lineage.CHATTING_MODE_MESSAGE);
 	}
-	
+
 	/**
 	 * 상점 종료.
 	 * 2019-08-19
@@ -288,6 +304,15 @@ public class PcMarketController {
 							temp.setBless(s.getInvItemBress());
 							temp.setEnLevel(s.getInvItemEn());
 							temp.setCount(s.getInvItemCount());
+							temp.setEnFire(s.getInvItemEnFire()); 	
+							temp.setEnWater(s.getInvItemEnWater()); 	
+							temp.setEnWind(s.getInvItemEnWind()); 	
+							temp.setEnEarth(s.getInvItemEnEarth()); 	
+							temp.setInvDolloptionA(s.getInvDolloptionA());
+							temp.setInvDolloptionB(s.getInvDolloptionB());
+							temp.setInvDolloptionC(s.getInvDolloptionC());
+							temp.setInvDolloptionD(s.getInvDolloptionD());
+							temp.setInvDolloptionE(s.getInvDolloptionE());
 							temp.setDefinite(true);
 							pc.getInventory().append(temp, true);
 						} else {
@@ -295,8 +320,18 @@ public class PcMarketController {
 								temp = ItemDatabase.newInstance(i);
 								temp.setObjectId(s.getInvItemObjectId() == 0 ? ServerDatabase.nextItemObjId() : s.getInvItemObjectId());
 								temp.setBless(s.getInvItemBress());
+						 
 								temp.setEnLevel(s.getInvItemEn());
 								temp.setDefinite(true);
+								temp.setEnFire(s.getInvItemEnFire()); 	
+								temp.setEnWater(s.getInvItemEnWater()); 	
+								temp.setEnWind(s.getInvItemEnWind()); 	
+								temp.setEnEarth(s.getInvItemEnEarth()); 	
+								temp.setInvDolloptionA(s.getInvDolloptionA());
+								temp.setInvDolloptionB(s.getInvDolloptionB());
+								temp.setInvDolloptionC(s.getInvDolloptionC());
+								temp.setInvDolloptionD(s.getInvDolloptionD());
+								temp.setInvDolloptionE(s.getInvDolloptionE());
 								pc.getInventory().append(temp, true);
 							}
 						}
@@ -371,7 +406,8 @@ public class PcMarketController {
 						if (s.getItem().getName().contains(itemName) && (!isEn || (isEn && s.getInvItemEn() == en)) && (!isBless || (isBless && s.getInvItemBress() == bless))) {
 							marketPrice mp = new marketPrice();
 							StringBuffer sb = new StringBuffer();
-
+							
+							String prefix = s.getAdenType().equalsIgnoreCase("코인") ? "[코인] " : "[아덴] ";
 							sb.append(String.format("%d. %s", index++, s.getInvItemBress() == 0 ? "(축) " : s.getInvItemBress() == 1 ? "" : "(저주) "));
 
 							if (s.getInvItemEn() > 0)
@@ -381,9 +417,9 @@ public class PcMarketController {
 
 							if (s.getInvItemCount() > 1)
 								sb.append(String.format("(%d)", s.getInvItemCount()));
-							
-							if(s.getAdenType().equalsIgnoreCase("달러")){
-								sb.append(String.format(" [판매 금액]: %s 달러", Util.changePrice(s.getPrice())));
+
+							if(s.getAdenType().equalsIgnoreCase("코인")){
+								sb.append(String.format(" [판매 금액]: %s 코인", Util.changePrice(s.getPrice())));
 							}else{
 								sb.append(String.format(" [판매 금액]: %s 아데나", Util.changePrice(s.getPrice())));
 							}
@@ -432,6 +468,31 @@ public class PcMarketController {
 			int idx = 1;
 
 			for (PcShop s : pc_shop.getShopList().values()) {
+				// 💡 [핵심] 화폐 종류에 따른 접두어 결정
+				String prefix = s.getAdenType().equalsIgnoreCase("코인") ? "[코인] " : "[아덴] ";
+				
+				// 기존 아이템명 앞에 prefix를 붙여서 출력!
+				shopList.add(String.format("%d. %s%s", idx++, prefix, Util.getItemNameToString(s.getItem().getName(), s.getInvItemBress(), s.getInvItemEn(), s.getInvItemCount())));
+				shopList.add(String.format("가격: %s %s", Util.changePrice(s.getPrice()), s.getAdenType()));
+			}
+
+			pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), pc, "pcShopList", null, shopList));
+		}
+	}
+/*	
+	static private void shopList(PcInstance pc, StringTokenizer st, PcShopInstance pc_shop) {
+		if (pc_shop != null && pc_shop.getShopList() != null) {		
+			if (pc_shop.getShopList().size() < 1) {
+				ChattingController.toChatting(pc, "\\fR판매중인 아이템이 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+				return;
+			}
+			
+			List<String> shopList = new ArrayList<String>();
+			shopList.clear();
+
+			int idx = 1;
+
+			for (PcShop s : pc_shop.getShopList().values()) {
 				shopList.add(String.format("%d. %s", idx++, Util.getItemNameToString(s.getItem().getName(), s.getInvItemBress(), s.getInvItemEn(), s.getInvItemCount())));
 				shopList.add(String.format("가격: %s %s", Util.changePrice(s.getPrice()), s.getAdenType()));
 			}
@@ -439,82 +500,106 @@ public class PcMarketController {
 			pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), pc, "pcShopList", null, shopList));
 		}
 	}
-
+*/
 	/**
-	 * PcInventory에서 아이템 사용요청 처리 구간 에서 호출해서 사용함. : 아이템 사용을 하기전에 상점판매목록에 갱신해야 되는지 확인함. : 성공 여부 리턴하여 그에따라 인벤토리아이템 처리요청구간을 수행함.
+	 * PcInventory에서 아이템 사용요청 처리 구간 에서 호출해서 사용함. 
+	 * 아이템 사용을 하기전에 상점판매목록에 갱신해야 되는지 확인함. 
+	 * 성공 여부 리턴하여 그에따라 인벤토리아이템 처리요청구간을 수행함.
 	 * 
 	 * @param pc
 	 * @param item
 	 * @return
 	 */
 	static public boolean isShopToAppend(PcInstance pc, ItemInstance item, long count) {
-		pc.toSender(S_ObjectLock.clone(BasePacketPooling.getPool(S_ObjectLock.class), 0x09));
 		// 초기화 안된거 무시.
-		PcShopInstance pc_shop = getShop(pc.getObjectId());
+		PcShopInstance pc_shop = shop_list.get(pc.getObjectId());
 		if (pc_shop == null)
 			return false;
 
 		// 더이상 등록할 공간이 없는건 일반 아이템 사용하듯 처리.
-		if (pc_shop.getItem(0L) == null)
+		if (pc_shop.list.get(0L) == null)
 			return false;
 
 		// 착용 한거 무시.
 		if (item.isEquipped()) {
-			pc_shop.removeItem(0L);
 			ChattingController.toChatting(pc, "\\fR사용중인 아이템은 등록할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			ChattingController.toChatting(pc, "\\fR판매등록이 취소되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			return true;
+			return false;
 		}
 
 		// 거래 안되는 아이템은 무시.
 		if (!item.getItem().isTrade() || item.getBless() < 0) {
-			pc_shop.removeItem(0L);
 			ChattingController.toChatting(pc, "\\fR거래가 불가능한 아이템 입니다.", Lineage.CHATTING_MODE_MESSAGE);
-			ChattingController.toChatting(pc, "\\fR판매등록이 취소되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			return true;
+			return false;
 		}
 
-		// 아데나 등록 못하도록 처리
-		if (item.getItem().getNameIdNumber() == 4) {
-			pc_shop.removeItem(0L);
-			ChattingController.toChatting(pc, "\\fR아데나는 판매할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			ChattingController.toChatting(pc, "\\fR판매등록이 취소되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			return true;
+		// =========================================================
+		// 💡 [추가 및 수정 1] 아데나 뿐만 아니라 '코인' 화폐도 판매품 등록 방지
+		// =========================================================
+		if (item.getItem().getNameIdNumber() == 4 || item.getItem().getName().equalsIgnoreCase("코인")) {
+			ChattingController.toChatting(pc, "\\fR화폐는 판매할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+			return false;
 		}
-	
-		PcShop s = pc_shop.getItem(0L);
-		pc_shop.removeItem(0L);
-		
-		if (count < s.getInvItemCount()) {
-			ChattingController.toChatting(pc, "\\fR판매등록할 아이템 수량이 부족합니다.", Lineage.CHATTING_MODE_MESSAGE);
-			ChattingController.toChatting(pc, "\\fR판매등록이 취소되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
-			return true;
-		}
-		
+		// =========================================================
+
+		PcShop s = pc_shop.list.remove(0L);
 		s.setItem(item.getItem());
-		s.setInvItemObjectId(item.getItem().isPiles() ? ServerDatabase.nextItemObjId() : item.getObjectId());
+
+		// =========================================================
+		// 💡 [추가 및 수정 2] 유저가 선택한 화폐 타입에 따라 s.setAdenType 지정!
+		// =========================================================
+		if (pc.getExchangeCurrencyType() == 1) {
+			s.setAdenType("코인");
+		} else {
+			s.setAdenType("아데나");
+		}
+		// =========================================================
+
+		if (pc_shop.list.get(item.getObjectId()) != null) {
+			s.setInvItemObjectId(ServerDatabase.nextItemObjId());
+		} else {
+			s.setInvItemObjectId(item.getObjectId());
+		}
+
+		if (count > item.getCount() || count < 0) {
+			count = item.getCount();
+		}
+
+		s.setInvItemCount(count);
 		s.setInvItemEn(item.getEnLevel());
 		s.setInvItemBress(item.getBless());
 		s.setInvItemDefinite(true);
-		pc_shop.appendItem(s.getInvItemObjectId(), s);
-		insertItem(pc, s);
+		s.setInvItemEnFire(item.getEnFire());  
+		s.setInvItemEnWater(item.getEnWater());  
+		s.setInvItemEnWind(item.getEnWind());  
+		s.setInvItemEnEarth(item.getEnEarth());  
+		s.setInvDolloptionA(item.getInvDolloptionA());
+		s.setInvDolloptionB(item.getInvDolloptionB());
+		s.setInvDolloptionC(item.getInvDolloptionC());
+		s.setInvDolloptionD(item.getInvDolloptionD());
+		s.setInvDolloptionE(item.getInvDolloptionE());
+
+		pc_shop.list.put(s.getInvItemObjectId(), s);
+		PcMarketController.insertItem(pc, s);
 		
-		String itemName = CharacterMarbleDatabase.getItemName(item);
-		if (itemName != null) {
-			ChattingController.toChatting(pc, String.format("개인상점: '%s' %s(%,d) 등록", itemName, s.getAdenType(), s.getPrice()), Lineage.CHATTING_MODE_MESSAGE);
+		if (count > 1) {
+			ChattingController.toChatting(pc, String.format("개인상점: '%s(%d)' 1개당 %s(%d) 등록", item.getItem().getName(),
+					count, s.getAdenType(), s.getPrice()), Lineage.CHATTING_MODE_MESSAGE);
 		} else {
-			if (count > 1)
-				ChattingController.toChatting(pc, String.format("개인상점: '%s(%,d)' 1개당 %s(%,d) 등록", item.getItem().getName(), s.getInvItemCount(), s.getAdenType(), s.getPrice()), Lineage.CHATTING_MODE_MESSAGE);
-			else {
-				if (item.getItem().getType1().equalsIgnoreCase("weapon") || item.getItem().getType1().equalsIgnoreCase("armor"))
-					ChattingController.toChatting(pc, String.format("개인상점: '+%d%s' %s(%,d) 등록", item.getEnLevel(), item.getItem().getName(), s.getAdenType(), s.getPrice()),
-							Lineage.CHATTING_MODE_MESSAGE);
-				else
-					ChattingController.toChatting(pc, String.format("개인상점: '%s' %s(%,d) 등록", item.getItem().getName(), s.getAdenType(), s.getPrice()), Lineage.CHATTING_MODE_MESSAGE);
-			}
+			if (item.getItem().getType1().equalsIgnoreCase("weapon")
+					|| item.getItem().getType1().equalsIgnoreCase("armor"))
+				ChattingController.toChatting(pc, String.format("개인상점: '+%d%s' %s(%d) 등록", item.getEnLevel(),
+						item.getItem().getName(), s.getAdenType(), s.getPrice()), Lineage.CHATTING_MODE_MESSAGE);
+			else
+				ChattingController.toChatting(pc,
+						String.format("개인상점: '%s' %s(%d) 등록", item.getItem().getName(), s.getAdenType(), s.getPrice()),
+						Lineage.CHATTING_MODE_MESSAGE);
 		}
-		
-		pc.getInventory().count(item, item.getCount() - s.getInvItemCount(), true);
+
+		pc.getInventory().count(item, item.getCount() - count, true);
+		pc.PcMarket_Count = 0;
+		pc.PcMarket_Step = 0;
+		// 💡 [선택사항] 등록 완료 후 화폐 상태를 다시 아데나(0)로 초기화
+		pc.setExchangeCurrencyType(0);
 		return true;
 	}
 	
@@ -608,7 +693,7 @@ public class PcMarketController {
 		
 		try {
 			con = DatabaseConnection.getLineage();
-			st = con.prepareStatement("INSERT INTO pc_shop SET pc_objId=?, pc_name=?, item_objId=?, item_name=?, bless=?, en_level=?, count=?, aden_type=?, price=?");
+			st = con.prepareStatement("INSERT INTO pc_shop SET pc_objId=?, pc_name=?, item_objId=?, item_name=?, bless=?, en_level=?, count=?, aden_type=?, price=? ,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=?");
 			st.setLong(1, pc.getObjectId());
 			st.setString(2, pc.getName());
 			st.setLong(3, s.getInvItemObjectId());
@@ -618,6 +703,15 @@ public class PcMarketController {
 			st.setLong(7, s.getInvItemCount());
 			st.setString(8, s.getAdenType());
 			st.setLong(9, s.getPrice());
+			st.setInt(10, s.getInvItemEnFire());
+			st.setInt(11, s.getInvItemEnWater());
+			st.setInt(12, s.getInvItemEnWind());
+			st.setInt(13, s.getInvItemEnEarth());
+			st.setLong(14, s.getInvDolloptionA());
+			st.setLong(15, s.getInvDolloptionB());
+			st.setLong(16, s.getInvDolloptionC());
+			st.setLong(17, s.getInvDolloptionD());
+			st.setLong(18, s.getInvDolloptionE());
 			st.executeUpdate();
 		} catch (Exception e) {
 			lineage.share.System.printf("%s : insertItem(PcInstance pc, PcShop s)\r\n", PcMarketController.class.toString());
@@ -638,15 +732,24 @@ public class PcMarketController {
 		
 		try {
 			con = DatabaseConnection.getLineage();
-			st = con.prepareStatement("UPDATE pc_shop SET pc_name=?, item_name=?, bless=?, en_level=?, count=?, aden_type=?, price=? WHERE item_objId=?");
+			st = con.prepareStatement("UPDATE pc_shop SET pc_name=?, item_name=?, bless=?, en_level=?, count=?, aden_type=?, price=?,enfire=?,enwater=?,enwind=?,enearth=?,dolloption_a=?,dolloption_b=?,dolloption_c=?,dolloption_d=?,dolloption_e=? WHERE item_objId=?");
 			st.setString(1, s.getPc().pc_name == null ? "" : s.getPc().pc_name);
 			st.setString(2, s.getItem().getName());
 			st.setInt(3, s.getInvItemBress());
 			st.setInt(4, s.getInvItemEn());
 			st.setLong(5, s.getInvItemCount());
 			st.setString(6, s.getAdenType());
-			st.setLong(7, s.getPrice());
-			st.setLong(8, s.getInvItemObjectId());
+			st.setLong(7, s.getPrice());  
+			st.setInt(8, s.getInvItemEnFire());
+			st.setInt(9, s.getInvItemEnWater());
+			st.setInt(10, s.getInvItemEnWind());
+			st.setInt(11, s.getInvItemEnEarth());
+			st.setLong(12, s.getInvDolloptionA());
+			st.setLong(13, s.getInvDolloptionB());
+			st.setLong(14, s.getInvDolloptionC());
+			st.setLong(15, s.getInvDolloptionD());
+			st.setLong(16, s.getInvDolloptionE());
+			st.setLong(17, s.getInvItemObjectId());
 			st.executeUpdate();
 		} catch (Exception e) {
 			lineage.share.System.printf("%s : updateItem(PcInstance pc, PcShop s)\r\n", PcMarketController.class.toString());

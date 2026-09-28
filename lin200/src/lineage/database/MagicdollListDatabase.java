@@ -224,7 +224,10 @@ public class MagicdollListDatabase {
 							pc.setMagicdollDeathKnight(enabled);
 							pc.setDynamicReduction(pc.getDynamicReduction() + 7);
 							pc.setDynamicExp(pc.getDynamicExp() + 0.25);
-							ChattingController.toChatting(pc, "데스나이트: 대미지 감소+7, 경험치 보너스+25%, 일정확률 헬파이어 발동", Lineage.CHATTING_MODE_MESSAGE);
+							pc.setDynamicHp(pc.getDynamicHp() + 200);
+							pc.setDynamicMr(pc.getDynamicMr() + 15);
+							pc.setDynamicStunResist(pc.getDynamicStunResist() + 0.05);
+							ChattingController.toChatting(pc, "데스나이트: 대미지 감소+7, 경험치 보너스+25%, HP+200, 스턴내성+5, Mr+15, 일정확률 헬파이어 발동", Lineage.CHATTING_MODE_MESSAGE);
 						} else if (mdl.getDollBuffType().equalsIgnoreCase("바란카")) {
 							pc.setMagicdollBaranka(enabled);
 							pc.setDynamicStunResist(pc.getDynamicStunResist() + 0.10);
@@ -345,7 +348,7 @@ public class MagicdollListDatabase {
 				pc.setDynamicExp(pc.getDynamicExp() + 0.1);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(5);
-				ChattingController.toChatting(pc, "군주:근거리 대미지+2, 근거리 명중+4, 근거리 치명타+2%,  64초당 MP 회복+5, 경험치 보너스+10%", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(pc, "군주:근거리 대미지+2, 근거리 명중+4, 근거리 치명타+2%, 64초당 MP 회복+5, 경험치 보너스+10%", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("기사")) {
 				pc.setDynamicAddDmg(pc.getDynamicAddDmg() + 2);
 				pc.setDynamicAddHit(pc.getDynamicAddHit() + 4);
@@ -353,7 +356,7 @@ public class MagicdollListDatabase {
 				pc.setDynamicExp(pc.getDynamicExp() + 0.1);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(5);
-				ChattingController.toChatting(pc, "기사: 근거리 대미지+2, 근거리 명중+4, 근거리 치명타+2%,  64초당 MP 회복+5, 경험치 보너스+10%", Lineage.CHATTING_MODE_MESSAGE);
+				ChattingController.toChatting(pc, "기사: 근거리 대미지+2, 근거리 명중+4, 근거리 치명타+2%, 64초당 MP 회복+5, 경험치 보너스+10%", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("요정")) {
 				pc.setDynamicAddDmgBow(pc.getDynamicAddDmgBow() + 2);
 				pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() + 4);
@@ -363,13 +366,13 @@ public class MagicdollListDatabase {
 				pc.setDynamicExp(pc.getDynamicExp() + 0.1);
 				ChattingController.toChatting(pc, "요정: 원거리 대미지+2, 원거리 명중+4, 원거리 치명타+2%, 64초당 MP 회복+5, 경험치 보너스+10%", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("마법사")) {
-				pc.setDynamicSp(pc.getDynamicSp() + 3);
+				pc.setDynamicSp(pc.getDynamicSp() + 2);
 				pc.setDynamicMagicHit(pc.getDynamicMagicHit() + 2);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(5);
 				pc.setDynamicExp(pc.getDynamicExp() + 0.1);
-				pc.setDynamicInt(pc.getDynamicInt() + 2);
-				ChattingController.toChatting(pc, "마법사: SP+3, 마법 명중+2, 64초당 MP 회복+5, 경험치 보너스+10%, INT+2", Lineage.CHATTING_MODE_MESSAGE);
+//				pc.setDynamicInt(pc.getDynamicInt() + 2);
+				ChattingController.toChatting(pc, "마법사: SP+2, 마법 명중+2, 64초당 MP 회복+5, 경험치 보너스+10%", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("다크엘프")) {
 				pc.setDynamicAddDmg(pc.getDynamicAddDmg() + 2);
 				pc.setDynamicAddHit(pc.getDynamicAddHit() + 4);
@@ -385,48 +388,48 @@ public class MagicdollListDatabase {
 				pc.setDynamicExp(pc.getDynamicExp() + 0.35);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(15);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 10);
-				ChattingController.toChatting(pc, "진 군주: 스턴내성+10,대미지 감소+8, 경험치 보너스+35%, 64초당 MP 회복+15, PvP 대미지+10", Lineage.CHATTING_MODE_MESSAGE);
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 5);
+				ChattingController.toChatting(pc, "진 군주: 스턴내성+10,대미지 감소+8, 경험치 보너스+35%, 64초당 MP 회복+15, PvP 대미지+5", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 기사")) {
-				pc.setDynamicAddDmg(pc.getDynamicAddDmg() + 8);
-				pc.setDynamicAddHit(pc.getDynamicAddHit() + 8);
+				pc.setDynamicAddDmg(pc.getDynamicAddDmg() + 6);
+				pc.setDynamicAddHit(pc.getDynamicAddHit() + 6);
 				pc.setDynamicCritical(pc.getDynamicCritical() + 5);
 				pc.setDynamicStunHit(pc.getDynamicStunHit() + 0.1);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(15);
 				pc.setDynamicExp(pc.getDynamicExp() + 0.2);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 10);
-				ChattingController.toChatting(pc, "진 기사: 근거리 대미지+8, 근거리 명중+8, 근거리 치명타+5%, 스턴 명중+10, 64초당 MP 회복+15, 경험치 보너스+20%, PvP 대미지+10", Lineage.CHATTING_MODE_MESSAGE);
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 5);
+				ChattingController.toChatting(pc, "진 기사: 근거리 대미지+6, 근거리 명중+6, 근거리 치명타+5%, 스턴 명중+10, 64초당 MP 회복+15, 경험치 보너스+20%, PvP 대미지+5", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 요정")) {
-				pc.setDynamicAddDmgBow(pc.getDynamicAddDmgBow() + 8);
-				pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() + 8);
+				pc.setDynamicAddDmgBow(pc.getDynamicAddDmgBow() + 6);
+				pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() + 6);
 				pc.setDynamicBowCritical(pc.getDynamicBowCritical() + 5);
 				pc.setDynamicStunResist(pc.getDynamicStunResist() + 0.08);
 				pc.setDynamicExp(pc.getDynamicExp() + 0.20);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(15);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 10);
-				ChattingController.toChatting(pc, "진 요정: 원거리 대미지+8, 원거리 명중+8, 원거리 치명타+5%, 스턴 내성+8, 64초당 MP 회복+15, 경험치 보너스+20%, PvP 대미지+10", Lineage.CHATTING_MODE_MESSAGE);
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 5);
+				ChattingController.toChatting(pc, "진 요정: 원거리 대미지+6, 원거리 명중+6, 원거리 치명타+5%, 스턴 내성+8, 64초당 MP 회복+15, 경험치 보너스+20%, PvP 대미지+5", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 마법사")) {
-				pc.setDynamicSp(pc.getDynamicSp() + 8);
-				pc.setDynamicMagicHit(pc.getDynamicMagicHit() + 8);
-				pc.setDynamicStunResist(pc.getDynamicStunResist() + 0.08);
+				pc.setDynamicSp(pc.getDynamicSp() + 6);
+				pc.setDynamicMagicHit(pc.getDynamicMagicHit() + 6);
+				pc.setDynamicStunResist(pc.getDynamicStunResist() + 0.1);
 				pc.setDynamicExp(pc.getDynamicExp() + 0.20);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(20);
-				pc.setDynamicInt(pc.getDynamicInt() + 4);
-				ChattingController.toChatting(pc, "진 마법사: SP+8, 마법 명중+8, 스턴 내성+8, 64초당 MP 회복+20, 경험치 보너스+20%, INT+4", Lineage.CHATTING_MODE_MESSAGE);
+//				pc.setDynamicInt(pc.getDynamicInt() + 4);
+				ChattingController.toChatting(pc, "진 마법사: SP+6, 마법 명중+6, 스턴 내성+10, 64초당 MP 회복+20, 경험치 보너스+20%", Lineage.CHATTING_MODE_MESSAGE);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 다크엘프")) {
-				pc.setDynamicAddDmg(pc.getDynamicAddDmg() + 8);
-				pc.setDynamicAddHit(pc.getDynamicAddHit() + 8);
-				pc.setDynamicCritical(pc.getDynamicCritical() + 5);
+				pc.setDynamicAddDmg(pc.getDynamicAddDmg() + 3);
+				pc.setDynamicAddHit(pc.getDynamicAddHit() + 3);
+				pc.setDynamicCritical(pc.getDynamicCritical() + 10);
 //				pc.setDynamicStunHit(pc.getDynamicStunHit() + 0.1);
 				pc.setDynamicStunResist(pc.getDynamicStunResist() + 0.1);
 				pc.setMagicdollTimeMpTic(64);
 				pc.setMagicdollMpTic(15);
 				pc.setDynamicExp(pc.getDynamicExp() + 0.2);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 10);
-				ChattingController.toChatting(pc, "진 다크엘프: 근거리 대미지+8, 근거리 명중+8, 근거리 치명타+5%, 스턴 내성+10, 64초당 MP 회복+15, 경험치 보너스+20%, PvP 대미지+10", Lineage.CHATTING_MODE_MESSAGE);	
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() + 5);
+				ChattingController.toChatting(pc, "진 다크엘프: 근거리 대미지+3, 근거리 명중+3, 근거리 치명타+10%, 스턴 내성+10, 64초당 MP 회복+15, 경험치 보너스+20%, PvP 대미지+5", Lineage.CHATTING_MODE_MESSAGE);	
 			}
 		} else {
 			// 1단계 마법인형
@@ -542,6 +545,9 @@ public class MagicdollListDatabase {
 				pc.setMagicdollDeathKnight(enabled);
 				pc.setDynamicReduction(pc.getDynamicReduction() - 7);
 				pc.setDynamicExp(pc.getDynamicExp() - 0.25);
+				pc.setDynamicHp(pc.getDynamicHp() - 200);
+				pc.setDynamicMr(pc.getDynamicMr() - 15);
+				pc.setDynamicStunResist(pc.getDynamicStunResist() - 0.05);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("바란카")) {
 				pc.setMagicdollBaranka(enabled);
 				pc.setDynamicStunResist(pc.getDynamicStunResist() - 0.10);
@@ -663,12 +669,12 @@ public class MagicdollListDatabase {
 				pc.setMagicdollMpTic(0);
 				pc.setDynamicExp(pc.getDynamicExp() - 0.1);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("마법사")) {
-				pc.setDynamicSp(pc.getDynamicSp() - 3);
+				pc.setDynamicSp(pc.getDynamicSp() - 2);
 				pc.setDynamicMagicHit(pc.getDynamicMagicHit() - 2);
 				pc.setMagicdollTimeMpTic(0);
 				pc.setMagicdollMpTic(0);
 				pc.setDynamicExp(pc.getDynamicExp() - 0.1);
-				pc.setDynamicInt(pc.getDynamicInt() - 2);
+//				pc.setDynamicInt(pc.getDynamicInt() - 2);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("다크엘프")) {
 				pc.setDynamicAddDmg(pc.getDynamicAddDmg() - 2);
 				pc.setDynamicAddHit(pc.getDynamicAddHit() - 4);
@@ -683,43 +689,43 @@ public class MagicdollListDatabase {
 				pc.setDynamicExp(pc.getDynamicExp() - 0.35);
 				pc.setMagicdollTimeMpTic(0);
 				pc.setMagicdollMpTic(0);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 10);
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 5);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 기사")) {
-				pc.setDynamicAddDmg(pc.getDynamicAddDmg() - 8);
-				pc.setDynamicAddHit(pc.getDynamicAddHit() - 8);
+				pc.setDynamicAddDmg(pc.getDynamicAddDmg() - 6);
+				pc.setDynamicAddHit(pc.getDynamicAddHit() - 6);
 				pc.setDynamicCritical(pc.getDynamicCritical() - 5);
 				pc.setDynamicStunHit(pc.getDynamicStunHit() - 0.1);
 				pc.setMagicdollTimeMpTic(0);
 				pc.setMagicdollMpTic(0);
 				pc.setDynamicExp(pc.getDynamicExp() - 0.2);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 10);
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 5);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 요정")) {
-				pc.setDynamicAddDmgBow(pc.getDynamicAddDmgBow() - 8);
-				pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() - 8);
+				pc.setDynamicAddDmgBow(pc.getDynamicAddDmgBow() - 6);
+				pc.setDynamicAddHitBow(pc.getDynamicAddHitBow() - 6);
 				pc.setDynamicBowCritical(pc.getDynamicBowCritical() - 5);
 				pc.setDynamicStunResist(pc.getDynamicStunResist() - 0.08);
 				pc.setDynamicExp(pc.getDynamicExp() - 0.20);
 				pc.setMagicdollTimeMpTic(0);
 				pc.setMagicdollMpTic(0);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 10);
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 5);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 마법사")) {
-				pc.setDynamicSp(pc.getDynamicSp() - 8);
-				pc.setDynamicMagicHit(pc.getDynamicMagicHit() - 8);
+				pc.setDynamicSp(pc.getDynamicSp() - 6);
+				pc.setDynamicMagicHit(pc.getDynamicMagicHit() - 6);
 				pc.setDynamicExp(pc.getDynamicExp() - 0.20);
-				pc.setDynamicStunResist(pc.getDynamicStunResist() - 0.08);
+				pc.setDynamicStunResist(pc.getDynamicStunResist() - 0.1);
 				pc.setMagicdollTimeMpTic(0);
 				pc.setMagicdollMpTic(0);
-				pc.setDynamicInt(pc.getDynamicInt() - 4);
+//				pc.setDynamicInt(pc.getDynamicInt() - 4);
 			} else if (mdl.getDollBuffType().equalsIgnoreCase("진 다크엘프")) {
-				pc.setDynamicAddDmg(pc.getDynamicAddDmg() - 8);
-				pc.setDynamicAddHit(pc.getDynamicAddHit() - 8);
-				pc.setDynamicCritical(pc.getDynamicCritical() - 5);
+				pc.setDynamicAddDmg(pc.getDynamicAddDmg() - 3);
+				pc.setDynamicAddHit(pc.getDynamicAddHit() - 3);
+				pc.setDynamicCritical(pc.getDynamicCritical() - 10);
 //				pc.setDynamicStunHit(pc.getDynamicStunHit() - 0.1);
-				pc.setDynamicStunResist(pc.getDynamicStunResist() - 0.08);
+				pc.setDynamicStunResist(pc.getDynamicStunResist() - 0.1);
 				pc.setMagicdollTimeMpTic(0);
 				pc.setMagicdollMpTic(0);
 				pc.setDynamicExp(pc.getDynamicExp() - 0.2);
-				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 10);	
+				pc.setDynamicAddPvpDmg(pc.getDynamicAddPvpDmg() - 5);	
 			}
 		}
 

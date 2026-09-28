@@ -195,6 +195,7 @@ public class Colosseum {
 		if(h == 0)
 			h = timeStart[0];
 		info.add(String.format("%d시", h));
+/*		
 		// 참가 가능 클래스
 		switch(joinClass){
 			case 1:
@@ -243,6 +244,27 @@ public class Colosseum {
 				info.add("군주, 기사, 요정, 법사");
 				break;
 		}
+*/		
+		// ==========================================
+				// ✅ [수정] 참가 가능 클래스 (switch문 삭제 및 비트 연산 적용)
+				// ==========================================
+				StringBuilder classes = new StringBuilder();
+				
+				if ((joinClass & 1) != 0) classes.append("군주, ");
+				if ((joinClass & 2) != 0) classes.append("기사, ");
+				if ((joinClass & 4) != 0) classes.append("요정, ");
+				if ((joinClass & 8) != 0) classes.append("법사, ");
+				if ((joinClass & 16) != 0) classes.append("다크엘프, "); // 다크엘프 추가!
+				// 나중에 추가할 클래스가 있다면 32, 64, 128... 순으로 추가만 하시면 됩니다.
+
+				if (classes.length() > 0) {
+					classes.setLength(classes.length() - 2); // 마지막에 붙은 ", " 꼬리표 떼기
+					info.add(classes.toString());
+				} else {
+					info.add("없음");
+				}
+				// ==========================================
+				
 		// 참가 가능 성별
 		info.add(joinSex==0 ? "모두" : joinSex==1 ? "남성" : "여성");
 		// 참가 가능 최저 레벨

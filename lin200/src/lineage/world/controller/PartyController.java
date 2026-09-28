@@ -70,6 +70,17 @@ public final class PartyController {
 	 * @param use
 	 */
 	static public void toParty(PcInstance pc, PcInstance use) {
+		// ==========================================
+				// ✅ [추가] 잊섬 일반 파티 초대 완벽 차단
+				// ==========================================
+				// 초대하는 사람(pc)이나 받는 사람(use) 중 한 명이라도 잊섬에 있다면 파티 결성 취소
+				if (pc != null && pc.getGm() == 0 && !lineage.share.Lineage.is_twistisland_chatting) {
+					if (pc.getMap() == 707 || pc.getMap() == 999 || (use != null && (use.getMap() == 70 || use.getMap() == 809))) {
+						ChattingController.toChatting(pc, "잊혀진 섬에서는 파티를 맺을 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+						return; // 이 아래의 모든 파티 결성 로직 무시!
+					}
+				}
+		// ==========================================
 		if (use != null && !use.isDead()) {	
 			if (use.getPartyId() == 0) {
 				Party p = find(pc);
@@ -156,6 +167,16 @@ public final class PartyController {
 	}
 	
 	static public void toClanParty(PcInstance pc, PcInstance use) {
+		// ==========================================
+				// ✅ [추가] 잊섬 혈맹 파티 초대 완벽 차단
+				// ==========================================
+				if (pc != null && pc.getGm() == 0 && !lineage.share.Lineage.is_twistisland_chatting) {
+					if (pc.getMap() == 707 || pc.getMap() == 999 || (use != null && (use.getMap() == 70 || use.getMap() == 809))) {
+						ChattingController.toChatting(pc, "잊혀진 섬에서는 혈맹 파티를 맺을 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+						return; // 이 아래의 모든 혈맹 파티 결성 로직 무시!
+					}
+				}
+				// ==========================================
 		if (use != null && !use.isDead()) {
 			if (use.getPartyId() == 0) {
 				if (!use.isFishing() && pc.getClanId() == use.getClanId() && pc.getObjectId() != use.getObjectId() && use.getMap() != Lineage.teamBattleMap && use.getMap() != Lineage.BattleRoyalMap) {

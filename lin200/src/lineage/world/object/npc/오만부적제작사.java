@@ -53,87 +53,87 @@ public class 오만부적제작사 extends object {
 
             if (action.equalsIgnoreCase("오만의 탑 1층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 1층 이동 주문서", false, 1, true, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 1층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 1층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 2층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 2층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 2층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 2층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 3층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 3층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 3층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 3층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 4층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 4층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 4층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 4층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 5층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 5층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 5층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 5층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 6층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 6층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 6층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 6층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 7층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 7층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 7층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 7층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 8층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 8층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 8층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 8층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 9층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 9층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 9층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 9층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 10층 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 10층 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 30000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 10층 이동 부적", 1, 0, 1, 10);
+                createItem(pc, createList, itemList, "오만의 탑 10층 이동 부적", 1, 0, 1, 30);
 
             } else if (action.equalsIgnoreCase("오만의 탑 정상 이동 부적")) {
                 createList.add(new CreateItem("오만의 탑 정상 이동 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 10000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 3000000));
                 if (!checkItem(pc, createList, itemList))
                     return;
 
@@ -152,12 +152,12 @@ public class 오만부적제작사 extends object {
                 createList.add(new CreateItem("오만의 탑 9층 이동 부적", false, 1, false, 0, 1));
                 createList.add(new CreateItem("오만의 탑 10층 이동 부적", false, 1, false, 0, 1));
                 
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 500000));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));
                 
                 if (!checkItem(pc, createList, itemList))
                     return;
 
-                createItem(pc, createList, itemList, "오만의 탑 환상의 지배 부적", 1, 0, 1, 100);     
+                createItem(pc, createList, itemList, "오만의 탑 환상의 지배 부적", 1, 0, 1, 30);     
             }
         }
     }

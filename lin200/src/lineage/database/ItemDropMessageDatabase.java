@@ -148,14 +148,15 @@ public class ItemDropMessageDatabase {
 	 * 2020-11-29
 	 * by connector12@nate.com
 	 */
+	
 	static public void sendMessage(object o, String item1, String item2) {
-	    if (!(o instanceof PcInstance) || item1 == null || item2 == null)
+	    if (!(o instanceof PcInstance) || item1 == null  || item2 == null)
 	        return;
 
 	    PcInstance pc = (PcInstance) o;
 	    String local = Util.getMapName((Character) o);
 
-	    if (find(item1, 0, false)) {
+	    if (find(item1, 0, false)) {  
 	        if (Lineage.is_item_drop_msg_name) {
 	            World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null, Lineage.CHATTING_MODE_MESSAGE,
 	                String.format("\\fR어느 아덴 용사가 \\fU%s \\fR에서", local)));
@@ -178,7 +179,6 @@ public class ItemDropMessageDatabase {
 	        }
 	    }
 	}
-
 	
 	/**
 	 * 특정 아이템 획득시 전체 메세지 여부.
@@ -246,12 +246,52 @@ public class ItemDropMessageDatabase {
 	 */
 	static public void sendMessageMagicDoll2(object o, String item) {
 		if (Lineage.is_item_drop_msg_doll && o != null && o instanceof PcInstance && item != null) {
+			PcInstance pc = (PcInstance) o;
+			String name = pc.getName();
+			String itemName = item;
+
+			// 토스트 메세지 내용 구성
+			String toastLine1 = String.format("\\g1* 인형 진화 성공 [ %s ] *", itemName);
+			String toastLine2 = Lineage.is_item_drop_msg_name
+				? String.format("\\fH어느 아덴 용사가 인형 진화에 성공하여 [%s]을(를) 획득하였습니다.", itemName)
+				: String.format("\\fH%s님이 인형 진화에 성공하여 [%s]을(를) 획득하였습니다.", name, itemName);
+
+			// 전체 채팅 메시지
 			if (Lineage.is_item_drop_msg_name) {
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null, Lineage.CHATTING_MODE_MESSAGE, "\\fR어느 아덴 용사가 인형 진화에 성공하여"));
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null, Lineage.CHATTING_MODE_MESSAGE, String.format("\\fY%s \\fR을(를) 획득하였습니다.", item)));
+				World.toSender(S_ObjectChatting.clone(
+					BasePacketPooling.getPool(S_ObjectChatting.class), 
+					null, 
+					Lineage.CHATTING_MODE_MESSAGE, 
+					"\\fR어느 아덴 용사가 인형 진화에 성공하여"
+				));
+				World.toSender(S_ObjectChatting.clone(
+					BasePacketPooling.getPool(S_ObjectChatting.class), 
+					null, 
+					Lineage.CHATTING_MODE_MESSAGE, 
+					String.format("\\fY%s \\fR을(를) 획득하였습니다.", itemName)
+				));
 			} else {
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null, Lineage.CHATTING_MODE_MESSAGE, String.format("\\fT%s \\fR님이 인형 진화에 성공하여", o.getName())));
-				World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class), null, Lineage.CHATTING_MODE_MESSAGE, String.format("\\fY%s \\fR을(를) 획득하였습니다.", item)));
+				World.toSender(S_ObjectChatting.clone(
+					BasePacketPooling.getPool(S_ObjectChatting.class), 
+					null, 
+					Lineage.CHATTING_MODE_MESSAGE, 
+					String.format("\\fT%s \\fR님이 인형 진화에 성공하여", name)
+				));
+				World.toSender(S_ObjectChatting.clone(
+					BasePacketPooling.getPool(S_ObjectChatting.class), 
+					null, 
+					Lineage.CHATTING_MODE_MESSAGE, 
+					String.format("\\fY%s \\fR을(를) 획득하였습니다.", itemName)
+				));
+			}
+
+			// 전체 토스트 알림 추가
+			for (PcInstance online : World.getPcList()) {
+				SC_TOAST_NOTI.newInstance()
+					.setMessage(toastLine1)
+					.setMessage2(toastLine2)
+					.setToastType(ToastType.HeavyText)
+					.send(online);
 			}
 		}
 	}

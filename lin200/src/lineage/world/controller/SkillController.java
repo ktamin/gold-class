@@ -453,10 +453,12 @@ public final class SkillController {
 				break;
 			case 9:
 				switch (skill.getSkillNumber()) {
-				case 0:
+//				case 0:
 					// 자신에게 시전되는 마법
-
-					break;
+//					break;
+				case 0: // [추가] 바운스 어택
+		            BounceAttack.init(cha, skill);
+		            break;
 				case 1:
 					if (Lineage.server_version >= 250)
 						FogOfSleeping.init(cha, skill, cbp.readD());
@@ -491,9 +493,9 @@ public final class SkillController {
 				case 1:
 					Lightning.init(cha, skill, cbp.readD(), cbp.readH(), cbp.readH());
 					break;
-				case 2:
+				case 2: 
 
-					break;
+		            break;
 				case 3:
 					MassSlow.init(cha, skill, cbp.readD());
 					break;
@@ -503,16 +505,19 @@ public final class SkillController {
 				case 5:
 					AbsoluteBarrier.init(cha, skill);
 					break;
-				case 6:
-					// 사용불가
-					break;
+				case 6: 
+
+		            break;
 				case 7:
 					CounterBarrier.init(cha, skill);
 					break;
 				}
 				break;
 			case 11:
-				switch (skill.getSkillNumber()) {
+				switch (skill.getSkillNumber()) {				
+				case 1: // [추가] 바운스 어택
+		            BounceAttack.init(cha, skill);
+		            break;
 				case 6:
 
 					break;
@@ -1152,9 +1157,19 @@ public final class SkillController {
 			return false;
 		if (o instanceof Racer)
 			return false;
+		
 		// 몬스터끼리는 모두 실패시키기.
-		if (cha instanceof MonsterInstance && o instanceof MonsterInstance)
+//		if (cha instanceof MonsterInstance && o instanceof MonsterInstance)
+//			return false;
+		
+		// 몬스터끼리는 모두 실패시키기 (단, 타겟이 펫이나 서먼 몬스터일 경우는 예외로 데미지 적용!)
+		if (cha instanceof MonsterInstance && o instanceof MonsterInstance) {
+		// 타겟(o)이 PetInstance(펫)도 아니고 SummonInstance(서먼)도 아닐 때만 실패 처리
+		if (!(o instanceof lineage.world.object.instance.PetInstance) && !(o instanceof lineage.world.object.instance.SummonInstance)) {
 			return false;
+				}
+		}
+				
 		// 공격존체크해야되는 마법시 공격가능존 체크.
 		if (isZoneCheckMagic(skill) && !World.isAttack(cha, o) && cha.getObjectId() != o.getObjectId()) {
 			if (cha instanceof PcInstance)
@@ -1618,7 +1633,7 @@ public final class SkillController {
 	 * @return
 	 */
 	static public int getDamage(Character cha, object target, object o, Skill skill, double alpha_dmg, int skill_element) {
-		ItemInstance item = cha.getInventory().find("디스(에이션트)", 0, 1);
+		ItemInstance item = cha.getInventory().find("네메시스", 0, 1);
 		
 		cha.setFight(true);
 		// 버그 방지
@@ -1746,7 +1761,7 @@ public final class SkillController {
 		
 		// 라우풀 마법이라면 라우풀 수치에따라 대미지에 영향주기.
 		// 풀라우풀일 경우 대미지의 48% 추가
-		
+	
 		if(item != null){
 			dmg += dmg * 0.5;
 		}
@@ -1756,9 +1771,21 @@ public final class SkillController {
 
 		}
 
+		// ✅ 스킬 번호(77번 = 디스인티그레이트) 조건 추가!
+		if(item != null && skill.getUid() == 77){
+		    dmg += dmg * 0.5;
+		}
+
+		// ✅ 라우풀 보너스 제한도 디스인티그레이트일 때만 네메시스 검사하도록 변경
+		if (isLawfulMagic(skill) && cha instanceof PcInstance && cha.getLawful() >= Lineage.NEUTRAL + 500) {
+		    if (skill.getUid() == 77 && item != null) {
+		        // 네메시스 디스 보유자는 이미 50% 보너스를 받았으므로 라우풀 보너스를 중복해서 받지 않음 (생략)
+		    } else {
+		        // 일반 디스 사용자나 다른 라우풀 마법은 정상적으로 라우풀 보너스(최대 48%) 적용
+		        dmg += dmg * (((cha.getLawful() - 66035) * 0.00001) * 1.5);
+		    }
+		}
 		
-
-
 		// 힐계열 마법이 아닐때
 		// : mr체크해서 데미지 하향.
 		// : 기타 버프 상태따라 처리.
@@ -1874,7 +1901,9 @@ public final class SkillController {
 					}
 					
 					//임페리얼 아머
-					if (targetSkill != null &&  targetSkill.getItem().getName().equalsIgnoreCase("임페리얼 아머")  && Util.random(1, 100) <= 20  ) {
+					if (targetSkill != null &&  targetSkill.getItem().getName().equalsIgnoreCase("임페리얼 아머")  
+						&& target.getClassType() == Lineage.LINEAGE_CLASS_ROYAL	
+						&& Util.random(1, 100) <= 20  ) {
 						dmg *= 0.1;
 						target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 15846), target instanceof PcInstance);
 

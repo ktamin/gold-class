@@ -12,6 +12,7 @@ import lineage.plugin.PluginController;
 import lineage.share.Lineage;
 import lineage.share.TimeLine;
 import lineage.util.Util;
+import lineage.world.controller.ShopController;
 import lineage.world.object.instance.ItemArmorInstance;
 import lineage.world.object.instance.ItemBookInstance;
 import lineage.world.object.instance.ItemCrystalInstance;
@@ -54,6 +55,8 @@ import lineage.world.object.item.all_night.BuffMaan;
 import lineage.world.object.item.all_night.Buff_potion;
 import lineage.world.object.item.all_night.Caotic_potion;
 import lineage.world.object.item.all_night.ChangeSexPotion;
+import lineage.world.object.item.all_night.ExpDrop_Potion_20;
+import lineage.world.object.item.all_night.ExpDrop_Potion_50;
 import lineage.world.object.item.all_night.Exp_drop_potion;
 import lineage.world.object.item.all_night.Exp_marble;
 import lineage.world.object.item.all_night.Exp_potion;
@@ -100,12 +103,14 @@ import lineage.world.object.item.all_night.귀걸이변경주문서;
 import lineage.world.object.item.all_night.마물변경주문서;
 import lineage.world.object.item.all_night.마법변경주문서;
 import lineage.world.object.item.all_night.마안변경주문서;
+import lineage.world.object.item.all_night.망토변경주문서;
 import lineage.world.object.item.all_night.목걸이변경주문서;
 import lineage.world.object.item.all_night.몬스터드랍확인막대;
 import lineage.world.object.item.all_night.몬스터영혼석;
 import lineage.world.object.item.all_night.무기2차변경주문서;
 import lineage.world.object.item.all_night.무기변경주문서;
 import lineage.world.object.item.all_night.반지변경주문서;
+import lineage.world.object.item.all_night.방어구2차변경주문서;
 import lineage.world.object.item.all_night.벨트변경주문서;
 import lineage.world.object.item.all_night.변카변경주문서;
 import lineage.world.object.item.all_night.부츠변경주문서;
@@ -133,12 +138,14 @@ import lineage.world.object.item.all_night.클래스변경권;
 import lineage.world.object.item.all_night.투구변경주문서;
 import lineage.world.object.item.all_night.티셔츠변경주문서;
 import lineage.world.object.item.all_night.혈맹버프물약;
+import lineage.world.object.item.all_night.희미한기억의구슬;
 import lineage.world.object.item.armor.ArmorOfIllusion;
 import lineage.world.object.item.armor.Turban;
 import lineage.world.object.item.bow.BowOfIllusion;
 import lineage.world.object.item.cloak.CloakInvisibility;
 import lineage.world.object.item.cloak.ElvenCloak;
 import lineage.world.object.item.etc.EvolutionFruit;
+import lineage.world.object.item.etc.LimitBundle;
 import lineage.world.object.item.helm.HelmInfravision;
 import lineage.world.object.item.helm.HelmMagicHealing;
 import lineage.world.object.item.helm.HelmMagicPower;
@@ -244,7 +251,6 @@ import lineage.world.object.item.scroll.SpellScrollWeaponBreak;
 import lineage.world.object.item.scroll.SpellScrollWindShuriken;
 import lineage.world.object.item.scroll.TOITeleportCharm;
 import lineage.world.object.item.scroll.TOITeleportScroll;
-
 import lineage.world.object.item.scroll.발라카스의숨결;
 import lineage.world.object.item.shield.ElvenShield;
 import lineage.world.object.item.wand.EbonyWand;
@@ -274,6 +280,7 @@ import lineage.world.object.item.yadolan.ScrollOfgd3;
 import lineage.world.object.item.yadolan.ScrollOfgd4;
 import lineage.world.object.item.yadolan.ScrollOfgrts;
 import lineage.world.object.item.yadolan.Seal_enchant;
+import lineage.world.object.item.yadolan.ShopControllerItem;
 import lineage.world.object.item.yadolan.aManaPotion;
 import lineage.world.object.item.yadolan.at;
 import lineage.world.object.item.yadolan.expRecovery;
@@ -292,6 +299,8 @@ import lineage.world.object.item.yadolan.자칼스턴;
 import lineage.world.object.item.yadolan.자칼트리;
 import lineage.world.object.item.yadolan.좌표복구주문서;
 import lineage.world.object.item.yadolan.한방군업;
+import lineage.world.object.magic.ExpDropBuff_20;
+import lineage.world.object.magic.ExpDropBuff_50;
 import lineage.world.object.npc.야도란텔3;
 
 public final class ItemDatabase {
@@ -961,6 +970,8 @@ public final class ItemDatabase {
 				return ItemBookInstance.clone(getPool(ItemBookInstance.class), 9, 7).clone(item);
 			case 1872: // 마법서 (맵솔루트 배리어)
 				return ItemBookInstance.clone(getPool(ItemBookInstance.class), 10, 5).clone(item);
+			case 4008: // 기술서 (바운스 어택)
+				return ItemBookInstance.clone(getPool(ItemBookInstance.class), 11, 0).clone(item);
 			case 4713: // 기술서 (카운터 배리어)
 				return ItemBookInstance.clone(getPool(ItemBookInstance.class), 10, 7).clone(item);
 			case 1873: // 마법서 (어드밴스 스피릿)
@@ -1520,9 +1531,17 @@ public final class ItemDatabase {
 			return StatClear.clone(getPool(StatClear.class)).clone(item);
 
 		} else if (item.getType2().equalsIgnoreCase("exp_potion")) {
-			// 경험치 물약
-			return Exp_potion.clone(getPool(Exp_potion.class)).clone(item);
-
+			// 경험치 물약 100%
+			return Exp_potion.clone(getPool(Exp_potion.class)).clone(item);			
+			
+		} else if (item.getType2().equalsIgnoreCase("exp_potion20")) {
+			// 버프 물약 20%
+			return ExpDrop_Potion_20.clone(getPool(ExpDropBuff_20.class)).clone(item);
+			
+		} else if (item.getType2().equalsIgnoreCase("exp_potion50")) {
+			// 버프 물약 50%
+			return ExpDrop_Potion_50.clone(getPool(ExpDropBuff_50.class)).clone(item);
+			
 		} else if (item.getType2().equalsIgnoreCase("buff_potion")) {
 			// 버프 물약
 			return Buff_potion.clone(getPool(Buff_potion.class)).clone(item);
@@ -1538,10 +1557,6 @@ public final class ItemDatabase {
 		} else if (item.getType2().equalsIgnoreCase("accessory_scroll")) {
 			// 장신구 주문서
 			return ScrollOfAccessory.clone(getPool(ScrollOfAccessory.class)).clone(item);
-			
-		} else if (item.getType2().equalsIgnoreCase("roomtis_scroll")) {
-			// 룸티스 강화 주문서
-			return ScrollOfRoomtisEnchant.clone(getPool(ScrollOfRoomtisEnchant.class)).clone(item);
 
 		} else if (item.getType2().equalsIgnoreCase("scroll_orim_armor")) {
 			// 오림의 갑옷 마법 주문서
@@ -1654,13 +1669,16 @@ public final class ItemDatabase {
 		} else if (item.getType2().equalsIgnoreCase("item_swap")) {
 			// 장비 스왑
 			return ItemSwap.clone(getPool(ItemSwap.class)).clone(item);
-
+			//상점관리
+		} else if (item.getType2().equalsIgnoreCase("market_icon")) {
+			return ShopControllerItem.clone(getPool(ShopControllerItem.class)).clone(item);
 		} else if (item.getType2().equalsIgnoreCase("자동 물약")) {
 			// 자동 물약
 			return AutoPotion.clone(getPool(AutoPotion.class)).clone(item);
 		} else if (item.getType2().equalsIgnoreCase("자동 사냥")) {
 			// 자동 물약
 			return AutoPotion.clone(getPool(AutoPotion.class)).clone(item);
+
 		} else if (item.getType2().equalsIgnoreCase("한방군업")) {
 			return 한방군업.clone(getPool(한방군업.class)).clone(item);
 		} else if (item.getType2().equalsIgnoreCase("버프시간")) {
@@ -1676,7 +1694,7 @@ public final class ItemDatabase {
 		} else if (item.getType2().equalsIgnoreCase("사냥터 이동")) {
 			return huntgo.clone(getPool(notice.class)).clone(item);
 		} else if (item.getType2().equalsIgnoreCase("마을 이동")) {
-			return huntgo1.clone(getPool(notice.class)).clone(item);	
+			return huntgo1.clone(getPool(notice.class)).clone(item);
 		} else if (item.getType2().equalsIgnoreCase("보스 이동")) {
 			return huntgo2.clone(getPool(notice.class)).clone(item);
 		} else if (item.getType2().equalsIgnoreCase("환상 부적")) {
@@ -1758,6 +1776,10 @@ public final class ItemDatabase {
 			// 용갑옷 속성 변경 주문서
 			return 용갑옷속성변경주문서.clone(getPool(용갑옷속성변경주문서.class)).clone(item);
 
+		} else if (item.getType2().equalsIgnoreCase("망토 변경 주문서")) {
+			// 암석 변경 주문서
+			return 망토변경주문서.clone(getPool(암석변경주문서.class)).clone(item);
+
 		} else if (item.getType2().equalsIgnoreCase("암석 변경 주문서")) {
 			// 암석 변경 주문서
 			return 암석변경주문서.clone(getPool(암석변경주문서.class)).clone(item);
@@ -1770,13 +1792,17 @@ public final class ItemDatabase {
 			// 2차 귀걸이 변경 주문서
 			return 귀걸이2차변경주문서.clone(getPool(귀걸이2차변경주문서.class)).clone(item);
 
-		} else if (item.getType2().equalsIgnoreCase("2차 가더 변경주문서")) {
+		} else if (item.getType2().equalsIgnoreCase("가더 변경 주문서")) {
 			// 2차 가더 변경 주문서
 			return 가더2차변경주문서.clone(getPool(가더2차변경주문서.class)).clone(item);
 
 		} else if (item.getType2().equalsIgnoreCase("2차 무기 변경주문서")) {
 			// 2차 무기 변경 주문서
 			return 무기2차변경주문서.clone(getPool(무기2차변경주문서.class)).clone(item);
+
+		} else if (item.getType2().equalsIgnoreCase("2차 방어구 변경주문서")) {
+			// 2차 방어구 변경 주문서
+			return 방어구2차변경주문서.clone(getPool(방어구2차변경주문서.class)).clone(item);
 
 		} else if (item.getType2().equalsIgnoreCase("최대 HP 증가 물약")) {
 			// 최대 HP 증가 물약
@@ -1897,7 +1923,7 @@ public final class ItemDatabase {
 		} else if (item.getType2().equalsIgnoreCase("집행 강화 주문서")) {
 			// 집행 강화 주문서
 			return 발라카스의숨결.clone(getPool(발라카스의숨결.class)).clone(item);
-			
+
 		} else if (item.getType2().equalsIgnoreCase("roomtis_scroll")) {
 			// 룸티스 강화 주문서
 			return ScrollOfRoomtisEnchant.clone(getPool(ScrollOfRoomtisEnchant.class)).clone(item);
@@ -1905,6 +1931,15 @@ public final class ItemDatabase {
 		} else if (item.getType2().equalsIgnoreCase("스냅퍼 강화 주문서")) {
 			// 스냅퍼 강화 주문서
 			return ScrollOfSnapperEnchant.clone(getPool(ScrollOfSnapperEnchant.class)).clone(item);
+			
+		} else if (item.getType2().equalsIgnoreCase("기억의 구슬")) {
+			// 희미한 기억의 구슬
+			return 희미한기억의구슬.clone(getPool(희미한기억의구슬.class)).clone(item);	
+			
+			// 💡 type2(chance_bundle) 충돌을 피하기 위해 아이템 이름으로 직접 연결
+		} else if (item.getName().equals("기운 무기 상자") || item.getName().equals("연금술사의 돌")) {
+			// 횟수제 찬스 번들 아이템 처리
+			return LimitBundle.clone(getPool(LimitBundle.class)).clone(item);
 
 			// ==========================================
 			// ✅ [추가] 룬 조각 3종 세트 통합 연결
@@ -1941,8 +1976,8 @@ public final class ItemDatabase {
 				item.getName().equalsIgnoreCase("기운을 잃은 우그누스의 가더") ||
 				item.getName().equalsIgnoreCase("기운을 잃은 쿠거의 가더") ||
 				item.getName().equalsIgnoreCase("기운을 잃은 시어의 심안") ||
-				item.getName().equalsIgnoreCase("한양 코인 조각")) {
-			return 룬조각.clone(getPool(룬조각.class)).clone(item);	
+				item.getName().equalsIgnoreCase("코인 조각")) {
+			return 룬조각.clone(getPool(룬조각.class)).clone(item);
 
 		} else if (item.getType2().equalsIgnoreCase("자동사냥 계정 시간 초기화")) {
 			return 자동사냥시간초기화.clone(getPool(자동사냥시간초기화.class)).clone(item);
@@ -1960,6 +1995,7 @@ public final class ItemDatabase {
 			return SelfSpell.clone(getPool(SelfSpell.class)).clone(item);
 		} else if (item.getType2().equalsIgnoreCase("파이널 번")) {
 			return ItemFinal.clone(getPool(ItemFinal.class)).clone(item);
+
 		} else {
 			return ItemInstance.clone(getPool(ItemInstance.class)).clone(item);
 		}

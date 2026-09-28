@@ -72,8 +72,10 @@ final public class WantedController {
 			ChattingController.toChatting(o, "캐릭터명이 잘못되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
 			return;
 		}
-		if (target_price < 0 && target_price > 3) {
-			ChattingController.toChatting(o, "수배 단수 설정이 잘못되었습니다. 1,2,3단", Lineage.CHATTING_MODE_MESSAGE);
+//		if (target_price < 0 && target_price > 3) { =====1.2.3단만 입력이 가능하도록
+		if (target_price != 1) {   //==========수배 1단만 가능하도록
+//			ChattingController.toChatting(o, "수배 단수 설정이 잘못되었습니다. 1,2,3단", Lineage.CHATTING_MODE_MESSAGE);
+			ChattingController.toChatting(o, "수배는 1단만 이용할 수 있습니다.(비용5만)", Lineage.CHATTING_MODE_MESSAGE);
 			return;
 		}
 
@@ -120,9 +122,9 @@ final public class WantedController {
 			return;
 		}
 
-		if(target_price == 1)      target_price = 50000;
-		else if(target_price == 2) target_price = 100000;
-		else if(target_price == 3) target_price = 150000;
+		if(target_price == 1)      target_price = 50000;		
+//		else if(target_price == 2) target_price = 2000000;
+//		else if(target_price == 3) target_price = 3000000;
 
 		if (!o.getInventory().isAden(target_price, true)) {
 			ChattingController.toChatting(o, String.format("수배금액: %d아데나", target_price), Lineage.CHATTING_MODE_MESSAGE);
@@ -316,10 +318,12 @@ final public class WantedController {
 
 		if (price == 50000) {
 			iconId = 88; bonus = 1; rankStr = "1단";
-		} else if (price == 100000) {
+/*			
+		} else if (price == 2000000) {
 			iconId = 89; bonus = 2; rankStr = "2단";
-		} else if (price == 150000) {
+		} else if (price == 3000000) {
 			iconId = 90; bonus = 3; rankStr = "3단";
+*/			
 		}
 
 		if (iconId > 0) {
@@ -339,10 +343,12 @@ final public class WantedController {
 
 		if (price == 50000) {
 			iconId = 88; bonus = 1; rankStr = "1단";
-		} else if (price == 100000) {
+/*			
+		} else if (price == 2000000) {
 			iconId = 89; bonus = 2; rankStr = "2단";
-		} else if (price == 150000) {
+		} else if (price == 3000000) {
 			iconId = 90; bonus = 3; rankStr = "3단";
+*/			
 		}
 
 		if (iconId > 0) {

@@ -30,7 +30,6 @@ public class 그신컨트롤러 {
         TimeLine.start("그신 컨트롤러..");
         calendar = Calendar.getInstance();
         isOpen = false;
-//		shadowEndTime = Long.MAX_VALUE;
         shadowEndTime = 0L;
         lastRemainSecSent = -1;
         nextTimerBroadcastAt = 0L;
@@ -47,25 +46,53 @@ public class 그신컨트롤러 {
 
         // 요일(1=일, 7=토)
         int day = getDayOfWeek();
+        
+        // 💡 외부 Config(0=일 ~ 6=토) 기준과 맞추기 위해 자바 요일에서 1을 뺌
+        int configDay = day - 1;
 
         // 스케줄 체크 (열릴 때만 트리거)
         if (!isOpen) {
-            if (day == 1 || day == 7) {
-                // 주말 스케줄
-                for (TeamBattleTime t : Lineage.shadow_dungeon_time_list2) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+            // 1. 외부 설정(shadow_open_day_list)에 오늘 요일이 포함되어 있는지 확인
+            if (Lineage.shadow_open_day_list.contains(configDay)) {
+                
+                // 2. 포함되어 있다면, 오늘이 주말(토, 일)인지 평일인지 구분하여 시간 체크
+                if (configDay == 0 || configDay == 6) { 
+                    // 주말 스케줄 (일요일=0, 토요일=6)
+                    for (TeamBattleTime t : Lineage.shadow_dungeon_time_list2) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
+                    }
+                } else {
+                    // 평일 스케줄 (월~금)
+                    for (TeamBattleTime t : Lineage.shadow_dungeon_time_list) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
                     }
                 }
-            } else {
-                // 평일 스케줄
-                for (TeamBattleTime t : Lineage.shadow_dungeon_time_list) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
-                    }
-                }
+            }
+        }
+
+        // 열려 있으면 주기 갱신/종료 처리
+        if (isOpen) {
+            long diffMs   = shadowEndTime - nowMs;
+            int  remainSec = (int)Math.max(0, diffMs / 1000L);
+
+            // 종료 시점
+            if (diffMs <= 0) {
+                close();               // 상태/메시지
+                sendTimerUI(false, nowMs); // 0초 내려서 타이머 끄기
+                return;
+            }
+
+            // 1초 간격으로만 브로드캐스트 (원하면 5000L로 줄여 부하 감소)
+            if (nowMs >= nextTimerBroadcastAt && remainSec != lastRemainSecSent) {
+                sendTimerUI(true, nowMs);         // 남은 시간(초) 전송
+                lastRemainSecSent = remainSec;
+                nextTimerBroadcastAt = nowMs + 1000L;
             }
         }
 
@@ -117,11 +144,11 @@ public class 그신컨트롤러 {
         String toastTitle, toastDesc;
 
         if (isOpen) {
-            chatMsg   = "\\fY      ***** 그림자 신전으로 가는길이 열렸습니다. *****";
+            chatMsg    = "\\fY      *** 그림자 신전으로 가는길이 열렸습니다. ***";
             toastTitle = "★ 그림자 신전 입장 가능 ★";
             toastDesc  = "던전이 열렸습니다. 지금 바로 입장하세요!";
         } else {
-            chatMsg   = "\\fY      ***** 그림자 신전으로 가는길이 닫혔습니다. *****";
+            chatMsg    = "\\fY      *** 그림자 신전으로 가는길이 닫혔습니다. ***";
             toastTitle = "■ 그림자 신전 닫힘 안내";
             toastDesc  = "던전이 닫혔습니다. 다음 오픈을 기다려 주세요.";
         }

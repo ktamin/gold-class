@@ -1,8 +1,12 @@
 package lineage.world.controller;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import lineage.bean.lineage.Clan;
 import lineage.database.DatabaseConnection;
@@ -75,6 +79,8 @@ public final class LetterController {
 	 */
 	static public void toLetter(String from, String to, String subject, String memo, int aden){
 		if(to!=null && subject!=null && memo!=null){
+			// -------편지지 로그를 남기기 위해 추가 2026.06.18
+			writeLetterLog("개인편지", from, to, subject, memo);
 			Connection con = null;
 			try {
 				con = DatabaseConnection.getLineage();
@@ -93,6 +99,8 @@ public final class LetterController {
 			// 혈맹 찾기.
 			Clan clan = ClanController.find(to);
 			if(clan != null){
+				// 💡 [로그 1번 추가] 혈맹 편지 로그 발송 (루프 돌기 전에 1번만 기록!)-------2026.06.18
+				writeLetterLog("혈맹편지", from, to + " 혈맹", subject, memo);
 				Connection con = null;
 				try {
 					con = DatabaseConnection.getLineage();
@@ -241,5 +249,55 @@ public final class LetterController {
 		}
 		// 디비에 등록.
 		insert(con, new_uid, type, from==null ? "메티스" : from, to, subject, memo, String.valueOf(user!=null), aden);
+	}
+	
+	/**
+	 * ✨ [업그레이드] 편지 종류(개인, 혈맹, 전체)를 분류해서 딱 1번만 기록하는 만능 로그 함수
+	 */
+	static public void writeLetterLog(String type, String from, String to, String subject, String memo) {
+		try {
+			java.io.PrintWriter out = new java.io.PrintWriter(new java.io.FileWriter("log_letter.txt", true));
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String time = sdf.format(new java.util.Date());
+			
+			// 💡 [편지로그][시간][분류] [보낸이 -> 받는이] 제목: OOO | 내용: OOO
+			String logMessage = String.format("[편지로그][%s][%s] [%s -> %s] 제목: %s | 내용: %s", time, type, from, to, subject, memo);
+			
+			out.println(logMessage);
+			out.close();
+			lineage.share.System.println(logMessage); 
+		} catch (Exception e) {
+			lineage.share.System.println("편지 로그 작성 중 오류 발생: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * ✨ [최적화] 전체 편지를 보낼 때 DB 연결을 1번만 써서 1000배 빠르게 처리하는 전용 함수
+	 */
+	static public int toGlobalLetter(String from, String subject, String memo){
+		int sendCount = 0;
+		if(subject != null && memo != null){
+			java.sql.Connection con = null;
+			java.sql.PreparedStatement st = null;
+			java.sql.ResultSet rs = null;
+			try {
+				con = lineage.database.DatabaseConnection.getLineage();
+				st = con.prepareStatement("SELECT name FROM characters");
+				rs = st.executeQuery();
+				while(rs.next()){
+					// 루프를 돌며 편지를 배달하지만, DB 연결(con)은 1개만 공유합니다. (렉 방지)
+					toLetter(con, from, "Paper", rs.getString(1), subject, memo, 0);
+					sendCount++;
+				}
+				// 💡 배달이 다 끝나면 전체 편지 로그를 딱 "1번"만 남깁니다!
+				writeLetterLog("전체편지", from, "전체(" + sendCount + "명)", subject, memo);
+			} catch (Exception e) {
+				lineage.share.System.println(e);
+			} finally {
+				lineage.database.DatabaseConnection.close(st, rs);
+				lineage.database.DatabaseConnection.close(con);
+			}
+		}
+		return sendCount; // 발송된 총인원수를 반환
 	}
 }

@@ -70,7 +70,7 @@ public class 마법주문서제작사 extends object {
 
             if (action.equalsIgnoreCase("희귀 제작 비법서")) {
                 createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 10000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 50000));
 //              createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
 //              createList.add(new CreateItem("아데나", false, 1, false, 0, 100000000));
                 if (!checkItem(pc, createList, itemList)) return;
@@ -78,8 +78,8 @@ public class 마법주문서제작사 extends object {
                 createItem(pc, createList, itemList, "희귀 제작 비법서", 1, 0, 1, 100);
 
             } else if (action.equalsIgnoreCase("영웅 제작 비법서")) {
-                createList.add(new CreateItem("희귀 제작 비법서", false, 1, false, 0, 15));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 50000));
+                createList.add(new CreateItem("희귀 제작 비법서", false, 1, false, 0, 10));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
 //              createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
 //              createList.add(new CreateItem("아데나", false, 1, false, 0, 100000000));
                 if (!checkItem(pc, createList, itemList)) return;
@@ -88,7 +88,7 @@ public class 마법주문서제작사 extends object {
 
             } else if (action.equalsIgnoreCase("전설 제작 비법서")) {
                 createList.add(new CreateItem("영웅 제작 비법서", false, 1, false, 0, 10));
-                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 100000));
+                createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 150000));
 //              createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
 //              createList.add(new CreateItem("아데나", false, 1, false, 0, 100000000));
                 if (!checkItem(pc, createList, itemList)) return;
@@ -96,7 +96,7 @@ public class 마법주문서제작사 extends object {
                 createItem(pc, createList, itemList, "전설 제작 비법서", 1, 0, 1, 100);
 
             } else if (action.equalsIgnoreCase("신화 제작 비법서")) {
-                createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 5));
+                createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 10));
                 createList.add(new CreateItem("신비한 날개깃털", false, 1, false, 0, 300000));
 //              createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
 //              createList.add(new CreateItem("아데나", false, 1, false, 0, 50000000));

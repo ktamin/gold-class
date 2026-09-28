@@ -29,6 +29,7 @@ public class Warehouse {
 	private int InvDolloptionD;
 	private int InvDolloptionE;
 	private long expire_time;
+	private long click_delay;
 	
 	public void clear() {
 		uid = accountUid = clanId = invId = petId = letterId = type = gfxid = quantity = en = bress = durability = time = enfire = enwater = enwind=  enearth= 0;
@@ -37,6 +38,7 @@ public class Warehouse {
 		name = 구분1 = 구분2 = null;
 		definite = false;
 		expire_time = 0;
+		click_delay = 0;
 	}
 	public int getUid() {
 		return uid;
@@ -201,13 +203,19 @@ public class Warehouse {
 	public void setInvDolloptionE(int invDolloptionE) {
 		InvDolloptionE = invDolloptionE;
 	}
-	
 	public long getExpireTime() {
 	    return expire_time;
 	}
 
 	public void setExpireTime(long expire_time) {
 	    this.expire_time = expire_time;
+	}
+	public long getClickDelay() {
+		return click_delay;
+	}
+
+	public void setClickDelay(long click_delay) {
+		this.click_delay = click_delay;
 	}
 }
 	

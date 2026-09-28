@@ -27,7 +27,7 @@ public class 마족신전컨트롤러 {
     private static long nextTimerBroadcastAt = 0L; // 다음 갱신 전송 시각(ms)
 
     // 항상 열려있는 사냥터로 운용할 때 true
-    private static final boolean ALWAYS_OPEN = true;
+    private static final boolean ALWAYS_OPEN = false;
 
     public static void init() {
         TimeLine.start("마족신전 컨트롤러..");
@@ -36,6 +36,18 @@ public class 마족신전컨트롤러 {
         deteEndTime = 0L;
         lastRemainSecSent = -1;
         nextTimerBroadcastAt = 0L;
+        
+        /*상시개방*/
+        if (ALWAYS_OPEN) {
+            // 상시 오픈: 열림 상태로 전환하고 타이머는 숨김(0초)
+            isOpen = true;
+            deteEndTime = Long.MAX_VALUE; // 의미 없음이지만 닫히지 않도록 매우 크게
+            sendMessage();                                      // “열렸습니다” 1회 안내
+            sendTimerUI(false, System.currentTimeMillis()); // 타이머 UI 끄기
+            TimeLine.end();
+            return; // 스케줄 기반 로직 건너뜀
+        }
+        
         TimeLine.end();
     }
 
@@ -61,23 +73,31 @@ public class 마족신전컨트롤러 {
 
         // 요일(1=일, 7=토)
         int day = getDayOfWeek();
+        
+        // 💡 외부 Config(0=일 ~ 6=토) 기준과 맞추기 위해 자바 요일에서 1을 뺌
+        int configDay = day - 1;
 
         // 스케줄 체크 (열릴 때만 트리거)
         if (!isOpen) {
-            if (day == 1 || day == 7) {
-                // 주말 스케줄
-                for (TeamBattleTime t : Lineage.dete_dungeon_time_list2) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+            // 1. 오늘 요일이 Config(gomu_open_day_list)에 등록된 요일인지 확인
+            if (Lineage.dete_open_day_list.contains(configDay)) {
+                
+                // 2. 포함되어 있다면, 오늘이 주말(토, 일)인지 평일인지 구분하여 시간 체크
+                if (configDay == 0 || configDay == 6) {
+                    // [주말 스케줄] (일요일=0, 토요일=6) -> time_list2 사용
+                    for (TeamBattleTime t : Lineage.dete_dungeon_time_list2) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
                     }
-                }
-            } else {
-                // 평일 스케줄
-                for (TeamBattleTime t : Lineage.dete_dungeon_time_list) {
-                    if (t.getHour() == hour && t.getMin() == min) {
-                        open(nowMs);
-                        break;
+                } else {
+                    // [평일 스케줄] (월~금) -> time_list 사용
+                    for (TeamBattleTime t : Lineage.dete_dungeon_time_list) {
+                        if (t.getHour() == hour && t.getMin() == min) {
+                            open(nowMs);
+                            break;
+                        }
                     }
                 }
             }
@@ -185,7 +205,7 @@ public class 마족신전컨트롤러 {
 
         /* 상시개방 */
         if (ALWAYS_OPEN) {
-            // 상시 오픈: 타이머 숨김1
+            // 상시 오픈: 타이머 숨김
             SC_TIMER_UI_NOTI.newInstance()
                     .setTimerType(TimerType.Normal)
                     .setRemainTime(0)

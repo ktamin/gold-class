@@ -61,23 +61,23 @@ public class 마족제작사 extends object {
 				checkItem(pc, createList, itemList);				
 				createItem(pc, createList, createList2, itemList, "저주받은 피", 1, 0, 1);
 				
-			} else if (action.equalsIgnoreCase("악마왕의 양손검")) {					
+			} else if (action.equalsIgnoreCase("악마왕의 양손검")) {
 				createList.add(new CreateItem("타락의 악마서 1권", false, 1, false, 0, 1));
-				createList.add(new CreateItem("타락의 악마서 2권", false, 1, false, 0, 1));	
+				createList.add(new CreateItem("타락의 악마서 2권", false, 1, false, 0, 1));
 				createList.add(new CreateItem("타락의 악마서 3권", false, 1, false, 0, 1));
 				createList.add(new CreateItem("타락의 악마서 4권", false, 1, false, 0, 1));
 				createList.add(new CreateItem("저주받은 피", false, 1, false, 0, 10));
 				checkItem(pc, createList, itemList);				
 				createItem(pc, createList, createList2, itemList, "악마왕의 양손검", 1, 0, 1);
 					
-			} else if (action.equalsIgnoreCase("악마왕의 한손검")) {					
+			} else if (action.equalsIgnoreCase("악마왕의 창")) {					
 				createList.add(new CreateItem("타락의 악마서 1권", false, 1, false, 0, 1));
 				createList.add(new CreateItem("타락의 악마서 2권", false, 1, false, 0, 1));	
 				createList.add(new CreateItem("타락의 악마서 3권", false, 1, false, 0, 1));
 				createList.add(new CreateItem("타락의 악마서 4권", false, 1, false, 0, 1));
 				createList.add(new CreateItem("저주받은 피", false, 1, false, 0, 10));
 				checkItem(pc, createList, itemList);				
-				createItem(pc, createList, createList2, itemList, "악마왕의 한손검", 1, 0, 1);
+				createItem(pc, createList, createList2, itemList, "악마왕의 창", 1, 0, 1);
 				
 			} else if (action.equalsIgnoreCase("악마왕의 이도류")) {					
 				createList.add(new CreateItem("타락의 악마서 1권", false, 1, false, 0, 1));

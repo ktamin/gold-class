@@ -30,12 +30,16 @@ public class ScrollOfOrimWeapon extends Enchant {
 						return;
 					}
 
+					// 강화 확률 계산 및 결과값 받아오기
 					int en = toEnchant(cha, weapon, this);
 
+					// 무기에 강화 수치 적용
 					weapon.toEnchant((PcInstance) cha, en);
 
-					if (en != -127)
+					if (en != -127) {
+						// 주문서 소모
 						cha.getInventory().count(this, getCount() - 1, true);
+					}
 				}
 			} else {
 				if (weapon instanceof ItemWeaponInstance && !weapon.getItem().isEnchant())

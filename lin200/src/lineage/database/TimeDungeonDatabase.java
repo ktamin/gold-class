@@ -128,18 +128,34 @@ public final class TimeDungeonDatabase {
 		// 기란감옥 이용시간 초기화
 		if (hour == Lineage.giran_dungeon_inti_time && min == 0 && sec == 0)
 			resetGiranDungeonTime();
-		
+
 		// 기란감옥 초기화 주문서 사용횟수 초기화
 		if (hour == Lineage.giran_dungeon_reset_hour && min == 0 && sec == 0)
 			resetGiranDungeonScrollCount();
-		
+
 		if (hour == Lineage.giran_dungeon_reset_hour && min == 0 && sec == 0)
 			resetAutoTime();
 
 		if (hour == Lineage.giran_dungeon_reset_hour && min == 0 && sec == 0)
+			resetCheck();
+		// if (hour == Lineage.giran_dungeon_reset_hour && min == 0 && sec == 0)
+		// resetauto();
+		if (hour == Lineage.giran_dungeon_reset_hour && min == 0 && sec == 0)
 			Lineage.init(true);
 
+	}
 	
+	static public void resetCheck() {
+
+		AccountDatabase.updateDayc();
+		AccountDatabase.updateDaycheck2();
+
+		for (PcInstance pc : World.getPcList()) {
+			pc.setDaycheck(0);
+			pc.setDayptime(0);
+		}
+		World.toSender(S_ObjectChatting.clone(BasePacketPooling.getPool(S_ObjectChatting.class),
+				String.format("[알림] 출석체크가 초기화  되었습니다.")));
 	}
 	
 	static public void resetGiranDungeonTime() {

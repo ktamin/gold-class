@@ -26,7 +26,7 @@ public class Exp_potion extends ItemInstance {
 				if (isLvCheck(pc)) {
 					int time = s.getBuffDuration();
 					
-					if (getItem().getName().contains("30일")) {
+					if (getItem().getName().contains("무한")) {
 						time = 36000;
 					}
 					
@@ -37,7 +37,7 @@ public class Exp_potion extends ItemInstance {
 					pc.setExpPotionAdenaUntil(System.currentTimeMillis() + (time * 1000L));
 
 					// 아이템 수량 갱신
-					if (!getItem().getName().contains("30일")) {
+					if (!getItem().getName().contains("무한")) {
 						pc.getInventory().count(this, getCount() - 1, true);
 					}
 				}

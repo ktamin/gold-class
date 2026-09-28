@@ -21,6 +21,12 @@ public class Exp_support extends ItemInstance {
 	public void toClick(Character cha, ClientBasePacket cbp) {
 		if (cha.getInventory() != null && !cha.isWorldDelete() && !cha.isLock() && !cha.isDead()) {
 			
+			// 💡 [추가] 오픈 대기 상태 체크
+			if (Lineage.open_wait) {
+				ChattingController.toChatting(cha, "[오픈대기] 오픈대기 상태에서는 아이템을 사용하실 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+				return;
+			}
+			
 			// 1. 지원 기능 활성화 여부 확인
 			if (!Lineage.is_exp_support) {
 				ChattingController.toChatting(cha, "\\fY레벨업 지원은 현재 사용할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);

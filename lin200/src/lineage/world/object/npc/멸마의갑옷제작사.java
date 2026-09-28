@@ -51,113 +51,150 @@ public class 멸마의갑옷제작사 extends object {
             List<CreateItem> createList = new ArrayList<>();
             List<ItemInstance> itemList = new ArrayList<>();
 
-            if (action.equalsIgnoreCase("발라카스의 마갑주7")) {
-            	createList.add(new CreateItem("화룡 비늘 갑옷", true, 0, true, 7, 1));
-                createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-                createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            if (action.equalsIgnoreCase("0멸마의 판금 갑옷")) {
+            	createList.add(new CreateItem("고대의 판금 갑옷", false, 0, false, 0, 1));
+                createList.add(new CreateItem("멸마의 반지", false, 0, true, 5, 1));
+//              createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 10000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "발라카스의 마갑주", 1, 7, 1, 100);
+                createItem(pc, createList, itemList, "멸마의 판금 갑옷", 1, 0, 1, 100);
                 
-            } else if (action.equalsIgnoreCase("발라카스의 마갑주8")) {
-            	createList.add(new CreateItem("화룡 비늘 갑옷", true, 0, true, 8, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("0멸마의 비늘 갑옷")) {
+            	createList.add(new CreateItem("고대의 비늘 갑옷", false, 0, false, 0, 1));
+            	 createList.add(new CreateItem("멸마의 반지", false, 0, true, 5, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 10000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "발라카스의 마갑주", 1, 8, 1, 100); 
+                createItem(pc, createList, itemList, "멸마의 비늘 갑옷", 1, 0, 1, 100); 
                 
-            } else if (action.equalsIgnoreCase("발라카스의 마갑주9")) {
-            	createList.add(new CreateItem("화룡 비늘 갑옷", true, 0, true, 9, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("0멸마의 가죽 갑옷")) {
+            	createList.add(new CreateItem("고대의 가죽 갑옷", false, 0, false, 0, 1));
+            	 createList.add(new CreateItem("멸마의 반지", false, 0, true, 5, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 10000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "발라카스의 마갑주", 1, 9, 1, 100);     
+                createItem(pc, createList, itemList, "멸마의 가죽 갑옷", 1, 0, 1, 100);     
 
-            } else if (action.equalsIgnoreCase("안타라스의 마갑주7")) {
-            	createList.add(new CreateItem("지룡 비늘 갑옷", true, 0, true, 7, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("0멸마의 로브")) {
+            	createList.add(new CreateItem("고대의 로브", false, 0, false, 0, 1));
+            	 createList.add(new CreateItem("멸마의 반지", false, 0, true, 5, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 10000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "안타라스의 마갑주", 1, 7, 1, 100);
+                createItem(pc, createList, itemList, "멸마의 로브", 1, 0, 1, 100);
                 
-            } else if (action.equalsIgnoreCase("안타라스의 마갑주8")) {
-            	createList.add(new CreateItem("지룡 비늘 갑옷", true, 0, true, 8, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("1멸마의 판금 갑옷")) {
+                createList.add(new CreateItem("고대의 판금 갑옷", false, 0, false, 0, 1));
+                createList.add(new CreateItem("멸마의 반지", false, 0, true, 6, 1));
+//              createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 15000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "안타라스의 마갑주", 1, 8, 1, 100);
+                    createItem(pc, createList, itemList, "멸마의 판금 갑옷", 1, 1, 1, 100);
                 
-            } else if (action.equalsIgnoreCase("안타라스의 마갑주9")) {
-            	createList.add(new CreateItem("지룡 비늘 갑옷", true, 0, true, 9, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("1멸마의 비늘 갑옷")) {
+            	createList.add(new CreateItem("고대의 비늘 갑옷", false, 0, false, 8, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 6, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 15000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "안타라스의 마갑주", 1, 9, 1, 100);    
-
-            } else if (action.equalsIgnoreCase("린드비오르의 마갑주7")) {
-            	createList.add(new CreateItem("풍룡 비늘 갑옷", true, 0, true, 7, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
-                if (!checkItem(pc, createList, itemList)) return;
-
-                createItem(pc, createList, itemList, "린드비오르의 마갑주", 1, 7, 1, 100);
+                createItem(pc, createList, itemList, "멸마의 비늘 갑옷", 1, 1, 1, 100); 
                 
-            } else if (action.equalsIgnoreCase("린드비오르의 마갑주8")) {
-            	createList.add(new CreateItem("풍룡 비늘 갑옷", true, 0, true, 8, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("1멸마의 가죽 갑옷")) {
+            	createList.add(new CreateItem("고대의 가죽 갑옷", false, 0, false, 0, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 6, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 15000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "린드비오르의 마갑주", 1, 8, 1, 100);
+                createItem(pc, createList, itemList, "멸마의 가죽 갑옷", 1, 1, 1, 100);     
+
+            } else if (action.equalsIgnoreCase("1멸마의 로브")) {
+            	createList.add(new CreateItem("고대의 로브", false, 0, false, 0, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 6, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 15000000));
+                if (!checkItem(pc, createList, itemList)) return;
+
+                createItem(pc, createList, itemList, "멸마의 로브", 1, 1, 1, 100);
                 
-            } else if (action.equalsIgnoreCase("린드비오르의 마갑주9")) {
-            	createList.add(new CreateItem("풍룡 비늘 갑옷", true, 0, true, 9, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("2멸마의 판금 갑옷")) {
+                createList.add(new CreateItem("고대의 판금 갑옷", false, 0, false, 0, 1));
+                createList.add(new CreateItem("멸마의 반지", false, 0, true, 7, 1));
+//              createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "린드비오르의 마갑주", 1, 9, 1, 100);    
-
-            } else if (action.equalsIgnoreCase("파푸리온의 마갑주7")) {
-            	createList.add(new CreateItem("수룡 비늘 갑옷", true, 0, true, 7, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
-                if (!checkItem(pc, createList, itemList)) return;
-
-                createItem(pc, createList, itemList, "파푸리온의 마갑주", 1, 7, 1, 100);
+                    createItem(pc, createList, itemList, "멸마의 판금 갑옷", 1, 2, 1, 100);
                 
-            } else if (action.equalsIgnoreCase("파푸리온의 마갑주8")) {
-            	createList.add(new CreateItem("수룡 비늘 갑옷", true, 0, true, 8, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("2멸마의 비늘 갑옷")) {
+            	createList.add(new CreateItem("고대의 비늘 갑옷", false, 0, false, 8, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 7, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "파푸리온의 마갑주", 1, 8, 1, 100);
+                createItem(pc, createList, itemList, "멸마의 비늘 갑옷", 1, 2, 1, 100); 
                 
-            } else if (action.equalsIgnoreCase("파푸리온의 마갑주9")) {
-            	createList.add(new CreateItem("수룡 비늘 갑옷", true, 0, true, 9, 1));
-            	createList.add(new CreateItem("전설 제작 비법서", false, 1, false, 0, 1));
-            	createList.add(new CreateItem("축복 부여 주문서", false, 1, false, 0, 100));
-                createList.add(new CreateItem("아데나", false, 1, false, 0, 30000000));
+            } else if (action.equalsIgnoreCase("2멸마의 가죽 갑옷")) {
+            	createList.add(new CreateItem("고대의 가죽 갑옷", false, 0, false, 0, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 7, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
                 if (!checkItem(pc, createList, itemList)) return;
 
-                createItem(pc, createList, itemList, "파푸리온의 마갑주", 1, 9, 1, 100); 
+                createItem(pc, createList, itemList, "멸마의 가죽 갑옷", 1, 2, 1, 100);     
+
+            } else if (action.equalsIgnoreCase("2멸마의 로브")) {
+            	createList.add(new CreateItem("고대의 로브", false, 0, false, 0, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 7, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 20000000));
+                if (!checkItem(pc, createList, itemList)) return;
+
+                createItem(pc, createList, itemList, "멸마의 로브", 1, 2, 1, 100); 
+                
+            } else if (action.equalsIgnoreCase("3멸마의 판금 갑옷")) {
+                createList.add(new CreateItem("고대의 판금 갑옷", false, 0, false, 0, 1));
+                createList.add(new CreateItem("멸마의 반지", false, 0, true, 8, 1));
+//              createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 25000000));
+                if (!checkItem(pc, createList, itemList)) return;
+
+                    createItem(pc, createList, itemList, "멸마의 판금 갑옷", 1, 3, 1, 100);
+                
+            } else if (action.equalsIgnoreCase("3멸마의 비늘 갑옷")) {
+            	createList.add(new CreateItem("고대의 비늘 갑옷", false, 0, false, 0, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 8, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 25000000));
+                if (!checkItem(pc, createList, itemList)) return;
+
+                createItem(pc, createList, itemList, "멸마의 비늘 갑옷", 1, 3, 1, 100); 
+                
+            } else if (action.equalsIgnoreCase("3멸마의 가죽 갑옷")) {
+            	createList.add(new CreateItem("고대의 가죽 갑옷", false, 0, false, 0, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 8, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 25000000));
+                if (!checkItem(pc, createList, itemList)) return;
+
+                createItem(pc, createList, itemList, "멸마의 가죽 갑옷", 1, 3, 1, 100);     
+
+            } else if (action.equalsIgnoreCase("3멸마의 로브")) {
+            	createList.add(new CreateItem("고대의 로브", false, 0, false, 0, 1));
+            	createList.add(new CreateItem("멸마의 반지", false, 0, true, 8, 1));
+//            	createList.add(new CreateItem("고대의 갑옷 조각", false, 1, false, 0, 100));
+                createList.add(new CreateItem("아데나", false, 1, false, 0, 25000000));
+                if (!checkItem(pc, createList, itemList)) return;
+
+                createItem(pc, createList, itemList, "멸마의 로브", 1, 3, 1, 100); 
+                
             }
         }
     }

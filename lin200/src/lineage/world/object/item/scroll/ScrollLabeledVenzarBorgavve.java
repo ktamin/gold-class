@@ -19,7 +19,7 @@ public class ScrollLabeledVenzarBorgavve extends ItemInstance {
 		int bress = this.bless;
 
 		// 수량 갱신.
-                if (!getItem().getName().contains("30일")) {
+                if (!getItem().getName().contains("무한")) {
 		cha.getInventory().count(this, getCount()-1, true);
                 }
 

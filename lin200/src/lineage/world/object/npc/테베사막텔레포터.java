@@ -1,6 +1,7 @@
 package lineage.world.object.npc;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import lineage.network.packet.BasePacketPooling;
@@ -10,71 +11,80 @@ import lineage.share.Lineage;
 import lineage.util.Util;
 import lineage.world.controller.ChattingController;
 import lineage.world.controller.WantedController;
+import lineage.world.controller.테베사막컨트롤러;
 import lineage.world.object.object;
 import lineage.world.object.instance.PcInstance;
 
 public class 테베사막텔레포터 extends object {
+	@Override
+	public void toTalk(PcInstance pc, ClientBasePacket cbp) {
+		List<String> list = new ArrayList<String>();
+		
+		int nowday = getDayOfWeek ();
+		list.add(String.format("입장 레벨: %d이상 입장 가능", Lineage.desert_level));
+		list.add(String.format("수배 조건: %s", Lineage.desert_wanted ? "수배자만 입장 가능" : "수배 필요없음"));
+		list.add(String.format("혈맹 조건: %s", Lineage.desert_clan ? "혈맹 필요" : "혈맹 필요없음"));
+		
+		if(nowday == 1 || nowday == 7){
+			list.add(String.format("입장 시간: %s", Lineage.desert_dungeon_time2));	
+		}else{
+			list.add(String.format("입장 시간: %s", Lineage.desert_dungeon_time));
+		}
+		list.add(String.format("진행 시간: %s", Lineage.desert_play_time < 60 ? Lineage.desert_play_time + "초" : (Lineage.desert_play_time / 60) + "분"));
+		list.add(String.format("입장 가능 여부: %s", 테베사막컨트롤러.isOpen ? "현재 입장 가능" : "입장 불가"));
+		
+		pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "deserttel", null, list));
+	}
 
-    @Override
-    public void toTalk(PcInstance pc, ClientBasePacket cbp) {
-        List<String> list = new ArrayList<String>();
+	@Override
+	public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp) {
+	    if (!"desert_teleport".equalsIgnoreCase(action)) return;
+	    
+	    // ==========================================
+	    // ✅ [추가] 고정 멤버 제한
+	    // ==========================================
+	    if (pc.getGm() == 0 && !pc.isMember()) {
+	        ChattingController.toChatting(pc, "고정 멤버만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+	        return;
+	    }
 
-        list.add(String.format("입장 레벨: %d이상 입장 가능", Lineage.tebe_level));
-        list.add(String.format("수배 조건: %s", Lineage.tebe_wanted ? "수배자만 입장 가능" : "수배 필요없음"));
-        list.add(String.format("혈맹 조건: %s", Lineage.tebe_clan ? "혈맹 필요" : "혈맹 필요없음"));
-        list.add(String.format("입장재료 : 아데나 %,d 개", Lineage.go_tebe));
+	    // 1. 혈맹 제한
+	    if (pc.getGm() == 0 && (pc.getClanId() == 0 || pc.getClanName().equalsIgnoreCase(Lineage.new_clan_name))) {
+	        ChattingController.toChatting(pc, "혈맹이 없거나 신규 혈맹은 입장할 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
+	        return;
+	    }
 
-        pc.toSender(S_Html.clone(BasePacketPooling.getPool(S_Html.class), this, "tebe1tel", null, list));
-    }
+	    // 2. 레벨 제한
+	    if (pc.getGm() == 0 && pc.getLevel() < Lineage.desert_level) {
+	        ChattingController.toChatting(pc, String.format("수렵 이벤트 던전은 %d레벨 이상 입장 가능합니다.", Lineage.desert_level), Lineage.CHATTING_MODE_MESSAGE);
+	        return;
+	    }
 
-    @Override
-    public void toTalk(PcInstance pc, String action, String type, ClientBasePacket cbp) {
-        if (!action.equalsIgnoreCase("tebe1_teleport"))
-            return;
+	    // 3. 사냥터 오픈 여부
+	    if (pc.getGm() == 0 && !테베사막컨트롤러.isOpen) {
+	        ChattingController.toChatting(pc, "수렵 이벤트 던전으로 가는길이 닫혀있습니다.", Lineage.CHATTING_MODE_MESSAGE);
+	        return;
+	    }
 
-        // GM이면 모든 제한 무시하고 바로 입장
-        if (pc.getGm() > 0) {
-            // 입장
-        	pc.toPotal(Util.random(32627, 32619), Util.random(32899, 32899), 780);
-            return;
-        }
+	    // 4. 입장료 체크
+	    if (pc.getGm() == 0 && !pc.getInventory().isAden("아데나", Lineage.go_desert, true)) {
+	        ChattingController.toChatting(pc, String.format("입장료 아데나: %,d 부족합니다.", Lineage.go_desert), Lineage.CHATTING_MODE_MESSAGE);
+	        return;
+	    }
 
-        // 1) 레벨 체크
-        if (pc.getLevel() < Lineage.tebe_level) {
-            ChattingController.toChatting(pc,
-                String.format("테베라스 사막은 %d레벨 이상 입장 가능합니다.", Lineage.tebe_level),
-                Lineage.CHATTING_MODE_MESSAGE);
-            return;
-        }
+	    // 5. 수배자 제한 (옵션)
+	    if (pc.getGm() == 0 && Lineage.desert_wanted && !WantedController.checkWantedPc(pc)) {
+	        ChattingController.toChatting(pc, "수렵 이벤트 던전은 수배자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+	        return;
+	    }
 
-        // 2) 수배 조건
-        // wh_wanted = true  → 수배자만 입장
-        // wh_wanted = false → 수배 필요 없음(= 수배자는 입장 가능/불가 정책이 없으니 통과)
-        if (Lineage.tebe_wanted && !WantedController.checkWantedPc(pc)) {
-            ChattingController.toChatting(pc, "테베라스 사막은 수배자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
-            return;
-        }
+	    // 모두 통과
+	    pc.toPotal(Util.random(32624, 32622), Util.random(32893, 32904), 780);
+	}
 
-        // 3) 혈맹 조건
-        if (Lineage.tebe_clan && pc.getClanId() <= 0) {
-            ChattingController.toChatting(pc, "테베라스 사막은 혈맹 가입자만 입장 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
-            return;
-        }
-
-        // 4) 입장료(아데나) 체크 — 0이면 패스
-        if (Lineage.go_tebe > 0) {
-            // 서버 공용: 인벤에 아데나 차감 API가 있으면 사용 (이름은 "아데나"로 고정)
-            // true: 차감 성공 / false: 부족
-            if (pc.getInventory() == null ||
-                !pc.getInventory().isAden("아데나", Lineage.go_tebe, true)) {
-                ChattingController.toChatting(pc,
-                    String.format("입장재료가 부족합니다. 아데나 %,d만 필요합니다.", Lineage.go_tebe),
-                    Lineage.CHATTING_MODE_MESSAGE);
-                return;
-            }
-        }
-
-        // 5) 입장
-        pc.toPotal(Util.random(32627, 32619), Util.random(32899, 32899), 780);
-    }
+	public static int getDayOfWeek() {
+		Calendar rightNow = Calendar.getInstance();
+		int day_of_week = rightNow.get(Calendar.DAY_OF_WEEK);
+		return day_of_week;
+	}
 }
