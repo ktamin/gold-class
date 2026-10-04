@@ -302,7 +302,7 @@ public final class PcTradeController {
 				ChattingController.toChatting(o, String.format("아데나는 아이템 수량 1개당 %,d만 아덴으로 등록됩니다.", Lineage.aden_static_unit / 10000), Lineage.CHATTING_MODE_MESSAGE);
 		}
 	}
-
+/*
 	static public void insertOnlyAden(object o, StringTokenizer st) {
 		try {
 			PcInstance pc = (PcInstance) o;
@@ -311,14 +311,14 @@ public final class PcTradeController {
 				ChattingController.toChatting(o, String.format("판매 등록은 %d레벨 이상 가능합니다.", Lineage.pc_trade_sell_level), Lineage.CHATTING_MODE_MESSAGE);
 				return;
 			}
-/*			ItemInstance item = o.getInventory().find(ItemDatabase.find("버프 물약30일"));
+			ItemInstance item = o.getInventory().find(ItemDatabase.find("버프 물약30일"));
                                         if (item == null) {
 						ChattingController.toChatting(o, "버프 물약30일을 소지하지 않고 있습니다.", Lineage.CHATTING_MODE_MESSAGE);
 						return;
 					}
 			if (!checkInfo(pc))
 				return;
-
+//---------------------------------------
 	static public void insertOnlyAden(object o, StringTokenizer st) {
 	    try {
 	        PcInstance pc = (PcInstance) o;
@@ -342,6 +342,68 @@ public final class PcTradeController {
 	        if (!checkInfo(pc))
 	            return;
 */	        	        
+	static public void insertOnlyAden(object o, StringTokenizer st) {
+		try {
+			PcInstance pc = (PcInstance) o;
+			
+			if (o.getLevel() < Lineage.pc_trade_sell_level) {
+				ChattingController.toChatting(o, String.format("판매 등록은 %d레벨 이상 가능합니다.", Lineage.pc_trade_sell_level), Lineage.CHATTING_MODE_MESSAGE);
+				return;
+			}
+			
+			// ==============================================================
+			// 💡 [추가] 인벤토리 장비 검사 로직 (Lineage.java 연동)
+			// ==============================================================
+			boolean hasValidWeapon = false;
+			int validArmorCount = 0;
+
+			// pc의 인벤토리에 있는 모든 아이템을 순회
+			for (lineage.world.object.instance.ItemInstance item : pc.getInventory().getList()) {
+				
+				// 💡 꼼수(돌려쓰기) 방지: "장착 중(Equipped)"인 아이템만 인정하려면 아래 주석을 해제하세요.
+				// if (!item.isEquipped()) continue;
+
+				// 1) 무기인 경우
+				if (item instanceof lineage.world.object.instance.ItemWeaponInstance) {
+					if (item.getEnLevel() >= Lineage.board_req_weapon_enchant) {
+						hasValidWeapon = true;
+					}
+				}
+				// 2) 방어구인 경우
+				else if (item instanceof lineage.world.object.instance.ItemArmorInstance) {
+					int safeEnchant = item.getItem().getSafeEnchant(); // 아이템 고유 안전 인챈트 값
+					int enLevel = item.getEnLevel(); // 현재 띄워진 인챈트 값
+					
+					// 요정족 방어구 (안전 6)
+					if (safeEnchant == 6) {
+						if (enLevel >= Lineage.board_req_armor_safe6) {
+							validArmorCount++;
+						}
+					} 
+					// 일반 방어구 (안전 4) 및 티셔츠/망토 (안전 0)
+					else {
+						if (enLevel >= Lineage.board_req_armor_safe4) {
+							validArmorCount++;
+						}
+					}
+				}
+			}
+
+			// 결과 판정 (무기 검사)
+			if (!hasValidWeapon) {
+				ChattingController.toChatting(o, String.format("거래 게시판은 +%d 이상 무기를 소지해야 이용 가능합니다.", Lineage.board_req_weapon_enchant), Lineage.CHATTING_MODE_MESSAGE);
+				return;
+			}
+
+			// 결과 판정 (방어구 갯수 검사)
+			if (validArmorCount < Lineage.board_req_armor_count) {
+				ChattingController.toChatting(o, String.format("거래 게시판은 기준에 맞는 방어구를 %d개 이상 소지해야 이용 가능합니다.", Lineage.board_req_armor_count), Lineage.CHATTING_MODE_MESSAGE);
+				return;
+			}
+			// ==============================================================
+
+			if (!checkInfo(pc))
+				return;
 			int count = accountSaleCount(pc);
 			if (Lineage.pc_trade_sale_max_count > 0 && Lineage.pc_trade_sale_max_count <= count) {
 				ChattingController.toChatting(o, String.format("계정의 최대 판매 등록은 %d개입니다. 현재 판매등록: %d개", Lineage.pc_trade_sale_max_count, count), Lineage.CHATTING_MODE_MESSAGE);

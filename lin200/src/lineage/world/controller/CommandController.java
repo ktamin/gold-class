@@ -1102,6 +1102,9 @@ public class CommandController {
 				} else if (key.equalsIgnoreCase(Lineage.command + "업")) {
 					PcTradeController.viewBoard4(o);
 					return true;
+				} else if (key.equalsIgnoreCase(Lineage.command + "아")) {
+					PcTradeController.viewBoard(o);
+					return true;
 				} else if (key.equalsIgnoreCase(Lineage.command + "판매등록")) {
 					PcTradeController.insertItem(o, st);
 					return true;

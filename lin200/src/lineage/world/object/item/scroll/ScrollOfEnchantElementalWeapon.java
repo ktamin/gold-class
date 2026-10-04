@@ -103,9 +103,10 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
                 return;
             }
 
-            int chance = chanceByStep(curStep);
-            int roll = Util.random(1, 100);
-            boolean success = (chance >= roll);
+         // 💡 새 코드로 교체 (소수점 난수 생성: 0.00 ~ 99.99...)
+            double chance = chanceByStep(curStep);
+            double roll = Math.random() * 100.0; 
+            boolean success = (roll < chance);
 
             String afterElem = beforeElem;
             int afterStep = curStep;
@@ -157,9 +158,10 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
                 return;
             }
 
-            int chance = chanceByStep(curStep);
-            int roll = Util.random(1, 100);
-            boolean success = (chance >= roll);
+         // 💡 새 코드로 교체 (소수점 난수 생성: 0.00 ~ 99.99...)
+            double chance = chanceByStep(curStep);
+            double roll = Math.random() * 100.0; 
+            boolean success = (roll < chance);
 
             String afterElem = beforeElem;
             int afterStep = curStep;
@@ -211,9 +213,10 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
                 return;
             }
 
-            int chance = chanceByStep(curStep);
-            int roll = Util.random(1, 100);
-            boolean success = (chance >= roll);
+         // 💡 새 코드로 교체 (소수점 난수 생성: 0.00 ~ 99.99...)
+            double chance = chanceByStep(curStep);
+            double roll = Math.random() * 100.0; 
+            boolean success = (roll < chance);
 
             String afterElem = beforeElem;
             int afterStep = curStep;
@@ -265,9 +268,10 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
                 return;
             }
 
-            int chance = chanceByStep(curStep);
-            int roll = Util.random(1, 100);
-            boolean success = (chance >= roll);
+         // 💡 새 코드로 교체 (소수점 난수 생성: 0.00 ~ 99.99...)
+            double chance = chanceByStep(curStep);
+            double roll = Math.random() * 100.0; 
+            boolean success = (roll < chance);
 
             String afterElem = beforeElem;
             int afterStep = curStep;
@@ -320,22 +324,16 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
     // =========================================================
 
     /** 단계별 성공 확률 반환 (0단→dan1, 1단→dan2, …) */
-    private int chanceByStep(int step) {
-        switch (step) {
-            case 0:
-                return Lineage_Balance.dan1;
-            case 1:
-                return Lineage_Balance.dan2;
-            case 2:
-                return Lineage_Balance.dan3;
-            case 3:
-                return Lineage_Balance.dan4;
-            case 4:
-                return Lineage_Balance.dan5;
-            default:
-                return 0;
-        }
-    }
+	private double chanceByStep(int step) { // int를 double로 변경
+		switch (step) {
+			case 0: return Lineage_Balance.dan1;
+			case 1: return Lineage_Balance.dan2;
+			case 2: return Lineage_Balance.dan3;
+			case 3: return Lineage_Balance.dan4;
+			case 4: return Lineage_Balance.dan5;
+			default: return 0.0;
+		}
+	}
 
     /**
      * "다음 단계" 최소 요구 +강
@@ -395,8 +393,8 @@ public class ScrollOfEnchantElementalWeapon extends ItemInstance {
             String afterElem,
             int afterStep,
             boolean success,
-            int chance,
-            int roll) {
+            double chance, // int를 double로 변경
+			double roll) { // int를 double로 변경
 
         String line = String.format(
                 "계정:%s 캐릭:%s | 주문서:%s | 대상:%s+%d | 이전:%s %d단 -> 이후:%s %d단 | 결과:%s | 확률:%d%% 주사위:%d",

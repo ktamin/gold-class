@@ -104,15 +104,15 @@ public class 라바던전텔레포터 extends object {
 	 		
 	 		if (rnd == 1) {
 	 			// 📍 첫 번째 위치 (기존 좌표)
-	 			pc.toPotal(Util.random(32742, 32739), Util.random(32839, 32837), 451);
+	 			pc.toPotal(Util.random(32738, 32741), Util.random(32677, 32680), 479);
 	 		} 
 	 		else if (rnd == 2) {
 	 			// 📍 두 번째 위치 (좌표 숫자를 원하시는 곳으로 수정하세요)
-	 			pc.toPotal(Util.random(32737, 32743), Util.random(32858, 32857), 451); 
+	 			pc.toPotal(Util.random(32933, 32931), Util.random(32870, 32865), 479); 
 	 		} 
 	 		else {
 	 			// 📍 세 번째 위치 (좌표 숫자를 원하시는 곳으로 수정하세요)
-	 			pc.toPotal(Util.random(32759, 32753), Util.random(32845, 32845), 451);
+	 			pc.toPotal(Util.random(32726, 32731), Util.random(32866, 32868), 479);
 	 		}
 	}
 

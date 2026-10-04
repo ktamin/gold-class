@@ -1075,8 +1075,8 @@ public class MonsterInstance extends Character {
 				if (isBoss()
 						&& !Util.isDistance(x, y, map, homeX, homeY, homeMap, Lineage.SEARCH_MONSTER_TARGET_LOCATION)) {
 					// 보스 스폰 지역 멀어질시 hp/mp 초기화
-					setNowHp(getTotalHp());
-					setNowMp(getTotalMp());
+//					setNowHp(getTotalHp());
+//					setNowMp(getTotalMp());
 					// =============2026.06.08 보스 스폰 자리로 돌아올시 데미지/경험치 초기화
 					// 🚨 [추가] 보스 어그로 및 타겟 초기화
 					// =========================================================

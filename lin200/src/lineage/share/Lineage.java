@@ -1331,6 +1331,12 @@ public final class Lineage {
 	static public int dan3;
 	static public int dan4;
 	static public int dan5;
+	
+	// 💡 거래 게시판 장비 제한 설정
+	static public int board_req_weapon_enchant = 7; // 무기 +7 이상
+	static public int board_req_armor_safe4 = 5;    // 안전 4(일반) 방어구 +5 이상
+	static public int board_req_armor_safe6 = 7;    // 안전 6(요정) 방어구 +7 이상
+	static public int board_req_armor_count = 6;    // 조건을 만족하는 방어구 개수 (6개)
 
 	// 스피드핵
 	static public boolean speedhack = true;
@@ -1423,7 +1429,7 @@ public final class Lineage {
 			24, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38,
 			39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 68,
 			69, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 85, 86,209,
-			210, 211, 212, 213, 214, 215, 216, 300, 301, 304, 400, 401, 410, 420, 440, 441, 445, 451, 452, 480, 522,
+			210, 211, 212, 213, 214, 215, 216, 300, 301, 304, 400, 401, 410, 420, 440, 441, 445, 451, 452, 479, 480, 522,
 			523, 524, 604, 605, 666, 777, 781, 811, 780, 783, 809, 810, 811, 812, 73, 75, 167, 2004, 5167, 15450 };
 
 	static public int TeleportPossibleMapLength = TeleportPossibleMap.length;
@@ -1827,6 +1833,23 @@ public final class Lineage {
 	// 수렵이벤트 요일별 오픈
 	static public List<Integer> petpaper_open_day_list = new ArrayList<Integer>();
 	
+	// 티칼신전 입장 레벨
+	static public int tical_level = 1;
+	// 티칼신전 수배자만 입장가능 여부
+	static public boolean tical_wanted = false;
+	// 티칼신전 혈맹가입자만 입장가능 여부
+	static public boolean tical_clan = false;
+	// 티칼신전 입장 시간
+	static public List<TeamBattleTime> tical_dungeon_time_list = new ArrayList<TeamBattleTime>();
+	static public String tical_dungeon_time = "";
+
+	static public List<TeamBattleTime> tical_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
+	static public String tical_dungeon_time2 = "";
+	// 티칼신전 진행 시간(초)
+	static public int tical_play_time = 600;
+	// 티칼신전 요일별 오픈
+	static public List<Integer> tical_open_day_list = new ArrayList<Integer>();
+	
 	// 스팟 공성전 맵 입장 레벨
 	static public int spottower_level = 1;
 	// 스팟 공성전 맵 수배자만 입장가능 여부
@@ -1843,24 +1866,6 @@ public final class Lineage {
 	static public int spottower_play_time = 600;
 	// 스팟 공성전 맵 요일별 오픈
 	static public List<Integer> spottower_open_day_list = new ArrayList<Integer>();
-	
-	// 스팟 공성전 맵 입장 레벨
-	static public int tical_level = 1;
-	// 스팟 공성전 맵 수배자만 입장가능 여부
-	static public boolean tical_wanted = false;
-	// 스팟 공성전 맵 혈맹가입자만 입장가능 여부
-	static public boolean tical_clan = false;
-	// 스팟 공성전 맵 입장 시간
-	static public List<TeamBattleTime> tical_dungeon_time_list = new ArrayList<TeamBattleTime>();
-	static public String tical_dungeon_time = "";
-
-	static public List<TeamBattleTime> tical_dungeon_time_list2 = new ArrayList<TeamBattleTime>();
-	static public String tical_dungeon_time2 = "";
-	// 스팟 공성전 맵 진행 시간(초)
-	static public int tical_play_time = 600;
-	// 스팟 공성전 맵 요일별 오픈
-	static public List<Integer> tical_open_day_list = new ArrayList<Integer>();
-
 
 	// 캐쉬사냥터 입장 레벨
 	static public int cash_level = 1;
@@ -4477,6 +4482,11 @@ public final class Lineage {
 						petpaper_dungeon_time2 = value;
 						teamBattleTime(petpaper_dungeon_time_list2, value);
 					}
+					
+					else if (key.equalsIgnoreCase("tical_dungeon_time2")) {
+						tical_dungeon_time2 = value;
+						teamBattleTime(tical_dungeon_time_list2, value);
+					}
 
 					else if (key.equalsIgnoreCase("tebe_dungeon_time2")) {
 						tebe_dungeon_time2 = value;
@@ -5557,6 +5567,16 @@ public final class Lineage {
 						Lineage.reward_coin_min_save = Long.parseLong(value);
 					else if (key.equalsIgnoreCase("reward_coin_max_save"))
 						Lineage.reward_coin_max_save = Long.parseLong(value);
+					
+					// 💡 거래 게시판 장비 제한 설정 로더 추가
+					else if (key.equalsIgnoreCase("board_req_weapon_enchant"))
+						board_req_weapon_enchant = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("board_req_armor_safe4"))
+						board_req_armor_safe4 = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("board_req_armor_safe6"))
+						board_req_armor_safe6 = Integer.parseInt(value);
+					else if (key.equalsIgnoreCase("board_req_armor_count"))
+						board_req_armor_count = Integer.parseInt(value);
 
 				}
 			}
@@ -5885,6 +5905,13 @@ public final class Lineage {
 	static public List<Integer> getPetPaperOpendayList() {
 		synchronized (petpaper_open_day_list) {
 			return new ArrayList<Integer>(petpaper_open_day_list);
+		}
+	}
+	
+	// 티칼신전 개방 요일
+	static public List<Integer> getticalOpendayList() {
+		synchronized (tical_open_day_list) {
+			return new ArrayList<Integer>(tical_open_day_list);
 		}
 	}
 	

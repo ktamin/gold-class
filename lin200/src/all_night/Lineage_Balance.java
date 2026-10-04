@@ -485,11 +485,11 @@ public final class Lineage_Balance {
 	// 속성 최대 강화 단수
 	public static int danlevel; // 속성강화제한 (최대 단수)
 	// 속성 단계별 확률
-	public static int dan1;     // 1단 확률
-	public static int dan2;     // 2단 확률
-	public static int dan3;     // 3단 확률
-	public static int dan4;     // 4단 확률
-	public static int dan5;     // 5단 확률
+	public static double dan1;     // 1단 확률
+	public static double dan2;     // 2단 확률
+	public static double dan3;     // 3단 확률
+	public static double dan4;     // 4단 확률
+	public static double dan5;     // 5단 확률
 
 	// 안전인챈트 0 무기 0 -> 1 확률(%)
 	static public double weapon_safe_enchant0_0_probability;
@@ -1477,21 +1477,21 @@ public final class Lineage_Balance {
 					else if (key.equalsIgnoreCase("bless_change_probability6"))
 						bless_change_probability6 = Double.valueOf(value) * 0.01;
 					
-					// 💡 무기 속성 강화 로더 추가
+					// 💡 무기 속성 강화 로더 추가 (수정됨)
 					else if (key.equalsIgnoreCase("elemental_fail_penalty"))
 						elemental_fail_penalty = Integer.parseInt(value);
 					else if (key.equalsIgnoreCase("danlevel"))
-						danlevel = Integer.valueOf(value);
+						danlevel = Integer.parseInt(value);
 					else if (key.equalsIgnoreCase("dan1"))
-						dan1 = Integer.valueOf(value);
+						dan1 = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("dan2"))
-						dan2 = Integer.valueOf(value);
+						dan2 = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("dan3"))
-						dan3 = Integer.valueOf(value);
+						dan3 = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("dan4"))
-						dan4 = Integer.valueOf(value);
+						dan4 = Double.parseDouble(value);
 					else if (key.equalsIgnoreCase("dan5"))
-						dan5 = Integer.valueOf(value);
+						dan5 = Double.parseDouble(value);
 
 					else if (key.equalsIgnoreCase("weapon_safe_enchant0_0_probability"))
 						weapon_safe_enchant0_0_probability = Double.valueOf(value) * 0.01;
