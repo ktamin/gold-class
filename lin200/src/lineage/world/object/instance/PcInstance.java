@@ -355,6 +355,11 @@ public class PcInstance extends Character {
 	private int tempClanGrade;
 	private int battleTeam;
 	private boolean isTeamBattleDead;
+	
+	// 💡 할파스의 가호 상태 관리 및 자동 이펙트 엔진
+	public long lastHalpasTime = 0;
+	private java.util.Timer halpasHeartbeatTimer = null;
+	private java.util.Timer halpasCooldownTimer = null;
 
 	// 시간제 던전을 위한 변수
 	private int giran_dungeon_time;
@@ -3744,39 +3749,47 @@ public class PcInstance extends Character {
 			}
 		}
 		if (this.getInventory() != null && !this.isWorldDelete()) {
-			ItemInstance item = this.getInventory().find(ItemDatabase.find("랭킹변신카드30일"));
+			ItemInstance item = this.getInventory().find(ItemDatabase.find("제니스의 반지"));
 			int check = 0;
 
 			// 수량 체크
 			for (ItemInstance check_item : this.getInventory().getList()) {
-				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("랭킹변신카드30일"))
+				if (check_item != null && check_item.getItem().getName().equalsIgnoreCase("제니스의 반지"))
 					check = check + 1;
 			}
 
 			if (check == 0 && isSealBuff100) {
-				// this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 3);
-				// this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 3);
-				this.setDynamicHp(this.getDynamicHp() - 200);
+//				this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() - 3);
+//				this.setDynamicReduction(this.getDynamicAddPvpReduction() - 2);
+//				this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() - 2);
+				this.setDynamicHp(this.getDynamicHp() - 100);
 				isSealBuff100 = false;
 				toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 				toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
-				ChattingController.toChatting(this, "[알림] 랭킹변신카드30일 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
+				
+				// ✅ [수정] 116번 버프 아이콘 해제 (시간을 0으로 전송)
+				SC_BUFFICON_NOTI.on(this, 116, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+				
+				ChattingController.toChatting(this, "[알림]독 면역,HP+100 효과가 해제됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			}
 
 			if (item != null) {
 				// 정상적으로 효과 적용할 경우
 				if (check == 1 && !isSealBuff100) {
 					isSealBuff100 = true;
-					// this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 3);
-					// this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 3);
-					this.setDynamicHp(this.getDynamicHp() + 200);
+//					this.setDynamicAddPvpDmg(this.getDynamicAddPvpDmg() + 3);
+//					this.setDynamicReduction(this.getDynamicAddPvpReduction() + 2);
+//					this.setDynamicAddPvpReduction(this.getDynamicAddPvpReduction() + 2);
+					this.setDynamicHp(this.getDynamicHp() + 100);
+					
 					ChattingController.toChatting(this,
-							String.format("[알림] %s 효과 적용 : HP+200", item.getItem().getName()),
+							String.format("[알림] %s 효과 적용 :독 면역,HP+100", item.getItem().getName()),
 							Lineage.CHATTING_MODE_MESSAGE);
 					toSender(S_CharacterStat.clone(BasePacketPooling.getPool(S_CharacterStat.class), this));
 					toSender(S_CharacterSpMr.clone(BasePacketPooling.getPool(S_CharacterSpMr.class), this));
 
-					// 정상적으로 효과 적용 중이면서 인첸트 레벨이 변경 될 경우
+					// ✅ [수정] 116번 버프 아이콘 무제한 생성 (시간을 -1로 전송)
+					SC_BUFFICON_NOTI.on(this, 116, -1, 0);
 				}
 			}
 		}
@@ -8695,6 +8708,67 @@ public class PcInstance extends Character {
 			}
 		}
 	}
+	
+	// 할파스의 갑옷 1. 활성화 중 30초 간격 유지 이펙트 (23311) 시작
+			public void startHalpasHeartbeat() {
+				stopHalpasTimers(); // 중복 실행 방지
+				
+				long remainTimeMs = (this.lastHalpasTime + (3 * 60 * 60 * 1000L)) - System.currentTimeMillis();
+				if (remainTimeMs > 0) {
+					// 아직 쿨타임 중이면 백그라운드 대기 타이머로 넘김
+					startHalpasCooldown(remainTimeMs);
+					return;
+				}
+
+				// 쿨타임이 끝났거나 없으면 30초마다 23311(심장박동) 반복
+				halpasHeartbeatTimer = new java.util.Timer();
+				halpasHeartbeatTimer.scheduleAtFixedRate(new java.util.TimerTask() {
+					@Override
+					public void run() {
+						if (isWorldDelete() || getInventory() == null) {
+							stopHalpasTimers();
+							return;
+						}
+						// 30초마다 살아있음 이펙트 발동
+						toSender(lineage.network.packet.server.S_ObjectEffect.clone(lineage.network.packet.BasePacketPooling.getPool(lineage.network.packet.server.S_ObjectEffect.class), PcInstance.this, 23311), true);
+					}
+				}, 0L, 10000L); // 30초 뒤 첫 실행, 이후 30초 간격 반복
+			}
+
+			// 2. 쿨타임 대기 (3시간 뒤 재활성화 이펙트 23830)
+			public void startHalpasCooldown(long delayMs) {
+				halpasCooldownTimer = new java.util.Timer();
+				halpasCooldownTimer.schedule(new java.util.TimerTask() {
+					@Override
+					public void run() {
+						if (isWorldDelete() || getInventory() == null) return;
+						
+						lineage.world.object.instance.ItemInstance armor = getInventory().getSlot(lineage.share.Lineage.SLOT_ARMOR);
+						if (armor != null) {
+							String name = armor.getItem().getName();
+							if (name.equalsIgnoreCase("할파스의 완력") || name.equalsIgnoreCase("할파스의 예지력") || name.equalsIgnoreCase("할파스의 마력")) {
+								// 쿨타임 종료 아이콘 변경
+								Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.on(PcInstance.this, 118, 0, Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+								Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.on(PcInstance.this, 117, -1, 0);
+								
+								// ✅ 3시간 후 재활성화 이펙트 (23830)
+								toSender(lineage.network.packet.server.S_ObjectEffect.clone(lineage.network.packet.BasePacketPooling.getPool(lineage.network.packet.server.S_ObjectEffect.class), PcInstance.this, 23830), true);
+								lineage.world.controller.ChattingController.toChatting(PcInstance.this, "할파스의 가호 쿨타임이 종료되어 다시 활성화되었습니다.", lineage.share.Lineage.CHATTING_MODE_MESSAGE);
+								
+								// 재활성화 되었으니 다시 30초 박동 루프 시작
+								startHalpasHeartbeat();
+							}
+						}
+					}
+				}, delayMs);
+			}
+
+			// 3. 모든 타이머 강제 정지 (옷 벗거나, 접속 종료 시)
+			public void stopHalpasTimers() {
+				if (halpasHeartbeatTimer != null) { halpasHeartbeatTimer.cancel(); halpasHeartbeatTimer = null; }
+				if (halpasCooldownTimer != null) { halpasCooldownTimer.cancel(); halpasCooldownTimer = null; }
+			}
+			// =======================================================
 
 	public void sendProto(ProtoOutputStream stream, boolean isClear) {
 		client.sendProto(stream, isClear);

@@ -123,6 +123,9 @@ public class 룬조각 extends ItemInstance {
 		} else if (myName.equalsIgnoreCase("시어의 심안")) {
 			targetName = "시어의 심안";
 			needCount = 3;  // 10개 필요			
+		} else if (myName.equalsIgnoreCase("제니스의 반지 조각")) {
+			targetName = "제니스의 반지";
+			needCount = 5;  // 10개 필요
 		
 		} else {
 			// 지정되지 않은 룬 조각일 경우 방어용

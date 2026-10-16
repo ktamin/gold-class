@@ -1,5 +1,6 @@
 package lineage.world.controller;
 
+import Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI;
 import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI;
 import Fx.server.MJTemplate.MJProto.Models.SC_TOAST_NOTI.ToastType;
 import all_night.Lineage_Balance;
@@ -507,6 +508,45 @@ public final class DamageController {
 										
 						target.setNowMp(target.getNowMp() + mp);
 						target.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), target, 2188), target instanceof PcInstance);
+					}
+					
+					// ==========================================
+					// 할파스의 가호 (HP 100 이하 시 2000 회복, 쿨타임 3시간)
+					// ==========================================
+					if (targetArmor != null) {
+						String armorName = targetArmor.getItem().getName();
+						if (armorName.equalsIgnoreCase("할파스의 완력") || 
+							armorName.equalsIgnoreCase("할파스의 예지력") || 
+							armorName.equalsIgnoreCase("할파스의 마력")) {
+							
+							PcInstance pc = (PcInstance) target; // ⚠️ 스킬 컨트롤러는 target 대신 o 를 사용하세요.
+							
+							// ✅ [조건 변경] 현재 HP가 10% 미만이 아니라 "100 이하"일 때 발동
+							if (pc.getNowHp() <= 100) {
+								long currentTime = System.currentTimeMillis();
+								
+								if (currentTime - pc.lastHalpasTime >= (3 * 60 * 60 * 1000L)) {
+									
+									// ✅ [회복량 변경] 현재 HP에 2000을 더하되, 최대 체력을 넘지 못하게 방어(Math.min)
+									pc.setNowHp(Math.min(pc.getMaxHp(), pc.getNowHp() + 2000)); 
+									pc.lastHalpasTime = currentTime;
+									
+									// 1. [발동 시 터지는 이펙트] 24035
+									pc.toSender(S_ObjectEffect.clone(BasePacketPooling.getPool(S_ObjectEffect.class), pc, 24035), true);
+									
+									// 멘트 변경
+									ChattingController.toChatting(pc, "할파스의 가호가 발동하여 체력이 2000 회복되었습니다.", Lineage.CHATTING_MODE_MESSAGE);
+									
+									// [아이콘 스위칭]
+									SC_BUFFICON_NOTI.on(pc, 117, 0, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+									SC_BUFFICON_NOTI.on(pc, 118, 10800, SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+									
+									// [엔진 스위칭] 기존 30초 박동 정지 & 3시간 쿨타임 엔진 가동!
+									pc.stopHalpasTimers();
+									pc.startHalpasCooldown(3 * 60 * 60 * 1000L);
+								}
+							}
+						}
 					}
 					
 					//임페리얼 아머

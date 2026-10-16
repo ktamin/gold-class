@@ -13,16 +13,25 @@ import lineage.world.controller.ChattingController;
 import lineage.world.object.Character;
 import lineage.world.object.instance.ItemInstance;
 import lineage.world.object.instance.ItemWeaponInstance;
+import lineage.world.object.instance.ItemArmorInstance; // ✅ 방어구 클래스 추가
 
 public class 발라카스의숨결 extends ItemInstance {
 
-    // 대상 무기 이름(서버 DB 표기명과 일치하도록 유지)
+    // 대상 무기 및 방어구 이름 (서버 DB 표기명과 일치하도록 유지)
     private static final Set<String> ALLOWED = new HashSet<>(Arrays.asList(
+        // 무기류
         "진명황의 집행검",
         "사신의 검",
+        "고대 신의 창",
         "붉은 그림자의 이도류",
         "가이아의 격노",        // DB가 '격노'로 되어 있으면 이것도 허용
-        "수정 결정체 지팡이"
+        "수정 결정체 지팡이",
+        
+        // ✅ 방어구류 추가 (예지력, 인내력 모두 추가해 두었습니다)
+        "할파스의 완력",
+        "할파스의 인내력",
+        "할파스의 마력",
+        "할파스의 예지력"
     ));
 
     // 기본 확률표(%) : cur +N → +N+1 (0..9)
@@ -42,10 +51,13 @@ public class 발라카스의숨결 extends ItemInstance {
 
         // 대상 아이템 (선택)
         ItemInstance target = cha.getInventory().value(cbp.readD());
-        if (target == null || !(target instanceof ItemWeaponInstance)) {
-            ChattingController.toChatting(cha, "집행급 무기에만 사용 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
+        
+        // ✅ [수정] 무기(ItemWeaponInstance)이거나 방어구(ItemArmorInstance)일 때만 통과
+        if (target == null || (!(target instanceof ItemWeaponInstance) && !(target instanceof ItemArmorInstance))) {
+            ChattingController.toChatting(cha, "집행급 무기 또는 할파스급 방어구에만 사용 가능합니다.", Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
+        
         if (target.getItem() == null) {
             ChattingController.toChatting(cha, "대상 아이템 정보를 찾을 수 없습니다.", Lineage.CHATTING_MODE_MESSAGE);
             return;
@@ -53,7 +65,7 @@ public class 발라카스의숨결 extends ItemInstance {
 
         final String name = safeName(target);
         if (!isAllowed(name)) {
-            ChattingController.toChatting(cha, "발라카스 숨결은 집행급 무기에만 사용이 가능합니다!", Lineage.CHATTING_MODE_MESSAGE);
+            ChattingController.toChatting(cha, "할파스의 숨결은 집행급/할파스에만 사용이 가능합니다!", Lineage.CHATTING_MODE_MESSAGE);
             return;
         }
 
@@ -70,7 +82,7 @@ public class 발라카스의숨결 extends ItemInstance {
             return;
         }
 
-        // ▶ 최대 +10 제한
+        // ▶ 최대 +10 제한 (코드상은 5로 되어 있음)
         if (cur >= 5) {
             ChattingController.toChatting(cha, "더 이상 강화할 수 없습니다. (최대 + 5)", Lineage.CHATTING_MODE_MESSAGE);
             return;
@@ -86,8 +98,15 @@ public class 발라카스의숨결 extends ItemInstance {
                 String.format("강화에 성공했습니다. (+%d → +%d)", cur, cur+1),
                 Lineage.CHATTING_MODE_MESSAGE
             );
+            
+            // ✅ 성공 이펙트가 필요하시다면 아래 주석을 풀고 사용하세요. (숫자는 이펙트 번호)
+            // cha.toSender(lineage.network.packet.server.S_ObjectEffect.clone(BasePacketPooling.getPool(lineage.network.packet.server.S_ObjectEffect.class), cha, 143), true);
+            
         } else {
             ChattingController.toChatting(cha, "강화에 실패 하였습니다.", Lineage.CHATTING_MODE_MESSAGE);
+            
+            // ✅ 실패 이펙트가 필요하시다면 아래 주석을 풀고 사용하세요.
+            // cha.toSender(lineage.network.packet.server.S_ObjectEffect.clone(BasePacketPooling.getPool(lineage.network.packet.server.S_ObjectEffect.class), cha, 158), true);
         }
 
         // 인벤토리 갱신 & 주문서 소모

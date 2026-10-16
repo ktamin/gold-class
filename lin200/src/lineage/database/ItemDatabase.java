@@ -1976,6 +1976,7 @@ public final class ItemDatabase {
 				item.getName().equalsIgnoreCase("기운을 잃은 우그누스의 가더") ||
 				item.getName().equalsIgnoreCase("기운을 잃은 쿠거의 가더") ||
 				item.getName().equalsIgnoreCase("기운을 잃은 시어의 심안") ||
+				item.getName().equalsIgnoreCase("제니스의 반지 조각") ||
 				item.getName().equalsIgnoreCase("코인 조각")) {
 			return 룬조각.clone(getPool(룬조각.class)).clone(item);
 

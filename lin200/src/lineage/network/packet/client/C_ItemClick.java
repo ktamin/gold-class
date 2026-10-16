@@ -64,7 +64,7 @@ public class C_ItemClick extends ClientBasePacket {
 		
 		ItemInstance item = pc.getInventory().value( readD() );
 		
-		if (java.util.Arrays.asList("전투가호", "전투의 룬", "방어의 룬", "생명의 룬", "드래곤의 진주").contains(item.getItem().getName())) {
+		if (java.util.Arrays.asList("전투가호", "전투의 룬", "방어의 룬", "생명의 룬", "제니스의 반지").contains(item.getItem().getName())) {
 			ChattingController.toChatting(pc, "해당 아이템은 착용 할 수 없으며 인벤토리에서 효과가 적용됩니다.", Lineage.CHATTING_MODE_MESSAGE);
 			return this;
 		}

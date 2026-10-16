@@ -202,6 +202,37 @@ public class ItemArmorInstance extends ItemIllusionInstance {
 			//\f1%0%s 손에 달라 붙었습니다.
 			cha.toSender(S_Message.clone(BasePacketPooling.getPool(S_Message.class), 149, getName()));
 		}
+		
+		// 할파스의 가호 버프 아이콘 처리 (장비 착용/해제 시 UI 및 엔진 연동)
+		// ==============================================================
+		if (cha instanceof PcInstance) {
+			PcInstance pc = (PcInstance) cha;
+			String armorName = getItem().getName(); 
+			
+			if (armorName.equalsIgnoreCase("할파스의 완력") || 
+				armorName.equalsIgnoreCase("할파스의 예지력") || 
+				armorName.equalsIgnoreCase("할파스의 마력")) {
+				
+				if (equipped) { 
+					long remainTimeMs = (pc.lastHalpasTime + (3 * 60 * 60 * 1000L)) - System.currentTimeMillis();
+					if (remainTimeMs > 0) {
+						Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.on(pc, 118, (int)(remainTimeMs / 1000), Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+					} else {
+						Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.on(pc, 117, -1, 0);
+					}
+					// [엔진 시동] 착용 시 타이머 스타트!
+					pc.startHalpasHeartbeat();
+					
+				} else { 
+					Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.on(pc, 117, 0, Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+					Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.on(pc, 118, 0, Fx.server.MJTemplate.MJProto.Models.SC_BUFFICON_NOTI.REMAINING_TYPE_SECONDS);
+					
+					// [엔진 정지] 장비 해제 시 모든 이펙트 타이머 정지
+					pc.stopHalpasTimers();
+				}
+			}
+		}
+		// ==============================================================
 
 		cha.toSender(S_InventoryEquipped.clone(BasePacketPooling.getPool(S_InventoryEquipped.class), this));
 	}

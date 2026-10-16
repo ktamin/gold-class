@@ -1075,6 +1075,9 @@ public final class CharactersDatabase {
 				// 장인 무기 +10, +11
 				pc.scrollWeaponCount10 = rs.getInt("무기천장_10");
 				pc.scrollWeaponCount11 = rs.getInt("무기천장_11");
+				
+				// ✅ [추가] 할파스의 가호 마지막 발동 시간 불러오기
+				pc.lastHalpasTime = rs.getLong("halpas_time");
 				//========================================================
 				pc.setExp_marble_save_count(rs.getInt("경험치저장구슬_사용횟수"));
 				pc.setExp_marble_use_count(rs.getInt("경험치구슬_사용횟수"));
@@ -1593,7 +1596,8 @@ public final class CharactersDatabase {
 					+ "인형천장_용인형=?, 인형보너스_용인형=?, " // 👈 보너스 용인형 추가
 					+ "갑옷천장_7=?, 갑옷천장_8=?, 갑옷천장_9=?, "
 					+ "무기천장_10=?, 무기천장_11=?, "
-					+ "인형진화_사용횟수=? WHERE objID=?");
+					+ "인형진화_사용횟수=?, "
+					+ "halpas_time=? WHERE objID=?"); // 👈 halpas_time 추가!
 			st.setInt(1, pc.getLevel());
 			st.setInt(2, pc.getNowHp());
 			st.setInt(3, pc.getMaxHp());
@@ -1699,7 +1703,8 @@ public final class CharactersDatabase {
 			st.setInt(99, pc.scrollWeaponCount10); 
 			st.setInt(100, pc.scrollWeaponCount11);					
 			st.setInt(101, pc.dollEvoCount);        
-			st.setLong(102, pc.getObjectId());      
+			st.setLong(102, pc.lastHalpasTime); 
+			st.setLong(103, pc.getObjectId());       
 						
 			st.executeUpdate();
 			st.close();
